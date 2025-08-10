@@ -1,10 +1,10 @@
 import IndexPage from "./IndexPage.vue";
 
 export default {
-  path: "/",
-  name: "portal.index",
+  path: "/berita",
+  name: "berita.index",
   component: IndexPage,
   meta: {
-    title: "Portal",
+    title: "Berita",
   },
 };

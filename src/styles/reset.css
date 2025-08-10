@@ -1,0 +1,46 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* Hilangkan margin default heading & paragraf */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+  padding: 0;
+}
+
+/* List tanpa bullet default (opsional) */
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+  padding-left: 0;
+}
+
+/* Image responsif default */
+img,
+picture {
+  max-width: 100%;
+  display: block;
+}
+
+/* Link tanpa underline default (opsional) */
+a {
+  text-decoration: none;
+  color: inherit;
+}

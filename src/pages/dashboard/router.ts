@@ -1,11 +1,15 @@
-import IndexPage from "./IndexPage.vue";
+import AppLayout from "@/components/layout/AppLayout.vue";
+
+import DashboardPage from "@/pages/dashboard/IndexPage.vue";
 
 export default {
+  path: "/dashboard",
+  component: AppLayout,
   children: [
     {
-      path: "/dashboard",
+      path: "",
       name: "dashboard.index",
-      component: IndexPage,
+      component: DashboardPage,
       meta: {
         requiresAuth: true,
         title: "Dashboard",

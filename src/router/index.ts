@@ -38,6 +38,7 @@ Object.keys(modules).forEach((key) => {
 const routes: RouteRecordRaw[] = [
   // Dynamic Routes yang ada di folder pages
   ...dynamicRoutes,
+
   {
     path: "/:pathMatch(.*)*",
     name: "not-found",

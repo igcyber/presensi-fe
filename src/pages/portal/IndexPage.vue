@@ -13,10 +13,10 @@ const { menus, menuActive, openSubMenu, hasOpenSubMenu, toggleSubMenu, closeSubM
     <div class="header-content">
       <img class="main-logo" src="/kukar-logo.png" alt="logo-kukarkab" />
       <div class="title-wrapper">
-        <p class="intro-text">
-          Portal Resmi <br />
-          Kabupaten Kutai Kartanegara
-        </p>
+        <div class="intro-text">
+          <p>Portal Resmi</p>
+          <p>Kabupaten Kutai Kartanegara</p>
+        </div>
         <p class="intro-sub-text">"Kukar Idaman Mitra Pembangunan IKN"</p>
       </div>
 
@@ -104,16 +104,16 @@ const { menus, menuActive, openSubMenu, hasOpenSubMenu, toggleSubMenu, closeSubM
 /* ========================================= */
 
 .portal-container {
-  position: absolute;
-  display: flex;
-  overflow: auto;
-  flex-direction: column;
   align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: auto;
+  position: absolute;
   top: 0;
   width: 100%;
-  height: 100%;
   z-index: 1;
-  background-color: rgba(0, 0, 0, 0.5);
 }
 
 /* ========================================= */
@@ -121,16 +121,17 @@ const { menus, menuActive, openSubMenu, hasOpenSubMenu, toggleSubMenu, closeSubM
 /* ========================================= */
 
 .header-content {
-  width: 100%;
+  align-items: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
   margin: 20px auto 0 auto;
+  width: 100%;
 }
 
 .title-wrapper {
   display: flex;
   flex-direction: column;
+  margin-top: 10px;
   text-align: center;
   width: fit-content;
 }
@@ -140,27 +141,33 @@ const { menus, menuActive, openSubMenu, hasOpenSubMenu, toggleSubMenu, closeSubM
 }
 
 .intro-text {
+  color: white;
+  display: flex;
+  flex-direction: column;
   font-size: 30px;
   font-weight: bold;
-  color: white;
+}
+
+.intro-text p:first-child {
+  line-height: 0.5;
 }
 
 .intro-sub-text {
-  line-height: 50px;
+  color: white;
 }
 
 .button-web {
-  display: inline-block;
-  padding: 12px;
-  margin: 20px auto 40px auto;
-  width: 120px;
-  text-align: center;
   background-color: var(--color-primary);
   border-radius: 60px;
-  text-decoration: none;
   color: white;
+  display: inline-block;
   font-weight: 500;
+  margin: 20px auto 40px auto;
+  padding: 12px;
+  text-align: center;
+  text-decoration: none;
   transition: all 0.5s;
+  width: 120px;
 }
 
 .button-web:hover {
@@ -173,32 +180,32 @@ const { menus, menuActive, openSubMenu, hasOpenSubMenu, toggleSubMenu, closeSubM
 /* ========================================= */
 
 .main-content {
+  height: fit-content;
   margin: auto 0 5% 0;
   width: 100%;
-  height: fit-content;
 }
 
 .main-content-wrapper {
   display: flex;
-  justify-content: center;
   flex-flow: row wrap;
+  gap: 20px;
+  justify-content: center;
   margin: 0 auto;
   width: 700px;
-  gap: 20px;
 }
 
 .menu-item-wrapper {
   background-color: var(--color-primary);
-  padding: 5px 0;
+  border-radius: 10px;
+  color: #fff;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border-radius: 10px;
-  width: 100px;
   min-height: 90px;
+  padding: 5px 0;
   text-decoration: none;
-  color: #fff;
   transition: all 0.5s;
+  width: 100px;
 }
 
 .menu-item-wrapper:hover {
@@ -207,18 +214,18 @@ const { menus, menuActive, openSubMenu, hasOpenSubMenu, toggleSubMenu, closeSubM
 }
 
 .menu-logo {
-  margin: auto auto;
-  width: fit-content;
-  max-width: 40px;
-  max-height: 100px;
   color: #fff;
+  margin: auto auto;
+  max-height: 100px;
+  max-width: 40px;
+  width: fit-content;
 }
 
 .menu-title {
-  text-align: center;
   font-size: 13px;
-  padding: 0 5px;
   margin: 10px auto 5px auto;
+  padding: 0 5px;
+  text-align: center;
 }
 
 /* ========================================= */
@@ -226,62 +233,62 @@ const { menus, menuActive, openSubMenu, hasOpenSubMenu, toggleSubMenu, closeSubM
 /* ========================================= */
 
 .popup-sub-menu {
-  display: none;
-  position: absolute;
-  bottom: 0;
-  z-index: 1;
+  animation: slideUp 0.5s ease-in-out;
   background-color: var(--color-secondary);
-  width: 100%;
+  bottom: 0;
+  display: none;
   height: 55%;
   max-height: 95%;
-  animation: slideUp 0.5s ease-in-out;
+  position: absolute;
+  width: 100%;
+  z-index: 1;
 }
 
 .arrow {
-  width: 0;
-  height: 0;
+  border-bottom: 30px solid var(--color-secondary);
   border-left: 30px solid transparent;
   border-right: 30px solid transparent;
-  border-bottom: 30px solid var(--color-secondary);
+  height: 0;
   margin: -30px auto auto auto;
+  width: 0;
 }
 
 .arrow svg {
-  width: 40px;
-  margin: 10px 0 0 -20px;
   animation: upDown 0.5s;
-  animation-iteration-count: infinite;
   animation-direction: alternate;
+  animation-iteration-count: infinite;
+  margin: 10px 0 0 -20px;
+  width: 40px;
 }
 
 .arrow svg:hover {
-  transform: translateY(10px);
   cursor: pointer;
+  transform: translateY(10px);
 }
 
 .sub-menu-title {
+  font-size: 20px;
   margin: 20px 20px 10px 20px;
   padding: 10px;
   text-align: center;
-  font-size: 20px;
 }
 
 .sub-menu-content {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  margin: 0 0 30px 0;
-  padding: 0 10px 0px 70px;
-  overflow-y: auto;
   height: 70%;
+  margin: 0 0 30px 0;
   max-height: 90%;
+  overflow-y: auto;
+  padding: 0 10px 0px 70px;
 }
 
 .sub-menu-wrapper {
   flex-basis: 22%;
   flex-shrink: 0;
-  margin: 0 20px;
   height: fit-content;
+  margin: 0 20px;
 }
 
 .sub-menu-list {
@@ -291,9 +298,9 @@ const { menus, menuActive, openSubMenu, hasOpenSubMenu, toggleSubMenu, closeSubM
 
 .sub-menu-list li {
   display: flex;
-  width: 330px;
-  padding: 0;
   margin-bottom: 7px;
+  padding: 0;
+  width: 330px;
 }
 
 .sub-menu-list-header {
@@ -303,8 +310,8 @@ const { menus, menuActive, openSubMenu, hasOpenSubMenu, toggleSubMenu, closeSubM
 }
 
 .sub-menu-list-wrapper {
-  text-decoration: none;
   color: white;
+  text-decoration: none;
 }
 
 .sub-menu-list-wrapper:hover {
@@ -312,8 +319,8 @@ const { menus, menuActive, openSubMenu, hasOpenSubMenu, toggleSubMenu, closeSubM
 }
 
 .sub-menu-list-logo {
-  width: max-content;
   height: 40px;
+  width: max-content;
 }
 
 .sub-menu-list-logo:hover {
@@ -330,6 +337,7 @@ const { menus, menuActive, openSubMenu, hasOpenSubMenu, toggleSubMenu, closeSubM
 }
 
 .footer-content p {
+  color: white;
   margin: 20px;
   text-align: center;
 }
@@ -339,20 +347,20 @@ const { menus, menuActive, openSubMenu, hasOpenSubMenu, toggleSubMenu, closeSubM
 /* ========================================= */
 
 .backround-bottom-wrapper {
-  position: absolute;
-  width: 100%;
-  height: 70px;
   background-color: rgba(6, 32, 53);
-  z-index: -1;
   bottom: 0;
   display: flex;
   flex-direction: row;
+  height: 70px;
   justify-content: center;
+  position: absolute;
+  width: 100%;
+  z-index: -1;
 }
 
 .bg-image-wrapper {
-  width: max-content;
   height: 200px;
+  width: max-content;
 }
 
 .bg-bottom-image {
@@ -360,11 +368,11 @@ const { menus, menuActive, openSubMenu, hasOpenSubMenu, toggleSubMenu, closeSubM
 }
 
 .bg-video {
-  position: fixed;
   left: 0;
-  top: 0;
-  min-width: 100%;
   min-height: 100%;
+  min-width: 100%;
+  position: fixed;
+  top: 0;
 }
 
 /* ========================================= */
@@ -433,8 +441,8 @@ const { menus, menuActive, openSubMenu, hasOpenSubMenu, toggleSubMenu, closeSubM
   }
 
   .main-content-wrapper {
-    width: 340px;
     justify-content: normal;
+    width: 340px;
   }
 
   .menu-item-wrapper {
@@ -473,16 +481,16 @@ const { menus, menuActive, openSubMenu, hasOpenSubMenu, toggleSubMenu, closeSubM
   }
 
   .sub-menu-content {
-    padding: 0;
     height: 85%;
+    padding: 0;
   }
 }
 
 /* Extra Small Mobile */
 @media screen and (max-width: 340px) {
   .main-content-wrapper {
-    width: 100%;
     gap: 10px;
+    width: 100%;
   }
 
   .menu-item-wrapper {
