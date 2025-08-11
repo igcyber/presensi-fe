@@ -42,10 +42,10 @@
       </div>
     </div>
 
-    <div class="row frame" style="padding-bottom: 80px">
+    <div class="row frame" style="padding-bottom: 60px">
       <div class="container" style="margin-bottom: 30px">
-        <div class="row">
-          <div class="col-md-4">
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-6 col-lg-4">
             <div class="fitur">
               <div class="fitur-iconframe">
                 <div class="fitur-icon">
@@ -58,7 +58,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-12 col-md-6 col-lg-4">
             <div class="fitur">
               <div class="fitur-iconframe">
                 <div class="fitur-icon">
@@ -71,7 +71,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-12 col-md-6 col-lg-4">
             <div class="fitur">
               <div class="fitur-iconframe">
                 <div class="fitur-icon">
@@ -136,7 +136,7 @@
       </div>
     </div>
 
-    <div class="row frame frame--grey" style="padding-bottom: 80px">
+    <div class="row frame frame--grey" style="padding-bottom: 50px">
       <div class="container">
         <div class="container">
           <div class="headingtext">
@@ -206,7 +206,7 @@
       </div>
     </div>
 
-    <div class="row frame frame--bg">
+    <div class="row frame frame--bg" style="padding-bottom: 50px">
       <div class="container">
         <div class="headingtext headingtext--white">
           <span class="headingtext-title b-20"
@@ -216,7 +216,7 @@
       </div>
       <div class="container">
         <div class="row">
-          <div v-for="(layanan, lIdx) in layanans" :key="lIdx" class="col-sm-2">
+          <div v-for="(layanan, lIdx) in layanans" :key="lIdx" class="col-6 col-md-2 d-flex justify-content-center">
             <div class="layanan layanan-light">
               <a :href="layanan.alamat" target="_blank">
                 <div class="layanan-icon-frame">
@@ -241,7 +241,7 @@
       </div>
       <div class="container">
         <div class="row">
-          <div v-for="(sistem, sIdx) in sistems" :key="sIdx" class="col-sm-2">
+          <div v-for="(sistem, sIdx) in sistems" :key="sIdx" class="col-6 col-md-2 d-flex justify-content-center">
             <div class="layanan layanan-light">
               <a :href="sistem.alamat" target="_blank">
                 <div class="layanan-icon-frame">
@@ -257,7 +257,7 @@
       </div>
     </div>
 
-    <div class="row frame frame--bgmap" style="padding-bottom: 80px">
+    <div class="row frame frame--bgmap" style="padding-bottom: 70px">
       <div class="container">
         <div class="row">
           <div class="col-md-12">
@@ -344,7 +344,7 @@ const berita1 = ref<BeritaItem[]>([
   },
   {
     id: 3,
-    judul: "Prestasi Tim Olahraga Kukar",
+    judul: "Prestasi Tim Olahraga Kukar di prapon",
     foto: "/dummy.jpg",
     created_at: new Date("2024-01-10"),
     isi: "Tim olahraga Kukar meraih prestasi gemilang...",
