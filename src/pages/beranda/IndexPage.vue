@@ -257,7 +257,7 @@
       </div>
     </div>
 
-    <div class="row frame frame--bgmap">
+    <div class="row frame frame--bgmap" style="padding-bottom: 80px">
       <div class="container">
         <div class="row">
           <div class="col-md-12">
@@ -271,7 +271,7 @@
           <div class="col-md-12">
             <div class="row">
               <div class="col-md-12">
-                <div class="owl-carousel owl-theme opd-owl">
+                <div :ref="setCarouselRef as VNodeRef" class="owl-carousel owl-theme opd-owl">
                   <div v-for="opd in opds" :key="opd.id" class="bupati bupati--opd">
                     <div class="bupati-image-frame">
                       <img class="bupati-image" :src="opd.foto" />
@@ -391,6 +391,8 @@ const opds = ref<OpdItem[]>([
   { id: 1, nama: "Dinas A", foto: "/dummy.jpg", website: "https://dinas-a.kukar.go.id", alamat: "Jl. Mawar No. 1, Tenggarong" },
   { id: 2, nama: "Dinas B", foto: "/dummy.jpg", website: "https://dinas-b.kukar.go.id", alamat: "Jl. Melati No. 2, Tenggarong" },
   { id: 3, nama: "Dinas C", foto: "/dummy.jpg", website: "https://dinas-c.kukar.go.id", alamat: "Jl. Anggrek No. 3, Tenggarong" },
+  { id: 4, nama: "Dinas D", foto: "/dummy.jpg", website: "https://dinas-d.kukar.go.id", alamat: "Jl. Anggrek No. 3, Tenggarong" },
+  { id: 5, nama: "Dinas E", foto: "/dummy.jpg", website: "https://dinas-e.kukar.go.id", alamat: "Jl. Anggrek No. 3, Tenggarong" },
 ]);
 
 // Form Pencarian
