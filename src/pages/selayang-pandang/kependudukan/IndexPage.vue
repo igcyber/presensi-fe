@@ -9,7 +9,7 @@ import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
 
     <div class="row">
       <div class="container frame2">
-        <SelayangPandang />
+        <SelayangPandang title="SEKILAS KEPEMDA KAB. KUTAI KARTANEGARA" />
       </div>
     </div>
   </div>
