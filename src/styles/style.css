@@ -215,10 +215,14 @@ hr {
 /* ===== BANNER & INTRO SECTION ===== */
 .banner {
   width: 100%;
-  height: 600px;
-  overflow: hidden;
-  position: relative;
+  height: 500px;
   background-color: gray;
+  display: flex;
+  align-items: center;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url(/hero.png);
+  background-size: cover;
+  background-position: bottom center;
+  background-repeat: no-repeat;
 }
 
 .banner-image {
@@ -240,25 +244,9 @@ hr {
   margin-bottom: 100px;
 }
 
-.intro {
-  position: relative;
-  margin-top: -600px;
-  height: 600px;
-  background-color: rgba(0, 0, 0, 0.247);
-}
-
-.intro-search {
-  padding-bottom: 200px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: flex-end;
-}
-
 .intro-title {
   font-size: 20px;
-  color: rgba(255, 255, 255, 0.6);
+  color: white;
   margin-bottom: 20px;
   line-height: 10px;
   font-family: "Roboto", sans-serif;
@@ -266,7 +254,7 @@ hr {
 
 .intro-subtext {
   font-size: 20px;
-  color: rgba(255, 255, 255, 0.6);
+  color: white;
   margin-bottom: 25px;
   font-family: "Roboto", sans-serif;
 }
@@ -285,7 +273,7 @@ hr {
   padding: 8px;
   border-radius: 5px;
   box-sizing: border-box;
-  width: 50%;
+  width: 55%;
 }
 
 .intro-input {
@@ -317,9 +305,9 @@ hr {
 
 /* ===== HOTLINE SECTION ===== */
 .hotline {
-  padding: 0px;
-  background-color: #12131a88;
-  padding: 15px 0px;
+  background-color: #062035;
+  padding: 15px 0 30px;
+  width: 100%;
 }
 
 .hotline .container,
@@ -1576,6 +1564,42 @@ a.footer-text:hover {
 }
 
 /* ===== RESPONSIVE STYLES ===== */
+
+@media only screen and (max-width: 1200px) {
+  .banner {
+    background-position: 95% center;
+  }
+}
+
+@media only screen and (max-width: 992px) {
+  .intro-search-frame {
+    width: 70%;
+  }
+
+  .hotline .container {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .hotline-heading {
+    border-right: none;
+  }
+
+  .hotline-left {
+    width: 100%;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.171);
+  }
+
+  .hotline-right {
+    flex-wrap: wrap;
+  }
+
+  .hotline-body {
+    flex: 50%;
+  }
+}
+
 @media only screen and (max-width: 575px) {
   /* Navigation Responsive */
   .navatas-left {
@@ -1636,7 +1660,8 @@ a.footer-text:hover {
 
   /* Banner & Intro Responsive */
   .banner {
-    height: 90vh;
+    height: 50vh;
+    background-position: 93% center;
   }
 
   .intro {
@@ -1646,10 +1671,6 @@ a.footer-text:hover {
 
   .banner-image {
     height: 90vh !important;
-  }
-
-  .intro-search {
-    padding-bottom: 300px;
   }
 
   .intro-title {

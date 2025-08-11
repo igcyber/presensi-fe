@@ -4,13 +4,23 @@
   "semi": true,
   "singleQuote": false,
   "printWidth": 160,
-  "importOrder": [
-    "<THIRD_PARTY_MODULES>",
-    "^@/components/(.*)$",
-    "^@/(.*)$",
-    "^src/(.*)$",
-    "^[./]"
-  ],
+  "importOrder": ["^(jquery(\\/.*)?|owl\\.carousel(\\/.*)?)$", "<THIRD_PARTY_MODULES>", "^@/components/(.*)$", "^@/(.*)$", "^src/(.*)$", "^[./]"],
   "importOrderSeparation": true,
-  "importOrderSortSpecifiers": true
+  "importOrderSortSpecifiers": true,
+  "overrides": [
+    {
+      "files": ["src/main.ts"],
+      "options": {
+        "importOrder": [
+          "^jquery(\\/.*)?$",
+          "^(bootstrap(\\/.*)?|owl\\.carousel(\\/.*)?)$",
+          "<THIRD_PARTY_MODULES>",
+          "^@/components/(.*)$",
+          "^@/(.*)$",
+          "^src/(.*)$",
+          "^[./]"
+        ]
+      }
+    }
+  ]
 }

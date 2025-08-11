@@ -1,8 +1,10 @@
 // Import CSS Bootstrap
-import "bootstrap/dist/css/bootstrap.min.css";
-// Import JS Bootstrap (opsional, hanya kalau butuh komponen JS seperti modal, dropdown)
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import $ from "jquery";
+
+import "bootstrap/dist/css/bootstrap.min.css";
+import "owl.carousel/dist/assets/owl.carousel.css";
+import "owl.carousel/dist/assets/owl.theme.default.css";
+
 import { createPinia } from "pinia";
 import { createApp } from "vue";
 
@@ -13,7 +15,8 @@ import "./styles/reset.css";
 import "./styles/style.css";
 import "./styles/variables.css";
 
-// Make jQuery available globally
+import("bootstrap/dist/js/bootstrap.bundle.min.js");
+
 (window as any).$ = (window as any).jQuery = $;
 
 const app = createApp(App);
