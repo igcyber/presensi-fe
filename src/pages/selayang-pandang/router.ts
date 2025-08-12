@@ -14,8 +14,8 @@ export default {
       name: "selayang-pandang.sejarah",
       component: SejarahPage,
       meta: {
-        requiresAuth: true,
         title: "Sejarah",
+        breadcrumb: "Sejarah",
       },
     },
     {
@@ -23,8 +23,8 @@ export default {
       name: "selayang-pandang.kependudukan",
       component: KependudukanPage,
       meta: {
-        requiresAuth: true,
         title: "Kependudukan",
+        breadcrumb: "Kependudukan",
       },
     },
     {
@@ -32,8 +32,8 @@ export default {
       name: "selayang-pandang.potensi-daerah",
       component: PotensiDaerahPage,
       meta: {
-        requiresAuth: true,
         title: "Potensi Daerah",
+        breadcrumb: "Potensi Daerah",
       },
     },
     {
@@ -41,8 +41,8 @@ export default {
       name: "selayang-pandang.prestasi",
       component: PrestasiPage,
       meta: {
-        requiresAuth: true,
         title: "Prestasi",
+        breadcrumb: "Prestasi dan Penghargaan",
       },
     },
   ],

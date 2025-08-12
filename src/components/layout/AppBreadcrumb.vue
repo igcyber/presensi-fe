@@ -54,6 +54,10 @@ const breadcrumbItems = computed<BreadcrumbItem[]>(() => {
 
 // Current page title (similar to $position in Blade)
 const currentPageTitle = computed(() => {
+  if (route.meta?.breadcrumb) {
+    return route.meta.breadcrumb;
+  }
+
   if (breadcrumbItems.value.length > 0) {
     return breadcrumbItems.value[breadcrumbItems.value.length - 1].title;
   }
