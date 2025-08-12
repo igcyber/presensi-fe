@@ -24,6 +24,7 @@ interface NavigationItem {
   title: string;
   path: string;
   children?: NavigationItem[];
+  external?: boolean;
 }
 
 // Reactive state
@@ -91,6 +92,11 @@ const navigation = ref<NavigationItem[]>([
   {
     title: "BERITA",
     path: "/berita",
+  },
+  {
+    title: "PPID",
+    path: "https://ppid.kukarkab.go.id/",
+    external: true,
   },
 ]);
 
