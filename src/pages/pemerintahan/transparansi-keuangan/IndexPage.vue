@@ -3,11 +3,11 @@
     <AppBreadcrumb />
 
     <div class="row">
-      <div class="container frame2">
+      <div class="frame2 container">
         <div class="row">
           <div class="col-md-12">
             <div class="table-responsive">
-              <table id="myTable" class="table table-striped">
+              <table id="myTable" class="table-striped table">
                 <thead>
                   <tr>
                     <th>No</th>

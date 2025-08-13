@@ -3,11 +3,11 @@
     <AppBreadcrumb />
 
     <div class="row">
-      <div class="container frame2">
+      <div class="frame2 container">
         <SelayangPandang title="PRESTASI DAN PENGHARGAAN PEMERINTAH KABUPATEN KUTAI KARTANEGARA">
           <template #content>
             <div class="table-responsive mt-4">
-              <table class="table table-striped">
+              <table class="table-striped table">
                 <thead>
                   <tr>
                     <th>No</th>
@@ -57,8 +57,8 @@
 import { onMounted } from "vue";
 
 import BasePagination from "@/components/BasePagination.vue";
-import SelayangPandang from "@/components/SelayangPandang.vue";
 import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
+import SelayangPandang from "@/components/SelayangPandang.vue";
 
 import { usePagination } from "@/composables/usePagination";
 

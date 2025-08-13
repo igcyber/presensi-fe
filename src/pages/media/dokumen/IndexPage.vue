@@ -1,39 +1,41 @@
 <template>
   <div class="container-fluid navbreaker">
     <AppBreadcrumb />
-  </div>
 
-  <div class="row">
-    <div class="container frame2">
-      <div class="row">
-        <template v-if="dokumens.length > 0">
-          <div v-for="dokumen in dokumens" :key="dokumen.id" class="col-md-4">
-            <div class="doc">
-              <div class="doc-image-frame">
-                <div class="doc-content">
-                  <i class="bx bx-file doc-file"></i>
-                  <span class="doc-date"> <i class="bx bx-calendar"></i> {{ formatters.date(dokumen.created_at) }} </span>
-                  <a :href="dokumen.link" target="_blank" class="doc-link">{{ dokumen.judul }}</a>
-                  <div class="doc-text">Sumber : diskominfo</div>
+    <div class="row">
+      <div class="frame2 container">
+        <div class="row">
+          <template v-if="dokumens.length > 0">
+            <div v-for="dokumen in dokumens" :key="dokumen.id" class="col-md-4">
+              <div class="doc">
+                <div class="doc-image-frame">
+                  <div class="doc-content">
+                    <i class="bx bx-file doc-file"></i>
+                    <span class="doc-date">
+                      <i class="bx bx-calendar"></i> {{ formatters.date(dokumen.created_at) }}
+                    </span>
+                    <a :href="dokumen.link" target="_blank" class="doc-link">{{ dokumen.judul }}</a>
+                    <div class="doc-text">Sumber : diskominfo</div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </template>
-        <template v-else>
+          </template>
+          <template v-else>
+            <div class="col-md-12">
+              <div class="alert alert-warning">Data kosong</div>
+            </div>
+          </template>
           <div class="col-md-12">
-            <div class="alert alert-warning">Data kosong</div>
+            <BasePagination
+              :page="currentPage"
+              :totalPages="totalPages"
+              :itemsPerPage="itemsPerPage"
+              :totalItems="totalItems"
+              @previousPage="prevPage"
+              @nextPage="nextPage"
+            />
           </div>
-        </template>
-        <div class="col-md-12">
-          <BasePagination
-            :page="currentPage"
-            :totalPages="totalPages"
-            :itemsPerPage="itemsPerPage"
-            :totalItems="totalItems"
-            @previousPage="prevPage"
-            @nextPage="nextPage"
-          />
         </div>
       </div>
     </div>

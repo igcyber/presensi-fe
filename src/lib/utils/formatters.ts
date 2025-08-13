@@ -232,7 +232,10 @@ export function formatTime(date: string | Date | null | undefined, locale: strin
  * formatStatus('diterima') // { label: 'Diterima', class: 'bg-green-100 text-green-800' }
  * formatStatus('pending', { pending: 'Menunggu' }) // { label: 'Menunggu', class: '...' }
  */
-export function formatStatus(status: string | null | undefined, customLabels: Record<string, string> = {}): { label: string; class: string } {
+export function formatStatus(
+  status: string | null | undefined,
+  customLabels: Record<string, string> = {},
+): { label: string; class: string } {
   if (!status) {
     return {
       label: "Tidak Diketahui",

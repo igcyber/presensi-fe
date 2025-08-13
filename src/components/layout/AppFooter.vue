@@ -4,7 +4,7 @@
       <div class="container">
         <div class="row">
           <!-- Logo Section -->
-          <div class="col-md-3 mb-5 mb-md-0">
+          <div class="col-md-3 mb-md-0 mb-5">
             <img class="footer-logo" src="/logo-white.png" alt="Logo Kukar" />
             <img class="footer-pse" src="/pse.png" alt="PSE" />
           </div>

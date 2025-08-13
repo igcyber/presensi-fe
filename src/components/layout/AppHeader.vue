@@ -3,7 +3,7 @@
     <div class="block">
       <!-- Top Navigation Bar -->
       <div class="container-fluid navatas">
-        <div class="container pdless">
+        <div class="pdless container">
           <div id="navatas-left" class="navatas-left">
             <div class="navatas-content">
               <a class="navatas-text"> <i class="bx bx-map green"></i> {{ contactInfo.alamat }} </a>
@@ -15,7 +15,7 @@
       </div>
 
       <!-- Main Navigation -->
-      <div class="container navbar-padding">
+      <div class="navbar-padding container">
         <a class="nav-item nav-link nav-logo" href="/">
           <img src="/logo.png" alt="logo" height="45" class="d-inline-block align-top" />
         </a>
@@ -32,16 +32,27 @@
           <i class="bx bx-menu"></i>
         </button>
 
-        <div ref="collapseNavbar" class="collapse navbar-collapse" id="navbarNavDropdown">
+        <div ref="collapseNavbar" class="navbar-collapse collapse" id="navbarNavDropdown">
           <div class="navbar-nav ml-auto">
             <template v-for="(item, idx) in navigation" :key="idx">
               <!-- Item tanpa anak -->
-              <router-link v-if="!item.children && !item.external" class="nav-item nav-link" :class="{ active: isActive(item.path) }" :to="item.path">
+              <router-link
+                v-if="!item.children && !item.external"
+                class="nav-item nav-link"
+                :class="{ active: isActive(item.path) }"
+                :to="item.path"
+              >
                 {{ item.title }}
               </router-link>
 
               <!-- Item eksternal -->
-              <a v-else-if="!item.children && item.external" class="nav-item nav-link" :href="item.path" target="_blank" rel="noopener">
+              <a
+                v-else-if="!item.children && item.external"
+                class="nav-item nav-link"
+                :href="item.path"
+                target="_blank"
+                rel="noopener"
+              >
                 {{ item.title }}
               </a>
 

@@ -43,7 +43,9 @@
                     </router-link>
                   </h2>
                   <p class="news-excerpt">{{ news.excerpt }}</p>
-                  <router-link :to="`/berita/${news.slug}`" class="btn btn-primary btn-sm"> Baca Selengkapnya </router-link>
+                  <router-link :to="`/berita/${news.slug}`" class="btn btn-primary btn-sm">
+                    Baca Selengkapnya
+                  </router-link>
                 </div>
               </div>
             </div>
@@ -77,7 +79,13 @@
               <div class="sidebar-widget">
                 <h3 class="widget-title">Cari Berita</h3>
                 <div class="search-form">
-                  <input v-model="searchQuery" type="text" class="form-control" placeholder="Cari berita..." @input="handleSearch" />
+                  <input
+                    v-model="searchQuery"
+                    type="text"
+                    class="form-control"
+                    placeholder="Cari berita..."
+                    @input="handleSearch"
+                  />
                   <button class="btn btn-primary" @click="handleSearch">
                     <i class="bx bx-search"></i>
                   </button>
@@ -89,7 +97,11 @@
                 <h3 class="widget-title">Kategori</h3>
                 <ul class="category-list">
                   <li v-for="category in categories" :key="category.id">
-                    <a href="#" @click.prevent="filterByCategory(category.id)" :class="{ active: selectedCategory === category.id }">
+                    <a
+                      href="#"
+                      @click.prevent="filterByCategory(category.id)"
+                      :class="{ active: selectedCategory === category.id }"
+                    >
                       {{ category.name }}
                       <span class="count">({{ category.count }})</span>
                     </a>
@@ -241,7 +253,9 @@ const filteredNews = computed(() => {
   // Filter by search query
   if (searchQuery.value) {
     filtered = filtered.filter(
-      (news) => news.title.toLowerCase().includes(searchQuery.value.toLowerCase()) || news.excerpt.toLowerCase().includes(searchQuery.value.toLowerCase()),
+      (news) =>
+        news.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+        news.excerpt.toLowerCase().includes(searchQuery.value.toLowerCase()),
     );
   }
 

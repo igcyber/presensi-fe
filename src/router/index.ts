@@ -1,4 +1,4 @@
-import { type RouteRecordRaw, createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory, type RouteRecordRaw, type RouterScrollBehavior } from "vue-router";
 
 import NotFound from "@/pages/NotFound.vue";
 
@@ -50,9 +50,23 @@ const routes: RouteRecordRaw[] = [
   },
 ];
 
+const scrollBehavior: RouterScrollBehavior = (to, from, savedPosition) => {
+  // Jika navigasi via tombol back/forward, kembalikan posisi sebelumnya
+  if (savedPosition) {
+    return savedPosition; // atau { ...savedPosition, behavior: 'smooth' }
+  }
+  // Jika ada hash (#section), scroll ke elemen tsb + offset header (jika perlu)
+  if (to.hash) {
+    return { el: to.hash, top: 80, behavior: "smooth" }; // sesuaikan offset navbar-mu
+  }
+  // Default: ke paling atas
+  return { left: 0, top: 0, behavior: "smooth" }; // ganti 'smooth' ke 'auto' bila ingin instan
+};
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
+  scrollBehavior,
 });
 
 // Navigation Guard untuk Authentication

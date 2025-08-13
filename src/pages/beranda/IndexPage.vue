@@ -34,7 +34,13 @@
             <p class="intro-text">Pemerintah Kabupaten<br />Kutai Kartanegara</p>
             <p class="intro-subtext">"Kukar Idaman Mitra Pembangunan IKN"</p>
             <form class="intro-search-frame" @submit.prevent="submitSearch">
-              <input class="intro-input" v-model="keyword" type="text" name="keyword" placeholder="Apa yang ingin anda cari?" />
+              <input
+                class="intro-input"
+                v-model="keyword"
+                type="text"
+                name="keyword"
+                placeholder="Apa yang ingin anda cari?"
+              />
               <input class="intro-btn btn-shadow" type="submit" value="Cari" />
             </form>
           </div>
@@ -101,9 +107,15 @@
                     <div class="post-image-frame">
                       <img :src="beritas1.foto" class="post-image" />
                     </div>
-                    <a :href="`/berita/${beritas1.id}/${beritas1.judul.replace(/[\\s/]+/g, '-')}`" class="post-link mt-2">{{ beritas1.judul }}</a>
+                    <a
+                      :href="`/berita/${beritas1.id}/${beritas1.judul.replace(/[\\s/]+/g, '-')}`"
+                      class="post-link mt-2"
+                      >{{ beritas1.judul }}</a
+                    >
                     <div class="post-date-frame">
-                      <span class="post-date"><i class="bx bx-calendar"></i> {{ formatters.date(beritas1.created_at) }}</span>
+                      <span class="post-date"
+                        ><i class="bx bx-calendar"></i> {{ formatters.date(beritas1.created_at) }}</span
+                      >
                     </div>
                     <div class="post-text">{{ beritas1.isi }}</div>
                   </div>
@@ -113,10 +125,12 @@
                 <div class="col-md-12">Data kosong</div>
               </template>
 
-              <div v-if="beritaHasItems" class="col-md-12 mb-5 mb-md-0">
+              <div v-if="beritaHasItems" class="col-md-12 mb-md-0 mb-5">
                 <hr />
                 <br />
-                <a href="/berita?page=2" class="btn btn-success">Lihat lebih banyak <i class="bx bx-chevron-right"></i></a>
+                <a href="/berita?page=2" class="btn btn-success"
+                  >Lihat lebih banyak <i class="bx bx-chevron-right"></i
+                ></a>
               </div>
             </div>
           </div>
@@ -148,8 +162,12 @@
               <div class="info-image-frame">
                 <img :src="bannerItem.foto" class="info-image" />
                 <div class="info-content">
-                  <a :href="bannerItem.foto" target="_blank" class="doc-link">{{ bannerItem.nama }}</a>
-                  <span class="info-date"><i class="bx bx-calendar"></i> {{ formatters.date(bannerItem.created_at) }}</span>
+                  <a :href="bannerItem.foto" target="_blank" data-lightbox="banner" class="doc-link">{{
+                    bannerItem.nama
+                  }}</a>
+                  <span class="info-date"
+                    ><i class="bx bx-calendar"></i> {{ formatters.date(bannerItem.created_at) }}</span
+                  >
                 </div>
               </div>
             </div>
@@ -171,7 +189,12 @@
                     :data-embed-url="youtubeInfo(video.link).embedUrl"
                     style="cursor: pointer; position: relative"
                   >
-                    <img :src="youtubeInfo(video.link).thumb" alt="Video Thumbnail" class="slider-video" style="width: 100%; height: 100%; object-fit: cover" />
+                    <img
+                      :src="youtubeInfo(video.link).thumb"
+                      alt="Video Thumbnail"
+                      class="slider-video"
+                      style="width: 100%; height: 100%; object-fit: cover"
+                    />
                     <div
                       style="
                         position: absolute;
@@ -262,7 +285,9 @@
         <div class="row">
           <div class="col-md-12">
             <div class="headingtext">
-              <a href="/unit-kerja/opd" class="headingtext-link">Lihat lebih banyak <i class="bx bx-chevron-right"></i></a>
+              <a href="/unit-kerja/opd" class="headingtext-link"
+                >Lihat lebih banyak <i class="bx bx-chevron-right"></i
+              ></a>
               <span class="headingtext-title b-20"
                 ><b><i class="bx bx-buildings"></i> Daftar OPD </b>Kutai Kartanegara ({{ opds.length }})</span
               >
@@ -390,11 +415,41 @@ const sistems = ref<SistemItem[]>([
 ]);
 
 const opds = ref<OpdItem[]>([
-  { id: 1, nama: "Dinas A", foto: "/dummy.jpg", website: "https://dinas-a.kukar.go.id", alamat: "Jl. Mawar No. 1, Tenggarong" },
-  { id: 2, nama: "Dinas B", foto: "/dummy.jpg", website: "https://dinas-b.kukar.go.id", alamat: "Jl. Melati No. 2, Tenggarong" },
-  { id: 3, nama: "Dinas C", foto: "/dummy.jpg", website: "https://dinas-c.kukar.go.id", alamat: "Jl. Anggrek No. 3, Tenggarong" },
-  { id: 4, nama: "Dinas D", foto: "/dummy.jpg", website: "https://dinas-d.kukar.go.id", alamat: "Jl. Anggrek No. 3, Tenggarong" },
-  { id: 5, nama: "Dinas E", foto: "/dummy.jpg", website: "https://dinas-e.kukar.go.id", alamat: "Jl. Anggrek No. 3, Tenggarong" },
+  {
+    id: 1,
+    nama: "Dinas A",
+    foto: "/dummy.jpg",
+    website: "https://dinas-a.kukar.go.id",
+    alamat: "Jl. Mawar No. 1, Tenggarong",
+  },
+  {
+    id: 2,
+    nama: "Dinas B",
+    foto: "/dummy.jpg",
+    website: "https://dinas-b.kukar.go.id",
+    alamat: "Jl. Melati No. 2, Tenggarong",
+  },
+  {
+    id: 3,
+    nama: "Dinas C",
+    foto: "/dummy.jpg",
+    website: "https://dinas-c.kukar.go.id",
+    alamat: "Jl. Anggrek No. 3, Tenggarong",
+  },
+  {
+    id: 4,
+    nama: "Dinas D",
+    foto: "/dummy.jpg",
+    website: "https://dinas-d.kukar.go.id",
+    alamat: "Jl. Anggrek No. 3, Tenggarong",
+  },
+  {
+    id: 5,
+    nama: "Dinas E",
+    foto: "/dummy.jpg",
+    website: "https://dinas-e.kukar.go.id",
+    alamat: "Jl. Anggrek No. 3, Tenggarong",
+  },
 ]);
 
 // Form Pencarian

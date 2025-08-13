@@ -22,7 +22,8 @@ export const ENV_CONFIG = {
   websiteUrl: import.meta.env.VITE_WEBSITE_URL || "/beranda",
 
   // External Links
-  pengaduanUrl: import.meta.env.VITE_PENGADUAN_URL || "https://www.lapor.go.id/instansi/pemerintah-kabupaten-kutai-kartanegara",
+  pengaduanUrl:
+    import.meta.env.VITE_PENGADUAN_URL || "https://www.lapor.go.id/instansi/pemerintah-kabupaten-kutai-kartanegara",
 
   // Development
   isDev: import.meta.env.DEV || false,

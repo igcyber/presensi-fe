@@ -1,7 +1,13 @@
 <template>
   <div>
     <form class="search-frame" method="GET" @submit.prevent="onSearchSubmit">
-      <input class="search-input" type="text" v-model="keyword" name="keyword" placeholder="Apa yang ingin anda cari?" />
+      <input
+        class="search-input"
+        type="text"
+        v-model="keyword"
+        name="keyword"
+        placeholder="Apa yang ingin anda cari?"
+      />
       <input class="search-btn" type="submit" value="Cari" />
     </form>
 

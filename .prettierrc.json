@@ -1,26 +1,31 @@
 {
-  "plugins": ["prettier-plugin-tailwindcss", "@trivago/prettier-plugin-sort-imports"],
   "$schema": "https://json.schemastore.org/prettierrc",
+  "plugins": [
+    "@trivago/prettier-plugin-sort-imports",
+    "prettier-plugin-tailwindcss"
+  ],
   "semi": true,
   "singleQuote": false,
-  "printWidth": 160,
-  "importOrder": ["^(jquery(\\/.*)?|owl\\.carousel(\\/.*)?)$", "<THIRD_PARTY_MODULES>", "^@/components/(.*)$", "^@/(.*)$", "^src/(.*)$", "^[./]"],
+  "printWidth": 120,
+  "tabWidth": 2,
+  "trailingComma": "all",
+  "arrowParens": "always",
+  "bracketSpacing": true,
+  "endOfLine": "lf",
+
+  "importOrder": [
+    "^jquery(\\/.*)?$",
+    "^(bootstrap(\\/.*)?|owl\\.carousel(\\/.*)?)$",
+    "<THIRD_PARTY_MODULES>",
+    "^@/components/(.*)$",
+    "^@/(.*)$",
+    "^src/(.*)$",
+    "^[./]",
+    ".*\\.(css|scss|sass|less|styl)$"
+  ],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
-  "overrides": [
-    {
-      "files": ["src/main.ts"],
-      "options": {
-        "importOrder": [
-          "^jquery(\\/.*)?$",
-          "^(bootstrap(\\/.*)?|owl\\.carousel(\\/.*)?)$",
-          "<THIRD_PARTY_MODULES>",
-          "^@/components/(.*)$",
-          "^@/(.*)$",
-          "^src/(.*)$",
-          "^[./]"
-        ]
-      }
-    }
-  ]
+  "importOrderCaseInsensitive": true,
+  "importOrderParserPlugins": ["typescript", "jsx", "decorators-legacy"],
+  "importOrderSideEffects": false
 }

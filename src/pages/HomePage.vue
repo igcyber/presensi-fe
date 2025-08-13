@@ -10,11 +10,13 @@
           <div class="col-lg-6">
             <h1 class="hero-title">Selamat Datang di Portal Kabupaten Kutai Kartanegara</h1>
             <p class="hero-subtitle">
-              Portal resmi Pemerintah Kabupaten Kutai Kartanegara yang menyediakan informasi lengkap tentang selayang pandang, pemerintahan, media, dan berita
-              terkini.
+              Portal resmi Pemerintah Kabupaten Kutai Kartanegara yang menyediakan informasi lengkap tentang selayang
+              pandang, pemerintahan, media, dan berita terkini.
             </p>
             <div class="hero-buttons">
-              <router-link to="/selayang-pandang/sejarah" class="btn btn-primary btn-lg"> Selayang Pandang </router-link>
+              <router-link to="/selayang-pandang/sejarah" class="btn btn-primary btn-lg">
+                Selayang Pandang
+              </router-link>
               <router-link to="/berita" class="btn btn-outline-primary btn-lg"> Berita Terkini </router-link>
             </div>
           </div>
@@ -57,7 +59,9 @@
               </div>
               <h3>Pemerintahan</h3>
               <p>Informasi struktur dan program pemerintah</p>
-              <router-link to="/pemerintahan/struktur-organisasi" class="btn btn-sm btn-outline-primary"> Lihat Struktur </router-link>
+              <router-link to="/pemerintahan/struktur-organisasi" class="btn btn-sm btn-outline-primary">
+                Lihat Struktur
+              </router-link>
             </div>
           </div>
           <div class="col-md-3 col-sm-6 mb-4">
@@ -67,7 +71,9 @@
               </div>
               <h3>PPID</h3>
               <p>Pejabat Pengelola Informasi dan Dokumentasi</p>
-              <a href="https://ppid.kukarkab.go.id/" target="_blank" class="btn btn-sm btn-outline-primary"> Kunjungi PPID </a>
+              <a href="https://ppid.kukarkab.go.id/" target="_blank" class="btn btn-sm btn-outline-primary">
+                Kunjungi PPID
+              </a>
             </div>
           </div>
         </div>
@@ -86,7 +92,9 @@
                 <div class="news-date">{{ formatters.date(news.date) }}</div>
                 <h3 class="news-title">{{ news.title }}</h3>
                 <p class="news-excerpt">{{ news.excerpt }}</p>
-                <router-link :to="`/berita/${news.slug}`" class="btn btn-sm btn-primary"> Baca Selengkapnya </router-link>
+                <router-link :to="`/berita/${news.slug}`" class="btn btn-sm btn-primary">
+                  Baca Selengkapnya
+                </router-link>
               </div>
             </div>
           </div>

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { usePortal } from "@/composables/usePortal";
-import { PORTAL_CONFIG, getTargetAttribute, hasSubmenu, isExternalLink } from "@/lib/config/portal";
+import { getTargetAttribute, hasSubmenu, isExternalLink, PORTAL_CONFIG } from "@/lib/config/portal";
 
 describe("Portal Configuration", () => {
   it("should have correct portal name", () => {
@@ -21,7 +21,9 @@ describe("Portal Configuration", () => {
   });
 
   it("should have external links configured", () => {
-    expect(PORTAL_CONFIG.menu.externalLinks).toContain("https://www.lapor.go.id/instansi/pemerintah-kabupaten-kutai-kartanegara");
+    expect(PORTAL_CONFIG.menu.externalLinks).toContain(
+      "https://www.lapor.go.id/instansi/pemerintah-kabupaten-kutai-kartanegara",
+    );
   });
 });
 

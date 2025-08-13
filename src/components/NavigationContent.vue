@@ -1,13 +1,15 @@
 <template>
   <div class="content">
     <template v-for="item in navigation" :key="item.path">
-      <RouterLink class="content-link" :class="{ active: isActive(item.path) }" :to="item.path">{{ item.title }}</RouterLink>
+      <RouterLink class="content-link" :class="{ active: isActive(item.path) }" :to="item.path">{{
+        item.title
+      }}</RouterLink>
     </template>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { type ComputedRef, computed } from "vue";
+import { computed, type ComputedRef } from "vue";
 import { RouterLink, useRoute } from "vue-router";
 
 import { type NavigationItem, useAppData } from "@/composables/useAppData";

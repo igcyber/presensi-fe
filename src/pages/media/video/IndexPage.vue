@@ -1,40 +1,40 @@
 <template>
   <div class="container-fluid navbreaker">
     <AppBreadcrumb />
-  </div>
 
-  <div class="row">
-    <div class="container frame2">
-      <div class="row">
-        <template v-if="videos.length > 0">
-          <div v-for="video in videos" :key="video.id" class="col-md-4">
-            <div class="post">
-              <div class="post-image-frame">
-                <iframe width="100%" height="100%" :src="video.link" :frameborder="0" allowfullscreen></iframe>
+    <div class="row">
+      <div class="frame2 container">
+        <div class="row">
+          <template v-if="videos.length > 0">
+            <div v-for="video in videos" :key="video.id" class="col-md-4">
+              <div class="post">
+                <div class="post-image-frame">
+                  <iframe width="100%" height="100%" :src="video.link" :frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="post-date-frame">
+                  <span class="post-date"><i class="bx bx-calendar"></i> {{ formatters.date(video.created_at) }}</span>
+                </div>
+                <a href="#" class="post-link">{{ video.judul }}</a>
+                <div class="post-text">Sumber : diskominfo</div>
+                <hr />
               </div>
-              <div class="post-date-frame">
-                <span class="post-date"><i class="bx bx-calendar"></i> {{ formatters.date(video.created_at) }}</span>
-              </div>
-              <a href="#" class="post-link">{{ video.judul }}</a>
-              <div class="post-text">Sumber : diskominfo</div>
-              <hr />
             </div>
-          </div>
-        </template>
-        <template v-else>
+          </template>
+          <template v-else>
+            <div class="col-md-12">
+              <div class="alert alert-warning">Data kosong</div>
+            </div>
+          </template>
           <div class="col-md-12">
-            <div class="alert alert-warning">Data kosong</div>
+            <BasePagination
+              :page="currentPage"
+              :totalPages="totalPages"
+              :itemsPerPage="itemsPerPage"
+              :totalItems="totalItems"
+              @previousPage="prevPage"
+              @nextPage="nextPage"
+            />
           </div>
-        </template>
-        <div class="col-md-12">
-          <BasePagination
-            :page="currentPage"
-            :totalPages="totalPages"
-            :itemsPerPage="itemsPerPage"
-            :totalItems="totalItems"
-            @previousPage="prevPage"
-            @nextPage="nextPage"
-          />
         </div>
       </div>
     </div>
