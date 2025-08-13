@@ -1,4 +1,4 @@
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 
 // Interfaces
 interface ContactInfo {
@@ -215,12 +215,6 @@ const fetchAllAppData = async () => {
     isLoading.value = false;
   }
 };
-
-// Lifecycle
-onMounted(() => {
-  // Fetch initial data
-  fetchAllAppData();
-});
 
 // Return composable
 export function useAppData() {
