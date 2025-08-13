@@ -58,20 +58,26 @@ const videos = ref([
   {
     id: 1,
     judul: "Video Pembangunan Infrastruktur Kukar",
-    link: "https://www.youtube.com/embed/2JDD50bZIHI",
+    link: "https://www.youtube-nocookie.com/embed/2JDD50bZIHI",
     created_at: new Date("2024-01-15"),
   },
   {
     id: 2,
     judul: "Video Program UMKM Kukar",
-    link: "https://www.youtube.com/embed/dnR6t99WJW0",
+    link: "https://www.youtube-nocookie.com/embed/2JDD50bZIHI",
     created_at: new Date("2024-01-12"),
   },
   {
     id: 3,
     judul: "TUTORIAL PENDAFTARAN BEASISWA KUKAR IDAMAN",
-    link: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    link: "https://www.youtube-nocookie.com/embed/2JDD50bZIHI",
     created_at: new Date("2024-01-10"),
+  },
+  {
+    id: 4,
+    judul: "Video Program UMKM Kukar",
+    link: "https://www.youtube-nocookie.com/embed/2JDD50bZIHI",
+    created_at: new Date("2024-01-12"),
   },
 ]);
 

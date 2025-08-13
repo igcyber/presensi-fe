@@ -37,16 +37,15 @@
                   </tr>
                 </tbody>
               </table>
-
-              <BasePagination
-                :page="currentPage"
-                :totalPages="totalPages"
-                :itemsPerPage="itemsPerPage"
-                :totalItems="totalItems"
-                @previousPage="prevPage"
-                @nextPage="nextPage"
-              />
             </div>
+            <BasePagination
+              :page="currentPage"
+              :totalPages="totalPages"
+              :itemsPerPage="itemsPerPage"
+              :totalItems="totalItems"
+              @previousPage="prevPage"
+              @nextPage="nextPage"
+            />
           </template>
         </SelayangPandang>
       </div>

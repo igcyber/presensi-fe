@@ -488,7 +488,6 @@ hr {
 
 /* ===== POST STYLES ===== */
 .post {
-  margin-bottom: 20px;
   padding-top: 20px;
   overflow: hidden;
 }
@@ -622,7 +621,6 @@ hr {
   text-align: justify;
   font-family: "Roboto", sans-serif !important;
   overflow: hidden;
-  height: 70px;
 }
 
 .post-detail .post-text {
