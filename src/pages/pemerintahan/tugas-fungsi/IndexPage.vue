@@ -1,8 +1,3 @@
-<script setup lang="ts">
-import SelayangPandang from "@/components/SelayangPandang.vue";
-import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
-</script>
-
 <template>
   <div class="container-fluid navbreaker">
     <AppBreadcrumb />
@@ -14,3 +9,8 @@ import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import SelayangPandang from "@/components/SelayangPandang.vue";
+import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
+</script>

@@ -99,9 +99,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-import { useFormatters } from "@/composables/useFormatters";
+import { AppBreadcrumb } from "@/components/layout";
 
-import { AppBreadcrumb } from "../components/layout";
+import { useFormatters } from "@/composables/useFormatters";
 
 const formatters = useFormatters();
 

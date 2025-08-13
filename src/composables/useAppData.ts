@@ -20,7 +20,7 @@ interface RelatedLink {
   website: string;
 }
 
-interface NavigationItem {
+export interface NavigationItem {
   title: string;
   path: string;
   children?: NavigationItem[];
@@ -98,6 +98,23 @@ const navigation = ref<NavigationItem[]>([
     path: "https://ppid.kukarkab.go.id/",
     external: true,
   },
+]);
+
+const selayangPandangNavigation = ref<NavigationItem[]>([
+  { title: "Sejarah Kukar", path: "/selayang-pandang/sejarah" },
+  { title: "Kependudukan", path: "/selayang-pandang/kependudukan" },
+  { title: "Potensi Daerah", path: "/selayang-pandang/potensi-daerah" },
+  { title: "Prestasi dan Penghargaan", path: "/selayang-pandang/prestasi-dan-penghargaan" },
+]);
+
+const pemerintahanNavigation = ref<NavigationItem[]>([
+  { title: "Tugas dan Fungsi", path: "/pemerintahan/tugas-dan-fungsi" },
+  { title: "Struktur Organisasi", path: "/pemerintahan/struktur-organisasi" },
+  { title: "Visi Misi Kukar", path: "/pemerintahan/visi-misi" },
+  { title: "Strategi Daerah", path: "/pemerintahan/strategi" },
+  { title: "Program Strategis", path: "/pemerintahan/program-strategis" },
+  { title: "Bupati Kukar Sepanjang Masa", path: "/pemerintahan/bupati" },
+  { title: "Transparansi Keuangan", path: "/pemerintahan/transparansi-keuangan" },
 ]);
 
 const isLoading = ref(false);
@@ -213,6 +230,8 @@ export function useAppData() {
     footerInfo,
     relatedLinks,
     navigation,
+    selayangPandangNavigation,
+    pemerintahanNavigation,
     isLoading,
     error,
 

@@ -1,12 +1,3 @@
-<script setup lang="ts">
-import { RouterLink } from "vue-router";
-
-import { usePortal } from "@/composables/usePortal";
-
-// Menggunakan composable
-const { menus, menuActive, openSubMenu, hasOpenSubMenu, toggleSubMenu, closeSubMenu } = usePortal();
-</script>
-
 <template>
   <!-- Main Portal container -->
   <div class="portal-container" :class="{ 'overflow-hidden': hasOpenSubMenu }">
@@ -97,6 +88,15 @@ const { menus, menuActive, openSubMenu, hasOpenSubMenu, toggleSubMenu, closeSubM
   </video>
   <!-- /bg-video -->
 </template>
+
+<script setup lang="ts">
+import { RouterLink } from "vue-router";
+
+import { usePortal } from "@/composables/usePortal";
+
+// Menggunakan composable
+const { menus, menuActive, openSubMenu, hasOpenSubMenu, toggleSubMenu, closeSubMenu } = usePortal();
+</script>
 
 <style scoped>
 /* ========================================= */

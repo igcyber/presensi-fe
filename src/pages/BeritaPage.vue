@@ -130,9 +130,9 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 
-import { useFormatters } from "@/composables/useFormatters";
+import { AppBreadcrumb, AppLoading } from "@/components/layout";
 
-import { AppBreadcrumb, AppLoading } from "../components/layout";
+import { useFormatters } from "@/composables/useFormatters";
 
 const formatters = useFormatters();
 

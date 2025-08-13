@@ -1,25 +1,13 @@
-<script setup lang="ts">
-import BeritaSide from "@/components/BeritaSide.vue";
-import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
-</script>
-
 <template>
   <div class="container-fluid navbreaker">
     <AppBreadcrumb />
 
     <div class="row">
       <div class="container frame2">
-        <div class="row">
-          <div class="col-md-8">
-            <div class="detail-image-frame">
-              <img src="/dummy.jpg" class="detail-image" />
-            </div>
-            <div class="headingtext">
-              <span class="headingtext-title"> Prestasi dan Penghargaan </span>
-              <i class="bx bx-dots-horizontal-rounded detail-divider"></i>
-            </div>
-            <div class="detail-text">
-              <table class="table table-responsive">
+        <SelayangPandang title="PRESTASI DAN PENGHARGAAN PEMERINTAH KABUPATEN KUTAI KARTANEGARA">
+          <template #content>
+            <div class="table-responsive mt-4">
+              <table class="table table-striped">
                 <thead>
                   <tr>
                     <th>No</th>
@@ -49,20 +37,52 @@ import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
                   </tr>
                 </tbody>
               </table>
-            </div>
-            <div class="content">
-              <a class="content-link active">Sejarah Kukar</a>
-              <a class="content-link">Kependudukan</a>
-              <a class="content-link">Potensi Daerah</a>
-              <a class="content-link">Prestasi dan Penghargaan</a>
-            </div>
-          </div>
 
-          <div class="col-md-4">
-            <BeritaSide />
-          </div>
-        </div>
+              <BasePagination
+                :page="currentPage"
+                :totalPages="totalPages"
+                :itemsPerPage="itemsPerPage"
+                :totalItems="totalItems"
+                @previousPage="prevPage"
+                @nextPage="nextPage"
+              />
+            </div>
+          </template>
+        </SelayangPandang>
       </div>
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import { onMounted } from "vue";
+
+import BasePagination from "@/components/BasePagination.vue";
+import SelayangPandang from "@/components/SelayangPandang.vue";
+import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
+
+import { usePagination } from "@/composables/usePagination";
+
+const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
+
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value -= 1;
+  }
+};
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value += 1;
+  }
+};
+
+onMounted(() => {
+  setPagination({
+    currentPage: 1,
+    totalPages: 5,
+    totalItems: 100,
+    itemsPerPage: 10,
+  });
+});
+</script>

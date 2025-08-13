@@ -1,9 +1,10 @@
 import AppLayout from "@/components/layout/AppLayout.vue";
 
-import BupatiPage from "@/pages/pemerintahan/bupati/IndexPage.vue";
+import BupatiPage from "@/pages/pemerintahan/bupati-kukar/IndexPage.vue";
 import ProgramStrategisPage from "@/pages/pemerintahan/program-strategis/IndexPage.vue";
 import StrategiPage from "@/pages/pemerintahan/strategi/IndexPage.vue";
 import StrukturOrganisasiPage from "@/pages/pemerintahan/struktur-organisasi/IndexPage.vue";
+import TransparansiKeuanganPage from "@/pages/pemerintahan/transparansi-keuangan/IndexPage.vue";
 import TugasDanFungsiPage from "@/pages/pemerintahan/tugas-fungsi/IndexPage.vue";
 import VisiMisiPage from "@/pages/pemerintahan/visi-misi/IndexPage.vue";
 
@@ -63,6 +64,15 @@ export default {
       meta: {
         title: "Bupati",
         breadcrumb: "Bupati Daerah",
+      },
+    },
+    {
+      path: "transparansi-keuangan",
+      name: "pemerintahan.transparansi-keuangan",
+      component: TransparansiKeuanganPage,
+      meta: {
+        title: "Transparansi Keuangan",
+        breadcrumb: "Transparansi Keuangan",
       },
     },
   ],

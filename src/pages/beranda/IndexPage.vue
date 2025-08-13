@@ -277,16 +277,18 @@
                       <img class="bupati-image" :src="opd.foto" />
                     </div>
                     <div class="bupati-content-frame">
-                      <a :href="`/unit-kerja/opd/${opd.id}/${opd.nama.replace(/[\\s/]+/g, '-')}`" class="bupati-name">{{ opd.nama }}</a>
+                      <a href="#" class="bupati-name">{{ opd.nama }}</a>
                       <table>
-                        <tr>
-                          <td style="vertical-align: text-top"><i class="bx bx-globe bupati-icon"></i></td>
-                          <td class="bupati-textgrey">{{ opd.website }}</td>
-                        </tr>
-                        <tr>
-                          <td style="vertical-align: text-top"><i class="bx bx-map bupati-icon"></i></td>
-                          <td class="bupati-textgrey">{{ opd.alamat }}</td>
-                        </tr>
+                        <tbody>
+                          <tr>
+                            <td style="vertical-align: text-top"><i class="bx bx-globe bupati-icon"></i></td>
+                            <td class="bupati-textgrey">{{ opd.website }}</td>
+                          </tr>
+                          <tr>
+                            <td style="vertical-align: text-top"><i class="bx bx-map bupati-icon"></i></td>
+                            <td class="bupati-textgrey">{{ opd.alamat }}</td>
+                          </tr>
+                        </tbody>
                       </table>
                     </div>
                   </div>

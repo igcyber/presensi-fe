@@ -1,8 +1,8 @@
 import AppLayout from "@/components/layout/AppLayout.vue";
 
 import KependudukanPage from "@/pages/selayang-pandang/kependudukan/IndexPage.vue";
-import PotensiDaerahPage from "@/pages/selayang-pandang/potensi/IndexPage.vue";
-import PrestasiPage from "@/pages/selayang-pandang/prestasi/IndexPage.vue";
+import PotensiDaerahPage from "@/pages/selayang-pandang/potensi-daerah/IndexPage.vue";
+import PrestasiPage from "@/pages/selayang-pandang/prestasi-penghargaan/IndexPage.vue";
 import SejarahPage from "@/pages/selayang-pandang/sejarah/IndexPage.vue";
 
 export default {

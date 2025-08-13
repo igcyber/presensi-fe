@@ -1,19 +1,3 @@
-<script setup lang="ts">
-import BeritaSide from "@/components/BeritaSide.vue";
-
-const props = withDefaults(
-  defineProps<{
-    title?: string;
-    image?: string;
-    content?: string;
-  }>(),
-  {
-    image: "/dummy.jpg",
-    title: "SEKILAS SEJARAH KAB. KUTAI KARTANEGARA",
-  },
-);
-</script>
-
 <template>
   <div class="row">
     <div class="col-md-8">
@@ -59,13 +43,10 @@ const props = withDefaults(
             Tahun 2002 tentang "Perubahan Nama Kabupaten Kutai Menjadi Kabupaten Kutai Kartanegara".
           </p>
         </article>
+
+        <slot name="content" />
       </div>
-      <div class="content">
-        <a class="content-link active">Sejarah Kukar</a>
-        <a class="content-link">Kependudukan</a>
-        <a class="content-link">Potensi Daerah</a>
-        <a class="content-link">Prestasi dan Penghargaan</a>
-      </div>
+      <NavigationContent />
     </div>
 
     <div class="col-md-4">
@@ -73,3 +54,20 @@ const props = withDefaults(
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import BeritaSide from "@/components/BeritaSide.vue";
+import NavigationContent from "@/components/NavigationContent.vue";
+
+const props = withDefaults(
+  defineProps<{
+    title?: string;
+    image?: string;
+    content?: string;
+  }>(),
+  {
+    image: "/dummy.jpg",
+    title: "SEKILAS SEJARAH KAB. KUTAI KARTANEGARA",
+  },
+);
+</script>
