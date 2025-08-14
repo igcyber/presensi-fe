@@ -644,6 +644,8 @@ hr {
   height: 100px;
   width: 100px;
   background-color: #0d35558c;
+  box-sizing: border-box;
+  border: 2px solid transparent;
 }
 
 .layanan.layanan--dark {
@@ -657,6 +659,7 @@ hr {
 
 .layanan:hover {
   border: 2px solid rgba(206, 206, 206, 0.144);
+  box-sizing: border-box;
 }
 
 .layanan-icon {
@@ -673,6 +676,23 @@ hr {
   height: 55px;
   overflow: hidden;
   margin-bottom: 20px;
+}
+
+.layanan-icon-frame {
+  width: 80px;
+  height: 80px;
+  background: white;
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.layanan-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .layanan--dark .layanan-title {
@@ -871,6 +891,20 @@ hr {
 .slider-image:hover .slider-video:hover {
   cursor: pointer;
   filter: grayscale(0);
+}
+
+.slider-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* ===== PAGER STYLES ===== */

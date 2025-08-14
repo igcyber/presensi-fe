@@ -101,23 +101,21 @@
               <span class="headingtext-title"><b>Berita</b> Kabupaten</span>
             </div>
             <div class="row">
-              <template v-if="berita1.length">
-                <div v-for="beritas1 in berita1" :key="beritas1.id" class="col-md-6">
+              <template v-if="news.length">
+                <div v-for="berita in news" :key="berita.id" class="col-md-6">
                   <div class="post">
                     <div class="post-image-frame">
-                      <img :src="beritas1.foto" class="post-image" />
+                      <img :src="`https://kukarkab.go.id/uploads/beritas/${berita.foto}`" class="post-image" />
                     </div>
-                    <a
-                      :href="`/berita/${beritas1.id}/${beritas1.judul.replace(/[\\s/]+/g, '-')}`"
-                      class="post-link mt-2"
-                      >{{ beritas1.judul }}</a
-                    >
+                    <a :href="`/berita/${berita.id}/${berita.judul.replace(/[\\s/]+/g, '-')}`" class="post-link mt-2">{{
+                      berita.judul
+                    }}</a>
                     <div class="post-date-frame">
                       <span class="post-date"
-                        ><i class="bx bx-calendar"></i> {{ formatters.date(beritas1.created_at) }}</span
+                        ><i class="bx bx-calendar"></i> {{ formatters.date(berita.createdAt) }}</span
                       >
                     </div>
-                    <div class="post-text">{{ beritas1.isi }}</div>
+                    <div class="post-text" v-html="berita.isi.split(' ').slice(0, 17).join(' ') + '...'"></div>
                   </div>
                 </div>
               </template>
@@ -125,12 +123,12 @@
                 <div class="col-md-12">Data kosong</div>
               </template>
 
-              <div v-if="beritaHasItems" class="col-md-12 mb-md-0 mb-5">
+              <div v-if="news.length > 1" class="col-md-12 mb-md-0 mb-5">
                 <hr />
                 <br />
-                <a href="/berita?page=2" class="btn btn-success"
+                <RouterLink :to="{ name: 'berita.index' }" class="btn btn-success"
                   >Lihat lebih banyak <i class="bx bx-chevron-right"></i
-                ></a>
+                ></RouterLink>
               </div>
             </div>
           </div>
@@ -160,13 +158,13 @@
           <div :ref="setCarouselRef as VNodeRef" class="owl-carousel owl-theme baner slider">
             <div v-for="(bannerItem, idx) in banners" :key="idx" class="info">
               <div class="info-image-frame">
-                <img :src="bannerItem.foto" class="info-image" />
+                <img :src="`https://kukarkab.go.id/uploads/banners/${bannerItem.foto}`" class="info-image" />
                 <div class="info-content">
                   <a :href="bannerItem.foto" target="_blank" data-lightbox="banner" class="doc-link">{{
                     bannerItem.nama
                   }}</a>
                   <span class="info-date"
-                    ><i class="bx bx-calendar"></i> {{ formatters.date(bannerItem.created_at) }}</span
+                    ><i class="bx bx-calendar"></i> {{ formatters.date(bannerItem.createdAt) }}</span
                   >
                 </div>
               </div>
@@ -188,6 +186,7 @@
                     :data-video-id="youtubeInfo(video.link).id"
                     :data-embed-url="youtubeInfo(video.link).embedUrl"
                     style="cursor: pointer; position: relative"
+                    @click="openVideoModal(youtubeInfo(video.link).embedUrl)"
                   >
                     <img
                       :src="youtubeInfo(video.link).thumb"
@@ -195,21 +194,7 @@
                       class="slider-video"
                       style="width: 100%; height: 100%; object-fit: cover"
                     />
-                    <div
-                      style="
-                        position: absolute;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%);
-                        background: rgba(0, 0, 0, 0.5);
-                        border-radius: 50%;
-                        width: 60px;
-                        height: 60px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                      "
-                    >
+                    <div class="slider-play">
                       <i class="bx bx-play-circle" style="font-size: 3rem; color: white"></i>
                     </div>
                   </div>
@@ -232,9 +217,9 @@
     <div class="row frame frame--bg" style="padding-bottom: 50px">
       <div class="container">
         <div class="headingtext headingtext--white">
-          <span class="headingtext-title b-20"
-            ><b><i class="bx bx-check-circle"></i> Layanan</b> Publik ({{ layanans.length }})</span
-          >
+          <span class="headingtext-title b-20">
+            <b><i class="bx bx-check-circle"></i> Layanan</b> Publik ({{ layanans.length }})
+          </span>
         </div>
       </div>
       <div class="container">
@@ -243,7 +228,7 @@
             <div class="layanan layanan-light">
               <a :href="layanan.alamat" target="_blank">
                 <div class="layanan-icon-frame">
-                  <img :src="layanan.logo" class="layanan-icon" />
+                  <img :src="`https://kukarkab.go.id/uploads/${layanan.logo}`" class="layanan-icon" />
                 </div>
               </a>
             </div>
@@ -268,7 +253,7 @@
             <div class="layanan layanan-light">
               <a :href="sistem.alamat" target="_blank">
                 <div class="layanan-icon-frame">
-                  <img :src="sistem.logo" class="layanan-icon" />
+                  <img :src="`https://kukarkab.go.id/uploads/${sistem.logo}`" class="layanan-icon" />
                 </div>
               </a>
             </div>
@@ -299,7 +284,7 @@
                 <div :ref="setCarouselRef as VNodeRef" class="owl-carousel owl-theme opd-owl">
                   <div v-for="opd in opds" :key="opd.id" class="bupati bupati--opd">
                     <div class="bupati-image-frame">
-                      <img class="bupati-image" :src="opd.foto" />
+                      <img class="bupati-image" :src="`https://kukarkab.go.id/uploads/${opd.foto}`" />
                     </div>
                     <div class="bupati-content-frame">
                       <a href="#" class="bupati-name">{{ opd.nama }}</a>
@@ -324,20 +309,45 @@
         </div>
       </div>
     </div>
+
+    <!-- Video Modal -->
+    <div
+      id="videoModal"
+      class="modal fade"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="videoModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="videoModalLabel">Video</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div id="videoContainer"></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { VNodeRef } from "vue";
-import { computed, nextTick, onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
+import { nextTick, onMounted, ref } from "vue";
+import { RouterLink, useRouter } from "vue-router";
 
 import { useFormatters } from "@/composables/useFormatters";
+import { getBeranda } from "@/lib/api/beranda";
 
 type EmergencyItem = { icon: string; nama: string; isi: string };
-type BeritaItem = { id: number; judul: string; foto: string; created_at: Date; isi: string };
-type BannerInfoItem = { foto: string; nama: string; created_at: Date };
-type VideoItem = { link: string };
+type newsItem = { id: number; judul: string; foto: string; createdAt: Date; isi: string };
+type BannerInfoItem = { foto: string; nama: string; createdAt: Date };
+type VideoItem = { id: number; judul: string; link: string; createdAt: Date; isi: string };
 type LayananItem = { logo: string; alamat: string; nama: string };
 type SistemItem = { logo: string; alamat: string; nama: string };
 type OpdItem = { id: number; nama: string; foto: string; website: string; alamat: string };
@@ -345,112 +355,19 @@ type OpdItem = { id: number; nama: string; foto: string; website: string; alamat
 const router = useRouter();
 const formatters = useFormatters();
 
-// Dummy Data (banner icon tidak digunakan untuk saat ini)
+const emergencies = ref<EmergencyItem[]>([]);
 
-const emergencies = ref<EmergencyItem[]>([
-  { icon: "clinic", nama: "RS.Parikesit", isi: "0541662387" },
-  { icon: "shield", nama: "Polres Kukar", isi: "081214061874" },
-  { icon: "water", nama: "Pemadam Kebakaran", isi: "085255637728" },
-  { icon: "shield-alt", nama: "Satpol PP Kukar", isi: "081214061874" },
-]);
+const news = ref<newsItem[]>([]);
 
-const berita1 = ref<BeritaItem[]>([
-  {
-    id: 1,
-    judul: "Pembangunan Infrastruktur Jalan di Kukar",
-    foto: "/dummy.jpg",
-    created_at: new Date("2024-01-15"),
-    isi: "Pemerintah Kabupaten Kutai Kartanegara terus berkomitmen...",
-  },
-  {
-    id: 2,
-    judul: "Program Pemberdayaan UMKM Kukar",
-    foto: "/dummy.jpg",
-    created_at: new Date("2024-01-12"),
-    isi: "Program baru untuk meningkatkan kapasitas UMKM...",
-  },
-  {
-    id: 3,
-    judul: "Prestasi Tim Olahraga Kukar di prapon",
-    foto: "/dummy.jpg",
-    created_at: new Date("2024-01-10"),
-    isi: "Tim olahraga Kukar meraih prestasi gemilang...",
-  },
-  {
-    id: 4,
-    judul: "Peluncuran Program Digitalisasi Desa",
-    foto: "/dummy.jpg",
-    created_at: new Date("2024-01-08"),
-    isi: "Meningkatkan akses teknologi di pedesaan...",
-  },
-]);
+const banners = ref<BannerInfoItem[]>([]);
 
-const banners = ref<BannerInfoItem[]>([
-  { foto: "/banner-breadcrumb.png", nama: "Infografis 1", created_at: new Date("2024-01-05") },
-  { foto: "/banner-breadcrumb.png", nama: "Infografis 2", created_at: new Date("2024-01-03") },
-  { foto: "/banner-breadcrumb.png", nama: "Infografis 3", created_at: new Date("2024-01-03") },
-  { foto: "/banner-breadcrumb.png", nama: "Infografis 4", created_at: new Date("2024-01-03") },
-  { foto: "/banner-breadcrumb.png", nama: "Infografis 5", created_at: new Date("2024-01-03") },
-]);
+const videos = ref<VideoItem[]>([]);
 
-const videos = ref<VideoItem[]>([
-  { link: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" },
-  { link: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" },
-  { link: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" },
-  { link: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" },
-  { link: "/portal-video.webm" },
-]);
+const layanans = ref<LayananItem[]>([]);
 
-const layanans = ref<LayananItem[]>([
-  { logo: "/icon/ppid.png", alamat: "https://example.com/ppid", nama: "PPID" },
-  { logo: "/icon/opd.png", alamat: "https://example.com/opd", nama: "OPD" },
-  { logo: "/icon/layanan.png", alamat: "https://example.com/layanan", nama: "Layanan" },
-  { logo: "/icon/pengaduan.png", alamat: "https://example.com/pengaduan", nama: "Pengaduan" },
-]);
+const sistems = ref<SistemItem[]>([]);
 
-const sistems = ref<SistemItem[]>([
-  { logo: "/icon/pengaduan.png", alamat: "https://example.com/sistem-a", nama: "Sistem A" },
-  { logo: "/icon/opd.png", alamat: "https://example.com/sistem-b", nama: "Sistem B" },
-  { logo: "/icon/layanan.png", alamat: "https://example.com/sistem-c", nama: "Sistem C" },
-]);
-
-const opds = ref<OpdItem[]>([
-  {
-    id: 1,
-    nama: "Dinas A",
-    foto: "/dummy.jpg",
-    website: "https://dinas-a.kukar.go.id",
-    alamat: "Jl. Mawar No. 1, Tenggarong",
-  },
-  {
-    id: 2,
-    nama: "Dinas B",
-    foto: "/dummy.jpg",
-    website: "https://dinas-b.kukar.go.id",
-    alamat: "Jl. Melati No. 2, Tenggarong",
-  },
-  {
-    id: 3,
-    nama: "Dinas C",
-    foto: "/dummy.jpg",
-    website: "https://dinas-c.kukar.go.id",
-    alamat: "Jl. Anggrek No. 3, Tenggarong",
-  },
-  {
-    id: 4,
-    nama: "Dinas D",
-    foto: "/dummy.jpg",
-    website: "https://dinas-d.kukar.go.id",
-    alamat: "Jl. Anggrek No. 3, Tenggarong",
-  },
-  {
-    id: 5,
-    nama: "Dinas E",
-    foto: "/dummy.jpg",
-    website: "https://dinas-e.kukar.go.id",
-    alamat: "Jl. Anggrek No. 3, Tenggarong",
-  },
-]);
+const opds = ref<OpdItem[]>([]);
 
 // Form Pencarian
 const keyword = ref<string>("");
@@ -476,10 +393,51 @@ function youtubeInfo(link: string) {
     embedUrl = `https://www.youtube.com/embed/${id}?autoplay=1`;
     thumb = `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
   }
+
   return { id, embedUrl, thumb };
 }
 
-const beritaHasItems = computed(() => berita1.value.length >= 1);
+const openVideoModal = (embedUrl: string) => {
+  const modalElement = document.getElementById("videoModal") as HTMLDivElement;
+  const videoContainer = document.getElementById("videoContainer") as HTMLDivElement;
+
+  if (videoContainer && modalElement && (window as any).$) {
+    // Clear previous content
+    videoContainer.innerHTML = "";
+
+    // Create iframe with responsive styling
+    videoContainer.innerHTML = `<iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width: 100%; height: 400px; aspect-ratio: 16/9;"></iframe>`;
+
+    // Use jQuery to show modal (Bootstrap 4)
+    const $modal = (window as any).$(modalElement);
+
+    // Add event listener for modal close (only once)
+    $modal.off("hidden.bs.modal.videoModal").on("hidden.bs.modal.videoModal", () => {
+      // Stop video when modal is closed
+      videoContainer.innerHTML = "";
+    });
+
+    $modal.modal("show");
+  }
+};
+
+// Fetch beranda
+const fetchBeranda = async () => {
+  try {
+    const response = await getBeranda();
+    const responseData = response.data;
+
+    emergencies.value = responseData.emergencies;
+    news.value = responseData.berita;
+    banners.value = responseData.banners;
+    videos.value = responseData.videos;
+    layanans.value = responseData.layanans;
+    sistems.value = responseData.sistems;
+    opds.value = responseData.opds;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 const carouselRef = ref<HTMLElement[]>([]);
 
@@ -488,8 +446,9 @@ const setCarouselRef = (el: HTMLElement | null) => {
   carouselRef.value.push(el);
 };
 
-onMounted(async () => {
+const initialCarousel = async () => {
   await nextTick();
+
   if (!(window as any).jQuery?.fn?.owlCarousel) {
     try {
       await import("owl.carousel");
@@ -511,6 +470,12 @@ onMounted(async () => {
       responsive: { 0: { items: 1 }, 640: { items: 2 }, 1024: { items: 3 } },
     });
   });
+};
+
+onMounted(async () => {
+  await fetchBeranda();
+
+  await initialCarousel();
 });
 </script>
 
