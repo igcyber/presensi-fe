@@ -9,13 +9,13 @@ import "lightbox2/dist/css/lightbox.min.css";
 import { createPinia } from "pinia";
 import { createApp } from "vue";
 
-import App from "./App.vue";
-import router from "./router";
+import App from "@/App.vue";
+import router from "@/router";
 
-import "./styles/icons.css";
-import "./styles/reset.css";
-import "./styles/style.css";
-import "./styles/variables.css";
+import "@/styles/icons.css";
+import "@/styles/reset.css";
+import "@/styles/style.css";
+import "@/styles/variables.css";
 
 // Set jQuery globally FIRST
 (window as any).$ = (window as any).jQuery = $;

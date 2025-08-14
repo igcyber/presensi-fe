@@ -1,5 +1,5 @@
 // Konfigurasi Portal Kabupaten Kutai Kartanegara
-import { ENV_CONFIG } from "./environment";
+import { ENV_CONFIG } from "@/lib/config/environment";
 
 export const PORTAL_CONFIG = {
   // Informasi dasar portal

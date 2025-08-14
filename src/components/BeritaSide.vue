@@ -30,7 +30,9 @@
               {{ formatters.date(post.created_at) }}
             </span>
           </div>
-          <a :href="`/berita/${post.id}/${slugifyForUrl(post.judul)}`" class="post-link">{{ post.judul }}</a>
+          <router-link :to="`/berita/${post.id}/${slugifyForUrl(post.judul)}`" class="post-link">{{
+            post.judul
+          }}</router-link>
           <hr />
         </div>
       </div>

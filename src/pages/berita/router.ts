@@ -1,10 +1,31 @@
-import IndexPage from "./IndexPage.vue";
+import AppLayout from "@/components/layout/AppLayout.vue";
 
-export default {
-  path: "/berita",
-  name: "berita.index",
-  component: IndexPage,
-  meta: {
-    title: "Berita",
+import BeritaDetailPage from "@/pages/berita/DetailPage.vue";
+import BeritaPage from "@/pages/berita/IndexPage.vue";
+
+export default [
+  {
+    path: "/berita",
+    component: AppLayout,
+    children: [
+      {
+        path: "",
+        name: "berita.index",
+        component: BeritaPage,
+        meta: {
+          title: "Berita",
+          breadcrumb: "Berita",
+        },
+      },
+      {
+        path: ":id/:slug?",
+        name: "berita.detail",
+        component: BeritaDetailPage,
+        meta: {
+          title: "Detail Berita",
+          breadcrumb: "Detail Berita",
+        },
+      },
+    ],
   },
-};
+];

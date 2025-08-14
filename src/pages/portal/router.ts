@@ -1,9 +1,9 @@
-import IndexPage from "./IndexPage.vue";
+import PortalPage from "@/pages/portal/IndexPage.vue";
 
 export default {
   path: "/",
   name: "portal.index",
-  component: IndexPage,
+  component: PortalPage,
   meta: {
     title: "Portal",
   },
