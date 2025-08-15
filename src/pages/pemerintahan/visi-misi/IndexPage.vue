@@ -54,18 +54,19 @@ import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
 import SelayangPandang from "@/components/SelayangPandang.vue";
 
 import useFetch from "@/composables/useFetch";
-import { getVisiMisi, type VisiMisiResponse } from "@/lib/api/pemerintahan";
+import { getVisiMisi, type VisiMisiData, type VisiMisiResponse } from "@/lib/api/pemerintahan";
 
-const { data, isLoading, fetchData, isError, error } = useFetch<VisiMisiResponse>(getVisiMisi, {
+const { data, isLoading, fetchData, isError, error } = useFetch<VisiMisiResponse, VisiMisiData>(getVisiMisi, {
   immediate: false,
+  extractData: (response) => response.data,
 });
 
 const visi = computed(() => {
-  return data.value?.data?.visi;
+  return data.value?.visi;
 });
 
 const misi = computed(() => {
-  return data.value?.data?.misi;
+  return data.value?.misi;
 });
 
 onMounted(async () => {

@@ -30,13 +30,13 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(item, index) in data?.data.prestasis" :key="item.id">
+                    <tr v-for="(item, index) in data?.prestasis" :key="item.id">
                       <td>{{ index + 1 + (currentPage - 1) * itemsPerPage }}.</td>
                       <td>{{ item.tahun }}</td>
                       <td>{{ item.nama }}</td>
                       <td v-html="item.keterangan"></td>
                     </tr>
-                    <tr v-if="data?.data.prestasis?.length === 0">
+                    <tr v-if="data?.prestasis?.length === 0">
                       <td colspan="4" class="text-center">Belum ada data prestasi</td>
                     </tr>
                   </tbody>
@@ -73,7 +73,7 @@ import useFetch from "@/composables/useFetch";
 import { usePagination } from "@/composables/usePagination";
 import {
   getPrestasiPenghargaan,
-  type PrestasiPenghargaanData,
+  type PrestasiPenghargaanDataPlayload,
   type PrestasiPenghargaanResponse,
 } from "@/lib/api/selayang-pandang";
 
@@ -83,19 +83,20 @@ const STICKY_HEADER_OFFSET = 200;
 // Composables
 const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
 
-const { data, isLoading, fetchData, isError, error } = useFetch<PrestasiPenghargaanResponse>(
-  () => getPrestasiPenghargaan(currentPage.value),
-  {
-    immediate: false,
-  },
-);
+const { data, isLoading, fetchData, isError, error } = useFetch<
+  PrestasiPenghargaanResponse,
+  PrestasiPenghargaanDataPlayload
+>(() => getPrestasiPenghargaan(currentPage.value), {
+  immediate: false,
+  extractData: (response) => response.data,
+});
 
 // Refs
 const tableTarget = ref<HTMLElement | null>(null);
 
 // Computed
 const contentData = computed(() => {
-  return data.value?.data.data as unknown as PrestasiPenghargaanData;
+  return data.value?.data;
 });
 
 // Methods
@@ -133,10 +134,10 @@ onMounted(async () => {
   await fetchData();
 
   setPagination({
-    currentPage: data.value?.data.meta?.current_page || 1,
-    totalPages: data.value?.data.meta?.last_page || 1,
-    totalItems: data.value?.data.meta?.total || 0,
-    itemsPerPage: data.value?.data.meta?.per_page || 10,
+    currentPage: data.value?.meta?.current_page || 1,
+    totalPages: data.value?.meta?.last_page || 1,
+    totalItems: data.value?.meta?.total || 0,
+    itemsPerPage: data.value?.meta?.per_page || 10,
   });
 });
 </script>

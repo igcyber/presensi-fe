@@ -1,4 +1,4 @@
-import { type ApiResponse, type ContentData, type PlayloadData } from "@/lib/api/apiResponse";
+import { type ApiResponse, type ContentData, type PaginationMeta, type PlayloadData } from "@/lib/api/apiResponse";
 import httpInstance from "@/lib/api/httpInstance";
 
 export type SejarahData = ContentData;
@@ -19,6 +19,7 @@ export interface Prestasi {
 export type PrestasiPenghargaanDataPlayload<P = Prestasi> = {
   data: ContentData;
   prestasis?: P[];
+  meta?: PaginationMeta;
 };
 
 export type SejarahResponse = ApiResponse<PlayloadData<SejarahData>>;
