@@ -590,3 +590,22 @@ export function isEmpty(value: any): boolean {
 
   return false;
 }
+
+/**
+ * Check if current path is active (starts with given path)
+ * @param currentPath - Current route path
+ * @param targetPath - Target path to check against
+ * @returns Boolean indicating if path is active
+ *
+ * @example
+ * isActive('/users/profile', '/users') // true
+ * isActive('/admin/dashboard', '/users') // false
+ * isActive('/home', '/home') // true
+ */
+export function isActivePath(currentPath: string, targetPath: string): boolean {
+  if (!currentPath || !targetPath) {
+    return false;
+  }
+
+  return currentPath.startsWith(targetPath);
+}

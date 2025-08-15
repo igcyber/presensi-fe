@@ -19,7 +19,7 @@
             :image="`https://kukarkab.go.id/uploads/${contentData.foto}`"
           >
             <template #content>
-              <div ref="tableTarget" class="table-responsive">
+              <div ref="tableTarget" class="table-responsive" style="margin-top: -15px">
                 <table class="table-striped table">
                   <thead>
                     <tr>

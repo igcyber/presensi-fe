@@ -12,6 +12,7 @@ import {
   formatRelativeDate,
   formatStatus,
   formatTime,
+  isActivePath,
   isEmpty,
   maskEmail,
   safeGet,
@@ -54,5 +55,8 @@ export function useFormatters() {
     // Utilities
     safeGet,
     isEmpty,
+
+    // Path formatters
+    isActivePath,
   };
 }

@@ -1,9 +1,12 @@
 <template>
   <div class="content">
     <template v-for="item in navigation" :key="item.path">
-      <RouterLink class="content-link" :class="{ active: isActive(item.path) }" :to="item.path">{{
-        item.title
-      }}</RouterLink>
+      <RouterLink
+        class="content-link cursor-pointer"
+        :class="{ active: isActivePath(route.path, item.path) }"
+        :to="item.path"
+        >{{ item.title }}</RouterLink
+      >
     </template>
   </div>
 </template>
@@ -13,6 +16,7 @@ import { computed, type ComputedRef } from "vue";
 import { RouterLink, useRoute } from "vue-router";
 
 import { type NavigationItem, useAppData } from "@/composables/useAppData";
+import { isActivePath } from "@/lib/utils/formatters";
 
 const { selayangPandangNavigation, pemerintahanNavigation } = useAppData();
 
@@ -27,8 +31,4 @@ const navigation: ComputedRef<NavigationItem[]> = computed(() => {
     return pemerintahanNavigation.value;
   }
 });
-
-const isActive = (path: string) => {
-  return useRoute().path === path;
-};
 </script>

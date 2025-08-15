@@ -1,25 +1,10 @@
+import { type ApiResponse, type ContentData, type PlayloadData } from "@/lib/api/apiResponse";
 import httpInstance from "@/lib/api/httpInstance";
-
-export interface ContentData {
-  id: number;
-  nama: string;
-  isi: string;
-  slug: string;
-  foto: string;
-  createdAt: string;
-  updatedAt: string;
-}
 
 export type SejarahData = ContentData;
 export type KependudukanData = ContentData;
 export type PotensiDaerahData = ContentData;
 export type PrestasiPenghargaanData = ContentData;
-
-export interface PageMeta {
-  pagers: string[];
-  position: string;
-  pagetitle: string;
-}
 
 export interface Prestasi {
   id: number;
@@ -31,16 +16,15 @@ export interface Prestasi {
   updatedAt: string;
 }
 
-export type ApiResponse<T, M = PageMeta, P = Prestasi> = {
-  status?: string;
-  data: { data: T } & M;
+export type PrestasiPenghargaanDataPlayload<P = Prestasi> = {
+  data: ContentData;
   prestasis?: P[];
 };
 
-export type SejarahResponse = ApiResponse<SejarahData>;
-export type KependudukanResponse = ApiResponse<KependudukanData>;
-export type PotensiDaerahResponse = ApiResponse<PotensiDaerahData>;
-export type PrestasiPenghargaanResponse = ApiResponse<PrestasiPenghargaanData, PageMeta, Prestasi>;
+export type SejarahResponse = ApiResponse<PlayloadData<SejarahData>>;
+export type KependudukanResponse = ApiResponse<PlayloadData<KependudukanData>>;
+export type PotensiDaerahResponse = ApiResponse<PlayloadData<PotensiDaerahData>>;
+export type PrestasiPenghargaanResponse = ApiResponse<PrestasiPenghargaanDataPlayload<Prestasi>>;
 
 export const getSejarah = async (): Promise<SejarahResponse> => {
   const response = await httpInstance.get<SejarahResponse>(`/selayang-pandang/sejarah`);

@@ -39,7 +39,7 @@
               <router-link
                 v-if="!item.children && !item.external"
                 class="nav-item nav-link"
-                :class="{ active: isActive(item.path) }"
+                :class="{ active: isActivePath(route.path, item.path) }"
                 :to="item.path"
               >
                 {{ item.title }}
@@ -60,7 +60,7 @@
               <li v-else class="nav-item dropdown">
                 <a
                   class="nav-link dropdown-toggle"
-                  :class="{ active: isActive(item.path) }"
+                  :class="{ active: isActivePath(route.path, item.path) }"
                   href="#"
                   :id="`navbarDropdown-${idx}`"
                   role="button"
@@ -75,7 +75,7 @@
                     v-for="(child, cIdx) in item.children"
                     :key="cIdx"
                     class="dropdown-item"
-                    :class="{ active: isActive(child.path) }"
+                    :class="{ active: isActivePath(route.path, child.path) }"
                     :to="child.path"
                   >
                     {{ child.title }}
@@ -96,6 +96,7 @@ import { useRoute } from "vue-router";
 
 // Import composable
 import { useAppData } from "@/composables/useAppData";
+import { isActivePath } from "@/lib/utils/formatters";
 
 // Get contact info from composable
 const { contactInfo, navigation } = useAppData();
@@ -111,10 +112,6 @@ watch(
     collapseNavbar.value?.classList.remove("show");
   },
 );
-
-const isActive = (path: string) => {
-  return route.path.startsWith(path);
-};
 
 // Scroll effect for top navigation
 const handleScroll = () => {
