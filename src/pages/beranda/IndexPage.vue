@@ -160,9 +160,13 @@
               <div class="info-image-frame">
                 <img :src="`https://kukarkab.go.id/uploads/banners/${bannerItem.foto}`" class="info-image" />
                 <div class="info-content">
-                  <a :href="bannerItem.foto" target="_blank" data-lightbox="banner" class="doc-link">{{
-                    bannerItem.nama
-                  }}</a>
+                  <a
+                    :href="`https://kukarkab.go.id/uploads/banners/${bannerItem.foto}`"
+                    target="_blank"
+                    data-lightbox="banner"
+                    class="doc-link"
+                    >{{ bannerItem.nama }}</a
+                  >
                   <span class="info-date"
                     ><i class="bx bx-calendar"></i> {{ formatters.date(bannerItem.createdAt) }}</span
                   >

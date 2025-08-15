@@ -38,7 +38,7 @@ if (lightboxModule && lightboxModule.default && typeof lightboxModule.default.op
     resizeDuration: 200,
     wrapAround: true,
     disableScrolling: true,
-    positionFromTop: 230,
+    positionFromTop: 150,
     centerVertically: true,
   });
   lightboxConfigured = true;
