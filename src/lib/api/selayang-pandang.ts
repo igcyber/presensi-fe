@@ -41,7 +41,12 @@ export const getPotensiDaerah = async (): Promise<PotensiDaerahResponse> => {
   return response.data;
 };
 
-export const getPrestasiPenghargaan = async (): Promise<PrestasiPenghargaanResponse> => {
-  const response = await httpInstance.get<PrestasiPenghargaanResponse>(`/selayang-pandang/prestasi-dan-penghargaan`);
+export const getPrestasiPenghargaan = async (page: number): Promise<PrestasiPenghargaanResponse> => {
+  const response = await httpInstance.get<PrestasiPenghargaanResponse>(`/selayang-pandang/prestasi-dan-penghargaan`, {
+    params: {
+      page,
+    },
+  });
+
   return response.data;
 };

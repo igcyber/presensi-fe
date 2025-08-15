@@ -33,7 +33,7 @@ export default function useFetch<TResponse, TData = TResponse>(
         data.value = options.extractData(response);
       } else {
         // Default behavior: assume response has nested data structure
-        data.value = (response as any)?.data || (response as TData);
+        data.value = response as TData;
       }
     } catch (e) {
       error.value = e instanceof Error ? e : new Error(String(e));

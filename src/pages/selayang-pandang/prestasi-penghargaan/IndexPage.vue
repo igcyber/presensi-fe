@@ -30,13 +30,13 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(item, index) in prestasi" :key="item.id">
+                    <tr v-for="(item, index) in data?.data.prestasis" :key="item.id">
                       <td>{{ index + 1 + (currentPage - 1) * itemsPerPage }}.</td>
                       <td>{{ item.tahun }}</td>
                       <td>{{ item.nama }}</td>
                       <td v-html="item.keterangan"></td>
                     </tr>
-                    <tr v-if="prestasi.length === 0">
+                    <tr v-if="data?.data.prestasis?.length === 0">
                       <td colspan="4" class="text-center">Belum ada data prestasi</td>
                     </tr>
                   </tbody>
@@ -63,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 
 import BasePagination from "@/components/BasePagination.vue";
 import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
@@ -73,20 +73,32 @@ import useFetch from "@/composables/useFetch";
 import { usePagination } from "@/composables/usePagination";
 import {
   getPrestasiPenghargaan,
-  type Prestasi,
   type PrestasiPenghargaanData,
   type PrestasiPenghargaanResponse,
 } from "@/lib/api/selayang-pandang";
 
-const { data, isLoading, fetchData, isError, error } = useFetch<PrestasiPenghargaanResponse>(getPrestasiPenghargaan, {
-  immediate: false,
-});
-
-const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
-
-const tableTarget = ref<HTMLElement | null>(null);
+// Constants
 const STICKY_HEADER_OFFSET = 200;
 
+// Composables
+const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
+
+const { data, isLoading, fetchData, isError, error } = useFetch<PrestasiPenghargaanResponse>(
+  () => getPrestasiPenghargaan(currentPage.value),
+  {
+    immediate: false,
+  },
+);
+
+// Refs
+const tableTarget = ref<HTMLElement | null>(null);
+
+// Computed
+const contentData = computed(() => {
+  return data.value?.data.data as unknown as PrestasiPenghargaanData;
+});
+
+// Methods
 const scrollToTable = () => {
   if (tableTarget.value) {
     const y = tableTarget.value.getBoundingClientRect().top + window.scrollY - STICKY_HEADER_OFFSET;
@@ -98,49 +110,33 @@ const prevPage = () => {
   if (currentPage.value > 1) {
     currentPage.value -= 1;
   }
-
-  scrollToTable();
 };
 
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {
     currentPage.value += 1;
   }
-
-  scrollToTable();
 };
 
 const onPage = (page: number) => {
   currentPage.value = page;
-
-  scrollToTable();
 };
 
-const contentData = computed(() => {
-  return data.value?.data as unknown as PrestasiPenghargaanData;
+// Watchers
+watch(currentPage, () => {
+  fetchData();
+  scrollToTable();
 });
 
-const totalDatas = computed(() => {
-  return data.value?.prestasis?.length || 0;
-});
-
-const prestasi = computed((): Prestasi[] => {
-  return (
-    data.value?.prestasis?.slice(
-      (currentPage.value - 1) * itemsPerPage.value,
-      currentPage.value * itemsPerPage.value,
-    ) || []
-  );
-});
-
+// Lifecycle
 onMounted(async () => {
   await fetchData();
 
   setPagination({
-    currentPage: 1,
-    totalPages: Math.ceil(totalDatas.value / 10),
-    totalItems: totalDatas.value,
-    itemsPerPage: 10,
+    currentPage: data.value?.data.meta?.current_page || 1,
+    totalPages: data.value?.data.meta?.last_page || 1,
+    totalItems: data.value?.data.meta?.total || 0,
+    itemsPerPage: data.value?.data.meta?.per_page || 10,
   });
 });
 </script>
