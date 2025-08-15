@@ -4,63 +4,82 @@
 
     <div class="row">
       <div class="frame2 container">
-        <SelayangPandang title="PRESTASI DAN PENGHARGAAN PEMERINTAH KABUPATEN KUTAI KARTANEGARA">
-          <template #content>
-            <div class="table-responsive mt-4">
-              <table class="table-striped table">
-                <thead>
-                  <tr>
-                    <th>No</th>
-                    <th>Tahun</th>
-                    <th>Nama</th>
-                    <th>Keterangan</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>1.</td>
-                    <td>2024</td>
-                    <td>Piala Presiden</td>
-                    <td>Kabupaten Kutai Kartanegara memenangkan Piala Presiden dalam ajang lomba nasional.</td>
-                  </tr>
-                  <tr>
-                    <td>2.</td>
-                    <td>2024</td>
-                    <td>Piala Presiden</td>
-                    <td>Kabupaten Kutai Kartanegara memenangkan Piala Presiden dalam ajang lomba nasional.</td>
-                  </tr>
-                  <tr>
-                    <td>3.</td>
-                    <td>2024</td>
-                    <td>Piala Presiden</td>
-                    <td>Kabupaten Kutai Kartanegara memenangkan Piala Presiden dalam ajang lomba nasional.</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <BasePagination
-              :page="currentPage"
-              :totalPages="totalPages"
-              :itemsPerPage="itemsPerPage"
-              :totalItems="totalItems"
-              @previousPage="prevPage"
-              @nextPage="nextPage"
-            />
-          </template>
-        </SelayangPandang>
+        <div v-if="isLoading" class="text-center">
+          <div class="spinner-border" role="status"></div>
+        </div>
+        <div v-else-if="isError" class="alert alert-danger">
+          <h4>Error</h4>
+          <p>{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
+          <button class="btn btn-primary" @click="fetchData">Coba Lagi</button>
+        </div>
+        <div v-else-if="contentData">
+          <SelayangPandang
+            :title="contentData.slug"
+            :content="contentData.isi"
+            :image="`https://kukarkab.go.id/uploads/${contentData.foto}`"
+          >
+            <template #content>
+              <div class="table-responsive">
+                <table class="table-striped table">
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Tahun</th>
+                      <th>Nama</th>
+                      <th>Keterangan</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(item, index) in prestasi" :key="item.id">
+                      <td>{{ index + 1 }}.</td>
+                      <td>{{ item.tahun }}</td>
+                      <td>{{ item.nama }}</td>
+                      <td>{{ item.keterangan }}</td>
+                    </tr>
+                    <tr v-if="prestasi.length === 0">
+                      <td colspan="4" class="text-center">Belum ada data prestasi</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <BasePagination
+                :page="currentPage"
+                :totalPages="totalPages"
+                :itemsPerPage="itemsPerPage"
+                :totalItems="totalItems"
+                @previousPage="prevPage"
+                @nextPage="nextPage"
+              />
+            </template>
+          </SelayangPandang>
+        </div>
+        <div v-else class="alert alert-warning">
+          <p>Data tidak ditemukan</p>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { computed, onMounted } from "vue";
 
 import BasePagination from "@/components/BasePagination.vue";
 import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
 import SelayangPandang from "@/components/SelayangPandang.vue";
 
+import useFetch from "@/composables/useFetch";
 import { usePagination } from "@/composables/usePagination";
+import {
+  getPrestasiPenghargaan,
+  type Prestasi,
+  type PrestasiPenghargaanData,
+  type PrestasiPenghargaanResponse,
+} from "@/lib/api/selayang-pandang";
+
+const { data, isLoading, fetchData, isError, error } = useFetch<PrestasiPenghargaanResponse>(getPrestasiPenghargaan, {
+  immediate: false,
+});
 
 const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
 
@@ -76,7 +95,17 @@ const nextPage = () => {
   }
 };
 
-onMounted(() => {
+const contentData = computed(() => {
+  return data.value?.data as unknown as PrestasiPenghargaanData;
+});
+
+const prestasi = computed((): Prestasi[] => {
+  return data.value?.prestasis || [];
+});
+
+onMounted(async () => {
+  await fetchData();
+
   setPagination({
     currentPage: 1,
     totalPages: 5,
