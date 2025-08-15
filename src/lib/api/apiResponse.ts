@@ -1,3 +1,10 @@
+// Base API Response interface
+export type ApiResponse<T, M = PageMeta> = {
+  status?: string;
+  data: T & M;
+};
+
+// Content data structure
 export interface ContentData {
   id: number;
   nama: string;
@@ -8,10 +15,12 @@ export interface ContentData {
   updatedAt: string;
 }
 
+// Generic payload wrapper
 export type PlayloadData<T> = {
   data: T;
 };
 
+// Pagination related interfaces
 export interface PaginationLinks {
   first: string | null;
   last: string | null;
@@ -34,6 +43,7 @@ export interface PaginationResponse {
   meta: PaginationMeta;
 }
 
+// Page metadata interface
 export interface PageMeta {
   links?: PaginationLinks;
   meta?: PaginationMeta;
@@ -41,8 +51,3 @@ export interface PageMeta {
   position: string;
   pagetitle: string;
 }
-
-export type ApiResponse<T, M = PageMeta> = {
-  status?: string;
-  data: T & M;
-};
