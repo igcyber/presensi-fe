@@ -1,18 +1,19 @@
 <template>
   <div class="row">
     <div class="col-md-8">
-      <div v-if="props.image.split('/')[props.image.split('/').length - 1] != 'nopict.jpg'" class="detail-image-frame">
-        <img :src="props.image" class="detail-image" />
+      <div v-if="image.split('/')[image.split('/').length - 1] != 'nopict.jpg'" class="detail-image-frame">
+        <img :src="image" class="detail-image" />
       </div>
       <div class="headingtext">
-        <span class="headingtext-title"> {{ props.title }} </span>
+        <span class="headingtext-title"> {{ title }} </span>
         <i class="bx bx-dots-horizontal-rounded detail-divider"></i>
       </div>
       <div class="detail-text">
-        <article v-html="props.content"></article>
+        <article v-html="content"></article>
 
         <slot name="content" />
       </div>
+      <slot name="other" />
       <NavigationContent />
     </div>
 
@@ -26,7 +27,7 @@
 import BeritaSide from "@/components/BeritaSide.vue";
 import NavigationContent from "@/components/NavigationContent.vue";
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     title: string;
     image: string;

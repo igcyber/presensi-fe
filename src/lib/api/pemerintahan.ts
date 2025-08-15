@@ -30,7 +30,7 @@ export type BupatiDataPlayload<P = Bupati> = {
 
 export type TugasFungsiResponse = ApiResponse<PlayloadData<TugasFungsiData>>;
 export type StrukturOrganisasiResponse = ApiResponse<PlayloadData<StrukturOrganisasiData>>;
-export type PotensiDaerahResponse = ApiResponse<PotensiDaerahData>;
+export type VisiMisiResponse = ApiResponse<VisiMisiData>;
 export type StrategiDaerahResponse = ApiResponse<PlayloadData<StrategiDaerahData>>;
 export type ProgramStrategisResponse = ApiResponse<PlayloadData<ProgramStrategisData>>;
 export type BupatiResponse = ApiResponse<BupatiDataPlayload<Bupati>>;
@@ -45,8 +45,8 @@ export const getStrukturOrganisasi = async (): Promise<StrukturOrganisasiRespons
   return response.data;
 };
 
-export const getPotensiDaerah = async (): Promise<PotensiDaerahResponse> => {
-  const response = await httpInstance.get<PotensiDaerahResponse>(`/selayang-pandang/potensi-daerah`);
+export const getVisiMisi = async (): Promise<VisiMisiResponse> => {
+  const response = await httpInstance.get<VisiMisiResponse>(`/pemerintahan/visimisi`);
   return response.data;
 };
 
