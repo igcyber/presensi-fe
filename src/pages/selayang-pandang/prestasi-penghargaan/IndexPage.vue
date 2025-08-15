@@ -49,6 +49,7 @@
                 :totalItems="totalItems"
                 @previousPage="prevPage"
                 @nextPage="nextPage"
+                @page="onPage"
               />
             </template>
           </SelayangPandang>
@@ -95,12 +96,25 @@ const nextPage = () => {
   }
 };
 
+const onPage = (page: number) => {
+  currentPage.value = page;
+};
+
 const contentData = computed(() => {
   return data.value?.data as unknown as PrestasiPenghargaanData;
 });
 
+const totalDatas = computed(() => {
+  return data.value?.prestasis?.length || 0;
+});
+
 const prestasi = computed((): Prestasi[] => {
-  return data.value?.prestasis || [];
+  return (
+    data.value?.prestasis?.slice(
+      (currentPage.value - 1) * itemsPerPage.value,
+      currentPage.value * itemsPerPage.value,
+    ) || []
+  );
 });
 
 onMounted(async () => {
@@ -108,8 +122,8 @@ onMounted(async () => {
 
   setPagination({
     currentPage: 1,
-    totalPages: 5,
-    totalItems: 100,
+    totalPages: Math.ceil(totalDatas.value / 10),
+    totalItems: totalDatas.value,
     itemsPerPage: 10,
   });
 });

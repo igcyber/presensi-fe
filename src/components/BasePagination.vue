@@ -13,7 +13,7 @@
           <span class="page-link">{{ page }}</span>
         </li>
         <li v-else class="page-item">
-          <a class="page-link" :href="`#page=${page}`">{{ page }}</a>
+          <button class="page-link" @click="onPage(page)">{{ page }}</button>
         </li>
       </template>
 
@@ -35,9 +35,14 @@ interface Props {
   totalPages: number;
 }
 
-const props = withDefaults(defineProps<Props>(), {});
+const props = withDefaults(defineProps<Props>(), {
+  page: 1,
+  itemsPerPage: 10,
+  totalItems: 0,
+  totalPages: 1,
+});
 
-const emit = defineEmits(["previousPage", "nextPage"]);
+const emit = defineEmits(["previousPage", "nextPage", "page"]);
 
 const onPreviousPage = () => {
   emit("previousPage");
@@ -45,5 +50,9 @@ const onPreviousPage = () => {
 
 const onNextPage = () => {
   emit("nextPage");
+};
+
+const onPage = (page: number) => {
+  emit("page", page);
 };
 </script>
