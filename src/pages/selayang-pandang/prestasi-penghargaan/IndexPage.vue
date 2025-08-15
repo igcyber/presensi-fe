@@ -19,7 +19,7 @@
             :image="`https://kukarkab.go.id/uploads/${contentData.foto}`"
           >
             <template #content>
-              <div class="table-responsive">
+              <div ref="tableTarget" class="table-responsive">
                 <table class="table-striped table">
                   <thead>
                     <tr>
@@ -31,10 +31,10 @@
                   </thead>
                   <tbody>
                     <tr v-for="(item, index) in prestasi" :key="item.id">
-                      <td>{{ index + 1 }}.</td>
+                      <td>{{ index + 1 + (currentPage - 1) * itemsPerPage }}.</td>
                       <td>{{ item.tahun }}</td>
                       <td>{{ item.nama }}</td>
-                      <td>{{ item.keterangan }}</td>
+                      <td v-html="item.keterangan"></td>
                     </tr>
                     <tr v-if="prestasi.length === 0">
                       <td colspan="4" class="text-center">Belum ada data prestasi</td>
@@ -63,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 import BasePagination from "@/components/BasePagination.vue";
 import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
@@ -84,20 +84,36 @@ const { data, isLoading, fetchData, isError, error } = useFetch<PrestasiPengharg
 
 const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
 
+const tableTarget = ref<HTMLElement | null>(null);
+const STICKY_HEADER_OFFSET = 200;
+
+const scrollToTable = () => {
+  if (tableTarget.value) {
+    const y = tableTarget.value.getBoundingClientRect().top + window.scrollY - STICKY_HEADER_OFFSET;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  }
+};
+
 const prevPage = () => {
   if (currentPage.value > 1) {
     currentPage.value -= 1;
   }
+
+  scrollToTable();
 };
 
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {
     currentPage.value += 1;
   }
+
+  scrollToTable();
 };
 
 const onPage = (page: number) => {
   currentPage.value = page;
+
+  scrollToTable();
 };
 
 const contentData = computed(() => {

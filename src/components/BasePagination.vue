@@ -5,7 +5,7 @@
         <span class="page-link" aria-hidden="true">&lsaquo;</span>
       </li>
       <li v-else class="page-item">
-        <a class="page-link" @click="onPreviousPage" rel="prev" aria-label="Previous">&lsaquo;</a>
+        <button class="page-link" @click="onPreviousPage" rel="prev" aria-label="Previous">&lsaquo;</button>
       </li>
 
       <template v-for="(page, index) in props.totalPages" :key="index">
@@ -18,7 +18,7 @@
       </template>
 
       <li v-if="props.page < props.totalPages" class="page-item">
-        <a class="page-link" @click="onNextPage" rel="next" aria-label="Next">&rsaquo;</a>
+        <button class="page-link" @click="onNextPage" rel="next" aria-label="Next">&rsaquo;</button>
       </li>
       <li v-else class="page-item disabled" aria-disabled="true" aria-label="Next">
         <span class="page-link" aria-hidden="true">&rsaquo;</span>
