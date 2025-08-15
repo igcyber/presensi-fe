@@ -13,7 +13,9 @@
 
         <slot name="content" />
       </div>
+
       <slot name="other" />
+
       <NavigationContent />
     </div>
 

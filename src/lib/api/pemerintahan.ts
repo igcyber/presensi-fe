@@ -51,12 +51,12 @@ export const getVisiMisi = async (): Promise<VisiMisiResponse> => {
 };
 
 export const getStrategiDaerah = async (): Promise<StrategiDaerahResponse> => {
-  const response = await httpInstance.get<StrategiDaerahResponse>(`/pemerintahan/strategi-daerah`);
+  const response = await httpInstance.get<StrategiDaerahResponse>(`/pemerintahan/strategi`);
   return response.data;
 };
 
 export const getProgramStrategis = async (): Promise<ProgramStrategisResponse> => {
-  const response = await httpInstance.get<ProgramStrategisResponse>(`/pemerintahan/program-strategis`);
+  const response = await httpInstance.get<ProgramStrategisResponse>(`/pemerintahan/program`);
   return response.data;
 };
 
