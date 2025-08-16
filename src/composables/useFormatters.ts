@@ -5,6 +5,7 @@ import {
   formatDate,
   formatDetailName,
   formatFileSize,
+  formatMonthName,
   formatName,
   formatNumber,
   formatPercentage,
@@ -33,6 +34,7 @@ export function useFormatters() {
     date: formatDate,
     time: formatTime,
     relativeDate: formatRelativeDate,
+    monthName: formatMonthName,
 
     // Status formatters
     status: formatStatus,

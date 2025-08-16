@@ -218,6 +218,29 @@ export function formatTime(date: string | Date | null | undefined, locale: strin
 }
 
 /**
+ * Get month name from month number
+ * @param monthNumber - Nomor bulan (1-12)
+ * @param locale - Locale untuk formatting
+ * @returns Nama bulan
+ *
+ * @example
+ * formatMonthName(1) // "Januari"
+ * formatMonthName(12) // "Desember"
+ */
+export function formatMonthName(monthNumber: number | null | undefined, locale: string = "id-ID"): string {
+  if (!monthNumber || monthNumber < 1 || monthNumber > 12) {
+    return "-";
+  }
+
+  // Create a date object with the specified month
+  const date = new Date(2024, monthNumber - 1, 1);
+
+  return new Intl.DateTimeFormat(locale, {
+    month: "long",
+  }).format(date);
+}
+
+/**
  * 📊 STATUS FORMATTERS
  * Helper functions untuk format status
  */
