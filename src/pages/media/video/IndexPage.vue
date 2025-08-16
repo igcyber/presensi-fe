@@ -38,7 +38,7 @@
             <div class="alert alert-warning">Data kosong</div>
           </div>
         </template>
-        <div class="col-md-12" v-if="!isLoading && !isError">
+        <div v-if="!isLoading && !isError" class="col-md-12">
           <BasePagination
             :page="currentPage"
             :totalPages="totalPages"

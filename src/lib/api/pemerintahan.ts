@@ -7,6 +7,7 @@ export type PotensiDaerahData = ContentData;
 export type StrategiDaerahData = ContentData;
 export type ProgramStrategisData = ContentData;
 export type BupatiData = ContentData;
+
 export type VisiMisiData = {
   visi: ContentData;
   misi: ContentData;

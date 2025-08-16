@@ -1,7 +1,6 @@
 import type { ApiResponse, PaginationMeta } from "./apiResponse";
 import httpInstance from "./httpInstance";
 
-// Video data interface
 export interface VideoData {
   id: number;
   judul: string;
@@ -11,17 +10,39 @@ export interface VideoData {
   updatedAt: string;
 }
 
+export interface DokumenData {
+  id: number;
+  nama: string;
+  file: string;
+  isi?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export type VideoDataPlayload<P = VideoData> = {
   videos: P[];
   meta?: PaginationMeta;
 };
 
-// Video API response interface
-export type VideoResponse = ApiResponse<VideoDataPlayload<VideoData>>;
+export type DokumenDataPlayload<P = DokumenData> = {
+  dokumens: P[];
+  meta?: PaginationMeta;
+};
 
-// API function to get videos
+export type VideoResponse = ApiResponse<VideoDataPlayload<VideoData>>;
+export type DokumenResponse = ApiResponse<DokumenDataPlayload<DokumenData>>;
+
 export const getVideos = async (page: number = 1): Promise<VideoResponse> => {
   const response = await httpInstance.get<VideoResponse>(`/media/video`, {
+    params: {
+      page,
+    },
+  });
+  return response.data;
+};
+
+export const getDokumens = async (page: number = 1): Promise<DokumenResponse> => {
+  const response = await httpInstance.get<DokumenResponse>(`/media/dokumen`, {
     params: {
       page,
     },
