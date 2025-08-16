@@ -184,16 +184,14 @@
           <div :ref="setCarouselRef as VNodeRef" class="owl-carousel owl-theme baner slider">
             <div v-for="(video, vIdx) in videos" :key="vIdx" class="info">
               <div class="info-video-frame">
-                <template v-if="youtubeInfo(video.link).id">
+                <template v-if="formatters.youtubeInfo(video.link).id">
                   <div
                     class="info-video-frame"
-                    :data-video-id="youtubeInfo(video.link).id"
-                    :data-embed-url="youtubeInfo(video.link).embedUrl"
                     style="cursor: pointer; position: relative"
-                    @click="openVideoModal(youtubeInfo(video.link).embedUrl)"
+                    @click="openVideoModal(formatters.youtubeInfo(video.link).embedUrl)"
                   >
                     <img
-                      :src="youtubeInfo(video.link).thumb"
+                      :src="formatters.youtubeInfo(video.link).thumb"
                       alt="Video Thumbnail"
                       class="slider-video"
                       style="width: 100%; height: 100%; object-fit: cover"
@@ -314,29 +312,7 @@
       </div>
     </div>
 
-    <!-- Video Modal -->
-    <div
-      id="videoModal"
-      class="modal fade"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="videoModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="videoModalLabel">Video</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div id="videoContainer"></div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <VideoModal ref="videoModalRef" />
   </div>
 </template>
 
@@ -344,6 +320,8 @@
 import type { VNodeRef } from "vue";
 import { nextTick, onMounted, ref } from "vue";
 import { RouterLink, useRouter } from "vue-router";
+
+import VideoModal from "@/components/VideoModal.vue";
 
 import { useFormatters } from "@/composables/useFormatters";
 import { getBeranda } from "@/lib/api/beranda";
@@ -380,49 +358,11 @@ function submitSearch() {
   router.push({ path: "/berita", query });
 }
 
-function youtubeInfo(link: string) {
-  const ytWatch = /youtube\.com\/watch\?v=([^&]+)/;
-  const ytShort = /youtu\.be\/([^?]+)/;
-  const ytEmbed = /youtube\.com\/embed\/([^?]+)/;
-  let id = "";
-  let embedUrl = "";
-  let thumb = "";
-  const m1 = link.match(ytWatch);
-  const m2 = link.match(ytShort);
-  const m3 = link.match(ytEmbed);
-  if (m1?.[1]) id = m1[1];
-  else if (m2?.[1]) id = m2[1];
-  else if (m3?.[1]) id = m3[1];
-  if (id) {
-    embedUrl = `https://www.youtube.com/embed/${id}?autoplay=1`;
-    thumb = `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
-  }
-
-  return { id, embedUrl, thumb };
-}
+// Video Modal (Bootstrap 4)
+const videoModalRef = ref<InstanceType<typeof VideoModal> | null>(null);
 
 const openVideoModal = (embedUrl: string) => {
-  const modalElement = document.getElementById("videoModal") as HTMLDivElement;
-  const videoContainer = document.getElementById("videoContainer") as HTMLDivElement;
-
-  if (videoContainer && modalElement && (window as any).$) {
-    // Clear previous content
-    videoContainer.innerHTML = "";
-
-    // Create iframe with responsive styling
-    videoContainer.innerHTML = `<iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width: 100%; height: 400px; aspect-ratio: 16/9;"></iframe>`;
-
-    // Use jQuery to show modal (Bootstrap 4)
-    const $modal = (window as any).$(modalElement);
-
-    // Add event listener for modal close (only once)
-    $modal.off("hidden.bs.modal.videoModal").on("hidden.bs.modal.videoModal", () => {
-      // Stop video when modal is closed
-      videoContainer.innerHTML = "";
-    });
-
-    $modal.modal("show");
-  }
+  videoModalRef.value?.open(embedUrl);
 };
 
 // Fetch beranda

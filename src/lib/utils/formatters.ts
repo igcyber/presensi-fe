@@ -632,3 +632,32 @@ export function isActivePath(currentPath: string, targetPath: string): boolean {
 
   return currentPath.startsWith(targetPath);
 }
+
+/**
+ * Format youtube link to embed url and thumbnail
+ * @param link - Youtube link
+ * @returns Object with id, embedUrl, and thumb
+ *
+ * @example
+ * youtubeInfo('https://www.youtube.com/watch?v=dQw4w9WgXcQ') // { id: 'dQw4w9WgXcQ', embedUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1', thumb: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg' }
+ */
+export function youtubeInfo(link: string) {
+  const ytWatch = /youtube\.com\/watch\?v=([^&]+)/;
+  const ytShort = /youtu\.be\/([^?]+)/;
+  const ytEmbed = /youtube\.com\/embed\/([^?]+)/;
+  let id = "";
+  let embedUrl = "";
+  let thumb = "";
+  const m1 = link.match(ytWatch);
+  const m2 = link.match(ytShort);
+  const m3 = link.match(ytEmbed);
+  if (m1?.[1]) id = m1[1];
+  else if (m2?.[1]) id = m2[1];
+  else if (m3?.[1]) id = m3[1];
+  if (id) {
+    embedUrl = `https://www.youtube.com/embed/${id}?autoplay=1`;
+    thumb = `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
+  }
+
+  return { id, embedUrl, thumb };
+}

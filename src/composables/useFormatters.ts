@@ -18,6 +18,7 @@ import {
   maskEmail,
   safeGet,
   truncateText,
+  youtubeInfo,
 } from "@/lib/utils/formatters";
 
 /**
@@ -60,5 +61,8 @@ export function useFormatters() {
 
     // Path formatters
     isActivePath,
+
+    // Youtube formatters
+    youtubeInfo,
   };
 }

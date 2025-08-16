@@ -22,7 +22,11 @@
                 <div class="post-date-frame">
                   <span class="post-date"><i class="bx bx-calendar"></i> {{ formatters.date(video.createdAt) }}</span>
                 </div>
-                <a href="#" class="post-link">{{ video.judul }}</a>
+
+                <a href="#" class="post-link" @click="openVideoModal(formatters.youtubeInfo(video.link).embedUrl)">{{
+                  video.judul
+                }}</a>
+
                 <div class="post-text">Sumber : {{ video.isi }}</div>
                 <hr />
               </div>
@@ -48,13 +52,16 @@
       </div>
     </div>
   </div>
+
+  <VideoModal ref="videoModalRef" />
 </template>
 
 <script lang="ts" setup>
-import { onMounted, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 
 import BasePagination from "@/components/BasePagination.vue";
 import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
+import VideoModal from "@/components/VideoModal.vue";
 
 import useFetch from "@/composables/useFetch";
 import { useFormatters } from "@/composables/useFormatters";
@@ -87,6 +94,13 @@ const nextPage = () => {
 
 const onPage = (page: number) => {
   currentPage.value = page;
+};
+
+// Video Modal
+const videoModalRef = ref<InstanceType<typeof VideoModal> | null>(null);
+
+const openVideoModal = (embedUrl: string) => {
+  videoModalRef.value?.open(embedUrl);
 };
 
 // Watchers
