@@ -1,4 +1,4 @@
-import { type ApiResponse, type ContentData, type PlayloadData } from "@/lib/api/apiResponse";
+import { type ApiResponse, type ContentData, type PaginationMeta, type PlayloadData } from "@/lib/api/apiResponse";
 import httpInstance from "@/lib/api/httpInstance";
 
 export type TugasFungsiData = ContentData;
@@ -23,9 +23,24 @@ export interface Bupati {
   updatedAt: string;
 }
 
+export interface TransparansiKeuangan {
+  id: number;
+  nama: string;
+  file: string;
+  keterangan: string;
+  tanggalPublikasi: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export type BupatiDataPlayload<P = Bupati> = {
   data: ContentData;
   bupati?: P[];
+};
+
+export type TransparansiKeuanganDataPlayload<P = TransparansiKeuangan> = {
+  dokumenkeuangans: P[];
+  meta?: PaginationMeta;
 };
 
 export type TugasFungsiResponse = ApiResponse<PlayloadData<TugasFungsiData>>;
@@ -34,6 +49,7 @@ export type VisiMisiResponse = ApiResponse<VisiMisiData>;
 export type StrategiDaerahResponse = ApiResponse<PlayloadData<StrategiDaerahData>>;
 export type ProgramStrategisResponse = ApiResponse<PlayloadData<ProgramStrategisData>>;
 export type BupatiResponse = ApiResponse<BupatiDataPlayload<Bupati>>;
+export type TransparansiKeuanganResponse = ApiResponse<TransparansiKeuanganDataPlayload<TransparansiKeuangan>>;
 
 export const getTugasFungsi = async (): Promise<TugasFungsiResponse> => {
   const response = await httpInstance.get<TugasFungsiResponse>(`/pemerintahan/tugas-dan-fungsi`);
@@ -62,5 +78,15 @@ export const getProgramStrategis = async (): Promise<ProgramStrategisResponse> =
 
 export const getBupati = async (): Promise<BupatiResponse> => {
   const response = await httpInstance.get<BupatiResponse>(`/pemerintahan/bupati`);
+  return response.data;
+};
+
+export const getTransparansiKeuangan = async (page: number): Promise<TransparansiKeuanganResponse> => {
+  const response = await httpInstance.get<TransparansiKeuanganResponse>(`/pemerintahan/transparansi-keuangan`, {
+    params: {
+      page,
+    },
+  });
+
   return response.data;
 };
