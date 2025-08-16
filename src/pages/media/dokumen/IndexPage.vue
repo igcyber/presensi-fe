@@ -23,10 +23,13 @@
                       <span class="doc-date">
                         <i class="bx bx-calendar"></i> {{ formatters.date(dokumen.createdAt) }}
                       </span>
-                      <a :href="`https://kukarkab.go.id/uploads/${dokumen.file}`" target="_blank" class="doc-link">{{
-                        dokumen.nama
-                      }}</a>
-                      <div class="doc-text">Sumber : {{ dokumen.isi }}</div>
+                      <a
+                        :href="`https://kukarkab.go.id/uploads/documents/${dokumen.file}`"
+                        target="_blank"
+                        class="doc-link"
+                        >{{ dokumen.nama }}</a
+                      >
+                      <div class="doc-text">Sumber : {{ dokumen.isi ?? "Diskominfo" }}</div>
                     </div>
                   </div>
                 </div>

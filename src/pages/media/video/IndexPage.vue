@@ -27,7 +27,7 @@
                   video.judul
                 }}</a>
 
-                <div class="post-text">Sumber : {{ video.isi }}</div>
+                <div class="post-text">Sumber : {{ video.isi ?? "Diskominfo" }}</div>
                 <hr />
               </div>
             </div>
