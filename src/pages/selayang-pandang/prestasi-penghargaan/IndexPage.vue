@@ -73,7 +73,7 @@ import useFetch from "@/composables/useFetch";
 import { usePagination } from "@/composables/usePagination";
 import {
   getPrestasiPenghargaan,
-  type PrestasiPenghargaanDataPlayload,
+  type PrestasiPenghargaanDataPayload,
   type PrestasiPenghargaanResponse,
 } from "@/lib/api/selayang-pandang";
 
@@ -85,7 +85,7 @@ const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = use
 
 const { data, isLoading, fetchData, isError, error } = useFetch<
   PrestasiPenghargaanResponse,
-  PrestasiPenghargaanDataPlayload
+  PrestasiPenghargaanDataPayload
 >(() => getPrestasiPenghargaan(currentPage.value), {
   immediate: false,
   extractData: (response) => response.data,

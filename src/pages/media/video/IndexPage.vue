@@ -66,13 +66,13 @@ import VideoModal from "@/components/VideoModal.vue";
 import useFetch from "@/composables/useFetch";
 import { useFormatters } from "@/composables/useFormatters";
 import { usePagination } from "@/composables/usePagination";
-import { getVideos, type VideoData, type VideoDataPlayload, type VideoResponse } from "@/lib/api/media";
+import { getVideos, type VideoListPayload, type VideoResponse } from "@/lib/api/media";
 
 const formatters = useFormatters();
 const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
 
 // Fetch videos data
-const { data, isLoading, error, isError, fetchData } = useFetch<VideoResponse, VideoDataPlayload<VideoData>>(
+const { data, isLoading, error, isError, fetchData } = useFetch<VideoResponse, VideoListPayload>(
   () => getVideos(currentPage.value),
   {
     immediate: false,

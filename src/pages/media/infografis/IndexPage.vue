@@ -65,24 +65,19 @@ import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
 import useFetch from "@/composables/useFetch";
 import { useFormatters } from "@/composables/useFormatters";
 import { usePagination } from "@/composables/usePagination";
-import {
-  getInfografis,
-  type InfografisData,
-  type InfografisDataPlayload,
-  type InfografisResponse,
-} from "@/lib/api/media";
+import { getInfografis, type InfografisListPayload, type InfografisResponse } from "@/lib/api/media";
 
 const formatters = useFormatters();
 const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
 
 // Fetch infografis data
-const { data, isLoading, error, isError, fetchData } = useFetch<
-  InfografisResponse,
-  InfografisDataPlayload<InfografisData>
->(() => getInfografis(currentPage.value), {
-  immediate: false,
-  extractData: (response) => response.data,
-});
+const { data, isLoading, error, isError, fetchData } = useFetch<InfografisResponse, InfografisListPayload>(
+  () => getInfografis(currentPage.value),
+  {
+    immediate: false,
+    extractData: (response) => response.data,
+  },
+);
 
 const prevPage = () => {
   if (currentPage.value > 1) {

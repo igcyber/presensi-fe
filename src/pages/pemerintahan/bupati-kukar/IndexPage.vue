@@ -50,9 +50,9 @@ import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
 import SelayangPandang from "@/components/SelayangPandang.vue";
 
 import useFetch from "@/composables/useFetch";
-import { type Bupati, type BupatiDataPlayload, type BupatiResponse, getBupati } from "@/lib/api/pemerintahan";
+import { type BupatiDataPayload, type BupatiResponse, getBupati } from "@/lib/api/pemerintahan";
 
-const { data, isLoading, fetchData, isError, error } = useFetch<BupatiResponse, BupatiDataPlayload<Bupati>>(getBupati, {
+const { data, isLoading, fetchData, isError, error } = useFetch<BupatiResponse, BupatiDataPayload>(getBupati, {
   immediate: false,
   extractData: (response) => response.data,
 });

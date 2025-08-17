@@ -324,24 +324,25 @@ import { RouterLink, useRouter } from "vue-router";
 import VideoModal from "@/components/VideoModal.vue";
 
 import { useFormatters } from "@/composables/useFormatters";
-import { getBeranda } from "@/lib/api/beranda";
-
-type EmergencyItem = { icon: string; nama: string; isi: string };
-type newsItem = { id: number; judul: string; foto: string; createdAt: Date; isi: string };
-type BannerInfoItem = { foto: string; nama: string; createdAt: Date };
-type VideoItem = { id: number; judul: string; link: string; createdAt: Date; isi: string };
-type LayananItem = { logo: string; alamat: string; nama: string };
-type SistemItem = { logo: string; alamat: string; nama: string };
-type OpdItem = { id: number; nama: string; foto: string; website: string; alamat: string };
+import {
+  type BannerItem,
+  type EmergencyItem,
+  getBeranda,
+  type LayananItem,
+  type NewsItem,
+  type OpdItem,
+  type SistemItem,
+  type VideoItem,
+} from "@/lib/api/beranda";
 
 const router = useRouter();
 const formatters = useFormatters();
 
 const emergencies = ref<EmergencyItem[]>([]);
 
-const news = ref<newsItem[]>([]);
+const news = ref<NewsItem[]>([]);
 
-const banners = ref<BannerInfoItem[]>([]);
+const banners = ref<BannerItem[]>([]);
 
 const videos = ref<VideoItem[]>([]);
 

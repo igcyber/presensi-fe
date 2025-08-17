@@ -67,13 +67,13 @@ import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
 import useFetch from "@/composables/useFetch";
 import { useFormatters } from "@/composables/useFormatters";
 import { usePagination } from "@/composables/usePagination";
-import { type DokumenData, type DokumenDataPlayload, type DokumenResponse, getDokumens } from "@/lib/api/media";
+import { type DokumenListPayload, type DokumenResponse, getDokumens } from "@/lib/api/media";
 
 const formatters = useFormatters();
 const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
 
 // Fetch dokumen data
-const { data, isLoading, error, isError, fetchData } = useFetch<DokumenResponse, DokumenDataPlayload<DokumenData>>(
+const { data, isLoading, error, isError, fetchData } = useFetch<DokumenResponse, DokumenListPayload>(
   () => getDokumens(currentPage.value),
   {
     immediate: false,

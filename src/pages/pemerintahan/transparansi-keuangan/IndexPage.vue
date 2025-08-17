@@ -72,8 +72,7 @@ import { useFormatters } from "@/composables/useFormatters";
 import { usePagination } from "@/composables/usePagination";
 import {
   getTransparansiKeuangan,
-  type TransparansiKeuangan,
-  type TransparansiKeuanganDataPlayload,
+  type TransparansiKeuanganListPayload,
   type TransparansiKeuanganResponse,
 } from "@/lib/api/pemerintahan";
 
@@ -87,7 +86,7 @@ const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = use
 
 const { data, isLoading, fetchData, isError, error } = useFetch<
   TransparansiKeuanganResponse,
-  TransparansiKeuanganDataPlayload<TransparansiKeuangan>
+  TransparansiKeuanganListPayload
 >(() => getTransparansiKeuangan(currentPage.value), {
   immediate: false,
   extractData: (response) => response.data,
