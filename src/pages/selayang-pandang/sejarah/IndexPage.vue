@@ -34,7 +34,7 @@ import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
 import SelayangPandang from "@/components/SelayangPandang.vue";
 
 import useFetch from "@/composables/useFetch";
-import { getSejarah, type SejarahData, type SejarahResponse } from "@/lib/api/selayang-pandang";
+import { getSejarah, type SejarahData, type SejarahResponse } from "@/lib/api/selayangPandang";
 
 const { data, isLoading, fetchData, isError, error } = useFetch<SejarahResponse, SejarahData>(getSejarah, {
   immediate: false,

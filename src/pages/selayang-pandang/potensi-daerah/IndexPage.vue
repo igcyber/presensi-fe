@@ -34,7 +34,7 @@ import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
 import SelayangPandang from "@/components/SelayangPandang.vue";
 
 import useFetch from "@/composables/useFetch";
-import { getPotensiDaerah, type PotensiDaerahData, type PotensiDaerahResponse } from "@/lib/api/selayang-pandang";
+import { getPotensiDaerah, type PotensiDaerahData, type PotensiDaerahResponse } from "@/lib/api/selayangPandang";
 
 const { data, isLoading, fetchData, isError, error } = useFetch<PotensiDaerahResponse, PotensiDaerahData>(
   getPotensiDaerah,

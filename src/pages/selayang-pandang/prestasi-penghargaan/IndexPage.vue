@@ -75,7 +75,7 @@ import {
   getPrestasiPenghargaan,
   type PrestasiPenghargaanDataPayload,
   type PrestasiPenghargaanResponse,
-} from "@/lib/api/selayang-pandang";
+} from "@/lib/api/selayangPandang";
 
 // Constants
 const STICKY_HEADER_OFFSET = 200;
