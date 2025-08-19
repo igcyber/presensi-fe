@@ -15,6 +15,11 @@ export interface BeritaDetail extends Berita {
   };
 }
 
+export interface BeritaSidebar extends BaseEntity {
+  judul: string;
+  foto: string;
+}
+
 // Berita list payload
 export interface BeritaListPayload {
   beritas: Berita[];
@@ -24,6 +29,7 @@ export interface BeritaListPayload {
 // Berita response
 export type BeritaResponse = ApiResponse<BeritaListPayload>;
 export type BeritaDetailResponse = ApiResponse<PayloadData<BeritaDetail>>;
+export type BeritaSidebarResponse = ApiResponse<BeritaSidebar[]>;
 
 // Get berita list
 export const getBeritaList = async (page: number): Promise<BeritaResponse> => {
@@ -34,5 +40,11 @@ export const getBeritaList = async (page: number): Promise<BeritaResponse> => {
 // Get berita detail
 export const getBeritaDetail = async (id: number): Promise<BeritaDetailResponse> => {
   const response = await httpInstance.get<BeritaDetailResponse>(`/berita/${id}`);
+  return response.data;
+};
+
+// Get berita sidebar
+export const getBeritaSidebar = async (): Promise<BeritaSidebarResponse> => {
+  const response = await httpInstance.get<BeritaSidebarResponse>(`/berita/sidebar`);
   return response.data;
 };

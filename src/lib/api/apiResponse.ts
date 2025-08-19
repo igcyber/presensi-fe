@@ -13,8 +13,8 @@ export interface ApiResponse<T, M = PageMeta> {
  */
 export interface BaseEntity {
   id: number;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 /**
