@@ -32,8 +32,10 @@ export type BeritaDetailResponse = ApiResponse<PayloadData<BeritaDetail>>;
 export type BeritaSidebarResponse = ApiResponse<BeritaSidebar[]>;
 
 // Get berita list
-export const getBeritaList = async (page: number): Promise<BeritaResponse> => {
-  const response = await httpInstance.get<BeritaResponse>(`/berita?page=${page}`);
+export const getBeritaList = async (page: number, keyword?: string): Promise<BeritaResponse> => {
+  const response = await httpInstance.get<BeritaResponse>(
+    `/berita?page=${page}${keyword ? `&keyword=${keyword}` : ""}`,
+  );
   return response.data;
 };
 

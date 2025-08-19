@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form class="search-frame" method="GET">
+    <form class="search-frame" method="GET" @submit.prevent="onSearchSubmit">
       <input
         class="search-input"
         type="text"
@@ -59,7 +59,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 import useFetch from "@/composables/useFetch";
 import { useFormatters } from "@/composables/useFormatters";
@@ -73,6 +73,7 @@ const { data, isLoading, fetchData, isError, error } = useFetch<BeritaSidebarRes
   },
 );
 
+const router = useRouter();
 const route = useRoute();
 const formatters = useFormatters();
 
@@ -88,6 +89,13 @@ watch(
 function slugifyForUrl(text: string): string {
   return text.replace(/[\s/]+/g, "-");
 }
+
+const onSearchSubmit = () => {
+  const query = keyword.value ? { keyword: keyword.value } : {};
+  router.push({ path: "/berita", query });
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
 
 onMounted(async () => {
   await fetchData();

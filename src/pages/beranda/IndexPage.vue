@@ -366,6 +366,8 @@ const keyword = ref<string>("");
 function submitSearch() {
   const query = keyword.value ? { keyword: keyword.value } : {};
   router.push({ path: "/berita", query });
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 // Video Modal (Bootstrap 4)

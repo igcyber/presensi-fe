@@ -91,12 +91,17 @@ import { useFormatters } from "@/composables/useFormatters";
 import { usePagination } from "@/composables/usePagination";
 import { type BeritaListPayload, type BeritaResponse, getBeritaList } from "@/lib/api/berita";
 
+const route = useRoute();
+
+// Computed
+const keyword = computed(() => (route.query.keyword as string) ?? "");
+
 const formatters = useFormatters();
 const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
 
 // Fetch dokumen data
 const { data, isLoading, error, isError, fetchData } = useFetch<BeritaResponse, BeritaListPayload>(
-  () => getBeritaList(currentPage.value),
+  () => getBeritaList(currentPage.value, keyword.value),
   {
     immediate: false,
     extractData: (response) => response.data,
@@ -126,6 +131,10 @@ watch(currentPage, () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
+watch(keyword, () => {
+  fetchData();
+});
+
 onMounted(async () => {
   await fetchData();
 
@@ -136,11 +145,6 @@ onMounted(async () => {
     itemsPerPage: data.value?.meta?.per_page ?? 10,
   });
 });
-
-const route = useRoute();
-
-// Computed
-const keyword = computed(() => (route.query.search as string) || "");
 
 const getNewsDetailUrl = (id: number, title: string): string => {
   const slug = title.replace(/[ /%]/g, "-").toLowerCase();
