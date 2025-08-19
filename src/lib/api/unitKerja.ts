@@ -51,7 +51,8 @@ export interface OpdListPayload {
 
 export interface PerusahaanDaerahListPayload {
   data: ContentData;
-  perusahaans: PerusahaanDaerah[];
+  perusdas: PerusahaanDaerah[];
+  meta?: PaginationMeta;
 }
 
 /**
