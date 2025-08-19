@@ -34,7 +34,7 @@
                             class="post-image"
                           />
                         </div>
-                        <router-link :to="getNewsDetailUrl(news.id, news.judul)" class="post-link">
+                        <router-link :to="formatters.getNewsDetailUrl(news.id, news.judul)" class="post-link">
                           {{ news.judul }}
                         </router-link>
                         <div class="post-date-frame">
@@ -145,9 +145,4 @@ onMounted(async () => {
     itemsPerPage: data.value?.meta?.per_page ?? 10,
   });
 });
-
-const getNewsDetailUrl = (id: number, title: string): string => {
-  const slug = title.replace(/[ /%]/g, "-").toLowerCase();
-  return `/berita/${id}/${slug}`;
-};
 </script>

@@ -14,6 +14,7 @@ import {
   formatRelativeDate,
   formatStatus,
   formatTime,
+  getNewsDetailUrl,
   isActivePath,
   isEmpty,
   maskEmail,
@@ -63,6 +64,7 @@ export function useFormatters() {
 
     // Path formatters
     isActivePath,
+    getNewsDetailUrl,
 
     // Youtube & Facebook formatters
     youtubeInfo,

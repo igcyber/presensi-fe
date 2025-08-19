@@ -750,3 +750,14 @@ export function toEmbedUrl(url: string | null | undefined) {
 
   return url;
 }
+
+/**
+ * Get news detail url
+ * @param id - News id
+ * @param title - News title
+ * @returns News detail url
+ */
+export function getNewsDetailUrl(id: number, title: string): string {
+  const slug = title.replace(/[ /%]/g, "-").toLowerCase();
+  return `/berita/${id}/${slug}`;
+}

@@ -49,6 +49,11 @@ export function useBreadcrumb() {
     // Berita
     "berita.index": "Berita",
     "berita.detail": "Detail Berita",
+
+    // Unit Kerja
+    "unit-kerja.opd": "OPD",
+    "unit-kerja.opd.detail": "Detail OPD",
+    "unit-kerja.perusahaan-daerah": "Perusahaan Daerah",
   };
 
   /**
@@ -78,6 +83,11 @@ export function useBreadcrumb() {
     "pemerintahan.struktur-organisasi": ["Pemerintahan"],
     "pemerintahan.tugas-dan-fungsi": ["Pemerintahan"],
     "pemerintahan.bupati": ["Pemerintahan"],
+
+    // Unit Kerja
+    "unit-kerja.opd": ["Unit Kerja"],
+    "unit-kerja.opd.detail": ["Unit Kerja", "unit-kerja.opd"],
+    "unit-kerja.perusahaan-daerah": ["Unit Kerja"],
 
     // Berita
     "berita.index": [],

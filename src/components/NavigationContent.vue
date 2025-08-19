@@ -18,7 +18,7 @@ import { RouterLink, useRoute } from "vue-router";
 import { type NavigationItem, useAppData } from "@/composables/useAppData";
 import { isActivePath } from "@/lib/utils/formatters";
 
-const { selayangPandangNavigation, pemerintahanNavigation } = useAppData();
+const { selayangPandangNavigation, pemerintahanNavigation, unitKerjaNavigation } = useAppData();
 
 const route = useRoute();
 
@@ -27,6 +27,8 @@ const navigation: ComputedRef<NavigationItem[]> = computed(() => {
 
   if (routeSplit[1] === "selayang-pandang") {
     return selayangPandangNavigation.value;
+  } else if (routeSplit[1] === "unit-kerja") {
+    return unitKerjaNavigation.value;
   } else {
     return pemerintahanNavigation.value;
   }

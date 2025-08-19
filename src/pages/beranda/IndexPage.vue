@@ -278,9 +278,10 @@
           <div class="row">
             <div class="col-md-12">
               <div class="headingtext">
-                <a href="/unit-kerja/opd" class="headingtext-link"
-                  >Lihat lebih banyak <i class="bx bx-chevron-right"></i
-                ></a>
+                <RouterLink :to="{ name: 'unit-kerja.opd' }" class="headingtext-link">
+                  Lihat lebih banyak
+                  <i class="bx bx-chevron-right"></i>
+                </RouterLink>
                 <span class="headingtext-title b-20"
                   ><b><i class="bx bx-buildings"></i> Daftar OPD </b>Kutai Kartanegara ({{ opds.length }})</span
                 >
@@ -295,7 +296,9 @@
                         <img class="bupati-image" :src="`https://kukarkab.go.id/uploads/${opd.foto}`" />
                       </div>
                       <div class="bupati-content-frame">
-                        <a href="#" class="bupati-name">{{ opd.nama }}</a>
+                        <RouterLink :to="formatters.getNewsDetailUrl(opd.id, opd.nama)" class="bupati-name"
+                          >{{ opd.nama }}
+                        </RouterLink>
                         <table>
                           <tbody>
                             <tr>

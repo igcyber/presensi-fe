@@ -42,7 +42,7 @@ export default {
       name: "pemerintahan.strategi",
       component: StrategiPage,
       meta: {
-        title: "Strategi",
+        title: "Strategi Daerah",
       },
     },
     {
@@ -50,7 +50,7 @@ export default {
       name: "pemerintahan.program-strategis",
       component: ProgramStrategisPage,
       meta: {
-        title: "Program Strategis",
+        title: "Program Daerah",
       },
     },
     {
@@ -58,7 +58,7 @@ export default {
       name: "pemerintahan.bupati",
       component: BupatiPage,
       meta: {
-        title: "Bupati",
+        title: "Bupati Daerah",
       },
     },
     {

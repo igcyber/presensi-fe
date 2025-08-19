@@ -37,7 +37,7 @@
               <div class="post-text" v-html="data?.isi"></div>
               <br />
               <hr />
-              <ShareLink :url="getNewsDetailUrl(data?.id, data?.judul)" />
+              <ShareLink :url="formatters.getNewsDetailUrl(data?.id, data?.judul)" />
             </div>
           </div>
           <div class="col-md-4">
@@ -96,9 +96,4 @@ onBeforeUnmount(() => {
   // Opsional: bersihkan agar tidak "nyangkut" ke halaman lain
   clearContext();
 });
-
-const getNewsDetailUrl = (id: number, title: string): string => {
-  const slug = title.replace(/[ /%]/g, "-").toLowerCase();
-  return `/berita/${id}/${slug}`;
-};
 </script>

@@ -117,6 +117,11 @@ const pemerintahanNavigation = ref<NavigationItem[]>([
   { title: "Transparansi Keuangan", path: "/pemerintahan/transparansi-keuangan" },
 ]);
 
+const unitKerjaNavigation = ref<NavigationItem[]>([
+  { title: "OPD", path: "/unit-kerja/opd" },
+  { title: "Perusahaan Daerah", path: "/unit-kerja/perusahaan-daerah" },
+]);
+
 const isLoading = ref(false);
 const error = ref<string | null>(null);
 
@@ -226,6 +231,7 @@ export function useAppData() {
     navigation,
     selayangPandangNavigation,
     pemerintahanNavigation,
+    unitKerjaNavigation,
     isLoading,
     error,
 
