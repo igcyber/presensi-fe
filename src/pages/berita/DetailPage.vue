@@ -5,29 +5,39 @@
 
     <div class="row">
       <div class="frame2 container">
-        <div class="row">
+        <div v-if="isLoading" class="text-center">
+          <div class="spinner-border" role="status"></div>
+        </div>
+        <div v-else-if="isError" class="alert alert-danger">
+          <h4>Error</h4>
+          <p>{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
+          <button class="btn btn-primary" @click="fetchData">Coba Lagi</button>
+        </div>
+        <div v-else-if="data" class="row">
           <div class="col-md-12">
-            <a href="{{url('berita')}}" class="headingtext-back"><i class="bx bx-chevron-left"></i> Kembali</a>
+            <RouterLink :to="{ name: 'berita.index' }" class="headingtext-back"
+              ><i class="bx bx-chevron-left"></i> Kembali</RouterLink
+            >
             <br />
           </div>
 
           <div class="col-md-8">
             <div class="detail-image-frame">
-              <img :src="newsItem?.foto" class="detail-image" />
+              <img :src="`https://kukarkab.go.id/uploads/beritas/${data?.foto}`" class="detail-image" />
             </div>
             <div class="post post-detail">
               <div class="post-date-frame">
-                <span class="post-date"><i class="bx bx-calendar"></i> {{ formatDate(newsItem?.created_at) }}</span>
+                <span class="post-date"><i class="bx bx-calendar"></i> {{ formatters.date(data?.createdAt) }}</span>
               </div>
-              <p class="post-link">{{ newsItem?.judul }}</p>
+              <p class="post-link">{{ data?.judul }}</p>
               <div class="post-tag">
                 <span class="post-tag-icon"><i class="bx bx-buildings"></i> </span>
-                {{ newsItem?.opd_id == 0 ? "Kukarkab" : newsItem?.opd?.nama }}
+                {{ data?.opd?.nama || "Kukarkab" }}
               </div>
-              <div class="post-text" v-html="newsItem?.isi"></div>
+              <div class="post-text" v-html="data?.isi"></div>
               <br />
               <hr />
-              <ShareLink :url="`https://www.kukarkab.go.id/berita/${newsItem?.id}/${newsItem?.judul}`" />
+              <ShareLink :url="getNewsDetailUrl(data?.id, data?.judul)" />
             </div>
           </div>
           <div class="col-md-4">
@@ -40,90 +50,55 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { onBeforeUnmount, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 
 import BeritaSide from "@/components/BeritaSide.vue";
 import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
 import ShareLink from "@/components/ShareLink.vue";
 
+import { useBreadcrumb } from "@/composables/useBreadcrumb";
+import useFetch from "@/composables/useFetch";
 import { useFormatters } from "@/composables/useFormatters";
+import { type BeritaDetail, type BeritaDetailResponse, getBeritaDetail } from "@/lib/api/berita";
 
-// Types
-interface NewsItem {
-  id: number;
-  judul: string;
-  isi: string;
-  foto: string;
-  created_at: string;
-  opd_id?: number;
-  opd?: {
-    nama: string;
-  };
-}
-
-// Composables
 const route = useRoute();
-const { date: formatDate } = useFormatters();
+const id = Number(route.params.id);
 
-// Reactive data
-const newsItem = ref<NewsItem | null>(null);
-const loading = ref(true);
+const { setContext, clearContext } = useBreadcrumb();
 
-// Computed
-const newsId = computed(() => parseInt(route.params.id as string));
+const formatters = useFormatters();
 
-const fetchNewsDetail = async () => {
-  loading.value = true;
-  try {
-    // Simulasi data detail berita - ganti dengan API call yang sebenarnya
-    const mockNewsDetail: NewsItem = {
-      id: newsId.value,
-      judul: "Bupati Kutai Kartanegara Luncurkan Program Pembangunan Infrastruktur",
-      isi: `
-        <p>Pemerintah Kabupaten Kutai Kartanegara melalui Bupati Dr. Edi Damansyah, S.E., M.Si resmi meluncurkan program pembangunan infrastruktur yang komprehensif untuk tahun 2024. Program ini merupakan bagian dari komitmen pemerintah daerah dalam meningkatkan kesejahteraan masyarakat melalui pembangunan yang berkelanjutan.</p>
+const { data, isLoading, fetchData, isError, error } = useFetch<BeritaDetailResponse, BeritaDetail>(
+  () => getBeritaDetail(id),
+  {
+    immediate: false,
+    extractData: (response) => response.data.data,
+  },
+);
 
-        <p>Program pembangunan infrastruktur ini meliputi berbagai sektor vital seperti jalan, jembatan, fasilitas kesehatan, pendidikan, dan sarana air bersih. Total anggaran yang dialokasikan mencapai Rp 500 miliar yang berasal dari APBD Kabupaten Kutai Kartanegara dan dana dukungan dari pemerintah pusat.</p>
-
-        <h3>Prioritas Pembangunan</h3>
-        <ul>
-          <li>Pembangunan dan perbaikan jalan sepanjang 150 kilometer</li>
-          <li>Konstruksi 25 jembatan baru di berbagai kecamatan</li>
-          <li>Pembangunan 10 puskesmas pembantu</li>
-          <li>Renovasi 50 sekolah dasar</li>
-          <li>Instalasi jaringan air bersih untuk 15.000 KK</li>
-        </ul>
-
-        <p>Bupati Edi Damansyah menekankan bahwa program ini dirancang untuk merata di seluruh wilayah Kutai Kartanegara, terutama daerah-daerah terpencil yang selama ini masih mengalami keterbatasan akses infrastruktur.</p>
-
-        <p>"Pembangunan infrastruktur ini bukan hanya tentang fisik semata, tetapi juga tentang membuka akses ekonomi, pendidikan, dan kesehatan bagi masyarakat kita. Kami berkomitmen untuk mewujudkan Kutai Kartanegara yang maju dan sejahtera," ujar Bupati dalam sambutannya.</p>
-
-        <p>Pelaksanaan program ini akan dimulai pada bulan Februari 2024 dan ditargetkan selesai pada akhir tahun 2024. Pemerintah daerah juga akan melibatkan kontraktor lokal untuk mendorong perekonomian daerah.</p>
-      `,
-      foto: "/dummy.jpg",
-      created_at: "2024-01-15T10:00:00Z",
-      opd_id: 1,
-      opd: { nama: "Bagian Humas" },
-    };
-
-    // Simulasi delay loading
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
-    if (newsId.value === mockNewsDetail.id) {
-      newsItem.value = mockNewsDetail;
-    } else {
-      newsItem.value = null;
+// Update breadcrumb context ketika data sudah ada
+watch(
+  () => data.value?.judul,
+  (judul) => {
+    if (judul) {
+      setContext(judul);
     }
-  } catch (error) {
-    console.error("Error fetching news detail:", error);
-    newsItem.value = null;
-  } finally {
-    loading.value = false;
-  }
-};
+  },
+  { immediate: true },
+);
 
-// Lifecycle
-onMounted(() => {
-  fetchNewsDetail();
+onMounted(async () => {
+  await fetchData();
 });
+
+onBeforeUnmount(() => {
+  // Opsional: bersihkan agar tidak "nyangkut" ke halaman lain
+  clearContext();
+});
+
+const getNewsDetailUrl = (id: number, title: string): string => {
+  const slug = title.replace(/[ /%]/g, "-").toLowerCase();
+  return `/berita/${id}/${slug}`;
+};
 </script>

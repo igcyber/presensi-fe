@@ -76,7 +76,7 @@ export function useBreadcrumb() {
     "pemerintahan.bupati": ["Pemerintahan"],
 
     // Berita
-    "berita.index": ["Berita"],
+    "berita.index": [],
     "berita.detail": ["Berita", "berita.index"],
   };
 

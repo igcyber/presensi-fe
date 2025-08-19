@@ -621,6 +621,7 @@ hr {
   text-align: justify;
   font-family: "Roboto", sans-serif !important;
   overflow: hidden;
+  height: 90px;
 }
 
 .post-detail .post-text {

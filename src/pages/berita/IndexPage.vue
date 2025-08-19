@@ -10,50 +10,65 @@
               <div v-if="keyword && keyword !== ''" class="col-md-12">
                 <div class="alert alert-success">
                   <i class="bx bx-search"></i>
-                  {{ newsData.length }} hasil pencarian untuk <b>"{{ keyword }}"</b>.
+                  {{ data?.beritas.length }} hasil pencarian untuk <b>"{{ keyword }}"</b>.
                 </div>
               </div>
 
               <div class="col-md-12">
-                <div class="row">
-                  <div v-for="news in newsData" :key="news.id" class="col-md-4">
-                    <div class="post">
-                      <div class="post-image-frame">
-                        <img :src="news.foto" :alt="news.judul" class="post-image" />
-                      </div>
-                      <router-link :to="getNewsDetailUrl(news.id, news.judul)" class="post-link">
-                        {{ news.judul }}
-                      </router-link>
-                      <div class="post-date-frame">
-                        <span class="post-date">
-                          <i class="bx bx-calendar"></i>
-                          {{ formatDate(news.created_at) }}
-                        </span>
-                      </div>
-                      <div class="post-text" v-html="news.isi"></div>
-                      <hr />
-                    </div>
-                  </div>
-
-                  <div v-if="newsData.length === 0" class="col-md-12">
-                    <div class="p-4 text-center">
-                      <i class="bx bx-news bx-lg text-muted"></i>
-                      <p class="text-muted mt-2">Data kosong</p>
-                    </div>
-                  </div>
-
-                  <div class="col-md-12 text-center">
-                    <BasePagination
-                      v-if="pagination.totalPages > 1"
-                      :page="pagination.currentPage"
-                      :items-per-page="pagination.perPage"
-                      :total-items="pagination.totalItems"
-                      :total-pages="pagination.totalPages"
-                      @previous-page="handlePreviousPage"
-                      @next-page="handleNextPage"
-                    />
-                  </div>
+                <div v-if="isLoading" class="text-center">
+                  <div class="spinner-border" role="status"></div>
                 </div>
+                <div v-else-if="isError" class="alert alert-danger">
+                  <h4>Error</h4>
+                  <p>{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
+                  <button class="btn btn-primary" @click="fetchData">Coba Lagi</button>
+                </div>
+                <template v-else-if="data">
+                  <div class="row">
+                    <div v-for="news in data.beritas" :key="news.id" class="col-md-4">
+                      <div class="post">
+                        <div class="post-image-frame">
+                          <img
+                            :src="`https://kukarkab.go.id/uploads/beritas/${news.foto}`"
+                            :alt="news.judul"
+                            class="post-image"
+                          />
+                        </div>
+                        <router-link :to="getNewsDetailUrl(news.id, news.judul)" class="post-link">
+                          {{ news.judul }}
+                        </router-link>
+                        <div class="post-date-frame">
+                          <span class="post-date">
+                            <i class="bx bx-calendar"></i>
+                            {{ formatters.date(news.createdAt) }}
+                          </span>
+                        </div>
+                        <div class="post-text" v-html="news.isi.split(' ').slice(0, 15).join(' ') + '...'"></div>
+                        <hr />
+                      </div>
+                    </div>
+
+                    <div v-if="data.beritas.length === 0" class="col-md-12">
+                      <div class="p-4 text-center">
+                        <i class="bx bx-news bx-lg text-muted"></i>
+                        <p class="text-muted mt-2">Data kosong</p>
+                      </div>
+                    </div>
+
+                    <div class="col-md-12 text-center">
+                      <BasePagination
+                        v-if="totalPages > 1"
+                        :page="currentPage"
+                        :items-per-page="itemsPerPage"
+                        :total-items="totalItems"
+                        :total-pages="totalPages"
+                        @previousPage="prevPage"
+                        @nextPage="nextPage"
+                        @page="onPage"
+                      />
+                    </div>
+                  </div>
+                </template>
               </div>
             </div>
           </div>
@@ -64,48 +79,65 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted } from "vue";
 import { watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 
 import BasePagination from "@/components/BasePagination.vue";
 import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
 
+import useFetch from "@/composables/useFetch";
 import { useFormatters } from "@/composables/useFormatters";
+import { usePagination } from "@/composables/usePagination";
+import { type BeritaListPayload, type BeritaResponse, getBeritaList } from "@/lib/api/berita";
 
-interface NewsItem {
-  id: number;
-  judul: string;
-  isi: string;
-  foto: string;
-  created_at: string;
-  opd_id?: number;
-  opd?: {
-    nama: string;
-  };
-}
+const formatters = useFormatters();
+const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
 
-interface PaginationData {
-  currentPage: number;
-  perPage: number;
-  totalItems: number;
-  totalPages: number;
-}
+// Fetch dokumen data
+const { data, isLoading, error, isError, fetchData } = useFetch<BeritaResponse, BeritaListPayload>(
+  () => getBeritaList(currentPage.value),
+  {
+    immediate: false,
+    extractData: (response) => response.data,
+  },
+);
 
-// Composables
-const route = useRoute();
-const router = useRouter();
-const { date: formatDate } = useFormatters();
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value -= 1;
+  }
+};
 
-// Reactive data
-const newsData = ref<NewsItem[]>([]);
-const pagination = ref<PaginationData>({
-  currentPage: 1,
-  perPage: 9,
-  totalItems: 0,
-  totalPages: 0,
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value += 1;
+  }
+};
+
+const onPage = (page: number) => {
+  currentPage.value = page;
+};
+
+// Watchers
+watch(currentPage, () => {
+  fetchData();
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
 });
-const loading = ref(false);
+
+onMounted(async () => {
+  await fetchData();
+
+  setPagination({
+    currentPage: data.value?.meta?.current_page ?? 1,
+    totalPages: data.value?.meta?.last_page ?? 1,
+    totalItems: data.value?.meta?.total ?? 0,
+    itemsPerPage: data.value?.meta?.per_page ?? 10,
+  });
+});
+
+const route = useRoute();
 
 // Computed
 const keyword = computed(() => (route.query.search as string) || "");
@@ -114,108 +146,4 @@ const getNewsDetailUrl = (id: number, title: string): string => {
   const slug = title.replace(/[ /%]/g, "-").toLowerCase();
   return `/berita/${id}/${slug}`;
 };
-
-const fetchNews = async () => {
-  loading.value = true;
-  try {
-    // Simulasi data berita - ganti dengan API call yang sebenarnya
-    const mockNews: NewsItem[] = [
-      {
-        id: 1,
-        judul: "Bupati Kutai Kartanegara Luncurkan Program Pembangunan Infrastruktur",
-        isi: "Program pembangunan infrastruktur meliputi jalan...",
-        foto: "/dummy.jpg",
-        created_at: "2024-01-15T10:00:00Z",
-        opd_id: 1,
-        opd: { nama: "Bagian Humas" },
-      },
-      {
-        id: 2,
-        judul: "Festival Budaya Kutai Kartanegara 2024 Resmi Dibuka",
-        isi: "Festival budaya tahunan yang menampilkan berbagai kesenian tradisional dan modern telah resmi dibuka oleh Bupati...",
-        foto: "/dummy.jpg",
-        created_at: "2024-01-14T09:30:00Z",
-        opd_id: 2,
-        opd: { nama: "Dinas Pariwisata" },
-      },
-      {
-        id: 3,
-        judul: "Bantuan Sosial untuk Masyarakat Terdampak Bencana",
-        isi: "Pemerintah Kabupaten Kutai Kartanegara menyalurkan bantuan sosial berupa sembako dan peralatan untuk korban bencana...",
-        foto: "/dummy.jpg",
-        created_at: "2024-01-13T14:15:00Z",
-        opd_id: 3,
-        opd: { nama: "Dinas Sosial" },
-      },
-    ];
-
-    // Filter berdasarkan keyword jika ada
-    let filteredNews = mockNews;
-    if (keyword.value && keyword.value !== "") {
-      filteredNews = mockNews.filter(
-        (news) =>
-          news.judul.toLowerCase().includes(keyword.value.toLowerCase()) ||
-          news.isi.toLowerCase().includes(keyword.value.toLowerCase()),
-      );
-    }
-
-    // Simulasi pagination
-    const currentPage = parseInt(route.query.page as string) || 1;
-    const perPage = 9;
-    const totalItems = filteredNews.length;
-    const totalPages = Math.ceil(totalItems / perPage);
-
-    const startIndex = (currentPage - 1) * perPage;
-    const endIndex = startIndex + perPage;
-
-    newsData.value = filteredNews.slice(startIndex, endIndex);
-    pagination.value = {
-      currentPage,
-      perPage,
-      totalItems,
-      totalPages,
-    };
-  } catch (error) {
-    console.error("Error fetching news:", error);
-    newsData.value = [];
-  } finally {
-    loading.value = false;
-  }
-};
-
-const handlePreviousPage = () => {
-  if (pagination.value.currentPage > 1) {
-    const newPage = pagination.value.currentPage - 1;
-    router.push({
-      query: {
-        ...route.query,
-        page: newPage.toString(),
-      },
-    });
-  }
-};
-
-const handleNextPage = () => {
-  if (pagination.value.currentPage < pagination.value.totalPages) {
-    const newPage = pagination.value.currentPage + 1;
-    router.push({
-      query: {
-        ...route.query,
-        page: newPage.toString(),
-      },
-    });
-  }
-};
-
-// Lifecycle
-onMounted(() => {
-  fetchNews();
-});
-
-watch(
-  () => route.query,
-  () => {
-    fetchNews();
-  },
-);
 </script>
