@@ -40,6 +40,7 @@ export interface Bupati extends BaseEntity {
 export interface TransparansiKeuangan extends BaseEntity {
   nama: string;
   file: string;
+  link?: string | null;
   keterangan: string;
   tanggalPublikasi: string;
 }
@@ -68,6 +69,7 @@ export type StrategiDaerahResponse = ApiResponse<PayloadData<StrategiDaerahData>
 export type ProgramStrategisResponse = ApiResponse<PayloadData<ProgramStrategisData>>;
 export type BupatiResponse = ApiResponse<BupatiDataPayload>;
 export type TransparansiKeuanganResponse = ApiResponse<TransparansiKeuanganListPayload>;
+export type TransparansiKeuanganDetailResponse = ApiResponse<PayloadData<TransparansiKeuangan>>;
 
 /**
  * Fetch duties and functions data
@@ -132,5 +134,17 @@ export const getTransparansiKeuangan = async (page: number): Promise<Transparans
   const response = await httpInstance.get<TransparansiKeuanganResponse>("/pemerintahan/transparansi-keuangan", {
     params: { page },
   });
+  return response.data;
+};
+
+/**
+ * Fetch financial transparency document detail
+ * @param id - Document ID
+ * @returns Promise resolving to financial transparency detail response
+ */
+export const getTransparansiKeuanganDetail = async (id: number): Promise<TransparansiKeuanganDetailResponse> => {
+  const response = await httpInstance.get<TransparansiKeuanganDetailResponse>(
+    `/pemerintahan/transparansi-keuangan/${id}`,
+  );
   return response.data;
 };

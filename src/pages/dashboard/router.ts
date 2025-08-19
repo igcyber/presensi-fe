@@ -11,7 +11,6 @@ export default {
       name: "dashboard.index",
       component: DashboardPage,
       meta: {
-        requiresAuth: true,
         title: "Dashboard",
       },
     },

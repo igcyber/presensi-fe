@@ -15,7 +15,6 @@ export default {
       component: SejarahPage,
       meta: {
         title: "Sejarah",
-        breadcrumb: "Sejarah",
       },
     },
     {
@@ -24,7 +23,6 @@ export default {
       component: KependudukanPage,
       meta: {
         title: "Kependudukan",
-        breadcrumb: "Kependudukan",
       },
     },
     {
@@ -33,7 +31,6 @@ export default {
       component: PotensiDaerahPage,
       meta: {
         title: "Potensi Daerah",
-        breadcrumb: "Potensi Daerah",
       },
     },
     {
@@ -42,7 +39,6 @@ export default {
       component: PrestasiPage,
       meta: {
         title: "Prestasi",
-        breadcrumb: "Prestasi dan Penghargaan",
       },
     },
   ],

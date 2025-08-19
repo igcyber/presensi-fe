@@ -380,7 +380,7 @@ const fetchBeranda = async () => {
     sistems.value = responseData.sistems;
     opds.value = responseData.opds;
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching beranda:", error);
   }
 };
 

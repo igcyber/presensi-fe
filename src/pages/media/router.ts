@@ -15,7 +15,6 @@ export default {
       component: VideoPage,
       meta: {
         title: "Video",
-        breadcrumb: "Video",
       },
     },
     {
@@ -24,7 +23,6 @@ export default {
       component: DokumenPage,
       meta: {
         title: "Dokumen",
-        breadcrumb: "Dokumen",
       },
     },
     {
@@ -33,7 +31,6 @@ export default {
       component: InfografisPage,
       meta: {
         title: "Infografis",
-        breadcrumb: "Infografis",
       },
     },
     {
@@ -42,7 +39,6 @@ export default {
       component: MajalahPage,
       meta: {
         title: "Majalah",
-        breadcrumb: "Majalah",
       },
     },
   ],

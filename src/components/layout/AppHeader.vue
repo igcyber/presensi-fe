@@ -131,7 +131,6 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  console.log("masuk");
   window.removeEventListener("scroll", handleScroll);
 });
 </script>

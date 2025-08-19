@@ -4,11 +4,20 @@
       <div class="row">
         <div class="container">
           <div class="pager-line"></div>
-          <p class="pager-title">{{ currentPageTitle }}.</p>
-          <a class="pager-link"><i class="bx bx-home"></i></a>
+          <p class="pager-title">{{ getTitleFromRoute() }}.</p>
+          <RouterLink :to="{ name: 'beranda.index' }" class="pager-link">
+            <i class="bx bx-home"></i>
+          </RouterLink>
           <template v-for="(item, index) in breadcrumbItems" :key="index">
             <span class="pager-divider"><i class="bx bx-chevron-right"></i></span>
-            <span class="pager-link">{{ item.title }}</span>
+            <template v-if="item.href && item.href !== '#'">
+              <RouterLink :to="item.href" class="pager-link" :class="{ active: item.active }">
+                {{ item.label }}
+              </RouterLink>
+            </template>
+            <template v-else>
+              <span class="pager-link" :class="{ active: item.active }">{{ item.label }}</span>
+            </template>
           </template>
         </div>
       </div>
@@ -17,50 +26,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import { useRoute } from "vue-router";
+import { RouterLink } from "vue-router";
 
-interface BreadcrumbItem {
-  title: string;
-  path: string;
-}
+import { useBreadcrumb } from "@/composables/useBreadcrumb";
 
-const route = useRoute();
-
-// Generate breadcrumb items based on current route
-const breadcrumbItems = computed<BreadcrumbItem[]>(() => {
-  const items: BreadcrumbItem[] = [];
-  const pathSegments = route.path.split("/").filter((segment) => segment);
-
-  let currentPath = "";
-
-  pathSegments.forEach((segment, index) => {
-    currentPath += `/${segment}`;
-
-    // Convert segment to readable title
-    const title = segment
-      .split("-")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
-
-    items.push({
-      title,
-      path: currentPath,
-    });
-  });
-
-  return items;
-});
-
-// Current page title (similar to $position in Blade)
-const currentPageTitle = computed(() => {
-  if (route.meta?.breadcrumb) {
-    return route.meta.breadcrumb;
-  }
-
-  if (breadcrumbItems.value.length > 0) {
-    return breadcrumbItems.value[breadcrumbItems.value.length - 1].title;
-  }
-  return "Beranda";
-});
+const { breadcrumbItems, getTitleFromRoute } = useBreadcrumb();
 </script>

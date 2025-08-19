@@ -14,7 +14,6 @@ export default [
         component: BeritaPage,
         meta: {
           title: "Berita",
-          breadcrumb: "Berita",
         },
       },
       {
@@ -23,7 +22,6 @@ export default [
         component: BeritaDetailPage,
         meta: {
           title: "Detail Berita",
-          breadcrumb: "Detail Berita",
         },
       },
     ],

@@ -11,7 +11,6 @@ export default {
       name: "beranda.index",
       component: IndexPage,
       meta: {
-        requiresAuth: false,
         title: "Beranda",
       },
     },

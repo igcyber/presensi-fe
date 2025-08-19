@@ -4,6 +4,7 @@ import BupatiPage from "@/pages/pemerintahan/bupati-kukar/IndexPage.vue";
 import ProgramStrategisPage from "@/pages/pemerintahan/program-strategis/IndexPage.vue";
 import StrategiPage from "@/pages/pemerintahan/strategi/IndexPage.vue";
 import StrukturOrganisasiPage from "@/pages/pemerintahan/struktur-organisasi/IndexPage.vue";
+import TransparansiKeuanganDetailPage from "@/pages/pemerintahan/transparansi-keuangan/DetailPage.vue";
 import TransparansiKeuanganPage from "@/pages/pemerintahan/transparansi-keuangan/IndexPage.vue";
 import TugasDanFungsiPage from "@/pages/pemerintahan/tugas-fungsi/IndexPage.vue";
 import VisiMisiPage from "@/pages/pemerintahan/visi-misi/IndexPage.vue";
@@ -18,7 +19,6 @@ export default {
       component: TugasDanFungsiPage,
       meta: {
         title: "Tugas dan Fungsi",
-        breadcrumb: "Tugas dan Fungsi",
       },
     },
     {
@@ -27,7 +27,6 @@ export default {
       component: StrukturOrganisasiPage,
       meta: {
         title: "Struktur Organisasi",
-        breadcrumb: "Struktur Organisasi",
       },
     },
     {
@@ -36,7 +35,6 @@ export default {
       component: VisiMisiPage,
       meta: {
         title: "Visi dan Misi",
-        breadcrumb: "Visi & Misi",
       },
     },
     {
@@ -45,7 +43,6 @@ export default {
       component: StrategiPage,
       meta: {
         title: "Strategi",
-        breadcrumb: "Strategi Daerah",
       },
     },
     {
@@ -54,7 +51,6 @@ export default {
       component: ProgramStrategisPage,
       meta: {
         title: "Program Strategis",
-        breadcrumb: "Program Daerah",
       },
     },
     {
@@ -63,7 +59,6 @@ export default {
       component: BupatiPage,
       meta: {
         title: "Bupati",
-        breadcrumb: "Bupati Daerah",
       },
     },
     {
@@ -72,7 +67,14 @@ export default {
       component: TransparansiKeuanganPage,
       meta: {
         title: "Transparansi Keuangan",
-        breadcrumb: "Transparansi Keuangan",
+      },
+    },
+    {
+      path: "transparansi-keuangan/:id",
+      name: "pemerintahan.transparansi-keuangan-detail",
+      component: TransparansiKeuanganDetailPage,
+      meta: {
+        title: "Transparansi Keuangan Detail",
       },
     },
   ],

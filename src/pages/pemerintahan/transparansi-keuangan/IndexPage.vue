@@ -29,11 +29,10 @@
                     <th>{{ index + 1 + (currentPage - 1) * itemsPerPage }}.</th>
                     <td>{{ item.nama }}</td>
                     <td>
-                      <a
+                      <RouterLink
                         class="btn btn-sm btn-success"
-                        :href="`https://kukarkab.go.id/uploads/${item.file}`"
-                        target="_blank"
-                        >LIHAT DATA</a
+                        :to="{ name: 'pemerintahan.transparansi-keuangan-detail', params: { id: item.id } }"
+                        >LIHAT DATA</RouterLink
                       >
                     </td>
                     <td>{{ formatters.date(item.tanggalPublikasi) }}</td>
@@ -63,6 +62,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
+import { RouterLink } from "vue-router";
 
 import BasePagination from "@/components/BasePagination.vue";
 import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
