@@ -296,7 +296,12 @@
                         <img class="bupati-image" :src="`https://kukarkab.go.id/uploads/${opd.foto}`" />
                       </div>
                       <div class="bupati-content-frame">
-                        <RouterLink :to="formatters.getNewsDetailUrl(opd.id, opd.nama)" class="bupati-name"
+                        <RouterLink
+                          :to="{
+                            name: 'unit-kerja.opd.detail',
+                            params: { id: opd.id, slug: formatters.slugify(opd.nama) },
+                          }"
+                          class="bupati-name"
                           >{{ opd.nama }}
                         </RouterLink>
                         <table>

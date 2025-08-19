@@ -34,9 +34,15 @@
                             class="post-image"
                           />
                         </div>
-                        <router-link :to="formatters.getNewsDetailUrl(news.id, news.judul)" class="post-link">
+                        <RouterLink
+                          :to="{
+                            name: 'berita.detail',
+                            params: { id: news.id, slug: formatters.slugify(news.judul) },
+                          }"
+                          class="post-link"
+                        >
                           {{ news.judul }}
-                        </router-link>
+                        </RouterLink>
                         <div class="post-date-frame">
                           <span class="post-date">
                             <i class="bx bx-calendar"></i>

@@ -26,7 +26,14 @@
                       <img class="bupati-image" :src="`https://kukarkab.go.id/uploads/${opd.foto}`" />
                     </div>
                     <div class="bupati-content-frame">
-                      <a :href="formatters.getNewsDetailUrl(opd.id, opd.nama)" class="bupati-name">{{ opd.nama }}</a>
+                      <RouterLink
+                        :to="{
+                          name: 'unit-kerja.opd.detail',
+                          params: { id: opd.id, slug: formatters.slugify(opd.nama) },
+                        }"
+                        class="bupati-name"
+                        >{{ opd.nama }}</RouterLink
+                      >
                       <table>
                         <tbody>
                           <tr>

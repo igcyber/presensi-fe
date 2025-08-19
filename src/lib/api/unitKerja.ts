@@ -19,6 +19,18 @@ export interface Opd extends BaseEntity {
   website: string;
 }
 
+export interface Layanan extends BaseEntity {
+  logo: string;
+  nama: string;
+  jenis: string;
+  alamat: string;
+  keterangan: string;
+}
+
+export interface OpdDetail extends Opd {
+  layanans: Layanan[];
+}
+
 export interface PerusahaanDaerah extends BaseEntity {
   nama: string;
   alamat: string;
@@ -46,7 +58,7 @@ export interface PerusahaanDaerahListPayload {
  * Unit Kerja response
  */
 export type OpdResponse = ApiResponse<OpdListPayload>;
-export type OpdDetailResponse = ApiResponse<PayloadData<Opd>>;
+export type OpdDetailResponse = ApiResponse<PayloadData<OpdDetail>>;
 export type PerusahaanDaerahResponse = ApiResponse<PerusahaanDaerahListPayload>;
 
 /**

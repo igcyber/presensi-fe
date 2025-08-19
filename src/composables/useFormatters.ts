@@ -14,11 +14,12 @@ import {
   formatRelativeDate,
   formatStatus,
   formatTime,
-  getNewsDetailUrl,
+  getSlugUrl,
   isActivePath,
   isEmpty,
   maskEmail,
   safeGet,
+  slugify,
   toEmbedUrl,
   truncateText,
   youtubeInfo,
@@ -64,7 +65,8 @@ export function useFormatters() {
 
     // Path formatters
     isActivePath,
-    getNewsDetailUrl,
+    getSlugUrl,
+    slugify,
 
     // Youtube & Facebook formatters
     youtubeInfo,

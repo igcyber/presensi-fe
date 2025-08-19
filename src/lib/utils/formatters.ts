@@ -752,12 +752,25 @@ export function toEmbedUrl(url: string | null | undefined) {
 }
 
 /**
+ * Slugify title
+ * @param title - Title to slugify
+ * @returns Slugified title
+ *
+ * @example
+ * slugify('Hello World') // "hello-world"
+ */
+export function slugify(title: string): string {
+  return title.replace(/[ /%]/g, "-").toLowerCase();
+}
+
+/**
  * Get news detail url
+ * @param type - News type
  * @param id - News id
  * @param title - News title
  * @returns News detail url
  */
-export function getNewsDetailUrl(id: number, title: string): string {
-  const slug = title.replace(/[ /%]/g, "-").toLowerCase();
-  return `/berita/${id}/${slug}`;
+export function getSlugUrl(type: "berita" | "opd" | "perusahaan-daerah", id: number, title: string): string {
+  const slug = slugify(title);
+  return `https://kukarkab.go.id/${type}/${id}/${slug}`;
 }
