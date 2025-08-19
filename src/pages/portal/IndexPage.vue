@@ -25,7 +25,11 @@
           @click="menulist.link === '#' ? toggleSubMenu(menulist.id) : null"
           :target="menulist.link === '#' ? '_self' : '_blank'"
         >
-          <img class="menu-logo" :src="menulist.icon" :alt="menulist.judul" />
+          <img
+            class="menu-logo"
+            :src="`https://kukarkab.go.id/icon/portal-menu/${menulist.icon}`"
+            :alt="menulist.judul"
+          />
           <p class="menu-title">{{ menulist.judul }}</p>
         </a>
       </div>
@@ -45,26 +49,36 @@
       <p class="sub-menu-title">{{ menuActive.judul }}</p>
       <div class="sub-menu-content">
         <!-- submenu dengan kategori 'null' -->
-        <div v-if="menuActive.sub && menuActive.sub.length > 0" class="sub-menu-wrapper">
+        <!-- <div v-if="menuActive.portalMenuKats && menuActive.portalMenuKats.length > 0" class="sub-menu-wrapper">
           <p class="sub-menu-list-header"></p>
           <ul class="sub-menu-list">
-            <li v-for="submenu in menuActive.sub" :key="submenu.id">
+            <li v-for="submenu in menuActive.portalMenuKats" :key="submenu.id">
               <a class="sub-menu-list-wrapper" :href="submenu.link" :target="submenu.link === '#' ? '_self' : '_blank'">
-                <img v-if="submenu.icon" class="sub-menu-list-logo" :src="submenu.icon" :alt="submenu.judul" />
+                <img
+                  v-if="submenu.icon"
+                  class="sub-menu-list-logo"
+                  :src="`https://kukarkab.go.id/uploads/${submenu.icon}`"
+                  :alt="submenu.judul"
+                />
                 <br v-if="submenu.icon" />
-                {{ submenu.judul }}
+                {{ submenu.judul }}oke
               </a>
             </li>
           </ul>
-        </div>
+        </div> -->
 
         <!-- by kategori -->
-        <div v-for="kat in menuActive.kat" :key="kat.id" class="sub-menu-wrapper">
+        <div v-for="kat in menuActive.portalMenuKats" :key="kat.id" class="sub-menu-wrapper">
           <p class="sub-menu-list-header">{{ kat.judul }}</p>
           <ul class="sub-menu-list">
-            <li v-for="submenu in kat.sub" :key="submenu.id" class="sub-menu-list-wrapper">
+            <li v-for="submenu in kat.portalMenuSubs" :key="submenu.id" class="sub-menu-list-wrapper">
               <a class="sub-menu-list-wrapper" :href="submenu.link" :target="submenu.link === '#' ? '_self' : '_blank'">
-                <img v-if="submenu.icon" class="sub-menu-list-logo" :src="submenu.icon" :alt="submenu.judul" />
+                <img
+                  v-if="submenu.icon"
+                  class="sub-menu-list-logo"
+                  :src="`https://kukarkab.go.id/uploads/${submenu.icon}`"
+                  :alt="submenu.judul"
+                />
                 <span v-else>{{ submenu.judul }}</span>
               </a>
             </li>
@@ -90,12 +104,19 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from "vue";
 import { RouterLink } from "vue-router";
 
 import { usePortal } from "@/composables/usePortal";
 
 // Menggunakan composable
-const { menus, menuActive, openSubMenu, hasOpenSubMenu, toggleSubMenu, closeSubMenu } = usePortal();
+const { menus, menuActive, openSubMenu, hasOpenSubMenu, toggleSubMenu, closeSubMenu, fetchData } = usePortal();
+
+onMounted(async () => {
+  await fetchData();
+
+  console.log(menuActive.value);
+});
 </script>
 
 <style scoped>
@@ -271,6 +292,7 @@ const { menus, menuActive, openSubMenu, hasOpenSubMenu, toggleSubMenu, closeSubM
   margin: 20px 20px 10px 20px;
   padding: 10px;
   text-align: center;
+  color: #fff;
 }
 
 .sub-menu-content {
