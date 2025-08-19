@@ -661,3 +661,92 @@ export function youtubeInfo(link: string) {
 
   return { id, embedUrl, thumb };
 }
+
+/**
+ * Format facebook link to embed url
+ * @param link - Facebook link
+ * @returns Object with id and embedUrl
+ *
+ * @example
+ * facebookInfo('https://www.facebook.com/watch?v=dQw4w9WgXcQ') // { id: 'dQw4w9WgXcQ', embedUrl: 'https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fwatch%3Fv%3DdQw4w9WgXcQ&autoplay=true&width=500&height=280' }
+ */
+export function facebookInfo(link: string) {
+  // Jika sudah dalam format plugin embed, kembalikan langsung dengan perbaikan parameter
+  if (link.includes("facebook.com/plugins/video.php")) {
+    // Extract href parameter dari URL plugin
+    const hrefMatch = link.match(/href=([^&]+)/);
+    let id = "";
+
+    if (hrefMatch) {
+      const decodedHref = decodeURIComponent(hrefMatch[1]);
+      // Extract video ID dari href yang sudah di-decode
+      const videoIdMatch = decodedHref.match(/\/videos\/(\d+)/);
+      if (videoIdMatch) {
+        id = videoIdMatch[1];
+      }
+    }
+
+    // Pastikan parameter yang diperlukan ada dan set autoplay
+    const url = new URL(link);
+    url.searchParams.set("autoplay", "true");
+    url.searchParams.set("show_text", "false");
+
+    return { id, embedUrl: url.toString() };
+  }
+
+  // Pattern untuk berbagai format URL Facebook
+  const fbWatch = /facebook\.com\/.*\/videos\/(\d+)/;
+  const fbPost = /facebook\.com\/.*\/posts\/(\d+)/;
+  const fbShare = /facebook\.com\/share\/v\?.*video_id=(\d+)/;
+  const fbReel = /facebook\.com\/reel\/(\d+)/;
+
+  let id = "";
+  let embedUrl = "";
+
+  const m1 = link.match(fbWatch);
+  const m2 = link.match(fbPost);
+  const m3 = link.match(fbShare);
+  const m4 = link.match(fbReel);
+
+  if (m1?.[1]) id = m1[1];
+  else if (m2?.[1]) id = m2[1];
+  else if (m3?.[1]) id = m3[1];
+  else if (m4?.[1]) id = m4[1];
+
+  if (id) {
+    embedUrl = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(link)}&autoplay=true&width=500&height=280&show_text=false`;
+  } else {
+    // Jika tidak dapat mengekstrak ID, gunakan URL langsung dengan autoplay
+    embedUrl = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(link)}&autoplay=true&width=500&height=280&show_text=false`;
+  }
+
+  return { id, embedUrl };
+}
+
+/**
+ * Convert url to embed url
+ * @param url - Url yang akan dikonversi
+ * @returns Embed url
+ *
+ * @example
+ * toEmbedUrl('https://www.youtube.com/watch?v=dQw4w9WgXcQ') // "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
+ */
+export function toEmbedUrl(url: string | null | undefined) {
+  if (!url) {
+    return "";
+  }
+
+  if (url.includes("youtube.com")) {
+    return youtubeInfo(url).embedUrl;
+  } else if (url.includes("facebook.com")) {
+    return facebookInfo(url).embedUrl;
+  } else if (url.includes("instagram.com")) {
+    return url;
+  } else if (url.includes("twitter.com")) {
+    return url;
+  } else if (url.includes("tiktok.com")) {
+    return url;
+  }
+
+  return url;
+}

@@ -2,6 +2,14 @@ import { type ApiResponse, type BaseEntity, type PaginationMeta } from "@/lib/ap
 import httpInstance from "@/lib/api/httpInstance";
 
 /**
+ * Infographic data interface
+ */
+export interface FotoData extends BaseEntity {
+  judul: string;
+  foto: string;
+}
+
+/**
  * Video data interface
  */
 export interface VideoData extends BaseEntity {
@@ -9,6 +17,8 @@ export interface VideoData extends BaseEntity {
   isi?: string | null;
   link: string;
 }
+
+export type RadioData = VideoData;
 
 /**
  * Document data interface
@@ -40,10 +50,26 @@ export interface MajalahData extends BaseEntity {
 }
 
 /**
+ * Infographic list payload interface
+ */
+export interface FotoListPayload {
+  fotos: FotoData[];
+  meta?: PaginationMeta;
+}
+
+/**
  * Video list payload interface
  */
 export interface VideoListPayload {
   videos: VideoData[];
+  meta?: PaginationMeta;
+}
+
+/**
+ * Radio list payload interface
+ */
+export interface RadioListPayload {
+  radios: RadioData[];
   meta?: PaginationMeta;
 }
 
@@ -72,10 +98,24 @@ export interface MajalahListPayload {
 }
 
 // Response type aliases
+export type FotoResponse = ApiResponse<FotoListPayload>;
 export type VideoResponse = ApiResponse<VideoListPayload>;
+export type RadioResponse = ApiResponse<RadioListPayload>;
 export type DokumenResponse = ApiResponse<DokumenListPayload>;
 export type InfografisResponse = ApiResponse<InfografisListPayload>;
 export type MajalahResponse = ApiResponse<MajalahListPayload>;
+
+/**
+ * Fetch paginated fotos
+ * @param page - Page number (defaults to 1)
+ * @returns Promise resolving to foto response
+ */
+export const getFotos = async (page: number = 1): Promise<FotoResponse> => {
+  const response = await httpInstance.get<FotoResponse>("/media/foto", {
+    params: { page },
+  });
+  return response.data;
+};
 
 /**
  * Fetch paginated videos
@@ -84,6 +124,18 @@ export type MajalahResponse = ApiResponse<MajalahListPayload>;
  */
 export const getVideos = async (page: number = 1): Promise<VideoResponse> => {
   const response = await httpInstance.get<VideoResponse>("/media/video", {
+    params: { page },
+  });
+  return response.data;
+};
+
+/**
+ * Fetch paginated radios
+ * @param page - Page number (defaults to 1)
+ * @returns Promise resolving to radio response
+ */
+export const getRadios = async (page: number = 1): Promise<RadioResponse> => {
+  const response = await httpInstance.get<RadioResponse>("/media/radio", {
     params: { page },
   });
   return response.data;

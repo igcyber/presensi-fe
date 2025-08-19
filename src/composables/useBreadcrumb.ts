@@ -29,7 +29,9 @@ export function useBreadcrumb() {
     "selayang-pandang.prestasi": "Prestasi dan Penghargaan",
 
     // Media
+    "media.foto": "Foto",
     "media.video": "Video",
+    "media.radio": "Radio",
     "media.dokumen": "Dokumen",
     "media.infografis": "Infografis",
     "media.majalah": "Majalah",
@@ -60,7 +62,9 @@ export function useBreadcrumb() {
     "selayang-pandang.sejarah": ["Selayang Pandang"],
 
     // Media
+    "media.foto": ["Media"],
     "media.video": ["Media"],
+    "media.radio": ["Media"],
     "media.dokumen": ["Media"],
     "media.infografis": ["Media"],
     "media.majalah": ["Media"],

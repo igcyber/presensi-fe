@@ -506,7 +506,7 @@ hr {
 }
 
 .post-image-frame {
-  height: 240px;
+  height: 200px;
   width: 100%;
   overflow: hidden;
   margin-bottom: 15px;
@@ -1603,6 +1603,11 @@ a.footer-text:hover {
   .banner {
     background-position: 95% center;
   }
+
+  /* Post Responsive */
+  .post-image-frame {
+    height: 170px;
+  }
 }
 
 @media only screen and (max-width: 992px) {
@@ -1631,6 +1636,18 @@ a.footer-text:hover {
 
   .hotline-body {
     flex: 50%;
+  }
+
+  /* Post Responsive */
+  .post-image-frame {
+    height: 120px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  /* Post Responsive */
+  .post-image-frame {
+    height: 280px;
   }
 }
 

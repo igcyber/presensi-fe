@@ -12,41 +12,42 @@
           <p>{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
           <button class="btn btn-primary" @click="fetchData">Coba Lagi</button>
         </div>
-        <template v-else-if="data && data.videos.length > 0">
+        <template v-else-if="data && data.fotos.length > 0">
           <div class="row">
-            <div v-for="video in data.videos" :key="video.id" class="col-md-4">
-              <div class="post">
-                <div class="post-image-frame">
-                  <iframe width="100%" height="100%" :src="video.link" :frameborder="0" allowfullscreen></iframe>
+            <div v-for="foto in data.fotos" :key="foto.id" class="col-md-4">
+              <div class="info">
+                <div class="info-image-frame">
+                  <img :src="`https://kukarkab.go.id/uploads/banners/${foto.foto}`" class="info-image" />
+                  <div class="info-content">
+                    <a
+                      :href="`https://kukarkab.go.id/uploads/banners/${foto.foto}`"
+                      data-lightbox="banner"
+                      target="_blank"
+                      class="doc-link"
+                      >{{ foto.judul }}</a
+                    >
+                    <span class="info-date">
+                      <i class="bx bx-calendar"></i> {{ formatters.date(foto.createdAt) }}
+                    </span>
+                  </div>
                 </div>
-                <div class="post-date-frame">
-                  <span class="post-date"><i class="bx bx-calendar"></i> {{ formatters.date(video.createdAt) }}</span>
-                </div>
-
-                <a href="#" class="post-link" @click="openVideoModal(formatters.youtubeInfo(video.link).embedUrl)">{{
-                  video.judul
-                }}</a>
-
-                <div class="post-text" style="height: 40px">Sumber : {{ video.isi ?? "Diskominfo" }}</div>
-                <hr />
               </div>
             </div>
           </div>
 
-          <div class="row">
-            <div class="col-md-12">
-              <BasePagination
-                :page="currentPage"
-                :totalPages="totalPages"
-                :itemsPerPage="itemsPerPage"
-                :totalItems="totalItems"
-                @previousPage="prevPage"
-                @nextPage="nextPage"
-                @page="onPage"
-              />
-            </div>
+          <div class="col-md-12">
+            <BasePagination
+              :page="currentPage"
+              :totalPages="totalPages"
+              :itemsPerPage="itemsPerPage"
+              :totalItems="totalItems"
+              @previousPage="prevPage"
+              @nextPage="nextPage"
+              @page="onPage"
+            />
           </div>
         </template>
+
         <template v-else>
           <div class="col-md-12">
             <div class="alert alert-warning">Data kosong</div>
@@ -55,28 +56,25 @@
       </div>
     </div>
   </div>
-
-  <VideoModal ref="videoModalRef" />
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, watch } from "vue";
+import { onMounted, watch } from "vue";
 
 import BasePagination from "@/components/BasePagination.vue";
 import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
-import VideoModal from "@/components/VideoModal.vue";
 
 import useFetch from "@/composables/useFetch";
 import { useFormatters } from "@/composables/useFormatters";
 import { usePagination } from "@/composables/usePagination";
-import { getVideos, type VideoListPayload, type VideoResponse } from "@/lib/api/media";
+import { type FotoListPayload, type FotoResponse, getFotos } from "@/lib/api/media";
 
 const formatters = useFormatters();
 const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
 
-// Fetch videos data
-const { data, isLoading, error, isError, fetchData } = useFetch<VideoResponse, VideoListPayload>(
-  () => getVideos(currentPage.value),
+// Fetch infografis data
+const { data, isLoading, error, isError, fetchData } = useFetch<FotoResponse, FotoListPayload>(
+  () => getFotos(currentPage.value),
   {
     immediate: false,
     extractData: (response) => response.data,
@@ -97,13 +95,6 @@ const nextPage = () => {
 
 const onPage = (page: number) => {
   currentPage.value = page;
-};
-
-// Video Modal
-const videoModalRef = ref<InstanceType<typeof VideoModal> | null>(null);
-
-const openVideoModal = (embedUrl: string) => {
-  videoModalRef.value?.open(embedUrl);
 };
 
 // Watchers

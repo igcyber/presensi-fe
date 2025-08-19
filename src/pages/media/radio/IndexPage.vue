@@ -12,22 +12,29 @@
           <p>{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
           <button class="btn btn-primary" @click="fetchData">Coba Lagi</button>
         </div>
-        <template v-else-if="data && data.videos.length > 0">
+        <template v-else-if="data && data.radios.length > 0">
           <div class="row">
-            <div v-for="video in data.videos" :key="video.id" class="col-md-4">
+            <div v-for="radio in data.radios" :key="radio.id" class="col-md-4">
               <div class="post">
                 <div class="post-image-frame">
-                  <iframe width="100%" height="100%" :src="video.link" :frameborder="0" allowfullscreen></iframe>
+                  <iframe
+                    style="display: block"
+                    width="100%"
+                    height="100%"
+                    :src="formatters.toEmbedUrl(radio.link)"
+                    :frameborder="0"
+                    allowfullscreen
+                  ></iframe>
                 </div>
                 <div class="post-date-frame">
-                  <span class="post-date"><i class="bx bx-calendar"></i> {{ formatters.date(video.createdAt) }}</span>
+                  <span class="post-date"><i class="bx bx-calendar"></i> {{ formatters.date(radio.createdAt) }}</span>
                 </div>
 
-                <a href="#" class="post-link" @click="openVideoModal(formatters.youtubeInfo(video.link).embedUrl)">{{
-                  video.judul
+                <a href="#" class="post-link" @click="openVideoModal(formatters.toEmbedUrl(radio.link))">{{
+                  radio.judul
                 }}</a>
 
-                <div class="post-text" style="height: 40px">Sumber : {{ video.isi ?? "Diskominfo" }}</div>
+                <div class="post-text" style="height: 40px">Sumber : {{ radio.isi ?? "Diskominfo" }}</div>
                 <hr />
               </div>
             </div>
@@ -69,14 +76,14 @@ import VideoModal from "@/components/VideoModal.vue";
 import useFetch from "@/composables/useFetch";
 import { useFormatters } from "@/composables/useFormatters";
 import { usePagination } from "@/composables/usePagination";
-import { getVideos, type VideoListPayload, type VideoResponse } from "@/lib/api/media";
+import { getRadios, type RadioListPayload, type RadioResponse } from "@/lib/api/media";
 
 const formatters = useFormatters();
 const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
 
 // Fetch videos data
-const { data, isLoading, error, isError, fetchData } = useFetch<VideoResponse, VideoListPayload>(
-  () => getVideos(currentPage.value),
+const { data, isLoading, error, isError, fetchData } = useFetch<RadioResponse, RadioListPayload>(
+  () => getRadios(currentPage.value),
   {
     immediate: false,
     extractData: (response) => response.data,

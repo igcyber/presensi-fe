@@ -1,5 +1,5 @@
 <template>
-  <nav class="mt-3">
+  <nav v-if="props.totalPages > 1" class="mt-3">
     <ul class="pagination">
       <li v-if="props.page === 1" class="page-item disabled" aria-disabled="true" aria-label="Previous">
         <span class="page-link" aria-hidden="true">&lsaquo;</span>

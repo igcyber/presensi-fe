@@ -42,18 +42,24 @@
                   </tbody>
                 </table>
               </div>
-              <BasePagination
-                :page="currentPage"
-                :totalPages="totalPages"
-                :itemsPerPage="itemsPerPage"
-                :totalItems="totalItems"
-                @previousPage="prevPage"
-                @nextPage="nextPage"
-                @page="onPage"
-              />
+
+              <div class="row">
+                <div class="col-md-12">
+                  <BasePagination
+                    :page="currentPage"
+                    :totalPages="totalPages"
+                    :itemsPerPage="itemsPerPage"
+                    :totalItems="totalItems"
+                    @previousPage="prevPage"
+                    @nextPage="nextPage"
+                    @page="onPage"
+                  />
+                </div>
+              </div>
             </template>
           </SelayangPandang>
         </div>
+
         <div v-else class="alert alert-warning">
           <p>Data tidak ditemukan</p>
         </div>

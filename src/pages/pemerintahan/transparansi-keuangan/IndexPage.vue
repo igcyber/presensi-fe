@@ -12,49 +12,56 @@
           <p>{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
           <button class="btn btn-primary" @click="fetchData">Coba Lagi</button>
         </div>
-        <div v-else-if="data">
-          <div class="col-md-12">
-            <div class="table-responsive">
-              <table id="myTable" ref="tableTarget" class="table-striped table">
-                <thead>
-                  <tr>
-                    <th>No</th>
-                    <th>Nama Dokumen</th>
-                    <th>Dokumen Transparansi Keuangan</th>
-                    <th>Tanggal Publikasi</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(item, index) in data?.dokumenkeuangans" :key="item.id">
-                    <th>{{ index + 1 + (currentPage - 1) * itemsPerPage }}.</th>
-                    <td>{{ item.nama }}</td>
-                    <td>
-                      <RouterLink
-                        class="btn btn-sm btn-success"
-                        :to="{ name: 'pemerintahan.transparansi-keuangan-detail', params: { id: item.id } }"
-                        >LIHAT DATA</RouterLink
-                      >
-                    </td>
-                    <td>{{ formatters.date(item.tanggalPublikasi) }}</td>
-                  </tr>
-                  <tr v-if="data?.dokumenkeuangans?.length === 0">
-                    <td colspan="4" class="text-center">Belum ada data transparansi keuangan</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+        <template v-else-if="data && data.dokumenkeuangans.length > 0">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="table-responsive">
+                <table id="myTable" ref="tableTarget" class="table-striped table">
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Nama Dokumen</th>
+                      <th>Dokumen Transparansi Keuangan</th>
+                      <th>Tanggal Publikasi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(item, index) in data?.dokumenkeuangans" :key="item.id">
+                      <th>{{ index + 1 + (currentPage - 1) * itemsPerPage }}.</th>
+                      <td>{{ item.nama }}</td>
+                      <td>
+                        <RouterLink
+                          class="btn btn-sm btn-success"
+                          :to="{ name: 'pemerintahan.transparansi-keuangan-detail', params: { id: item.id } }"
+                          >LIHAT DATA</RouterLink
+                        >
+                      </td>
+                      <td>{{ formatters.date(item.tanggalPublikasi) }}</td>
+                    </tr>
+                    <tr v-if="data?.dokumenkeuangans?.length === 0">
+                      <td colspan="4" class="text-center">Belum ada data transparansi keuangan</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
 
-            <BasePagination
-              :page="currentPage"
-              :totalPages="totalPages"
-              :itemsPerPage="itemsPerPage"
-              :totalItems="totalItems"
-              @previousPage="prevPage"
-              @nextPage="nextPage"
-              @page="onPage"
-            />
+              <BasePagination
+                :page="currentPage"
+                :totalPages="totalPages"
+                :itemsPerPage="itemsPerPage"
+                :totalItems="totalItems"
+                @previousPage="prevPage"
+                @nextPage="nextPage"
+                @page="onPage"
+              />
+            </div>
           </div>
-        </div>
+        </template>
+        <template v-else>
+          <div class="col-md-12">
+            <div class="alert alert-warning">Data kosong</div>
+          </div>
+        </template>
       </div>
     </div>
   </div>

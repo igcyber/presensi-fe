@@ -13,7 +13,7 @@
           <button class="btn btn-primary" @click="fetchData">Coba Lagi</button>
         </div>
 
-        <template v-else-if="data">
+        <template v-else-if="data && data.majalahs.length > 0">
           <div class="row">
             <div v-for="majalah in data.majalahs" :key="majalah.id" class="col-md-12">
               <div class="post">
@@ -26,9 +26,23 @@
                 <a :href="majalah.link" class="post-link" style="height: auto"
                   >{{ majalah.tahun }} - {{ formatters.monthName(majalah.bulan) }}</a
                 >
-                <div class="post-text">Sumber : diskominfo</div>
+                <div class="post-text" style="height: 40px">Sumber : diskominfo</div>
                 <hr />
               </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <BasePagination
+                :page="currentPage"
+                :totalPages="totalPages"
+                :itemsPerPage="itemsPerPage"
+                :totalItems="totalItems"
+                @previousPage="prevPage"
+                @nextPage="nextPage"
+                @page="onPage"
+              />
             </div>
           </div>
         </template>
@@ -37,17 +51,6 @@
             <div class="alert alert-warning">Data kosong</div>
           </div>
         </template>
-        <div v-if="!isLoading && !isError" class="col-md-12">
-          <BasePagination
-            :page="currentPage"
-            :totalPages="totalPages"
-            :itemsPerPage="itemsPerPage"
-            :totalItems="totalItems"
-            @previousPage="prevPage"
-            @nextPage="nextPage"
-            @page="onPage"
-          />
-        </div>
       </div>
     </div>
   </div>

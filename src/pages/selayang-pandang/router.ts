@@ -38,7 +38,7 @@ export default {
       name: "selayang-pandang.prestasi",
       component: PrestasiPage,
       meta: {
-        title: "Prestasi",
+        title: "Prestasi dan Penghargaan",
       },
     },
   ],

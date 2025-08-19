@@ -12,7 +12,7 @@
           <p>{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
           <button class="btn btn-primary" @click="fetchData">Coba Lagi</button>
         </div>
-        <template v-else-if="data">
+        <template v-else-if="data && data.infografis.length > 0">
           <div class="row">
             <div v-for="infografis in data.infografis" :key="infografis.id" class="col-md-4">
               <div class="info">
@@ -34,23 +34,27 @@
               </div>
             </div>
           </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <BasePagination
+                :page="currentPage"
+                :totalPages="totalPages"
+                :itemsPerPage="itemsPerPage"
+                :totalItems="totalItems"
+                @previousPage="prevPage"
+                @nextPage="nextPage"
+                @page="onPage"
+              />
+            </div>
+          </div>
         </template>
+
         <template v-else>
           <div class="col-md-12">
             <div class="alert alert-warning">Data kosong</div>
           </div>
         </template>
-        <div v-if="!isLoading && !isError" class="col-md-12">
-          <BasePagination
-            :page="currentPage"
-            :totalPages="totalPages"
-            :itemsPerPage="itemsPerPage"
-            :totalItems="totalItems"
-            @previousPage="prevPage"
-            @nextPage="nextPage"
-            @page="onPage"
-          />
-        </div>
       </div>
     </div>
   </div>

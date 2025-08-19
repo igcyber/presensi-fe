@@ -1,5 +1,6 @@
 import {
   capitalizeWords,
+  facebookInfo,
   formatActiveStatus,
   formatCurrency,
   formatDate,
@@ -17,6 +18,7 @@ import {
   isEmpty,
   maskEmail,
   safeGet,
+  toEmbedUrl,
   truncateText,
   youtubeInfo,
 } from "@/lib/utils/formatters";
@@ -62,7 +64,9 @@ export function useFormatters() {
     // Path formatters
     isActivePath,
 
-    // Youtube formatters
+    // Youtube & Facebook formatters
     youtubeInfo,
+    facebookInfo,
+    toEmbedUrl,
   };
 }
