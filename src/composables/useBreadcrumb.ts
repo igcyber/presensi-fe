@@ -77,7 +77,7 @@ export function useBreadcrumb() {
 
     // Berita
     "berita.index": [],
-    "berita.detail": ["Berita", "berita.index"],
+    "berita.detail": ["berita.index"],
   };
 
   /**
