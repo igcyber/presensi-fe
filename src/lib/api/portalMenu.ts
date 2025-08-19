@@ -23,6 +23,7 @@ export interface PortalMenu extends BaseEntity {
   link: string;
   icon: string;
   portalMenuKats: PortalMenuKat[];
+  portalMenuSubs: PortalMenuSub[];
 }
 
 // Background Video data structure

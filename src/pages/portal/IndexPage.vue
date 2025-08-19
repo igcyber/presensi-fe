@@ -49,10 +49,10 @@
       <p class="sub-menu-title">{{ menuActive.judul }}</p>
       <div class="sub-menu-content">
         <!-- submenu dengan kategori 'null' -->
-        <!-- <div v-if="menuActive.portalMenuKats && menuActive.portalMenuKats.length > 0" class="sub-menu-wrapper">
+        <div v-if="menuActive.portalMenuSubs && menuActive.portalMenuSubs.length > 0" class="sub-menu-wrapper">
           <p class="sub-menu-list-header"></p>
           <ul class="sub-menu-list">
-            <li v-for="submenu in menuActive.portalMenuKats" :key="submenu.id">
+            <li v-for="submenu in menuActive.portalMenuSubs" :key="submenu.id">
               <a class="sub-menu-list-wrapper" :href="submenu.link" :target="submenu.link === '#' ? '_self' : '_blank'">
                 <img
                   v-if="submenu.icon"
@@ -61,11 +61,11 @@
                   :alt="submenu.judul"
                 />
                 <br v-if="submenu.icon" />
-                {{ submenu.judul }}oke
+                {{ submenu.judul }}
               </a>
             </li>
           </ul>
-        </div> -->
+        </div>
 
         <!-- by kategori -->
         <div v-for="kat in menuActive.portalMenuKats" :key="kat.id" class="sub-menu-wrapper">
