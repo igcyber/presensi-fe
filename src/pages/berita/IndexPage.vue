@@ -137,8 +137,15 @@ watch(currentPage, () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
-watch(keyword, () => {
-  fetchData();
+watch(keyword, async () => {
+  await fetchData();
+
+  setPagination({
+    currentPage: data.value?.meta?.current_page ?? 1,
+    totalPages: data.value?.meta?.last_page ?? 1,
+    totalItems: data.value?.meta?.total ?? 0,
+    itemsPerPage: data.value?.meta?.per_page ?? 10,
+  });
 });
 
 onMounted(async () => {
