@@ -202,7 +202,7 @@ import {
 } from "@/lib/api/selayangPandang";
 
 // Constants
-const STICKY_HEADER_OFFSET = 250;
+const STICKY_HEADER_OFFSET = window.visualViewport?.width && window.visualViewport.width < 1023 ? 190 : 265;
 
 // Composables
 const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
