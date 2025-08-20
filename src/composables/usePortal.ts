@@ -47,7 +47,6 @@ export function usePortal() {
   watch(openSubMenuId, (newVal) => {
     if (newVal) {
       menuActive.value = menus.value.find((menu) => menu.id === newVal) || null;
-      console.log(menuActive.value);
     } else {
       menuActive.value = null;
     }

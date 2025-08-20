@@ -56,7 +56,7 @@
       <div class="row frame" style="padding-bottom: 60px">
         <div class="container" style="margin-bottom: 30px">
           <div class="row justify-content-center">
-            <div class="col-12 col-md-6 col-lg-4">
+            <div class="col-md-6 col-lg-4 col-12">
               <div class="fitur">
                 <div class="fitur-iconframe">
                   <div class="fitur-icon">
@@ -69,7 +69,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-12 col-md-6 col-lg-4">
+            <div class="col-md-6 col-lg-4 col-12">
               <div class="fitur">
                 <div class="fitur-iconframe">
                   <div class="fitur-icon">
@@ -82,7 +82,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-12 col-md-6 col-lg-4">
+            <div class="col-md-6 col-lg-4 col-12">
               <div class="fitur">
                 <div class="fitur-iconframe">
                   <div class="fitur-icon">
@@ -232,7 +232,7 @@
         </div>
         <div class="container">
           <div class="row">
-            <div v-for="(layanan, lIdx) in layanans" :key="lIdx" class="col-6 col-md-2 d-flex justify-content-center">
+            <div v-for="(layanan, lIdx) in layanans" :key="lIdx" class="col-md-2 d-flex justify-content-center col-6">
               <div class="layanan layanan-light">
                 <a :href="layanan.alamat" target="_blank">
                   <div class="layanan-icon-frame">
@@ -257,7 +257,7 @@
         </div>
         <div class="container">
           <div class="row">
-            <div v-for="(sistem, sIdx) in sistems" :key="sIdx" class="col-6 col-md-2 d-flex justify-content-center">
+            <div v-for="(sistem, sIdx) in sistems" :key="sIdx" class="col-md-2 d-flex justify-content-center col-6">
               <div class="layanan layanan-light">
                 <a :href="sistem.alamat" target="_blank">
                   <div class="layanan-icon-frame">

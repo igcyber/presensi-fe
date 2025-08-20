@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+@theme {
+  /* Color */
+  --color-portal-green: #00a85f;
+  --color-portal-green-dark: #00884d;
+  --color-portal-blue: #0d3455cc;
+
+  /* Animation */
+  --animate-slide-up: slide-up 0.5s ease-in-out;
+  --animate-up-down: up-down 1.2s infinite ease-in-out;
+
+  @keyframes slide-up {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes up-down {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(10px);
+    }
+  }
+}
