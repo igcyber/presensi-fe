@@ -6,31 +6,31 @@
   >
     <!-- Header Content -->
     <header class="mt-5 mb-0 flex w-full flex-col items-center">
-      <img class="h-[120px] md:h-[100px]" src="/kukar-logo.png" alt="logo-kukarkab" />
+      <img class="h-[100px] md:h-[120px]" src="/kukar-logo.png" alt="logo-kukarkab" />
 
       <div class="mt-2.5 flex w-fit flex-col text-center">
         <div class="flex flex-col text-[30px] font-bold text-white">
-          <p class="leading-[0.5]">Portal Resmi</p>
+          <p class="leading-5">Portal Resmi</p>
           <p>Kabupaten Kutai Kartanegara</p>
         </div>
         <p class="mt-2 text-white">"Kukar Idaman Mitra Pembangunan IKN"</p>
       </div>
 
       <RouterLink
-        class="bg-portal-green hover:bg-portal-green-dark mt-5 mb-10 inline-block w-[120px] rounded-[60px] px-3 py-3 text-center font-medium text-white no-underline transition-all duration-500 hover:shadow-[0_4px_8px_0_rgba(171,190,209,0.4)]"
-        to="/beranda"
+        class="bg-portal-green hover:bg-portal-green-dark mt-5 inline-block w-[150px] rounded-[60px] p-3 text-center font-medium text-white transition-all duration-500 hover:shadow-[0_4px_8px_0_rgba(171,190,209,0.4)]"
+        :to="{ name: 'beranda.index' }"
       >
         Website
       </RouterLink>
     </header>
 
     <!-- Main Content -->
-    <main class="my-auto mb-10">
+    <main class="my-auto mb-20">
       <div class="flex flex-wrap justify-center gap-5">
         <a
           v-for="menulist in menus"
           :key="menulist.id"
-          class="xs:w-full bg-portal-green hover:bg-portal-green-dark flex min-h-[90px] w-[100px] flex-col justify-between rounded-[10px] p-[5px_0] text-white no-underline transition-all duration-500 hover:shadow-[0_4px_8px_0_rgba(171,190,209,0.4)]"
+          class="xs:w-full bg-portal-green hover:bg-portal-green-dark flex min-h-[90px] w-[100px] flex-col justify-between rounded-[10px] pt-2 pb-3 text-white transition-all duration-500 hover:shadow-[0_4px_8px_0_rgba(171,190,209,0.4)]"
           :href="menulist.link"
           @click="menulist.link === '#' ? toggleSubMenu(menulist.id) : null"
           :target="menulist.link === '#' ? '_self' : '_blank'"
@@ -132,7 +132,7 @@
   </div>
 
   <!-- Background Video -->
-  <video autoplay muted loop class="fixed top-0 left-0 min-h-full min-w-full">
+  <video autoplay muted loop class="fixed inset-0 h-full w-full object-cover">
     <source src="/portal-video.webm" type="video/webm" />
   </video>
 </template>
