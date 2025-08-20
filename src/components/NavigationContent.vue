@@ -1,13 +1,22 @@
 <template>
-  <div class="content">
-    <template v-for="item in navigation" :key="item.path">
-      <RouterLink
-        class="content-link cursor-pointer"
-        :class="{ active: isActivePath(route.path, item.path) }"
-        :to="item.path"
-        >{{ item.title }}</RouterLink
-      >
-    </template>
+  <div class="border-t border-gray-200 pt-8">
+    <h3 class="mb-4 text-lg font-semibold text-gray-800">Navigasi Terkait</h3>
+    <div class="flex flex-wrap gap-3">
+      <template v-for="item in navigation" :key="item.path">
+        <RouterLink
+          class="hover:text-portal-green hover:border-portal-green inline-block rounded-md border border-gray-300 px-4 py-2 text-sm text-gray-600 transition-all duration-200 hover:bg-gray-50"
+          :class="{
+            'bg-portal-green border-portal-green hover:bg-portal-green-dark text-white hover:text-white': isActivePath(
+              route.path,
+              item.path,
+            ),
+          }"
+          :to="item.path"
+        >
+          {{ item.title }}
+        </RouterLink>
+      </template>
+    </div>
   </div>
 </template>
 

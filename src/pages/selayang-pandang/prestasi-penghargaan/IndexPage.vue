@@ -1,50 +1,163 @@
 <template>
-  <div class="container-fluid navbreaker">
+  <div class="min-h-screen bg-gray-50">
+    <!-- Navigation Spacer -->
+    <div class="h-26.5 lg:h-40.5"></div>
+
+    <!-- Breadcrumb -->
     <AppBreadcrumb />
 
-    <div class="row">
-      <div class="frame2 container">
-        <div v-if="isLoading" class="text-center">
-          <div class="spinner-border" role="status"></div>
+    <!-- Main Content -->
+    <main class="py-12">
+      <div class="container">
+        <!-- Loading State -->
+        <div v-if="isLoading" class="flex items-center justify-center py-20">
+          <div class="text-center">
+            <div class="border-portal-green mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2"></div>
+            <p class="text-gray-600">Memuat data...</p>
+          </div>
         </div>
-        <div v-else-if="isError" class="alert alert-danger">
-          <h4>Error</h4>
-          <p>{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
-          <button class="btn btn-primary" @click="fetchData">Coba Lagi</button>
+
+        <!-- Error State -->
+        <div v-else-if="isError" class="mx-auto max-w-2xl">
+          <div class="rounded-lg border border-red-200 bg-red-50 p-8 text-center">
+            <i class="bx bx-error-circle mb-4 text-4xl text-red-500"></i>
+            <h4 class="mb-4 text-xl font-semibold text-red-800">Terjadi Kesalahan</h4>
+            <p class="mb-6 text-red-700">{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
+            <button
+              class="rounded-lg bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
+              @click="fetchData"
+            >
+              <i class="bx bx-refresh mr-2"></i>
+              Coba Lagi
+            </button>
+          </div>
         </div>
-        <div v-else-if="contentData">
+
+        <!-- Content -->
+        <div v-else-if="data">
           <SelayangPandang
-            :title="contentData.slug"
-            :content="contentData.isi"
-            :image="`https://kukarkab.go.id/uploads/${contentData.foto}`"
+            :title="data.data.slug"
+            :content="data.data.isi"
+            :image="`https://kukarkab.go.id/uploads/${data.data.foto}`"
           >
             <template #content>
-              <div ref="tableTarget" class="table-responsive" style="margin-top: -15px">
-                <table class="table-striped table">
-                  <thead>
-                    <tr>
-                      <th>No</th>
-                      <th>Tahun</th>
-                      <th>Nama</th>
-                      <th>Keterangan</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="(item, index) in data?.prestasis" :key="item.id">
-                      <td>{{ index + 1 + (currentPage - 1) * itemsPerPage }}.</td>
-                      <td>{{ item.tahun }}</td>
-                      <td>{{ item.nama }}</td>
-                      <td v-html="item.keterangan"></td>
-                    </tr>
-                    <tr v-if="data?.prestasis?.length === 0">
-                      <td colspan="4" class="text-center">Belum ada data prestasi</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+              <!-- Table Section -->
+              <div>
+                <div class="mb-6">
+                  <h3 class="mb-2 text-xl font-semibold text-gray-900">
+                    <i class="bx bx-trophy text-portal-green mr-2"></i>
+                    Daftar Prestasi dan Penghargaan
+                  </h3>
+                  <p class="text-sm text-gray-600">
+                    Berikut adalah prestasi dan penghargaan yang telah diraih Kabupaten Kutai Kartanegara
+                  </p>
+                </div>
 
-              <div class="row">
-                <div class="col-md-12">
+                <!-- Table Container -->
+                <div ref="tableTarget" class="overflow-hidden rounded border border-gray-200 bg-white shadow-sm">
+                  <!-- Desktop Table -->
+                  <div class="hidden overflow-x-auto md:block">
+                    <table class="min-w-full divide-y divide-gray-200">
+                      <thead class="bg-gray-50">
+                        <tr>
+                          <th
+                            scope="col"
+                            class="w-16 px-6 py-4 text-left text-xs font-medium tracking-wider text-gray-500 uppercase"
+                          >
+                            No
+                          </th>
+                          <th
+                            scope="col"
+                            class="w-24 px-6 py-4 text-left text-xs font-medium tracking-wider text-gray-500 uppercase"
+                          >
+                            Tahun
+                          </th>
+                          <th
+                            scope="col"
+                            class="px-6 py-4 text-left text-xs font-medium tracking-wider text-gray-500 uppercase"
+                          >
+                            Nama Prestasi
+                          </th>
+                          <th
+                            scope="col"
+                            class="px-6 py-4 text-left text-xs font-medium tracking-wider text-gray-500 uppercase"
+                          >
+                            Keterangan
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-gray-200 bg-white">
+                        <tr
+                          v-for="(item, index) in data?.prestasis"
+                          :key="item.id"
+                          class="transition-colors duration-150 hover:bg-gray-50"
+                        >
+                          <td class="px-6 py-4 text-sm font-medium whitespace-nowrap text-gray-900">
+                            {{ index + 1 + (currentPage - 1) * itemsPerPage }}.
+                          </td>
+                          <td class="px-6 py-4 text-sm whitespace-nowrap text-gray-900">
+                            <span
+                              class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800"
+                            >
+                              {{ item.tahun }}
+                            </span>
+                          </td>
+                          <td class="px-6 py-4 text-sm font-medium text-gray-900">
+                            {{ item.nama }}
+                          </td>
+                          <td class="px-6 py-4 text-sm text-gray-700">
+                            <div class="prose prose-sm max-w-none" v-html="item.keterangan"></div>
+                          </td>
+                        </tr>
+
+                        <!-- Empty State Row -->
+                        <tr v-if="data?.prestasis?.length === 0">
+                          <td colspan="4" class="px-6 py-12 text-center">
+                            <div class="text-gray-400">
+                              <i class="bx bx-trophy mb-3 text-4xl"></i>
+                              <p class="text-sm">Belum ada data prestasi dan penghargaan</p>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <!-- Mobile Cards -->
+                  <div class="space-y-4 p-4 md:hidden">
+                    <div
+                      v-for="(item, index) in data?.prestasis"
+                      :key="item.id"
+                      class="rounded border border-gray-200 bg-white p-4 shadow-sm"
+                    >
+                      <div class="mb-3 flex items-center justify-between">
+                        <span class="text-xs font-medium tracking-wider text-gray-500 uppercase">
+                          #{{ index + 1 + (currentPage - 1) * itemsPerPage }}
+                        </span>
+                        <span
+                          class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800"
+                        >
+                          {{ item.tahun }}
+                        </span>
+                      </div>
+
+                      <h4 class="mb-2 text-sm font-semibold text-gray-900">
+                        {{ item.nama }}
+                      </h4>
+
+                      <div class="prose prose-sm max-w-none text-sm text-gray-700" v-html="item.keterangan"></div>
+                    </div>
+
+                    <!-- Mobile Empty State -->
+                    <div v-if="data?.prestasis?.length === 0" class="py-8 text-center">
+                      <i class="bx bx-trophy mb-3 text-4xl text-gray-400"></i>
+                      <p class="text-sm text-gray-500">Belum ada data prestasi dan penghargaan</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="mt-6 flex justify-center">
                   <BasePagination
                     :page="currentPage"
                     :totalPages="totalPages"
@@ -60,16 +173,21 @@
           </SelayangPandang>
         </div>
 
-        <div v-else class="alert alert-warning">
-          <p>Data tidak ditemukan</p>
+        <!-- Empty State -->
+        <div v-else class="mx-auto max-w-2xl">
+          <div class="rounded-lg border border-yellow-200 bg-yellow-50 p-8 text-center">
+            <i class="bx bx-info-circle mb-4 text-4xl text-yellow-600"></i>
+            <h4 class="mb-4 text-xl font-semibold text-yellow-800">Data Tidak Ditemukan</h4>
+            <p class="text-yellow-700">Maaf, data yang Anda cari tidak tersedia saat ini.</p>
+          </div>
         </div>
       </div>
-    </div>
+    </main>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 
 import BasePagination from "@/components/BasePagination.vue";
 import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
@@ -84,7 +202,7 @@ import {
 } from "@/lib/api/selayangPandang";
 
 // Constants
-const STICKY_HEADER_OFFSET = 200;
+const STICKY_HEADER_OFFSET = 250;
 
 // Composables
 const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
@@ -100,10 +218,7 @@ const { data, isLoading, fetchData, isError, error } = useFetch<
 // Refs
 const tableTarget = ref<HTMLElement | null>(null);
 
-// Computed
-const contentData = computed(() => {
-  return data.value?.data;
-});
+// Computed properties can be added here if needed
 
 // Methods
 const scrollToTable = () => {
