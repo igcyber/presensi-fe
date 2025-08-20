@@ -70,20 +70,34 @@
               </a>
 
               <!-- Item dengan submenu -->
-              <div v-else class="group relative">
+              <div
+                :ref="(el) => setDesktopNavRef(el as Element, idx)"
+                v-else
+                class="group relative"
+                @keydown="handleDropdownKeydown($event, idx)"
+              >
                 <button
+                  @click="toggleDesktopMenu(idx)"
                   class="hover:text-portal-green flex items-center gap-1 px-3 py-4 text-sm font-medium text-gray-900 transition-colors"
                   :class="{
                     'text-portal-green font-bold': isActivePath(route.path, item.path),
                   }"
                 >
                   {{ item.title }}
-                  <i class="bx bx-chevron-down text-xs"></i>
+                  <i
+                    class="bx bx-chevron-down text-xs transition-transform duration-200"
+                    :class="{ 'rotate-180': showDesktopMenu && activeDesktopMenu === idx }"
+                  ></i>
                 </button>
 
                 <!-- Dropdown Menu -->
                 <div
-                  class="invisible absolute top-full left-0 z-50 mt-2 w-56 rounded-lg border border-gray-200 bg-white opacity-0 shadow-lg transition-all duration-200 group-hover:visible group-hover:opacity-100"
+                  v-show="showDesktopMenu && activeDesktopMenu === idx"
+                  class="absolute top-full left-0 z-50 mt-2 w-56 transform border border-gray-200 bg-white shadow-lg transition-all duration-200 ease-in-out"
+                  :class="{
+                    'visible translate-y-0 opacity-100': showDesktopMenu && activeDesktopMenu === idx,
+                    'invisible -translate-y-2 opacity-0': !(showDesktopMenu && activeDesktopMenu === idx),
+                  }"
                 >
                   <div class="py-2">
                     <router-link
@@ -94,6 +108,7 @@
                         'text-portal-green bg-gray-50 font-medium': isActivePath(route.path, child.path),
                       }"
                       :to="child.path"
+                      @click="closeDesktopMenu"
                     >
                       {{ child.title }}
                     </router-link>
@@ -106,7 +121,7 @@
 
         <!-- Mobile Navigation -->
         <div
-          ref="collapseNavbar"
+          ref="collapseMobileNavbar"
           class="overflow-auto transition-all duration-300 ease-in-out lg:hidden"
           :class="{ 'max-h-0': !showMobileMenu, 'max-h-96 pb-4': showMobileMenu }"
         >
@@ -186,10 +201,47 @@ const { contactInfo, navigation } = useAppData();
 // Get router component
 const route = useRoute();
 
-const collapseNavbar = ref<HTMLElement | null>(null);
+const collapseMobileNavbar = ref<HTMLElement | null>(null);
+const desktopNavRefs = ref<Map<number, HTMLElement>>(new Map());
+
+// Mobile menu
 const showMobileMenu = ref(false);
 const activeSubmenu = ref<number | null>(null);
 const mobileMenuButton = ref<HTMLElement | null>(null);
+// Desktop menu
+const activeDesktopMenu = ref<number | null>(null);
+const showDesktopMenu = ref(false);
+
+// Desktop menu functions
+const toggleDesktopMenu = (idx: number) => {
+  if (activeDesktopMenu.value === idx) {
+    closeDesktopMenu();
+  } else {
+    showDesktopMenu.value = true;
+    activeDesktopMenu.value = idx;
+  }
+};
+
+const closeDesktopMenu = () => {
+  showDesktopMenu.value = false;
+  activeDesktopMenu.value = null;
+};
+
+// Ref management functions
+const setDesktopNavRef = (el: Element | null, idx: number) => {
+  if (el && el instanceof HTMLElement) {
+    desktopNavRefs.value.set(idx, el);
+  } else {
+    desktopNavRefs.value.delete(idx);
+  }
+};
+
+// Keyboard navigation functions
+const handleDropdownKeydown = (event: KeyboardEvent, idx: number) => {
+  if (event.key === "Escape") {
+    closeDesktopMenu();
+  }
+};
 
 // Mobile menu functions
 const toggleMobileMenu = () => {
@@ -209,10 +261,23 @@ const toggleSubmenu = (idx: number) => {
 };
 
 const onDocPointer = (e: PointerEvent) => {
-  if (!showMobileMenu.value) return;
-  const t = e.target as Node;
-  if (collapseNavbar.value?.contains(t) == false && mobileMenuButton.value?.contains(t) == false) {
-    closeMobileMenu();
+  const target = e.target as Node;
+
+  // Handle mobile menu click outside
+  if (showMobileMenu.value) {
+    if (!collapseMobileNavbar.value?.contains(target) && !mobileMenuButton.value?.contains(target)) {
+      closeMobileMenu();
+    }
+    return;
+  }
+
+  // Handle desktop menu click outside
+  if (showDesktopMenu.value && activeDesktopMenu.value !== null) {
+    const activeNav = desktopNavRefs.value.get(activeDesktopMenu.value);
+
+    if (activeNav && !activeNav.contains(target)) {
+      closeDesktopMenu();
+    }
   }
 };
 
@@ -225,7 +290,7 @@ watch(
 
 watch(showMobileMenu, (newVal) => {
   if (newVal) {
-    collapseNavbar.value?.scrollTo({
+    collapseMobileNavbar.value?.scrollTo({
       top: 0,
       behavior: "smooth",
     });
@@ -238,6 +303,9 @@ onMounted(() => {
 
 onUnmounted(() => {
   document.removeEventListener("pointerdown", onDocPointer);
+
+  // Clear refs
+  desktopNavRefs.value.clear();
 });
 </script>
 
