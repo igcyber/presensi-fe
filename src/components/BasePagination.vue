@@ -1,5 +1,5 @@
 <template>
-  <nav v-if="props.totalPages > 1" class="flex items-center justify-center" aria-label="Pagination Navigation">
+  <nav v-if="props.totalPages > 1" class="mt-6 flex items-center justify-center" aria-label="Pagination Navigation">
     <div class="flex items-center space-x-1">
       <!-- Previous Button -->
       <button

@@ -39,7 +39,7 @@
 
       <!-- Error State -->
       <template v-else-if="isError">
-        <div class="rounded-lg border border-red-200 bg-red-50 p-4">
+        <div class="rounded border border-red-200 bg-red-50 p-4">
           <h4 class="mb-2 font-semibold text-red-800">Error</h4>
           <p class="mb-3 text-sm text-red-700">{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
           <button

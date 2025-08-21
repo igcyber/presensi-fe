@@ -19,12 +19,12 @@
 
         <!-- Error State -->
         <div v-else-if="isError" class="mx-auto max-w-2xl">
-          <div class="rounded-lg border border-red-200 bg-red-50 p-8 text-center">
+          <div class="rounded border border-red-200 bg-red-50 p-8 text-center">
             <i class="bx bx-error-circle mb-4 text-4xl text-red-500"></i>
             <h4 class="mb-4 text-xl font-semibold text-red-800">Terjadi Kesalahan</h4>
             <p class="mb-6 text-red-700">{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
             <button
-              class="rounded-lg bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
+              class="rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
               @click="fetchData"
             >
               <i class="bx bx-refresh mr-2"></i>
@@ -73,7 +73,7 @@
 
         <!-- Empty State -->
         <div v-else class="mx-auto max-w-2xl">
-          <div class="rounded-lg border border-yellow-200 bg-yellow-50 p-8 text-center">
+          <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
             <i class="bx bx-info-circle mb-4 text-4xl text-yellow-600"></i>
             <h4 class="mb-4 text-xl font-semibold text-yellow-800">Data Tidak Ditemukan</h4>
             <p class="text-yellow-700">Maaf, data yang Anda cari tidak tersedia saat ini.</p>
