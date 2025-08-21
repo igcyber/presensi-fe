@@ -1,49 +1,86 @@
 <template>
-  <div class="container-fluid navbreaker">
+  <div class="min-h-screen bg-gray-50">
+    <!-- Navigation Spacer -->
+    <div class="h-26.5 lg:h-40.5"></div>
+
+    <!-- Breadcrumb -->
     <AppBreadcrumb />
 
-    <div class="row">
-      <div class="frame2 container">
-        <div v-if="isLoading" class="text-center">
-          <div class="spinner-border" role="status"></div>
+    <!-- Main Content -->
+    <main class="py-12">
+      <div class="container">
+        <!-- Loading State -->
+        <div v-if="isLoading" class="flex items-center justify-center py-20">
+          <div class="text-center">
+            <div class="border-portal-green mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2"></div>
+            <p class="text-gray-600">Memuat data...</p>
+          </div>
         </div>
-        <div v-else-if="isError" class="alert alert-danger">
-          <h4>Error</h4>
-          <p>{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
-          <button class="btn btn-primary" @click="fetchData">Coba Lagi</button>
+
+        <!-- Error State -->
+        <div v-else-if="isError" class="mx-auto max-w-2xl">
+          <div class="rounded-lg border border-red-200 bg-red-50 p-8 text-center">
+            <i class="bx bx-error-circle mb-4 text-4xl text-red-500"></i>
+            <h4 class="mb-4 text-xl font-semibold text-red-800">Terjadi Kesalahan</h4>
+            <p class="mb-6 text-red-700">{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
+            <button
+              class="rounded-lg bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
+              @click="fetchData"
+            >
+              <i class="bx bx-refresh mr-2"></i>
+              Coba Lagi
+            </button>
+          </div>
         </div>
-        <div v-else-if="visi && misi">
+
+        <!-- Content -->
+        <div v-else-if="data">
           <SelayangPandang
-            :title="visi?.slug || ''"
-            :content="visi?.isi || ''"
-            :image="`https://kukarkab.go.id/uploads/${visi?.foto}`"
+            :title="visi.nama"
+            :content="visi.isi"
+            :image="`https://kukarkab.go.id/uploads/${visi.foto}`"
           >
             <template #other>
+              <!-- Hero Image -->
               <div
-                v-if="
-                  `https://kukarkab.go.id/uploads/${misi?.foto}`.split('/')[
-                    `https://kukarkab.go.id/uploads/${misi?.foto}`.split('/').length - 1
-                  ] != 'nopict.jpg'
-                "
-                class="detail-image-frame"
+                v-if="misi.foto.split('/')[misi.foto.split('/').length - 1] != 'nopict.jpg'"
+                class="mb-8 h-80 w-full overflow-hidden rounded shadow-lg"
               >
-                <img :src="`https://kukarkab.go.id/uploads/${misi?.foto}`" class="detail-image" />
+                <img
+                  :src="`https://kukarkab.go.id/uploads/${misi.foto}`"
+                  :alt="misi.nama"
+                  class="h-full w-full object-cover"
+                />
               </div>
-              <div class="headingtext mt-3">
-                <span class="headingtext-title"> {{ misi?.slug || "" }} </span>
-                <i class="bx bx-dots-horizontal-rounded detail-divider"></i>
+
+              <!-- Content Header -->
+              <div class="mb-4">
+                <h1 class="mb-4 text-3xl font-bold text-gray-800 md:text-4xl">
+                  {{ misi.nama }}
+                </h1>
+                <div class="text-portal-green flex items-center text-2xl">
+                  <i class="bx bx-dots-horizontal-rounded"></i>
+                </div>
               </div>
-              <div class="detail-text">
-                <article v-html="misi?.isi || ''"></article>
+
+              <!-- Article Content -->
+              <div class="mb-8 max-w-none">
+                <article v-html="misi.isi" class="text-justify leading-relaxed text-gray-700"></article>
               </div>
             </template>
           </SelayangPandang>
         </div>
-        <div v-else class="alert alert-warning">
-          <p>Data tidak ditemukan</p>
+
+        <!-- Empty State -->
+        <div v-else class="mx-auto max-w-2xl">
+          <div class="rounded-lg border border-yellow-200 bg-yellow-50 p-8 text-center">
+            <i class="bx bx-info-circle mb-4 text-4xl text-yellow-600"></i>
+            <h4 class="mb-4 text-xl font-semibold text-yellow-800">Data Tidak Ditemukan</h4>
+            <p class="text-yellow-700">Maaf, data yang Anda cari tidak tersedia saat ini.</p>
+          </div>
         </div>
       </div>
-    </div>
+    </main>
   </div>
 </template>
 
@@ -60,13 +97,12 @@ const { data, isLoading, fetchData, isError, error } = useFetch<VisiMisiResponse
   immediate: false,
   extractData: (response) => response.data,
 });
-
 const visi = computed(() => {
-  return data.value?.visi;
+  return (data.value as VisiMisiData)?.visi;
 });
 
 const misi = computed(() => {
-  return data.value?.misi;
+  return (data.value as VisiMisiData)?.misi;
 });
 
 onMounted(async () => {

@@ -1,17 +1,39 @@
 <template>
-  <div class="container-fluid navbreaker">
+  <div class="min-h-screen bg-gray-50">
+    <!-- Navigation Spacer -->
+    <div class="h-26.5 lg:h-40.5"></div>
+
+    <!-- Breadcrumb -->
     <AppBreadcrumb />
 
-    <div class="row">
-      <div class="frame2 container">
-        <div v-if="isLoading" class="text-center">
-          <div class="spinner-border" role="status"></div>
+    <!-- Main Content -->
+    <main class="py-12">
+      <div class="container">
+        <!-- Loading State -->
+        <div v-if="isLoading" class="flex items-center justify-center py-20">
+          <div class="text-center">
+            <div class="border-portal-green mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2"></div>
+            <p class="text-gray-600">Memuat data...</p>
+          </div>
         </div>
-        <div v-else-if="isError" class="alert alert-danger">
-          <h4>Error</h4>
-          <p>{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
-          <button class="btn btn-primary" @click="fetchData">Coba Lagi</button>
+
+        <!-- Error State -->
+        <div v-else-if="isError" class="mx-auto max-w-2xl">
+          <div class="rounded-lg border border-red-200 bg-red-50 p-8 text-center">
+            <i class="bx bx-error-circle mb-4 text-4xl text-red-500"></i>
+            <h4 class="mb-4 text-xl font-semibold text-red-800">Terjadi Kesalahan</h4>
+            <p class="mb-6 text-red-700">{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
+            <button
+              class="rounded-lg bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
+              @click="fetchData"
+            >
+              <i class="bx bx-refresh mr-2"></i>
+              Coba Lagi
+            </button>
+          </div>
         </div>
+
+        <!-- Content -->
         <div v-else-if="contentData">
           <SelayangPandang
             :title="contentData.slug"
@@ -19,27 +41,86 @@
             :image="`https://kukarkab.go.id/uploads/${contentData.foto}`"
           >
             <template #other>
-              <div v-for="(item, index) in bupatiData" :key="index" class="col-md-4">
-                <div class="bupati">
-                  <div class="bupati-image-frame">
-                    <img class="bupati-image" :src="`https://kukarkab.go.id/uploads/${item.foto}`" />
+              <!-- Grid Responsive untuk Card Bupati -->
+              <div class="mb-10 grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div
+                  v-for="(item, index) in bupatiData"
+                  :key="index"
+                  class="group transform overflow-hidden rounded-xl border border-gray-100 bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
+                >
+                  <!-- Image Container -->
+                  <div class="relative overflow-hidden">
+                    <div class="aspect-w-16 aspect-h-12 bg-gradient-to-br from-gray-200 to-gray-300">
+                      <img
+                        :src="`https://kukarkab.go.id/uploads/${item.foto}`"
+                        :alt="`${item.namaBupati} - ${item.namaWakil}`"
+                        class="h-48 w-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
+                        loading="lazy"
+                      />
+                    </div>
+
+                    <!-- Badge Periode -->
+                    <div class="absolute top-4 right-4">
+                      <div class="bg-portal-green rounded-full px-3 py-1 text-xs font-semibold text-white shadow-md">
+                        {{ item.tahunAwal }}-{{ item.tahunAkhir }}
+                      </div>
+                    </div>
                   </div>
-                  <div class="bupati-content-frame">
-                    <p class="bupati-name">{{ item.namaBupati }} - {{ item.namaWakil }}</p>
-                    <p class="bupati-periode mt-2">
-                      <i class="bx bx-calendar"></i> {{ item.tahunAwal }}/{{ item.tahunAkhir }}
-                    </p>
+
+                  <!-- Content Container -->
+                  <div class="space-y-4 p-6">
+                    <!-- Names -->
+                    <div class="space-y-2">
+                      <h3
+                        class="group-hover:text-portal-green text-lg leading-tight font-bold text-gray-900 transition-colors duration-200"
+                      >
+                        {{ item.namaBupati }}
+                      </h3>
+                      <p class="text-base font-medium text-gray-700">
+                        {{ item.namaWakil }}
+                      </p>
+                    </div>
+
+                    <!-- Period Information -->
+                    <div class="flex items-center space-x-2 text-sm text-gray-600">
+                      <i class="bx bx-calendar text-portal-green text-lg"></i>
+                      <span class="font-medium">Periode:</span>
+                      <span class="rounded-md bg-gray-100 px-2 py-1 font-semibold text-gray-800">
+                        {{ item.tahunAwal }}/{{ item.tahunAkhir }}
+                      </span>
+                    </div>
+
+                    <!-- Leadership Type Badge -->
+                    <div class="flex flex-wrap gap-2 pt-2">
+                      <span
+                        class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800"
+                      >
+                        <i class="bx bx-user-circle mr-1 text-sm"></i>
+                        Bupati & Wakil Bupati
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Card Footer dengan Decoration -->
+                  <div class="px-6 pb-6">
+                    <div class="from-portal-green h-1 w-full rounded-full bg-gradient-to-r to-blue-500"></div>
                   </div>
                 </div>
               </div>
             </template>
           </SelayangPandang>
         </div>
-        <div v-else class="alert alert-warning">
-          <p>Data tidak ditemukan</p>
+
+        <!-- Empty State -->
+        <div v-else class="mx-auto max-w-2xl">
+          <div class="rounded-lg border border-yellow-200 bg-yellow-50 p-8 text-center">
+            <i class="bx bx-info-circle mb-4 text-4xl text-yellow-600"></i>
+            <h4 class="mb-4 text-xl font-semibold text-yellow-800">Data Tidak Ditemukan</h4>
+            <p class="text-yellow-700">Maaf, data yang Anda cari tidak tersedia saat ini.</p>
+          </div>
         </div>
       </div>
-    </div>
+    </main>
   </div>
 </template>
 
@@ -50,7 +131,8 @@ import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
 import SelayangPandang from "@/components/SelayangPandang.vue";
 
 import useFetch from "@/composables/useFetch";
-import { type BupatiDataPayload, type BupatiResponse, getBupati } from "@/lib/api/pemerintahan";
+import type { ContentData } from "@/lib/api/apiResponse";
+import { type Bupati, type BupatiDataPayload, type BupatiResponse, getBupati } from "@/lib/api/pemerintahan";
 
 const { data, isLoading, fetchData, isError, error } = useFetch<BupatiResponse, BupatiDataPayload>(getBupati, {
   immediate: false,
@@ -58,11 +140,11 @@ const { data, isLoading, fetchData, isError, error } = useFetch<BupatiResponse, 
 });
 
 const contentData = computed(() => {
-  return data.value?.data;
+  return data.value?.data as ContentData;
 });
 
 const bupatiData = computed(() => {
-  return data.value?.bupati;
+  return data.value?.bupati as Bupati[];
 });
 
 onMounted(async () => {

@@ -11,11 +11,11 @@
       </div>
 
       <!-- Content Header -->
-      <div class="mb-8">
+      <div class="mb-4">
         <h1 class="mb-4 text-3xl font-bold text-gray-800 md:text-4xl">
           {{ title }}
         </h1>
-        <div class="text-portal-green mb-6 flex items-center text-2xl">
+        <div class="text-portal-green flex items-center text-2xl">
           <i class="bx bx-dots-horizontal-rounded"></i>
         </div>
       </div>
