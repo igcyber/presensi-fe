@@ -103,7 +103,7 @@
             </div>
           </template>
 
-          <!-- Empty State for no documents -->
+          <!-- Empty State for no videos -->
           <template v-else>
             <div class="mx-auto max-w-2xl">
               <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
