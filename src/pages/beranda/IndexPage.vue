@@ -547,15 +547,15 @@
           >
             <template #default="{ item: opd }">
               <div
-                class="group h-75 max-h-70 overflow-hidden rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                class="group h-100 min-h-90 rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
               >
                 <!-- OPD Logo -->
                 <div class="flex justify-center p-6 pb-4">
-                  <div class="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-gray-50">
+                  <div class="flex h-40 w-full items-center justify-center overflow-hidden rounded">
                     <img
                       :src="`https://kukarkab.go.id/uploads/${opd.foto}`"
                       :alt="`Logo ${opd.nama}`"
-                      class="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
+                      class="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
                       loading="lazy"
                     />
                   </div>
