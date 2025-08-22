@@ -1,17 +1,39 @@
 <template>
-  <div class="container-fluid navbreaker">
+  <div class="min-h-screen bg-gray-50">
+    <!-- Navigation Spacer -->
+    <div class="h-26.5 lg:h-40.5"></div>
+
+    <!-- Breadcrumb -->
     <AppBreadcrumb />
 
-    <div class="row">
-      <div class="frame2 container">
-        <div v-if="isLoading" class="text-center">
-          <div class="spinner-border" role="status"></div>
+    <!-- Main Content -->
+    <main class="py-12">
+      <div class="container">
+        <!-- Loading State -->
+        <div v-if="isLoading" class="flex items-center justify-center py-20">
+          <div class="text-center">
+            <div class="border-portal-green mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2"></div>
+            <p class="text-gray-600">Memuat data...</p>
+          </div>
         </div>
-        <div v-else-if="isError" class="alert alert-danger">
-          <h4>Error</h4>
-          <p>{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
-          <button class="btn btn-primary" @click="fetchData">Coba Lagi</button>
+
+        <!-- Error State -->
+        <div v-else-if="isError" class="mx-auto max-w-2xl">
+          <div class="rounded border border-red-200 bg-red-50 p-8 text-center">
+            <i class="bx bx-error-circle mb-4 text-4xl text-red-500"></i>
+            <h4 class="mb-4 text-xl font-semibold text-red-800">Terjadi Kesalahan</h4>
+            <p class="mb-6 text-red-700">{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
+            <button
+              class="rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
+              @click="fetchData"
+            >
+              <i class="bx bx-refresh mr-2"></i>
+              Coba Lagi
+            </button>
+          </div>
         </div>
+
+        <!-- Content -->
         <div v-else-if="data">
           <SelayangPandang
             :title="data.data.slug"
@@ -19,69 +41,112 @@
             :image="`https://kukarkab.go.id/uploads/${data.data.foto}`"
           >
             <template #other>
-              <div class="row">
-                <div v-for="opd in data.opds" :key="opd.id" class="col-md-6">
-                  <div class="bupati bupati--opd">
-                    <div class="bupati-image-frame">
-                      <img class="bupati-image" :src="`https://kukarkab.go.id/uploads/${opd.foto}`" />
+              <!-- OPD Grid -->
+              <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                <div
+                  v-for="opd in data.opds"
+                  :key="opd.id"
+                  class="group overflow-hidden rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                >
+                  <div class="flex h-full">
+                    <!-- OPD Logo -->
+                    <div class="flex w-32 flex-shrink-0 items-center justify-center bg-gray-50 p-4">
+                      <img
+                        :src="`https://kukarkab.go.id/uploads/${opd.foto}`"
+                        :alt="`Logo ${opd.nama}`"
+                        class="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
+                        loading="lazy"
+                      />
                     </div>
-                    <div class="bupati-content-frame">
+
+                    <!-- OPD Content -->
+                    <div class="flex flex-1 flex-col p-4">
+                      <!-- OPD Name -->
                       <RouterLink
                         :to="{
                           name: 'unit-kerja.opd.detail',
                           params: { id: opd.id, slug: formatters.slugify(opd.nama) },
                         }"
-                        class="bupati-name"
-                        >{{ opd.nama }}</RouterLink
+                        class="hover:text-portal-green mb-3 block text-lg font-semibold text-gray-900 transition-colors duration-200"
+                        style="
+                          display: -webkit-box;
+                          -webkit-line-clamp: 2;
+                          line-clamp: 2;
+                          -webkit-box-orient: vertical;
+                          overflow: hidden;
+                        "
                       >
-                      <table>
-                        <tbody>
-                          <tr>
-                            <td style="vertical-align: text-top">
-                              <i class="bx bx-globe bupati-icon"></i>
-                            </td>
-                            <td
-                              class="bupati-textgrey"
-                              style="word-wrap: break-word; word-break: break-all; white-space: normal"
-                            >
-                              {{ opd.website }}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td style="vertical-align: text-top"><i class="bx bx-map bupati-icon"></i></td>
-                            <td
-                              class="bupati-textgrey"
-                              style="word-wrap: break-word; word-break: break-word; white-space: normal"
-                            >
-                              {{ opd.alamat }}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
+                        {{ opd.nama }}
+                      </RouterLink>
+
+                      <!-- OPD Info -->
+                      <div class="space-y-2 text-sm text-gray-600">
+                        <!-- Website -->
+                        <div class="flex items-start">
+                          <i class="bx bx-globe text-portal-green mt-0.5 mr-2 flex-shrink-0"></i>
+                          <a
+                            v-if="opd.website"
+                            :href="opd.website"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="text-portal-green hover:text-portal-green/80 break-all transition-colors duration-200"
+                          >
+                            {{ opd.website }}
+                          </a>
+                          <span v-else class="text-gray-400">Website tidak tersedia</span>
+                        </div>
+
+                        <!-- Address -->
+                        <div class="flex items-start">
+                          <i class="bx bx-map text-portal-green mt-0.5 mr-2 flex-shrink-0"></i>
+                          <span class="break-words">{{ opd.alamat || "Alamat tidak tersedia" }}</span>
+                        </div>
+                      </div>
+
+                      <!-- Action Button -->
+                      <div class="mt-auto pt-4">
+                        <RouterLink
+                          :to="{
+                            name: 'unit-kerja.opd.detail',
+                            params: { id: opd.id, slug: formatters.slugify(opd.nama) },
+                          }"
+                          class="bg-portal-green hover:bg-portal-green/90 inline-flex items-center rounded-md px-3 py-2 text-sm font-medium text-white transition-colors duration-200"
+                        >
+                          <i class="bx bx-info-circle mr-2"></i>
+                          Lihat Detail
+                        </RouterLink>
+                      </div>
                     </div>
                   </div>
                 </div>
+              </div>
 
-                <div class="col-md-12">
-                  <BasePagination
-                    :page="currentPage"
-                    :totalPages="totalPages"
-                    :itemsPerPage="itemsPerPage"
-                    :totalItems="totalItems"
-                    @previousPage="prevPage"
-                    @nextPage="nextPage"
-                    @page="onPage"
-                  />
-                </div>
+              <!-- Pagination -->
+              <div class="flex justify-center">
+                <BasePagination
+                  :page="currentPage"
+                  :totalPages="totalPages"
+                  :itemsPerPage="itemsPerPage"
+                  :totalItems="totalItems"
+                  @previousPage="prevPage"
+                  @nextPage="nextPage"
+                  @page="onPage"
+                />
               </div>
             </template>
           </SelayangPandang>
         </div>
-        <div v-else class="alert alert-warning">
-          <p>Data tidak ditemukan</p>
+
+        <!-- Empty State -->
+        <div v-else class="mx-auto max-w-2xl">
+          <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
+            <i class="bx bx-info-circle mb-4 text-4xl text-yellow-600"></i>
+            <h4 class="mb-4 text-xl font-semibold text-yellow-800">Data Tidak Ditemukan</h4>
+            <p class="text-yellow-700">Maaf, data yang Anda cari tidak tersedia saat ini.</p>
+          </div>
         </div>
       </div>
-    </div>
+    </main>
   </div>
 </template>
 

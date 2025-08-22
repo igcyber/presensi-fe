@@ -52,19 +52,17 @@
             <div class="lg:col-span-1">
               <div class="space-y-6">
                 <!-- OPD Logo -->
-                <div class="overflow-hidden rounded-lg bg-white p-6 shadow-md">
-                  <div class="flex justify-center">
-                    <img
-                      :src="`https://kukarkab.go.id/uploads/${data.foto}`"
-                      :alt="`Logo ${data.nama}`"
-                      class="h-32 w-32 object-contain"
-                      loading="lazy"
-                    />
-                  </div>
+                <div class="overflow-hidden rounded bg-white shadow-md">
+                  <img
+                    :src="`https://kukarkab.go.id/uploads/${data.foto}`"
+                    :alt="`Logo ${data.nama}`"
+                    class="h-full w-full object-cover"
+                    loading="lazy"
+                  />
                 </div>
 
                 <!-- Location Map -->
-                <div class="overflow-hidden rounded-lg bg-white shadow-md">
+                <div class="overflow-hidden rounded bg-white shadow-md">
                   <div class="border-b border-gray-200 px-4 py-3">
                     <h3 class="text-lg font-semibold text-gray-900">
                       <i class="bx bx-map text-portal-green mr-2"></i>
@@ -88,7 +86,7 @@
             <div class="lg:col-span-2">
               <div class="space-y-6">
                 <!-- OPD Header -->
-                <div class="rounded-lg bg-white p-6 shadow-md">
+                <div class="rounded bg-white p-6 shadow-md">
                   <div class="mb-4 flex items-center">
                     <i class="bx bx-buildings text-portal-green mr-3 text-2xl"></i>
                     <h1 class="text-2xl font-bold text-gray-900 md:text-3xl">{{ data.nama }}</h1>
@@ -112,7 +110,7 @@
                 </div>
 
                 <!-- Related Applications -->
-                <div class="rounded-lg bg-white shadow-md">
+                <div class="rounded bg-white shadow-md">
                   <div class="border-b border-gray-200 px-6 py-4">
                     <h2 class="text-lg font-semibold text-gray-900">
                       <i class="bx bx-devices text-portal-green mr-2"></i>
@@ -126,7 +124,7 @@
                         <div
                           v-for="(layanan, index) in data.layanans"
                           :key="layanan.id"
-                          class="rounded-lg border border-gray-200 p-4 transition-shadow duration-200 hover:shadow-md"
+                          class="rounded border border-gray-200 p-4 transition-shadow duration-200 hover:shadow-md"
                         >
                           <!-- App Header -->
                           <div class="mb-3 flex items-center justify-between">
@@ -172,16 +170,6 @@
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-
-          <!-- Content Tabs (Optional - if needed for navigation) -->
-          <div class="mt-8 rounded-lg bg-white shadow-md">
-            <div class="border-b border-gray-200 px-6 py-3">
-              <nav class="flex space-x-8">
-                <a href="#" class="border-portal-green text-portal-green border-b-2 py-2 text-sm font-medium"> OPD </a>
-                <a href="#" class="py-2 text-sm font-medium text-gray-500 hover:text-gray-700"> Perusahaan Daerah </a>
-              </nav>
             </div>
           </div>
         </div>

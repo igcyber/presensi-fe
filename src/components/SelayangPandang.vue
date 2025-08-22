@@ -21,7 +21,7 @@
       </div>
 
       <!-- Article Content -->
-      <div class="mb-8 max-w-none">
+      <div class="max-w-none">
         <article v-html="content" class="text-justify leading-relaxed text-gray-700"></article>
 
         <!-- Additional Content Slot -->

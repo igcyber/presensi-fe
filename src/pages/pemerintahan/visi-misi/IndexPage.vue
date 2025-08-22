@@ -64,7 +64,7 @@
               </div>
 
               <!-- Article Content -->
-              <div class="mb-8 max-w-none">
+              <div class="max-w-none">
                 <article v-html="misi.isi" class="text-justify leading-relaxed text-gray-700"></article>
               </div>
             </template>

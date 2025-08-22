@@ -42,7 +42,7 @@
           >
             <template #other>
               <!-- Grid Responsive untuk Card Bupati -->
-              <div class="mb-10 grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div
                   v-for="(item, index) in bupatiData"
                   :key="index"

@@ -1,5 +1,5 @@
 <template>
-  <div class="border-t border-gray-200 pt-8">
+  <div class="mt-10 border-t border-gray-200 pt-8">
     <h3 class="mb-4 text-lg font-semibold text-gray-800">Navigasi Terkait</h3>
     <div class="flex flex-wrap gap-3">
       <template v-for="item in navigation" :key="item.path">
