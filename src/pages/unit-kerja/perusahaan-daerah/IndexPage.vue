@@ -1,17 +1,39 @@
 <template>
-  <div class="container-fluid navbreaker">
+  <div class="min-h-screen bg-gray-50">
+    <!-- Navigation Spacer -->
+    <div class="h-26.5 lg:h-40.5"></div>
+
+    <!-- Breadcrumb -->
     <AppBreadcrumb />
 
-    <div class="row">
-      <div class="frame2 container">
-        <div v-if="isLoading" class="text-center">
-          <div class="spinner-border" role="status"></div>
+    <!-- Main Content -->
+    <main class="py-12">
+      <div class="container">
+        <!-- Loading State -->
+        <div v-if="isLoading" class="flex items-center justify-center py-20">
+          <div class="text-center">
+            <div class="border-portal-green mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2"></div>
+            <p class="text-gray-600">Memuat data...</p>
+          </div>
         </div>
-        <div v-else-if="isError" class="alert alert-danger">
-          <h4>Error</h4>
-          <p>{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
-          <button class="btn btn-primary" @click="fetchData">Coba Lagi</button>
+
+        <!-- Error State -->
+        <div v-else-if="isError" class="mx-auto max-w-2xl">
+          <div class="rounded border border-red-200 bg-red-50 p-8 text-center">
+            <i class="bx bx-error-circle mb-4 text-4xl text-red-500"></i>
+            <h4 class="mb-4 text-xl font-semibold text-red-800">Terjadi Kesalahan</h4>
+            <p class="mb-6 text-red-700">{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
+            <button
+              class="rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
+              @click="fetchData"
+            >
+              <i class="bx bx-refresh mr-2"></i>
+              Coba Lagi
+            </button>
+          </div>
         </div>
+
+        <!-- Content -->
         <div v-else-if="data">
           <SelayangPandang
             :title="data.data.slug"
@@ -19,45 +41,81 @@
             :image="`https://kukarkab.go.id/uploads/${data.data.foto}`"
           >
             <template #other>
-              <div v-if="data.perusdas.length > 0" class="row">
-                <div v-for="perusda in data.perusdas" :key="perusda.id" class="col-md-6">
-                  <div class="bupati bupati--opd">
-                    <div class="bupati-image-frame">
-                      <img class="bupati-image" :src="`https://kukarkab.go.id/uploads/${perusda.foto}`" />
-                    </div>
-                    <div class="bupati-content-frame">
-                      <RouterLink :to="{ name: 'unit-kerja.perusahaan-daerah' }" class="bupati-name">{{
-                        perusda.nama
-                      }}</RouterLink>
-                      <table>
-                        <tbody>
-                          <tr>
-                            <td style="vertical-align: text-top">
-                              <i class="bx bx-globe bupati-icon"></i>
-                            </td>
-                            <td
-                              class="bupati-textgrey"
-                              style="word-wrap: break-word; word-break: break-all; white-space: normal"
+              <template v-if="data.perusdas.length > 0">
+                <!-- Perusahaan Daerah Grid -->
+                <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                  <div
+                    v-for="perusda in data.perusdas"
+                    :key="perusda.id"
+                    class="group overflow-hidden rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                  >
+                    <div class="flex h-full">
+                      <!-- Company Logo -->
+                      <div class="flex w-32 flex-shrink-0 items-center justify-center bg-gray-50 p-4">
+                        <img
+                          :src="`https://kukarkab.go.id/uploads/${perusda.foto}`"
+                          :alt="`Logo ${perusda.nama}`"
+                          class="h-20 w-20 object-contain transition-transform duration-300 group-hover:scale-105"
+                          loading="lazy"
+                        />
+                      </div>
+
+                      <!-- Company Content -->
+                      <div class="flex flex-1 flex-col p-4">
+                        <!-- Company Name -->
+                        <RouterLink
+                          :to="{ name: 'unit-kerja.perusahaan-daerah' }"
+                          class="hover:text-portal-green mb-3 block text-lg font-semibold text-gray-900 transition-colors duration-200"
+                          style="
+                            display: -webkit-box;
+                            -webkit-line-clamp: 2;
+                            line-clamp: 2;
+                            -webkit-box-orient: vertical;
+                            overflow: hidden;
+                          "
+                        >
+                          {{ perusda.nama }}
+                        </RouterLink>
+
+                        <!-- Company Info -->
+                        <div class="space-y-2 text-sm text-gray-600">
+                          <!-- Phone -->
+                          <div class="flex items-start">
+                            <i class="bx bx-phone text-portal-green mt-0.5 mr-2 flex-shrink-0"></i>
+                            <a
+                              v-if="perusda.telepon"
+                              :href="`tel:${perusda.telepon}`"
+                              class="inline-flex items-center rounded bg-green-100 px-2 py-1 text-xs font-medium text-green-800 transition-colors duration-200 hover:bg-green-200"
                             >
-                              <a :href="`tel:${perusda.telepon}`" class="badge badge-success">{{ perusda.telepon }}</a>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td style="vertical-align: text-top"><i class="bx bx-map bupati-icon"></i></td>
-                            <td
-                              class="bupati-textgrey"
-                              style="word-wrap: break-word; word-break: break-word; white-space: normal"
-                            >
-                              {{ perusda.alamat }}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
+                              {{ perusda.telepon }}
+                            </a>
+                            <span v-else class="text-gray-400">Telepon tidak tersedia</span>
+                          </div>
+
+                          <!-- Address -->
+                          <div class="flex items-start">
+                            <i class="bx bx-map text-portal-green mt-0.5 mr-2 flex-shrink-0"></i>
+                            <span class="break-words">{{ perusda.alamat || "Alamat tidak tersedia" }}</span>
+                          </div>
+                        </div>
+
+                        <!-- Action Button -->
+                        <div class="mt-auto pt-4">
+                          <RouterLink
+                            :to="{ name: 'unit-kerja.perusahaan-daerah' }"
+                            class="bg-portal-green hover:bg-portal-green/90 inline-flex items-center rounded-md px-3 py-2 text-sm font-medium text-white transition-colors duration-200"
+                          >
+                            <i class="bx bx-info-circle mr-2"></i>
+                            Lihat Detail
+                          </RouterLink>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <div class="col-md-12">
+                <!-- Pagination -->
+                <div class="flex justify-center">
                   <BasePagination
                     :page="currentPage"
                     :totalPages="totalPages"
@@ -68,18 +126,32 @@
                     @page="onPage"
                   />
                 </div>
-              </div>
-              <div v-else class="alert alert-info">
-                <p>Data tidak ditemukan</p>
-              </div>
+              </template>
+
+              <!-- Empty State for no companies -->
+              <template v-else>
+                <div class="mx-auto max-w-2xl">
+                  <div class="rounded border border-blue-200 bg-blue-50 p-8 text-center">
+                    <i class="bx bx-buildings mb-4 text-4xl text-blue-600"></i>
+                    <h4 class="mb-4 text-xl font-semibold text-blue-800">Tidak Ada Perusahaan Daerah</h4>
+                    <p class="text-blue-700">Maaf, belum ada data perusahaan daerah yang tersedia saat ini.</p>
+                  </div>
+                </div>
+              </template>
             </template>
           </SelayangPandang>
         </div>
-        <div v-else class="alert alert-warning">
-          <p>Data tidak ditemukan</p>
+
+        <!-- Empty State -->
+        <div v-else class="mx-auto max-w-2xl">
+          <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
+            <i class="bx bx-info-circle mb-4 text-4xl text-yellow-600"></i>
+            <h4 class="mb-4 text-xl font-semibold text-yellow-800">Data Tidak Ditemukan</h4>
+            <p class="text-yellow-700">Maaf, data yang Anda cari tidak tersedia saat ini.</p>
+          </div>
         </div>
       </div>
-    </div>
+    </main>
   </div>
 </template>
 

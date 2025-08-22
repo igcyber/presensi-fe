@@ -1,39 +1,106 @@
 <template>
-  <div class="container-fluid navbreaker">
+  <div class="min-h-screen bg-gray-50">
+    <!-- Navigation Spacer -->
+    <div class="h-26.5 lg:h-40.5"></div>
+
+    <!-- Breadcrumb -->
     <AppBreadcrumb />
 
-    <div class="row">
-      <div class="frame2 container">
-        <div v-if="isLoading" class="text-center">
-          <div class="spinner-border" role="status"></div>
-        </div>
-        <div v-else-if="isError" class="alert alert-danger">
-          <h4>Error</h4>
-          <p>{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
-          <button class="btn btn-primary" @click="fetchData">Coba Lagi</button>
+    <!-- Main Content -->
+    <main class="py-12">
+      <div class="container">
+        <!-- Loading State -->
+        <div v-if="isLoading" class="flex items-center justify-center py-20">
+          <div class="text-center">
+            <div class="border-portal-green mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2"></div>
+            <p class="text-gray-600">Memuat data...</p>
+          </div>
         </div>
 
-        <template v-else-if="data && data.majalahs.length > 0">
-          <div class="row">
-            <div v-for="majalah in data.majalahs" :key="majalah.id" class="col-md-12">
-              <div class="post">
-                <div>
-                  <iframe width="100%" height="500px" :src="majalah.link" :frameborder="0" allowfullscreen></iframe>
+        <!-- Error State -->
+        <div v-else-if="isError" class="mx-auto max-w-2xl">
+          <div class="rounded border border-red-200 bg-red-50 p-8 text-center">
+            <i class="bx bx-error-circle mb-4 text-4xl text-red-500"></i>
+            <h4 class="mb-4 text-xl font-semibold text-red-800">Terjadi Kesalahan</h4>
+            <p class="mb-6 text-red-700">{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
+            <button
+              class="rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
+              @click="fetchData"
+            >
+              <i class="bx bx-refresh mr-2"></i>
+              Coba Lagi
+            </button>
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div v-else-if="data">
+          <template v-if="data.majalahs.length > 0">
+            <!-- Magazine List -->
+            <div class="mb-12 space-y-8">
+              <div
+                v-for="majalah in data.majalahs"
+                :key="majalah.id"
+                class="overflow-hidden rounded bg-white shadow-md transition-shadow duration-300 hover:shadow-lg"
+              >
+                <!-- Magazine Embed -->
+                <div class="relative aspect-[16/10] bg-gray-100">
+                  <iframe
+                    class="h-full w-full"
+                    :src="majalah.link"
+                    frameborder="0"
+                    allowfullscreen
+                    loading="lazy"
+                  ></iframe>
                 </div>
-                <div class="post-date-frame">
-                  <span class="post-date"><i class="bx bx-calendar"></i> {{ formatters.date(majalah.createdAt) }}</span>
+
+                <!-- Magazine Info -->
+                <div class="p-6">
+                  <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+                    <!-- Left side: Title and Date -->
+                    <div class="flex-1">
+                      <!-- Title -->
+                      <a
+                        :href="majalah.link"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="hover:text-portal-green mb-2 block text-xl font-bold text-gray-900 transition-colors duration-200"
+                      >
+                        {{ majalah.tahun }} - {{ formatters.monthName(majalah.bulan) }}
+                      </a>
+
+                      <!-- Date and Source -->
+                      <div class="flex flex-col gap-2 text-sm text-gray-600 sm:flex-row sm:items-center sm:gap-4">
+                        <div class="flex items-center">
+                          <i class="bx bx-calendar mr-2"></i>
+                          <span>{{ formatters.date(majalah.createdAt) }}</span>
+                        </div>
+                        <div class="flex items-center">
+                          <i class="bx bx-building mr-2"></i>
+                          <span>Sumber: Diskominfo</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Right side: Action Button -->
+                    <div class="flex-shrink-0">
+                      <a
+                        :href="majalah.link"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="bg-portal-green hover:bg-portal-green/90 flex items-center justify-center rounded-md px-6 py-3 text-white transition-colors duration-200"
+                      >
+                        <i class="bx bx-book-open mr-2"></i>
+                        Baca Majalah
+                      </a>
+                    </div>
+                  </div>
                 </div>
-                <a :href="majalah.link" class="post-link" style="height: auto"
-                  >{{ majalah.tahun }} - {{ formatters.monthName(majalah.bulan) }}</a
-                >
-                <div class="post-text" style="height: 40px">Sumber : diskominfo</div>
-                <hr />
               </div>
             </div>
-          </div>
 
-          <div class="row">
-            <div class="col-md-12">
+            <!-- Pagination -->
+            <div class="flex justify-center">
               <BasePagination
                 :page="currentPage"
                 :totalPages="totalPages"
@@ -44,15 +111,30 @@
                 @page="onPage"
               />
             </div>
+          </template>
+
+          <!-- Empty State for no majalahs -->
+          <template v-else>
+            <div class="mx-auto max-w-2xl">
+              <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
+                <i class="bx bx-file-blank mb-4 text-4xl text-yellow-600"></i>
+                <h4 class="mb-4 text-xl font-semibold text-yellow-800">Tidak Ada Majalah</h4>
+                <p class="text-yellow-700">Maaf, belum ada majalah yang tersedia saat ini.</p>
+              </div>
+            </div>
+          </template>
+        </div>
+
+        <!-- Empty State -->
+        <div v-else class="mx-auto max-w-2xl">
+          <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
+            <i class="bx bx-info-circle mb-4 text-4xl text-yellow-600"></i>
+            <h4 class="mb-4 text-xl font-semibold text-yellow-800">Data Tidak Ditemukan</h4>
+            <p class="text-yellow-700">Maaf, data yang Anda cari tidak tersedia saat ini.</p>
           </div>
-        </template>
-        <template v-else>
-          <div class="col-md-12">
-            <div class="alert alert-warning">Data kosong</div>
-          </div>
-        </template>
+        </div>
       </div>
-    </div>
+    </main>
   </div>
 </template>
 

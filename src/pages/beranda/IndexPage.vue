@@ -1,330 +1,605 @@
 <template>
-  <div class="container-fluid navbreaker">
-    <div v-if="isLoading" class="d-flex flex-column justify-content-center align-items-center" style="height: 50vh">
-      <div class="spinner-border" role="status"></div>
-      <p class="mt-2">Loading...</p>
+  <div class="min-h-screen">
+    <!-- Navigation Spacer -->
+    <div class="h-26.5 lg:h-40.5"></div>
+
+    <!-- Loading State -->
+    <div v-if="isLoading" class="flex min-h-[50vh] flex-col items-center justify-center">
+      <div class="border-portal-green h-12 w-12 animate-spin rounded-full border-b-2"></div>
+      <p class="mt-2 text-gray-600">Memuat data...</p>
     </div>
+
     <template v-else>
-      <div class="row">
-        <div class="hotline">
-          <div class="container">
-            <div class="hotline-left">
-              <div class="hotline-heading">
-                <div class="hotline-icon-frame">
-                  <span class="hotline-icon"><i class="bx bx-phone-call"></i></span>
+      <!-- Emergency Hotline Section -->
+      <section class="bg-portal-blue-dark py-8 text-white">
+        <div class="container">
+          <div class="grid grid-cols-1 justify-center gap-8 lg:grid-cols-4">
+            <!-- Hotline Header -->
+            <div class="lg:col-span-1">
+              <div class="flex items-center">
+                <div class="mr-4 flex h-16 w-16 items-center justify-center rounded-full bg-white/20">
+                  <i class="bx bx-phone-call text-2xl"></i>
                 </div>
-                <div class="hotline-content-frame">
-                  <p class="hotline-title hotline-title--big">Kontak Emergency<br />Masyarakat KUKAR.</p>
-                  <p class="hotline-title hotline-title--small">Kontak Emergency Masyarakat KUKAR.</p>
+                <div>
+                  <h2 class="hidden text-base font-medium lg:block">Kontak Emergency<br />Masyarakat KUKAR</h2>
+                  <h2 class="block text-lg font-bold lg:hidden">Kontak Emergency Masyarakat KUKAR</h2>
                 </div>
               </div>
             </div>
-            <div class="hotline-right">
-              <div v-for="(emergency, idx) in emergencies" :key="idx" class="hotline-body">
-                <div class="hotline-icon-frame">
-                  <span class="hotline-icon"><i :class="`bx bx-${emergency.icon}`"></i></span>
-                </div>
-                <div class="hotline-content-frame">
-                  <p class="hotline-title">{{ emergency.nama }}</p>
-                  <p class="hotline-text">{{ emergency.isi }}</p>
+
+            <!-- Emergency Contacts -->
+            <div class="lg:col-span-3">
+              <div class="grid grid-cols-1 justify-evenly gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <div v-for="(emergency, idx) in emergencies" :key="idx" class="flex items-center">
+                  <div class="mr-3 flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
+                    <i :class="`bx bx-${emergency.icon}`" class="text-lg"></i>
+                  </div>
+                  <div>
+                    <p class="font-semibold">{{ emergency.nama }}</p>
+                    <p class="text-sm text-red-100">{{ emergency.isi }}</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="banner">
-          <div class="container">
-            <div class="intro-search">
-              <p class="intro-title"><i class="bx bx-home"></i> Selamat datang di portal resmi</p>
-              <p class="intro-text">Pemerintah Kabupaten<br />Kutai Kartanegara</p>
-              <p class="intro-subtext">"Kukar Idaman Mitra Pembangunan IKN"</p>
-              <form class="intro-search-frame" @submit.prevent="submitSearch">
+      </section>
+
+      <!-- Hero Banner Section -->
+      <section
+        class="from-portal-green to-portal-green/90 relative bg-gradient-to-br bg-[url('/hero.png')] bg-cover bg-position-[bottom_right_-100px] bg-no-repeat py-30 text-white sm:bg-position-[bottom_right]"
+      >
+        <div class="container">
+          <div class="mx-auto max-w-4xl text-center">
+            <p class="mb-4 flex items-center justify-center text-lg">
+              <i class="bx bx-home mr-2"></i>
+              Selamat datang di portal resmi
+            </p>
+            <h1 class="mb-4 text-4xl font-bold md:text-5xl">Pemerintah Kabupaten<br />Kutai Kartanegara</h1>
+            <p class="mb-8 text-xl text-green-100">"Kukar Idaman Mitra Pembangunan IKN"</p>
+
+            <!-- Search Form -->
+            <form @submit.prevent="submitSearch" class="mx-auto max-w-2xl">
+              <div class="flex flex-col gap-3 sm:flex-row">
                 <input
-                  class="intro-input"
                   v-model="keyword"
                   type="text"
                   name="keyword"
                   placeholder="Apa yang ingin anda cari?"
+                  class="flex-1 rounded-md border-0 bg-white px-6 py-4 text-gray-900 placeholder-gray-500 shadow-lg focus:ring-2 focus:ring-white focus:outline-none"
                 />
-                <input class="intro-btn btn-shadow" type="submit" value="Cari" />
-              </form>
-            </div>
+                <button
+                  type="submit"
+                  class="bg-portal-green hover:bg-portal-green/90 cursor-pointer rounded-md px-8 py-4 font-semibold text-white shadow-lg transition-all duration-200 hover:shadow-xl"
+                >
+                  <i class="bx bx-search mr-2"></i>
+                  Cari
+                </button>
+              </div>
+            </form>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div class="row frame" style="padding-bottom: 60px">
-        <div class="container" style="margin-bottom: 30px">
-          <div class="row justify-content-center">
-            <div class="col-12 col-md-6 col-lg-4">
-              <div class="fitur">
-                <div class="fitur-iconframe">
-                  <div class="fitur-icon">
-                    <i class="bx bx-chart"></i>
-                  </div>
-                </div>
-                <div class="fitur-contentframe">
-                  <a href="https://kukarkab.bps.go.id" target="_blank" class="fitur-title">Publikasi Statistik</a>
-                  <p class="fitur-link">www.kukarkab.bps.go.id</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-12 col-md-6 col-lg-4">
-              <div class="fitur">
-                <div class="fitur-iconframe">
-                  <div class="fitur-icon">
-                    <i class="bx bx-wallet"></i>
-                  </div>
-                </div>
-                <div class="fitur-contentframe">
-                  <a href="/pemerintahan/transparansi-keuangan" class="fitur-title">Transparansi Keuangan</a>
-                  <p class="fitur-link">www.kukarkab.go.id</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-12 col-md-6 col-lg-4">
-              <div class="fitur">
-                <div class="fitur-iconframe">
-                  <div class="fitur-icon">
-                    <i class="bx bx-chat"></i>
-                  </div>
-                </div>
-                <div class="fitur-contentframe">
-                  <a href="https://lapor.go.id" target="_blank" class="fitur-title">SPAN LAPOR!</a>
-                  <p class="fitur-link">www.lapor.go.id</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
+      <!-- Features Section -->
+      <section class="py-16">
         <div class="container">
-          <div class="row">
-            <div class="col-md-8">
-              <div class="headingtext">
-                <span class="headingtext-icon"><i class="bx bx-news"></i> </span>
-                <span class="headingtext-title"><b>Berita</b> Kabupaten</span>
+          <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <!-- Feature 1: Publikasi Statistik -->
+            <div
+              class="group flex items-center justify-start rounded bg-white p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg lg:justify-center"
+            >
+              <div class="flex items-center">
+                <div
+                  class="mr-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-blue-600 transition-colors duration-300 group-hover:bg-blue-600 group-hover:text-white"
+                >
+                  <i class="bx bx-chart text-2xl"></i>
+                </div>
+                <div>
+                  <a
+                    href="https://kukarkab.bps.go.id"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-lg font-semibold text-gray-900 transition-colors duration-200 hover:text-blue-600"
+                  >
+                    Publikasi Statistik
+                  </a>
+                  <p class="text-sm text-gray-500">www.kukarkab.bps.go.id</p>
+                </div>
               </div>
-              <div class="row">
-                <template v-if="news.length">
-                  <div v-for="berita in news" :key="berita.id" class="col-md-6">
-                    <div class="post">
-                      <div class="post-image-frame">
-                        <img :src="`https://kukarkab.go.id/uploads/beritas/${berita.foto}`" class="post-image" />
+            </div>
+
+            <!-- Feature 2: Transparansi Keuangan -->
+            <div
+              class="group flex items-center justify-start rounded bg-white p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg lg:justify-center"
+            >
+              <div class="flex items-center">
+                <div
+                  class="mr-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-green-600 transition-colors duration-300 group-hover:bg-green-600 group-hover:text-white"
+                >
+                  <i class="bx bx-wallet text-2xl"></i>
+                </div>
+                <div>
+                  <RouterLink
+                    to="/pemerintahan/transparansi-keuangan"
+                    class="text-lg font-semibold text-gray-900 transition-colors duration-200 hover:text-green-600"
+                  >
+                    Transparansi Keuangan
+                  </RouterLink>
+                  <p class="text-sm text-gray-500">www.kukarkab.go.id</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Feature 3: SPAN LAPOR -->
+            <div
+              class="group flex items-center justify-start rounded bg-white p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg lg:justify-center"
+            >
+              <div class="flex items-center">
+                <div
+                  class="mr-4 flex h-16 w-16 items-center justify-center rounded-full bg-orange-100 text-orange-600 transition-colors duration-300 group-hover:bg-orange-600 group-hover:text-white"
+                >
+                  <i class="bx bx-chat text-2xl"></i>
+                </div>
+                <div>
+                  <a
+                    href="https://lapor.go.id"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-lg font-semibold text-gray-900 transition-colors duration-200 hover:text-orange-600"
+                  >
+                    SPAN LAPOR!
+                  </a>
+                  <p class="text-sm text-gray-500">www.lapor.go.id</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- News & Election Info Section -->
+      <section class="bg-gray-50 py-16">
+        <div class="container">
+          <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+            <!-- News Section -->
+            <div class="lg:col-span-2">
+              <div class="mb-8 flex items-center">
+                <div class="bg-portal-green mr-3 flex h-10 w-10 items-center justify-center rounded-full text-white">
+                  <i class="bx bx-news text-lg"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-900"><span class="font-normal">Berita</span> Kabupaten</h2>
+              </div>
+
+              <template v-if="news.length">
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                  <article
+                    v-for="berita in news"
+                    :key="berita.id"
+                    class="group overflow-hidden rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                  >
+                    <!-- News Image -->
+                    <div class="relative aspect-[16/10] overflow-hidden">
+                      <img
+                        :src="`https://kukarkab.go.id/uploads/beritas/${berita.foto}`"
+                        :alt="berita.judul"
+                        class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                    </div>
+
+                    <!-- News Content -->
+                    <div class="p-4">
+                      <!-- Date -->
+                      <div class="mb-2 flex items-center text-sm text-gray-500">
+                        <i class="bx bx-calendar mr-2"></i>
+                        <time :datetime="new Date(berita.createdAt).toISOString()">{{
+                          formatters.date(berita.createdAt)
+                        }}</time>
                       </div>
+
+                      <!-- Title -->
                       <a
                         :href="`/berita/${berita.id}/${berita.judul.replace(/[\\s/]+/g, '-')}`"
-                        class="post-link mt-2"
-                        >{{ berita.judul }}</a
+                        class="hover:text-portal-green mb-2 block text-lg font-semibold text-gray-900 transition-colors duration-200"
+                        style="
+                          display: -webkit-box;
+                          -webkit-line-clamp: 2;
+                          line-clamp: 2;
+                          -webkit-box-orient: vertical;
+                          overflow: hidden;
+                        "
                       >
-                      <div class="post-date-frame">
-                        <span class="post-date"
-                          ><i class="bx bx-calendar"></i> {{ formatters.date(berita.createdAt) }}</span
-                        >
-                      </div>
-                      <div class="post-text" v-html="berita.isi.split(' ').slice(0, 17).join(' ') + '...'"></div>
-                      <hr />
-                    </div>
-                  </div>
-                </template>
-                <template v-else>
-                  <div class="col-md-12">Data kosong</div>
-                </template>
+                        {{ berita.judul }}
+                      </a>
 
-                <div v-if="news.length > 1" class="col-md-12 mb-md-0 mb-5">
-                  <RouterLink :to="{ name: 'berita.index' }" class="btn btn-success"
-                    >Lihat lebih banyak <i class="bx bx-chevron-right"></i
-                  ></RouterLink>
+                      <!-- Excerpt -->
+                      <div
+                        class="text-sm text-gray-600"
+                        style="
+                          display: -webkit-box;
+                          -webkit-line-clamp: 3;
+                          line-clamp: 3;
+                          -webkit-box-orient: vertical;
+                          overflow: hidden;
+                        "
+                        v-html="berita.isi.split(' ').slice(0, 17).join(' ') + '...'"
+                      ></div>
+                    </div>
+                  </article>
                 </div>
-              </div>
+
+                <!-- View More Button -->
+                <div v-if="news.length > 1" class="mt-8 text-center">
+                  <RouterLink
+                    :to="{ name: 'berita.index' }"
+                    class="bg-portal-green hover:bg-portal-green/90 inline-flex items-center rounded-md px-6 py-3 font-medium text-white transition-colors duration-200"
+                  >
+                    Lihat lebih banyak
+                    <i class="bx bx-chevron-right ml-2"></i>
+                  </RouterLink>
+                </div>
+              </template>
+
+              <!-- Empty News State -->
+              <template v-else>
+                <div class="rounded bg-white p-8 text-center shadow-md">
+                  <i class="bx bx-news mb-4 text-4xl text-gray-400"></i>
+                  <p class="text-gray-600">Belum ada berita terbaru</p>
+                </div>
+              </template>
             </div>
 
-            <div class="col-md-4">
-              <div class="headingtext">
-                <span class="headingtext-icon"><i class="bx bx-news"></i> </span>
-                <span class="headingtext-title"><b>Info</b> Pemilu</span>
-              </div>
-              <div class="row" style="margin-top: 20px">
-                <div class="col-md-12">
-                  <div id="gpr-kominfo-widget-container"></div>
+            <!-- Election Info Sidebar -->
+            <div class="lg:col-span-1">
+              <div class="mb-6 flex items-center">
+                <div class="mr-3 flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-white">
+                  <i class="bx bx-news text-lg"></i>
                 </div>
+                <h3 class="text-xl font-bold text-gray-900"><span class="font-normal">Info</span> Pemilu</h3>
+              </div>
+
+              <!-- Election Widget Container -->
+              <div class="rounded bg-white p-6 shadow-md">
+                <div id="gpr-kominfo-widget-container"></div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div class="row frame frame--grey" style="padding-bottom: 50px">
-        <div class="container">
-          <div class="container">
-            <div class="headingtext">
-              <span class="headingtext-icon"><i class="bx bx-image"></i> </span>
-              <span class="headingtext-title"><b>Infografis</b></span>
+      <!-- Infografis & Video Section -->
+      <section class="bg-gray-100 py-16">
+        <div class="container space-y-16">
+          <!-- Infografis Section -->
+          <div>
+            <div class="mb-8 flex items-center">
+              <div class="mr-3 flex h-10 w-10 items-center justify-center rounded-full bg-purple-600 text-white">
+                <i class="bx bx-image text-lg"></i>
+              </div>
+              <h2 class="text-2xl font-bold text-gray-900">
+                <span class="font-bold">Infografis</span>
+              </h2>
             </div>
-            <div :ref="setCarouselRef as VNodeRef" class="owl-carousel owl-theme baner slider">
-              <div v-for="(bannerItem, idx) in banners" :key="idx" class="info">
-                <div class="info-image-frame">
-                  <img :src="`https://kukarkab.go.id/uploads/banners/${bannerItem.foto}`" class="info-image" />
-                  <div class="info-content">
+
+            <VueCarousel
+              :items="banners"
+              :items-per-view="3"
+              :autoplay="true"
+              :autoplay-delay="3000"
+              :responsive="{
+                0: { itemsPerView: 1 },
+                640: { itemsPerView: 2 },
+                1024: { itemsPerView: 3 },
+              }"
+            >
+              <template #default="{ item: bannerItem }">
+                <div
+                  class="group overflow-hidden rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                >
+                  <!-- Image -->
+                  <div class="relative aspect-[3/4] overflow-hidden">
+                    <img
+                      :src="`https://kukarkab.go.id/uploads/banners/${bannerItem.foto}`"
+                      :alt="bannerItem.nama"
+                      class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                    <!-- Overlay -->
+                    <div
+                      class="absolute inset-0 bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                    ></div>
+                    <!-- Zoom Icon -->
+                    <div
+                      class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                    >
+                      <a
+                        :href="`https://kukarkab.go.id/uploads/banners/${bannerItem.foto}`"
+                        data-lightbox="banner"
+                        :data-title="bannerItem.nama"
+                        class="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 text-gray-900"
+                      >
+                        <i class="bx bx-zoom-in text-xl"></i>
+                      </a>
+                    </div>
+                  </div>
+
+                  <!-- Content -->
+                  <div class="p-4">
                     <a
                       :href="`https://kukarkab.go.id/uploads/banners/${bannerItem.foto}`"
-                      target="_blank"
-                      data-lightbox="banner"
-                      class="doc-link"
-                      >{{ bannerItem.nama }}</a
+                      data-lightbox="banner-title"
+                      :data-title="bannerItem.nama"
+                      class="hover:text-portal-green mb-2 block font-semibold text-gray-900 transition-colors duration-200"
+                      style="
+                        display: -webkit-box;
+                        -webkit-line-clamp: 2;
+                        line-clamp: 2;
+                        -webkit-box-orient: vertical;
+                        overflow: hidden;
+                      "
                     >
-                    <span class="info-date"
-                      ><i class="bx bx-calendar"></i> {{ formatters.date(bannerItem.createdAt) }}</span
-                    >
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="container">
-            <div class="headingtext">
-              <span class="headingtext-icon"><i class="bx bx-video"></i> </span>
-              <span class="headingtext-title"><b>Video</b></span>
-            </div>
-            <div :ref="setCarouselRef as VNodeRef" class="owl-carousel owl-theme baner slider">
-              <div v-for="(video, vIdx) in videos" :key="vIdx" class="info">
-                <div class="info-video-frame">
-                  <template v-if="formatters.youtubeInfo(video.link).id">
-                    <div
-                      class="info-video-frame"
-                      style="cursor: pointer; position: relative"
-                      @click="openVideoModal(formatters.youtubeInfo(video.link).embedUrl)"
-                    >
-                      <img
-                        :src="formatters.youtubeInfo(video.link).thumb"
-                        alt="Video Thumbnail"
-                        class="slider-video"
-                        style="width: 100%; height: 100%; object-fit: cover"
-                      />
-                      <div class="slider-play">
-                        <i class="bx bx-play-circle" style="font-size: 3rem; color: white"></i>
-                      </div>
+                      {{ bannerItem.nama }}
+                    </a>
+                    <div class="flex items-center text-sm text-gray-500">
+                      <i class="bx bx-calendar mr-2"></i>
+                      <time :datetime="new Date(bannerItem.createdAt).toISOString()">{{
+                        formatters.date(bannerItem.createdAt)
+                      }}</time>
                     </div>
-                  </template>
-                  <template v-else>
-                    <video controls class="slider-video" style="width: 100%; height: 100%">
-                      <source :src="video.link" type="video/mp4" />
-                      <source :src="video.link" type="video/webm" />
-                      <source :src="video.link" type="video/ogg" />
-                      Browser Anda tidak mendukung tag video.
-                    </video>
-                  </template>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="row frame frame--bg" style="padding-bottom: 50px">
-        <div class="container">
-          <div class="headingtext headingtext--white">
-            <span class="headingtext-title b-20">
-              <b><i class="bx bx-check-circle"></i> Layanan</b> Publik ({{ layanans.length }})
-            </span>
-          </div>
-        </div>
-        <div class="container">
-          <div class="row">
-            <div v-for="(layanan, lIdx) in layanans" :key="lIdx" class="col-6 col-md-2 d-flex justify-content-center">
-              <div class="layanan layanan-light">
-                <a :href="layanan.alamat" target="_blank">
-                  <div class="layanan-icon-frame">
-                    <img :src="`https://kukarkab.go.id/uploads/${layanan.logo}`" class="layanan-icon" />
                   </div>
-                </a>
-              </div>
-            </div>
-            <template v-if="!layanans.length">
-              <div class="col-sm-12">Data kosong</div>
-            </template>
+                </div>
+              </template>
+            </VueCarousel>
           </div>
-        </div>
 
-        <div class="container">
-          <br />
-          <div class="headingtext headingtext--white">
-            <span class="headingtext-title b-20"
-              ><b><i class="bx bx-check-circle"></i> Sistem</b> Administrasi ({{ sistems.length }})</span
+          <!-- Video Section -->
+          <div>
+            <div class="mb-8 flex items-center">
+              <div class="mr-3 flex h-10 w-10 items-center justify-center rounded-full bg-red-600 text-white">
+                <i class="bx bx-video text-lg"></i>
+              </div>
+              <h2 class="text-2xl font-bold text-gray-900">
+                <span class="font-bold">Video</span>
+              </h2>
+            </div>
+
+            <VueCarousel
+              :items="videos"
+              :items-per-view="3"
+              :autoplay="true"
+              :autoplay-delay="4000"
+              :responsive="{
+                0: { itemsPerView: 1 },
+                640: { itemsPerView: 2 },
+                1024: { itemsPerView: 3 },
+              }"
             >
+              <template #default="{ item: video }">
+                <div
+                  class="group overflow-hidden rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                >
+                  <!-- Video Thumbnail -->
+                  <div class="relative aspect-video overflow-hidden">
+                    <template v-if="formatters.youtubeInfo(video.link).id">
+                      <div
+                        class="relative cursor-pointer"
+                        @click="openVideoModal(formatters.youtubeInfo(video.link).embedUrl)"
+                      >
+                        <img
+                          :src="formatters.youtubeInfo(video.link).thumb"
+                          alt="Video Thumbnail"
+                          class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          loading="lazy"
+                        />
+                        <!-- Play Button Overlay -->
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/30">
+                          <div
+                            class="flex h-16 w-16 items-center justify-center rounded-full bg-red-600 text-white transition-transform duration-300 hover:scale-110"
+                          >
+                            <i class="bx bx-play text-2xl"></i>
+                          </div>
+                        </div>
+                      </div>
+                    </template>
+                    <template v-else>
+                      <video controls class="h-full w-full object-cover">
+                        <source :src="video.link" type="video/mp4" />
+                        <source :src="video.link" type="video/webm" />
+                        <source :src="video.link" type="video/ogg" />
+                        Browser Anda tidak mendukung tag video.
+                      </video>
+                    </template>
+                  </div>
+
+                  <!-- Video Info -->
+                  <div class="p-4">
+                    <h3
+                      class="font-semibold text-gray-900"
+                      style="
+                        display: -webkit-box;
+                        -webkit-line-clamp: 2;
+                        line-clamp: 2;
+                        -webkit-box-orient: vertical;
+                        overflow: hidden;
+                      "
+                    >
+                      {{ video.nama || "Video" }}
+                    </h3>
+                  </div>
+                </div>
+              </template>
+            </VueCarousel>
           </div>
         </div>
-        <div class="container">
-          <div class="row">
-            <div v-for="(sistem, sIdx) in sistems" :key="sIdx" class="col-6 col-md-2 d-flex justify-content-center">
-              <div class="layanan layanan-light">
-                <a :href="sistem.alamat" target="_blank">
-                  <div class="layanan-icon-frame">
-                    <img :src="`https://kukarkab.go.id/uploads/${sistem.logo}`" class="layanan-icon" />
-                  </div>
-                </a>
-              </div>
+      </section>
+
+      <!-- Services Section -->
+      <section class="bg-portal-blue-dark py-16 text-white">
+        <div class="container space-y-16">
+          <!-- Layanan Publik -->
+          <div>
+            <div class="mb-8">
+              <h2 class="text-2xl font-bold">
+                <i class="bx bx-check-circle mr-3"></i>
+                <span class="font-bold">Layanan</span> Publik ({{ layanans.length }})
+              </h2>
             </div>
-            <template v-if="!sistems.length">
-              <div class="col-sm-12">Data kosong</div>
+
+            <template v-if="layanans.length">
+              <div class="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+                <div v-for="(layanan, lIdx) in layanans" :key="lIdx" class="group flex justify-center">
+                  <a
+                    :href="layanan.alamat"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="flex h-20 w-20 items-center justify-center rounded-lg bg-white/10 p-3 backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:bg-white/20"
+                  >
+                    <img
+                      :src="`https://kukarkab.go.id/uploads/${layanan.logo}`"
+                      :alt="layanan.nama || 'Layanan'"
+                      class="h-full w-full object-contain"
+                      loading="lazy"
+                    />
+                  </a>
+                </div>
+              </div>
+            </template>
+            <template v-else>
+              <div class="rounded-lg bg-white/10 p-8 text-center backdrop-blur-sm">
+                <i class="bx bx-info-circle mb-4 text-4xl text-white/60"></i>
+                <p class="text-white/80">Belum ada layanan publik tersedia</p>
+              </div>
+            </template>
+          </div>
+
+          <!-- Sistem Administrasi -->
+          <div>
+            <div class="mb-8">
+              <h2 class="text-2xl font-bold">
+                <i class="bx bx-check-circle mr-3"></i>
+                <span class="font-bold">Sistem</span> Administrasi ({{ sistems.length }})
+              </h2>
+            </div>
+
+            <template v-if="sistems.length">
+              <div class="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+                <div v-for="(sistem, sIdx) in sistems" :key="sIdx" class="group flex justify-center">
+                  <a
+                    :href="sistem.alamat"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="flex h-20 w-20 items-center justify-center rounded-lg bg-white/10 p-3 backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:bg-white/20"
+                  >
+                    <img
+                      :src="`https://kukarkab.go.id/uploads/${sistem.logo}`"
+                      :alt="sistem.nama || 'Sistem'"
+                      class="h-full w-full object-contain"
+                      loading="lazy"
+                    />
+                  </a>
+                </div>
+              </div>
+            </template>
+            <template v-else>
+              <div class="rounded-lg bg-white/10 p-8 text-center backdrop-blur-sm">
+                <i class="bx bx-info-circle mb-4 text-4xl text-white/60"></i>
+                <p class="text-white/80">Belum ada sistem administrasi tersedia</p>
+              </div>
             </template>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div class="row frame frame--bgmap" style="padding-bottom: 70px">
+      <!-- OPD Section -->
+      <section class="bg-white py-16">
         <div class="container">
-          <div class="row">
-            <div class="col-md-12">
-              <div class="headingtext">
-                <RouterLink :to="{ name: 'unit-kerja.opd' }" class="headingtext-link">
-                  Lihat lebih banyak
-                  <i class="bx bx-chevron-right"></i>
-                </RouterLink>
-                <span class="headingtext-title b-20"
-                  ><b><i class="bx bx-buildings"></i> Daftar OPD </b>Kutai Kartanegara ({{ opds.length }})</span
-                >
+          <!-- Header -->
+          <div class="mb-8 flex flex-col items-center justify-between gap-4 sm:flex-row">
+            <div class="flex items-center">
+              <div class="bg-portal-green mr-3 flex h-10 w-10 items-center justify-center rounded-full text-white">
+                <i class="bx bx-buildings text-lg"></i>
               </div>
+              <h2 class="text-2xl font-bold text-gray-900">
+                <span class="font-bold">Daftar OPD</span> Kutai Kartanegara ({{ opds.length }})
+              </h2>
             </div>
-            <div class="col-md-12">
-              <div class="row">
-                <div class="col-md-12">
-                  <div :ref="setCarouselRef as VNodeRef" class="owl-carousel owl-theme opd-owl">
-                    <div v-for="opd in opds" :key="opd.id" class="bupati bupati--opd">
-                      <div class="bupati-image-frame">
-                        <img class="bupati-image" :src="`https://kukarkab.go.id/uploads/${opd.foto}`" />
-                      </div>
-                      <div class="bupati-content-frame">
-                        <RouterLink
-                          :to="{
-                            name: 'unit-kerja.opd.detail',
-                            params: { id: opd.id, slug: formatters.slugify(opd.nama) },
-                          }"
-                          class="bupati-name"
-                          >{{ opd.nama }}
-                        </RouterLink>
-                        <table>
-                          <tbody>
-                            <tr>
-                              <td style="vertical-align: text-top"><i class="bx bx-globe bupati-icon"></i></td>
-                              <td class="bupati-textgrey">{{ opd.website }}</td>
-                            </tr>
-                            <tr>
-                              <td style="vertical-align: text-top"><i class="bx bx-map bupati-icon"></i></td>
-                              <td class="bupati-textgrey">{{ opd.alamat }}</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
+            <RouterLink
+              :to="{ name: 'unit-kerja.opd' }"
+              class="bg-portal-green hover:bg-portal-green/90 inline-flex items-center rounded-md px-4 py-2 text-sm font-medium text-white transition-colors duration-200"
+            >
+              Lihat lebih banyak
+              <i class="bx bx-chevron-right ml-2"></i>
+            </RouterLink>
+          </div>
+
+          <!-- OPD Carousel -->
+          <VueCarousel
+            :items="opds"
+            :items-per-view="3"
+            :autoplay="false"
+            :autoplay-delay="5000"
+            :responsive="{
+              0: { itemsPerView: 1 },
+              640: { itemsPerView: 2 },
+              1024: { itemsPerView: 3 },
+            }"
+          >
+            <template #default="{ item: opd }">
+              <div
+                class="group h-75 max-h-70 overflow-hidden rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+              >
+                <!-- OPD Logo -->
+                <div class="flex justify-center p-6 pb-4">
+                  <div class="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-gray-50">
+                    <img
+                      :src="`https://kukarkab.go.id/uploads/${opd.foto}`"
+                      :alt="`Logo ${opd.nama}`"
+                      class="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  </div>
+                </div>
+
+                <!-- OPD Content -->
+                <div class="px-6 pb-6">
+                  <!-- OPD Name -->
+                  <RouterLink
+                    :to="{
+                      name: 'unit-kerja.opd.detail',
+                      params: { id: opd.id, slug: formatters.slugify(opd.nama) },
+                    }"
+                    class="hover:text-portal-green mb-3 block text-center font-semibold text-gray-900 transition-colors duration-200"
+                    style="
+                      display: -webkit-box;
+                      -webkit-line-clamp: 2;
+                      line-clamp: 2;
+                      -webkit-box-orient: vertical;
+                      overflow: hidden;
+                    "
+                  >
+                    {{ opd.nama }}
+                  </RouterLink>
+
+                  <!-- OPD Details -->
+                  <div class="space-y-2 text-sm text-gray-600">
+                    <!-- Website -->
+                    <div class="flex items-start">
+                      <i class="bx bx-globe text-portal-green mt-0.5 mr-2 flex-shrink-0"></i>
+                      <span class="break-all">{{ opd.website || "Website tidak tersedia" }}</span>
+                    </div>
+                    <!-- Address -->
+                    <div class="flex items-start">
+                      <i class="bx bx-map text-portal-green mt-0.5 mr-2 flex-shrink-0"></i>
+                      <span class="break-words">{{ opd.alamat || "Alamat tidak tersedia" }}</span>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
+            </template>
+          </VueCarousel>
         </div>
-      </div>
+      </section>
 
       <VideoModal ref="videoModalRef" />
     </template>
@@ -332,11 +607,11 @@
 </template>
 
 <script setup lang="ts">
-import type { VNodeRef } from "vue";
-import { nextTick, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { RouterLink, useRouter } from "vue-router";
 
 import VideoModal from "@/components/VideoModal.vue";
+import VueCarousel from "@/components/VueCarousel.vue";
 
 import { useFormatters } from "@/composables/useFormatters";
 import {
@@ -406,43 +681,8 @@ const fetchBeranda = async () => {
   }
 };
 
-const carouselRef = ref<HTMLElement[]>([]);
-
-const setCarouselRef = (el: HTMLElement | null) => {
-  if (!el) return;
-  carouselRef.value.push(el);
-};
-
-const initialCarousel = async () => {
-  await nextTick();
-
-  if (!(window as any).jQuery?.fn?.owlCarousel) {
-    try {
-      await import("owl.carousel");
-    } catch (e) {
-      await import("owl.carousel/dist/owl.carousel");
-    }
-  }
-
-  carouselRef.value.forEach((el) => {
-    const $el = (window as any).jQuery(el);
-    $el.owlCarousel({
-      items: 3,
-      loop: true,
-      margin: 16,
-      nav: false,
-      dots: true,
-      autoplay: true,
-      autoplayTimeout: 3000,
-      responsive: { 0: { items: 1 }, 640: { items: 2 }, 1024: { items: 3 } },
-    });
-  });
-};
-
 onMounted(async () => {
   await fetchBeranda();
-
-  await initialCarousel();
 });
 </script>
 

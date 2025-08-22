@@ -1,40 +1,96 @@
 <template>
-  <div class="container-fluid navbreaker">
+  <div class="min-h-screen bg-gray-50">
+    <!-- Navigation Spacer -->
+    <div class="h-26.5 lg:h-40.5"></div>
+
+    <!-- Breadcrumb -->
     <AppBreadcrumb />
 
-    <div class="row">
-      <div class="frame2 container">
-        <div v-if="isLoading" class="text-center">
-          <div class="spinner-border" role="status"></div>
+    <!-- Main Content -->
+    <main class="py-12">
+      <div class="container">
+        <!-- Loading State -->
+        <div v-if="isLoading" class="flex items-center justify-center py-20">
+          <div class="text-center">
+            <div class="border-portal-green mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2"></div>
+            <p class="text-gray-600">Memuat data...</p>
+          </div>
         </div>
-        <div v-else-if="isError" class="alert alert-danger">
-          <h4>Error</h4>
-          <p>{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
-          <button class="btn btn-primary" @click="fetchData">Coba Lagi</button>
+
+        <!-- Error State -->
+        <div v-else-if="isError" class="mx-auto max-w-2xl">
+          <div class="rounded border border-red-200 bg-red-50 p-8 text-center">
+            <i class="bx bx-error-circle mb-4 text-4xl text-red-500"></i>
+            <h4 class="mb-4 text-xl font-semibold text-red-800">Terjadi Kesalahan</h4>
+            <p class="mb-6 text-red-700">{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
+            <button
+              class="rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
+              @click="fetchData"
+            >
+              <i class="bx bx-refresh mr-2"></i>
+              Coba Lagi
+            </button>
+          </div>
         </div>
-        <template v-else-if="data && data.videos.length > 0">
-          <div class="row">
-            <div v-for="video in data.videos" :key="video.id" class="col-md-4">
-              <div class="post">
-                <div class="post-image-frame">
-                  <iframe width="100%" height="100%" :src="video.link" :frameborder="0" allowfullscreen></iframe>
-                </div>
-                <div class="post-date-frame">
-                  <span class="post-date"><i class="bx bx-calendar"></i> {{ formatters.date(video.createdAt) }}</span>
+
+        <!-- Content -->
+        <div v-else-if="data">
+          <template v-if="data.videos.length > 0">
+            <!-- Video Grid -->
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <div
+                v-for="video in data.videos"
+                :key="video.id"
+                class="overflow-hidden rounded bg-white shadow-md transition-shadow duration-300 hover:shadow-lg"
+              >
+                <!-- Video Thumbnail/Embed -->
+                <div class="relative aspect-video bg-gray-100">
+                  <iframe
+                    class="h-full w-full"
+                    :src="video.link"
+                    frameborder="0"
+                    allowfullscreen
+                    loading="lazy"
+                  ></iframe>
                 </div>
 
-                <a href="#" class="post-link" @click="openVideoModal(formatters.youtubeInfo(video.link).embedUrl)">{{
-                  video.judul
-                }}</a>
+                <!-- Video Info -->
+                <div class="p-4">
+                  <!-- Date -->
+                  <div class="mb-3 flex items-center text-sm text-gray-500">
+                    <i class="bx bx-calendar mr-2"></i>
+                    <span>{{ formatters.date(video.createdAt) }}</span>
+                  </div>
 
-                <div class="post-text" style="height: 40px">Sumber : {{ video.isi ?? "Diskominfo" }}</div>
-                <hr />
+                  <!-- Title -->
+                  <a
+                    href="#"
+                    class="hover:text-portal-green mb-3 block overflow-hidden text-lg font-semibold text-ellipsis text-gray-900 transition-colors duration-200"
+                    style="display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical"
+                    @click.prevent="openVideoModal(formatters.youtubeInfo(video.link).embedUrl)"
+                  >
+                    {{ video.judul }}
+                  </a>
+
+                  <!-- Source -->
+                  <div class="mb-4 text-sm text-gray-600">
+                    <span class="font-medium">Sumber:</span> {{ video.isi ?? "Diskominfo" }}
+                  </div>
+
+                  <!-- Watch Button -->
+                  <button
+                    @click="openVideoModal(formatters.youtubeInfo(video.link).embedUrl)"
+                    class="bg-portal-green hover:bg-portal-green/90 flex w-full cursor-pointer items-center justify-center rounded-md px-4 py-2 text-white transition-colors duration-200"
+                  >
+                    <i class="bx bx-play mr-2"></i>
+                    Tonton Video
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="row">
-            <div class="col-md-12">
+            <!-- Pagination -->
+            <div class="flex justify-center">
               <BasePagination
                 :page="currentPage"
                 :totalPages="totalPages"
@@ -45,15 +101,30 @@
                 @page="onPage"
               />
             </div>
+          </template>
+
+          <!-- Empty State for no videos -->
+          <template v-else>
+            <div class="mx-auto max-w-2xl">
+              <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
+                <i class="bx bx-file-blank mb-4 text-4xl text-yellow-600"></i>
+                <h4 class="mb-4 text-xl font-semibold text-yellow-800">Tidak Ada Video</h4>
+                <p class="text-yellow-700">Maaf, belum ada video yang tersedia saat ini.</p>
+              </div>
+            </div>
+          </template>
+        </div>
+
+        <!-- Empty State -->
+        <div v-else class="mx-auto max-w-2xl">
+          <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
+            <i class="bx bx-info-circle mb-4 text-4xl text-yellow-600"></i>
+            <h4 class="mb-4 text-xl font-semibold text-yellow-800">Data Tidak Ditemukan</h4>
+            <p class="text-yellow-700">Maaf, data yang Anda cari tidak tersedia saat ini.</p>
           </div>
-        </template>
-        <template v-else>
-          <div class="col-md-12">
-            <div class="alert alert-warning">Data kosong</div>
-          </div>
-        </template>
+        </div>
       </div>
-    </div>
+    </main>
   </div>
 
   <VideoModal ref="videoModalRef" />

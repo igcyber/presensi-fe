@@ -1,46 +1,101 @@
 <template>
-  <div class="container-fluid navbreaker">
+  <div class="min-h-screen bg-gray-50">
+    <!-- Navigation Spacer -->
+    <div class="h-26.5 lg:h-40.5"></div>
+
+    <!-- Breadcrumb -->
     <AppBreadcrumb />
 
-    <div class="row">
-      <div class="frame2 container">
-        <div v-if="isLoading" class="text-center">
-          <div class="spinner-border" role="status"></div>
+    <!-- Main Content -->
+    <main class="py-12">
+      <div class="container">
+        <!-- Loading State -->
+        <div v-if="isLoading" class="flex items-center justify-center py-20">
+          <div class="text-center">
+            <div class="border-portal-green mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2"></div>
+            <p class="text-gray-600">Memuat data...</p>
+          </div>
         </div>
-        <div v-else-if="isError" class="alert alert-danger">
-          <h4>Error</h4>
-          <p>{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
-          <button class="btn btn-primary" @click="fetchData">Coba Lagi</button>
+
+        <!-- Error State -->
+        <div v-else-if="isError" class="mx-auto max-w-2xl">
+          <div class="rounded border border-red-200 bg-red-50 p-8 text-center">
+            <i class="bx bx-error-circle mb-4 text-4xl text-red-500"></i>
+            <h4 class="mb-4 text-xl font-semibold text-red-800">Terjadi Kesalahan</h4>
+            <p class="mb-6 text-red-700">{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
+            <button
+              class="rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
+              @click="fetchData"
+            >
+              <i class="bx bx-refresh mr-2"></i>
+              Coba Lagi
+            </button>
+          </div>
         </div>
-        <template v-else-if="data">
-          <div class="row">
-            <template v-if="data.dokumens.length > 0">
-              <div v-for="dokumen in data.dokumens" :key="dokumen.id" class="col-md-4">
-                <div class="doc">
-                  <div class="doc-image-frame">
-                    <div class="doc-content">
-                      <i class="bx bx-file doc-file"></i>
-                      <span class="doc-date">
-                        <i class="bx bx-calendar"></i> {{ formatters.date(dokumen.createdAt) }}
-                      </span>
-                      <a
-                        :href="`https://kukarkab.go.id/uploads/documents/${dokumen.file}`"
-                        target="_blank"
-                        class="doc-link"
-                        >{{ dokumen.nama }}</a
-                      >
-                      <div class="doc-text">Sumber : {{ dokumen.isi ?? "Diskominfo" }}</div>
+
+        <!-- Content -->
+        <div v-else-if="data">
+          <template v-if="data.dokumens.length > 0">
+            <!-- Document Grid -->
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <div
+                v-for="dokumen in data.dokumens"
+                :key="dokumen.id"
+                class="group overflow-hidden rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+              >
+                <!-- Document Icon & Content -->
+                <div class="p-6">
+                  <!-- Document Icon -->
+                  <div class="mb-4 flex items-center justify-center">
+                    <div class="bg-portal-green/10 flex h-16 w-16 items-center justify-center rounded-full">
+                      <i class="bx bx-file text-portal-green text-3xl"></i>
                     </div>
                   </div>
+
+                  <!-- Date -->
+                  <div class="mb-3 flex items-center justify-center text-sm text-gray-500">
+                    <i class="bx bx-calendar mr-2"></i>
+                    <span>{{ formatters.date(dokumen.createdAt) }}</span>
+                  </div>
+
+                  <!-- Document Name/Link -->
+                  <a
+                    :href="`https://kukarkab.go.id/uploads/documents/${dokumen.file}`"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="hover:text-portal-green mb-3 block text-center text-lg font-semibold text-gray-900 transition-colors duration-200"
+                    style="
+                      display: -webkit-box;
+                      -webkit-line-clamp: 2;
+                      line-clamp: 2;
+                      -webkit-box-orient: vertical;
+                      overflow: hidden;
+                    "
+                  >
+                    {{ dokumen.nama }}
+                  </a>
+
+                  <!-- Source -->
+                  <div class="mb-4 text-center text-sm text-gray-600">
+                    <span class="font-medium">Sumber:</span> {{ dokumen.isi ?? "Diskominfo" }}
+                  </div>
+
+                  <!-- Download Button -->
+                  <a
+                    :href="`https://kukarkab.go.id/uploads/documents/${dokumen.file}`"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="bg-portal-green hover:bg-portal-green/90 flex w-full items-center justify-center rounded-md px-4 py-2 text-white transition-colors duration-200"
+                  >
+                    <i class="bx bx-download mr-2"></i>
+                    Unduh Dokumen
+                  </a>
                 </div>
               </div>
-            </template>
-            <template v-else>
-              <div class="col-md-12">
-                <div class="alert alert-warning">Data kosong</div>
-              </div>
-            </template>
-            <div v-if="!isLoading && !isError" class="col-md-12">
+            </div>
+
+            <!-- Pagination -->
+            <div class="flex justify-center">
               <BasePagination
                 :page="currentPage"
                 :totalPages="totalPages"
@@ -51,10 +106,30 @@
                 @page="onPage"
               />
             </div>
+          </template>
+
+          <!-- Empty State for no documents -->
+          <template v-else>
+            <div class="mx-auto max-w-2xl">
+              <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
+                <i class="bx bx-file-blank mb-4 text-4xl text-yellow-600"></i>
+                <h4 class="mb-4 text-xl font-semibold text-yellow-800">Tidak Ada Dokumen</h4>
+                <p class="text-yellow-700">Maaf, belum ada dokumen yang tersedia saat ini.</p>
+              </div>
+            </div>
+          </template>
+        </div>
+
+        <!-- Empty State -->
+        <div v-else class="mx-auto max-w-2xl">
+          <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
+            <i class="bx bx-info-circle mb-4 text-4xl text-yellow-600"></i>
+            <h4 class="mb-4 text-xl font-semibold text-yellow-800">Data Tidak Ditemukan</h4>
+            <p class="text-yellow-700">Maaf, data yang Anda cari tidak tersedia saat ini.</p>
           </div>
-        </template>
+        </div>
       </div>
-    </div>
+    </main>
   </div>
 </template>
 
