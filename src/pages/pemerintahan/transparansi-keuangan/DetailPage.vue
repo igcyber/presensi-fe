@@ -1,69 +1,140 @@
 <template>
-  <div class="container-fluid navbreaker">
+  <div class="min-h-screen bg-gray-50">
+    <!-- Navigation Spacer -->
+    <div class="h-26.5 lg:h-40.5"></div>
+
+    <!-- Breadcrumb -->
     <AppBreadcrumb />
 
-    <div class="row">
-      <div class="frame2 container">
-        <div v-if="isLoading" class="text-center">
-          <div class="spinner-border" role="status"></div>
+    <!-- Main Content -->
+    <main class="py-12">
+      <div class="container">
+        <!-- Loading State -->
+        <div v-if="isLoading" class="flex items-center justify-center py-20">
+          <div class="text-center">
+            <div class="border-portal-green mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2"></div>
+            <p class="text-gray-600">Memuat data...</p>
+          </div>
         </div>
-        <div v-else-if="isError" class="alert alert-danger">
-          <h4>Error</h4>
-          <p>{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
-          <button class="btn btn-primary" @click="fetchData">Coba Lagi</button>
+
+        <!-- Error State -->
+        <div v-else-if="isError" class="mx-auto max-w-2xl">
+          <div class="rounded border border-red-200 bg-red-50 p-8 text-center">
+            <i class="bx bx-error-circle mb-4 text-4xl text-red-500"></i>
+            <h4 class="mb-4 text-xl font-semibold text-red-800">Terjadi Kesalahan</h4>
+            <p class="mb-6 text-red-700">{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
+            <button
+              class="rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
+              @click="fetchData"
+            >
+              <i class="bx bx-refresh mr-2"></i>
+              Coba Lagi
+            </button>
+          </div>
         </div>
+
+        <!-- Content -->
         <div v-else-if="data">
-          <div class="row align-items-center mb-3">
-            <div class="col-md-3">
-              <strong>Judul Dokumen</strong>
-              :
-            </div>
+          <!-- Document Details Card -->
+          <div class="mx-auto max-w-4xl">
+            <div class="overflow-hidden rounded bg-white shadow-md">
+              <!-- Header -->
+              <div class="from-portal-green to-portal-green/90 border-b border-gray-200 bg-gradient-to-r px-6 py-4">
+                <h1 class="text-xl font-semibold text-white md:text-2xl">Detail Dokumen Transparansi Keuangan</h1>
+              </div>
 
-            <div class="col-md-9">
-              {{ data.nama }}
-            </div>
-          </div>
-          <div class="row align-items-center mb-3">
-            <div class="col-md-3">
-              <strong>Deskripsi</strong>
-              :
-            </div>
-            <div class="col-md-9" v-html="data.keterangan"></div>
-          </div>
-          <div class="row align-items-center mb-3">
-            <div class="col-md-3">
-              <strong>Tanggal Publikasi</strong>
-              :
-            </div>
-            <div class="col-md-9">
-              {{ data.tanggalPublikasi ? formatters.date(data.tanggalPublikasi) : "" }}
-            </div>
-          </div>
+              <!-- Content -->
+              <div class="p-6">
+                <!-- Document Title -->
+                <div class="mb-6">
+                  <dt class="mb-2 text-sm font-medium text-gray-600">Judul Dokumen</dt>
+                  <dd class="text-lg font-semibold text-gray-900">{{ data.nama }}</dd>
+                </div>
 
-          <div class="row align-items-center mb-3">
-            <div class="col-md-3">
-              <strong>File</strong>
-              :
+                <!-- Description -->
+                <div class="mb-6">
+                  <dt class="mb-2 text-sm font-medium text-gray-600">Deskripsi</dt>
+                  <dd
+                    class="max-w-none text-sm text-gray-700 [&_li]:my-1 [&_li]:marker:text-gray-600 [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-decimal [&_ul]:pl-5"
+                    v-html="data.keterangan"
+                  ></dd>
+                </div>
+
+                <!-- Publication Date -->
+                <div class="mb-6">
+                  <dt class="mb-2 text-sm font-medium text-gray-600">Tanggal Publikasi</dt>
+                  <dd class="flex items-center text-gray-900">
+                    <i class="bx bx-calendar text-portal-green mr-2"></i>
+                    <time v-if="data.tanggalPublikasi" :datetime="data.tanggalPublikasi">
+                      {{ formatters.date(data.tanggalPublikasi) }}
+                    </time>
+                    <span v-else class="text-gray-500">Tanggal tidak tersedia</span>
+                  </dd>
+                </div>
+
+                <!-- Files & Links -->
+                <div class="mb-6">
+                  <dt class="mb-3 text-sm font-medium text-gray-600">File & Tautan</dt>
+                  <dd class="space-y-3">
+                    <!-- File Download -->
+                    <div v-if="data.file">
+                      <a
+                        :href="`https://kukarkab.go.id/pemerintahan/transparansi-keuangan/download/${data.id}`"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="bg-portal-green hover:bg-portal-green/90 inline-flex items-center rounded-md px-4 py-2 text-sm font-medium text-white transition-colors duration-200"
+                      >
+                        <i class="bx bx-download mr-2"></i>
+                        Unduh: {{ data.file }}
+                      </a>
+                    </div>
+
+                    <!-- External Link -->
+                    <div v-if="data.link">
+                      <a
+                        :href="data.link"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="border-portal-green text-portal-green hover:bg-portal-green inline-flex items-center rounded-md border px-4 py-2 text-sm font-medium transition-colors duration-200 hover:text-white"
+                      >
+                        <i class="bx bx-link-external mr-2"></i>
+                        Kunjungi Tautan
+                      </a>
+                    </div>
+
+                    <!-- No files message -->
+                    <div v-if="!data.file && !data.link" class="rounded-md bg-yellow-50 p-3">
+                      <div class="flex items-center">
+                        <i class="bx bx-info-circle mr-2 text-yellow-600"></i>
+                        <span class="text-sm text-yellow-700">Tidak ada file atau tautan yang tersedia</span>
+                      </div>
+                    </div>
+                  </dd>
+                </div>
+
+                <!-- Metadata -->
+                <div class="rounded bg-gray-50 p-4">
+                  <h3 class="mb-2 text-sm font-medium text-gray-600">Informasi Dokumen</h3>
+                  <div class="text-xs text-gray-500">
+                    Dokumen ini merupakan bagian dari komitmen transparansi keuangan Pemerintah Kabupaten Kutai
+                    Kartanegara.
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="col-md-9">
-              <a
-                v-if="data.file"
-                target="_blank"
-                :href="`https://kukarkab.go.id/pemerintahan/transparansi-keuangan/download/${data.id}`"
-              >
-                <i class="bx bx-download"></i>
-                {{ data.file }}
-              </a>
-              <br />
-              <a v-if="data.link" target="_blank" :href="data.link">
-                <i class="bx bx-link-external"></i>
-                {{ data.link || "Tidak ada link" }}
-              </a>
-            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div v-else class="mx-auto max-w-2xl">
+          <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
+            <i class="bx bx-info-circle mb-4 text-4xl text-yellow-600"></i>
+            <h4 class="mb-4 text-xl font-semibold text-yellow-800">Data Tidak Ditemukan</h4>
+            <p class="text-yellow-700">Maaf, data yang Anda cari tidak tersedia saat ini.</p>
           </div>
         </div>
       </div>
-    </div>
+    </main>
   </div>
 </template>
 

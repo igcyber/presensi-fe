@@ -33,7 +33,7 @@
               <h3 class="text-lg font-semibold text-gray-900">Video</h3>
               <button
                 @click="close"
-                class="rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
+                class="h-10 w-10 cursor-pointer rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
                 aria-label="Tutup modal"
               >
                 <i class="bx bx-x text-2xl"></i>

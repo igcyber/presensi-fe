@@ -1,86 +1,159 @@
 <template>
-  <div class="container-fluid navbreaker">
+  <div class="min-h-screen bg-gray-50">
+    <!-- Navigation Spacer -->
+    <div class="h-26.5 lg:h-40.5"></div>
+
+    <!-- Breadcrumb -->
     <AppBreadcrumb />
 
-    <div class="row">
-      <div class="frame2 container">
-        <div class="row">
-          <div class="col-md-12">
-            <div class="row">
-              <div v-if="keyword && keyword !== ''" class="col-md-12">
-                <div class="alert alert-success">
-                  <i class="bx bx-search"></i>
-                  {{ data?.beritas.length }} hasil pencarian untuk <b>"{{ keyword }}"</b>.
-                </div>
-              </div>
+    <!-- Main Content -->
+    <main class="py-12">
+      <div class="container">
+        <!-- Loading State -->
+        <div v-if="isLoading" class="flex items-center justify-center py-20">
+          <div class="text-center">
+            <div class="border-portal-green mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2"></div>
+            <p class="text-gray-600">Memuat data...</p>
+          </div>
+        </div>
 
-              <div class="col-md-12">
-                <div v-if="isLoading" class="text-center">
-                  <div class="spinner-border" role="status"></div>
-                </div>
-                <div v-else-if="isError" class="alert alert-danger">
-                  <h4>Error</h4>
-                  <p>{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
-                  <button class="btn btn-primary" @click="fetchData">Coba Lagi</button>
-                </div>
-                <template v-else-if="data">
-                  <div class="row">
-                    <div v-for="news in data.beritas" :key="news.id" class="col-md-4">
-                      <div class="post">
-                        <div class="post-image-frame">
-                          <img
-                            :src="`https://kukarkab.go.id/uploads/beritas/${news.foto}`"
-                            :alt="news.judul"
-                            class="post-image"
-                          />
-                        </div>
-                        <RouterLink
-                          :to="{
-                            name: 'berita.detail',
-                            params: { id: news.id, slug: formatters.slugify(news.judul) },
-                          }"
-                          class="post-link"
-                        >
-                          {{ news.judul }}
-                        </RouterLink>
-                        <div class="post-date-frame">
-                          <span class="post-date">
-                            <i class="bx bx-calendar"></i>
-                            {{ formatters.date(news.createdAt) }}
-                          </span>
-                        </div>
-                        <div class="post-text" v-html="news.isi.split(' ').slice(0, 15).join(' ') + '...'"></div>
-                        <hr />
-                      </div>
-                    </div>
+        <!-- Error State -->
+        <div v-else-if="isError" class="mx-auto max-w-2xl">
+          <div class="rounded border border-red-200 bg-red-50 p-8 text-center">
+            <i class="bx bx-error-circle mb-4 text-4xl text-red-500"></i>
+            <h4 class="mb-4 text-xl font-semibold text-red-800">Terjadi Kesalahan</h4>
+            <p class="mb-6 text-red-700">{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
+            <button
+              class="rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
+              @click="fetchData"
+            >
+              <i class="bx bx-refresh mr-2"></i>
+              Coba Lagi
+            </button>
+          </div>
+        </div>
 
-                    <div v-if="data.beritas.length === 0" class="col-md-12">
-                      <div class="p-4 text-center">
-                        <i class="bx bx-news bx-lg text-muted"></i>
-                        <p class="text-muted mt-2">Data kosong</p>
-                      </div>
-                    </div>
+        <!-- Content -->
+        <div v-else-if="data">
+          <template v-if="data.beritas.length > 0">
+            <!-- News Grid -->
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <article
+                v-for="news in data.beritas"
+                :key="news.id"
+                class="group overflow-hidden rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+              >
+                <!-- News Image -->
+                <div class="relative aspect-[16/10] overflow-hidden">
+                  <img
+                    :src="`https://kukarkab.go.id/uploads/beritas/${news.foto}`"
+                    :alt="news.judul"
+                    class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    loading="lazy"
+                  />
 
-                    <div class="col-md-12 text-center">
-                      <BasePagination
-                        v-if="totalPages > 1"
-                        :page="currentPage"
-                        :items-per-page="itemsPerPage"
-                        :total-items="totalItems"
-                        :total-pages="totalPages"
-                        @previousPage="prevPage"
-                        @nextPage="nextPage"
-                        @page="onPage"
-                      />
-                    </div>
+                  <!-- Image Overlay -->
+                  <div
+                    class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  ></div>
+                </div>
+
+                <!-- News Content -->
+                <div class="p-4">
+                  <!-- Date -->
+                  <div class="mb-3 flex items-center text-sm text-gray-500">
+                    <i class="bx bx-calendar mr-2"></i>
+                    <time :datetime="news.createdAt">{{ formatters.date(news.createdAt) }}</time>
                   </div>
-                </template>
+
+                  <!-- Title -->
+                  <RouterLink
+                    :to="{
+                      name: 'berita.detail',
+                      params: { id: news.id, slug: formatters.slugify(news.judul) },
+                    }"
+                    class="hover:text-portal-green mb-3 block text-lg font-semibold text-gray-900 transition-colors duration-200"
+                    style="
+                      display: -webkit-box;
+                      -webkit-line-clamp: 2;
+                      line-clamp: 2;
+                      -webkit-box-orient: vertical;
+                      overflow: hidden;
+                    "
+                  >
+                    {{ news.judul }}
+                  </RouterLink>
+
+                  <!-- Excerpt -->
+                  <div
+                    class="mb-4 text-sm text-gray-600"
+                    style="
+                      display: -webkit-box;
+                      -webkit-line-clamp: 3;
+                      line-clamp: 3;
+                      -webkit-box-orient: vertical;
+                      overflow: hidden;
+                    "
+                    v-html="news.isi.split(' ').slice(0, 15).join(' ') + '...'"
+                  ></div>
+
+                  <!-- Read More Button -->
+                  <RouterLink
+                    :to="{
+                      name: 'berita.detail',
+                      params: { id: news.id, slug: formatters.slugify(news.judul) },
+                    }"
+                    class="text-portal-green hover:text-portal-green/80 inline-flex items-center text-sm font-medium transition-colors duration-200"
+                  >
+                    Baca Selengkapnya
+                    <i class="bx bx-right-arrow-alt ml-1"></i>
+                  </RouterLink>
+                </div>
+              </article>
+            </div>
+
+            <!-- Pagination -->
+            <div v-if="totalPages > 1" class="flex justify-center">
+              <BasePagination
+                :page="currentPage"
+                :items-per-page="itemsPerPage"
+                :total-items="totalItems"
+                :total-pages="totalPages"
+                @previousPage="prevPage"
+                @nextPage="nextPage"
+                @page="onPage"
+              />
+            </div>
+          </template>
+
+          <!-- Empty State for no news -->
+          <template v-else>
+            <div class="mx-auto max-w-2xl">
+              <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
+                <i class="bx bx-news mb-4 text-4xl text-yellow-600"></i>
+                <h4 class="mb-4 text-xl font-semibold text-yellow-800">Tidak Ada Berita</h4>
+                <p class="text-yellow-700">
+                  {{
+                    keyword
+                      ? `Tidak ditemukan berita dengan kata kunci "${keyword}".`
+                      : "Maaf, belum ada berita yang tersedia saat ini."
+                  }}
+                </p>
               </div>
             </div>
+          </template>
+        </div>
+
+        <!-- Empty State -->
+        <div v-else class="mx-auto max-w-2xl">
+          <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
+            <i class="bx bx-info-circle mb-4 text-4xl text-yellow-600"></i>
+            <h4 class="mb-4 text-xl font-semibold text-yellow-800">Data Tidak Ditemukan</h4>
+            <p class="text-yellow-700">Maaf, data yang Anda cari tidak tersedia saat ini.</p>
           </div>
         </div>
       </div>
-    </div>
+    </main>
   </div>
 </template>
 

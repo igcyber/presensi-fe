@@ -98,7 +98,7 @@
                       </td>
                       <td class="px-6 py-4 text-sm font-medium text-gray-900">
                         <RouterLink
-                          class="btn btn-sm btn-success"
+                          class="text-portal-green hover:text-portal-green-dark"
                           :to="{ name: 'pemerintahan.transparansi-keuangan-detail', params: { id: item.id } }"
                           >LIHAT DATA</RouterLink
                         >
@@ -143,7 +143,7 @@
                     {{ item.nama }}
                   </h4>
                   <RouterLink
-                    class="btn btn-sm btn-success"
+                    class="text-portal-green hover:text-portal-green-dark"
                     :to="{ name: 'pemerintahan.transparansi-keuangan-detail', params: { id: item.id } }"
                     >LIHAT DATA</RouterLink
                   >

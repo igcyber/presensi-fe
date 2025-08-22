@@ -11,7 +11,7 @@
           placeholder="Apa yang ingin anda cari?"
         />
         <button
-          class="bg-portal-green hover:bg-portal-green-dark rounded border-l border-gray-200 px-6 py-3 text-white transition-colors"
+          class="bg-portal-green hover:bg-portal-green-dark cursor-pointer rounded border-l border-gray-200 px-6 py-3 text-white transition-colors"
           type="submit"
         >
           <i class="bx bx-search"></i>

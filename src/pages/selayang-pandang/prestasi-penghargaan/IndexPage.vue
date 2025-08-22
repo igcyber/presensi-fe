@@ -106,7 +106,7 @@
                             {{ item.nama }}
                           </td>
                           <td class="px-6 py-4 text-sm text-gray-700">
-                            <div class="prose prose-sm max-w-none" v-html="item.keterangan"></div>
+                            <div class="max-w-none" v-html="item.keterangan"></div>
                           </td>
                         </tr>
 
@@ -145,7 +145,7 @@
                         {{ item.nama }}
                       </h4>
 
-                      <div class="prose prose-sm max-w-none text-sm text-gray-700" v-html="item.keterangan"></div>
+                      <div class="max-w-none text-sm text-gray-700" v-html="item.keterangan"></div>
                     </div>
 
                     <!-- Mobile Empty State -->

@@ -1,51 +1,117 @@
 <template>
-  <div class="container-fluid navbreaker">
+  <div class="min-h-screen bg-gray-50">
+    <!-- Navigation Spacer -->
+    <div class="h-26.5 lg:h-40.5"></div>
+
     <!-- Breadcrumb -->
     <AppBreadcrumb />
 
-    <div class="row">
-      <div class="frame2 container">
-        <div v-if="isLoading" class="text-center">
-          <div class="spinner-border" role="status"></div>
+    <!-- Main Content -->
+    <main class="py-12">
+      <div class="container">
+        <!-- Loading State -->
+        <div v-if="isLoading" class="flex items-center justify-center py-20">
+          <div class="text-center">
+            <div class="border-portal-green mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2"></div>
+            <p class="text-gray-600">Memuat data...</p>
+          </div>
         </div>
-        <div v-else-if="isError" class="alert alert-danger">
-          <h4>Error</h4>
-          <p>{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
-          <button class="btn btn-primary" @click="fetchData">Coba Lagi</button>
-        </div>
-        <div v-else-if="data" class="row">
-          <div class="col-md-12">
-            <RouterLink :to="{ name: 'berita.index' }" class="headingtext-back"
-              ><i class="bx bx-chevron-left"></i> Kembali</RouterLink
+
+        <!-- Error State -->
+        <div v-else-if="isError" class="mx-auto max-w-2xl">
+          <div class="rounded border border-red-200 bg-red-50 p-8 text-center">
+            <i class="bx bx-error-circle mb-4 text-4xl text-red-500"></i>
+            <h4 class="mb-4 text-xl font-semibold text-red-800">Terjadi Kesalahan</h4>
+            <p class="mb-6 text-red-700">{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
+            <button
+              class="rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
+              @click="fetchData"
             >
-            <br />
+              <i class="bx bx-refresh mr-2"></i>
+              Coba Lagi
+            </button>
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div v-else-if="data">
+          <!-- Back Button -->
+          <div class="mb-6">
+            <RouterLink
+              :to="{ name: 'berita.index' }"
+              class="text-portal-green hover:text-portal-green/80 inline-flex items-center transition-colors duration-200"
+            >
+              <i class="bx bx-chevron-left mr-1 text-lg"></i>
+              Kembali ke Berita
+            </RouterLink>
           </div>
 
-          <div class="col-md-8">
-            <div class="detail-image-frame">
-              <img :src="`https://kukarkab.go.id/uploads/beritas/${data?.foto}`" class="detail-image" />
-            </div>
-            <div class="post post-detail">
-              <div class="post-date-frame">
-                <span class="post-date"><i class="bx bx-calendar"></i> {{ formatters.date(data?.createdAt) }}</span>
+          <!-- Main Content Grid -->
+          <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+            <!-- Article Content -->
+            <article class="lg:col-span-2">
+              <!-- Featured Image -->
+              <div class="mb-6 overflow-hidden rounded">
+                <img
+                  :src="`https://kukarkab.go.id/uploads/beritas/${data?.foto}`"
+                  :alt="data?.judul"
+                  class="h-auto w-full object-cover"
+                  loading="lazy"
+                />
               </div>
-              <p class="post-link">{{ data?.judul }}</p>
-              <div class="post-tag">
-                <span class="post-tag-icon"><i class="bx bx-buildings"></i> </span>
-                {{ data?.opd?.nama || "Kukarkab" }}
+
+              <!-- Article Content -->
+              <div class="rounded bg-white p-6 shadow-md">
+                <!-- Meta Information -->
+                <div class="mb-4 flex flex-wrap items-center gap-4 text-sm text-gray-600">
+                  <div class="flex items-center">
+                    <i class="bx bx-calendar mr-2"></i>
+                    <time :datetime="data?.createdAt">{{ formatters.date(data?.createdAt) }}</time>
+                  </div>
+                  <div class="flex items-center">
+                    <i class="bx bx-buildings mr-2"></i>
+                    <span>{{ data?.opd?.nama || "Kukarkab" }}</span>
+                  </div>
+                </div>
+
+                <!-- Title -->
+                <h1 class="mb-6 text-2xl font-bold text-gray-900 md:text-3xl">
+                  {{ data?.judul }}
+                </h1>
+
+                <!-- Content -->
+                <div class="max-w-none text-gray-700" v-html="data?.isi"></div>
+
+                <!-- Divider -->
+                <hr class="my-8 border-gray-200" />
+
+                <!-- Share Section -->
+                <div class="rounded bg-gray-50 p-4">
+                  <h3 class="mb-3 text-lg font-semibold text-gray-900">Bagikan Artikel</h3>
+                  <ShareLink :url="formatters.getSlugUrl('berita', data.id, data.judul)" />
+                </div>
               </div>
-              <div class="post-text" v-html="data?.isi"></div>
-              <br />
-              <hr />
-              <ShareLink :url="formatters.getSlugUrl('berita', data.id, data.judul)" />
-            </div>
+            </article>
+
+            <!-- Sidebar -->
+            <aside class="lg:col-span-1">
+              <div class="sticky top-43">
+                <BeritaSide />
+              </div>
+            </aside>
           </div>
-          <div class="col-md-4">
-            <BeritaSide />
+        </div>
+
+        <!-- Empty State -->
+        <div v-else class="mx-auto max-w-2xl">
+          <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
+            <i class="bx bx-info-circle mb-4 text-4xl text-yellow-600"></i>
+            <h4 class="mb-4 text-xl font-semibold text-yellow-800">Data Tidak Ditemukan</h4>
+            <p class="text-yellow-700">Maaf, data yang Anda cari tidak tersedia saat ini.</p>
           </div>
         </div>
       </div>
-    </div>
+    </main>
   </div>
 </template>
 

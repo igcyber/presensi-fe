@@ -1,84 +1,201 @@
 <template>
-  <div class="container-fluid navbreaker">
+  <div class="min-h-screen bg-gray-50">
+    <!-- Navigation Spacer -->
+    <div class="h-26.5 lg:h-40.5"></div>
+
     <!-- Breadcrumb -->
     <AppBreadcrumb />
 
-    <div class="row">
-      <div class="frame2 container">
-        <div v-if="isLoading" class="text-center">
-          <div class="spinner-border" role="status"></div>
+    <!-- Main Content -->
+    <main class="py-12">
+      <div class="container">
+        <!-- Loading State -->
+        <div v-if="isLoading" class="flex items-center justify-center py-20">
+          <div class="text-center">
+            <div class="border-portal-green mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2"></div>
+            <p class="text-gray-600">Memuat data...</p>
+          </div>
         </div>
-        <div v-else-if="isError" class="alert alert-danger">
-          <h4>Error</h4>
-          <p>{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
-          <button class="btn btn-primary" @click="fetchData">Coba Lagi</button>
+
+        <!-- Error State -->
+        <div v-else-if="isError" class="mx-auto max-w-2xl">
+          <div class="rounded border border-red-200 bg-red-50 p-8 text-center">
+            <i class="bx bx-error-circle mb-4 text-4xl text-red-500"></i>
+            <h4 class="mb-4 text-xl font-semibold text-red-800">Terjadi Kesalahan</h4>
+            <p class="mb-6 text-red-700">{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
+            <button
+              class="rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
+              @click="fetchData"
+            >
+              <i class="bx bx-refresh mr-2"></i>
+              Coba Lagi
+            </button>
+          </div>
         </div>
-        <div v-else-if="data" class="row">
-          <div class="row">
-            <div class="col-md-12">
-              <RouterLink :to="{ name: 'unit-kerja.opd' }" class="headingtext-back"
-                ><i class="bx bx-chevron-left"></i> Kembali</RouterLink
-              >
-              <br />
-            </div>
-            <div class="col-md-4">
-              <div class="opd opd-detail">
-                <div class="opd-image-frame">
-                  <img :src="`https://kukarkab.go.id/uploads/${data.foto}`" class="opd-image" />
+
+        <!-- Content -->
+        <div v-else-if="data">
+          <!-- Back Button -->
+          <div class="mb-6">
+            <RouterLink
+              :to="{ name: 'unit-kerja.opd' }"
+              class="text-portal-green hover:text-portal-green/80 inline-flex items-center transition-colors duration-200"
+            >
+              <i class="bx bx-chevron-left mr-1 text-lg"></i>
+              Kembali ke Daftar OPD
+            </RouterLink>
+          </div>
+
+          <!-- Main Content -->
+          <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+            <!-- Left Sidebar -->
+            <div class="lg:col-span-1">
+              <div class="space-y-6">
+                <!-- OPD Logo -->
+                <div class="overflow-hidden rounded-lg bg-white p-6 shadow-md">
+                  <div class="flex justify-center">
+                    <img
+                      :src="`https://kukarkab.go.id/uploads/${data.foto}`"
+                      :alt="`Logo ${data.nama}`"
+                      class="h-32 w-32 object-contain"
+                      loading="lazy"
+                    />
+                  </div>
+                </div>
+
+                <!-- Location Map -->
+                <div class="overflow-hidden rounded-lg bg-white shadow-md">
+                  <div class="border-b border-gray-200 px-4 py-3">
+                    <h3 class="text-lg font-semibold text-gray-900">
+                      <i class="bx bx-map text-portal-green mr-2"></i>
+                      Lokasi
+                    </h3>
+                  </div>
+                  <div class="aspect-[4/3]">
+                    <iframe
+                      :src="data.maps"
+                      class="h-full w-full"
+                      style="border: 0"
+                      allowfullscreen
+                      loading="lazy"
+                    ></iframe>
+                  </div>
                 </div>
               </div>
-              <iframe class="opd-maps" :src="data.maps" style="border: 0" allowfullscreen loading="lazy"></iframe>
             </div>
-            <div class="col-md-8">
-              <div class="headingtext">
-                <span class="headingtext-title"> <i class="bx bx-buildings"></i> {{ data.nama }} </span>
-                <i class="bx bx-dots-horizontal-rounded detail-divider"></i>
-              </div>
-              <div class="detail-text" v-html="data.keterangan"></div>
-              <div class="detail-text">
-                <b><i class="bx bx-devices"></i> Aplikasi Terkait</b>
-              </div>
-              <br />
-              <table class="table-hover table">
-                <tr>
-                  <th>No</th>
-                  <th>Nama</th>
-                  <th>Keterangan</th>
-                  <th>Logo</th>
-                </tr>
-                <tr v-for="(layanan, index) in data.layanans" :key="layanan.id">
-                  <td>{{ index + 1 }}.</td>
-                  <td>
-                    {{ layanan.nama }}
-                    <br />
-                    <a :href="layanan.alamat" target="_blank" class="badge badge-success">{{ layanan.alamat }}</a>
-                  </td>
-                  <td v-html="layanan.keterangan"></td>
-                  <td>
-                    <a :href="layanan.alamat" target="_blank">
-                      <img style="width: 80px" :src="`https://kukarkab.go.id/uploads/${layanan.logo}`" alt="" />
+
+            <!-- Main Content Area -->
+            <div class="lg:col-span-2">
+              <div class="space-y-6">
+                <!-- OPD Header -->
+                <div class="rounded-lg bg-white p-6 shadow-md">
+                  <div class="mb-4 flex items-center">
+                    <i class="bx bx-buildings text-portal-green mr-3 text-2xl"></i>
+                    <h1 class="text-2xl font-bold text-gray-900 md:text-3xl">{{ data.nama }}</h1>
+                  </div>
+
+                  <!-- Description -->
+                  <div class="max-w-none text-gray-700" v-html="data.keterangan"></div>
+
+                  <!-- Website Button -->
+                  <div class="mt-6">
+                    <a
+                      :href="data.website"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="bg-portal-green hover:bg-portal-green/90 inline-flex items-center rounded-md px-4 py-2 text-sm font-medium text-white transition-colors duration-200"
+                    >
+                      <i class="bx bx-world mr-2"></i>
+                      Kunjungi Website
                     </a>
-                  </td>
-                </tr>
-                <tr v-if="data.layanans.length === 0">
-                  <td colspan="4">Data kosong</td>
-                </tr>
-              </table>
-              <a :href="data.website" target="_blank" class="btn btn-warning">
-                <i class="bx bx-world"></i>
-                Kunjungi website
-              </a>
-            </div>
-            <div class="col-md-12">
-              <div class="content">
-                <a class="content-link active">OPD</a>
-                <a class="content-link">Perusahaan Daerah</a>
+                  </div>
+                </div>
+
+                <!-- Related Applications -->
+                <div class="rounded-lg bg-white shadow-md">
+                  <div class="border-b border-gray-200 px-6 py-4">
+                    <h2 class="text-lg font-semibold text-gray-900">
+                      <i class="bx bx-devices text-portal-green mr-2"></i>
+                      Aplikasi Terkait
+                    </h2>
+                  </div>
+
+                  <div class="p-6">
+                    <template v-if="data.layanans.length > 0">
+                      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <div
+                          v-for="(layanan, index) in data.layanans"
+                          :key="layanan.id"
+                          class="rounded-lg border border-gray-200 p-4 transition-shadow duration-200 hover:shadow-md"
+                        >
+                          <!-- App Header -->
+                          <div class="mb-3 flex items-center justify-between">
+                            <span class="bg-portal-green rounded px-2 py-1 text-xs font-medium text-white">
+                              #{{ index + 1 }}
+                            </span>
+                            <a :href="layanan.alamat" target="_blank" rel="noopener noreferrer" class="flex-shrink-0">
+                              <img
+                                :src="`https://kukarkab.go.id/uploads/${layanan.logo}`"
+                                :alt="`Logo ${layanan.nama}`"
+                                class="h-12 w-12 rounded object-contain"
+                                loading="lazy"
+                              />
+                            </a>
+                          </div>
+
+                          <!-- App Info -->
+                          <h3 class="mb-2 font-semibold text-gray-900">{{ layanan.nama }}</h3>
+
+                          <div class="mb-3 text-sm text-gray-600" v-html="layanan.keterangan"></div>
+
+                          <!-- App Link -->
+                          <a
+                            :href="layanan.alamat"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="inline-flex items-center rounded-md bg-green-600 px-3 py-1 text-xs font-medium text-white transition-colors duration-200 hover:bg-green-700"
+                          >
+                            <i class="bx bx-link-external mr-1"></i>
+                            Akses Aplikasi
+                          </a>
+                        </div>
+                      </div>
+                    </template>
+
+                    <!-- Empty Applications State -->
+                    <template v-else>
+                      <div class="rounded-md bg-gray-50 p-6 text-center">
+                        <i class="bx bx-devices mb-2 text-2xl text-gray-400"></i>
+                        <p class="text-sm text-gray-600">Belum ada aplikasi terkait yang tersedia</p>
+                      </div>
+                    </template>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+
+          <!-- Content Tabs (Optional - if needed for navigation) -->
+          <div class="mt-8 rounded-lg bg-white shadow-md">
+            <div class="border-b border-gray-200 px-6 py-3">
+              <nav class="flex space-x-8">
+                <a href="#" class="border-portal-green text-portal-green border-b-2 py-2 text-sm font-medium"> OPD </a>
+                <a href="#" class="py-2 text-sm font-medium text-gray-500 hover:text-gray-700"> Perusahaan Daerah </a>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div v-else class="mx-auto max-w-2xl">
+          <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
+            <i class="bx bx-info-circle mb-4 text-4xl text-yellow-600"></i>
+            <h4 class="mb-4 text-xl font-semibold text-yellow-800">Data Tidak Ditemukan</h4>
+            <p class="text-yellow-700">Maaf, data yang Anda cari tidak tersedia saat ini.</p>
+          </div>
         </div>
       </div>
-    </div>
+    </main>
   </div>
 </template>
 

@@ -1,42 +1,102 @@
 <template>
-  <div class="container-fluid navbreaker">
+  <div class="min-h-screen bg-gray-50">
+    <!-- Navigation Spacer -->
+    <div class="h-26.5 lg:h-40.5"></div>
+
+    <!-- Breadcrumb -->
     <AppBreadcrumb />
 
-    <div class="row">
-      <div class="frame2 container">
-        <div v-if="isLoading" class="text-center">
-          <div class="spinner-border" role="status"></div>
+    <!-- Main Content -->
+    <main class="py-12">
+      <div class="container">
+        <!-- Loading State -->
+        <div v-if="isLoading" class="flex items-center justify-center py-20">
+          <div class="text-center">
+            <div class="border-portal-green mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2"></div>
+            <p class="text-gray-600">Memuat data...</p>
+          </div>
         </div>
-        <div v-else-if="isError" class="alert alert-danger">
-          <h4>Error</h4>
-          <p>{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
-          <button class="btn btn-primary" @click="fetchData">Coba Lagi</button>
+
+        <!-- Error State -->
+        <div v-else-if="isError" class="mx-auto max-w-2xl">
+          <div class="rounded border border-red-200 bg-red-50 p-8 text-center">
+            <i class="bx bx-error-circle mb-4 text-4xl text-red-500"></i>
+            <h4 class="mb-4 text-xl font-semibold text-red-800">Terjadi Kesalahan</h4>
+            <p class="mb-6 text-red-700">{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
+            <button
+              class="rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
+              @click="fetchData"
+            >
+              <i class="bx bx-refresh mr-2"></i>
+              Coba Lagi
+            </button>
+          </div>
         </div>
-        <template v-else-if="data && data.infografis.length > 0">
-          <div class="row">
-            <div v-for="infografis in data.infografis" :key="infografis.id" class="col-md-4">
-              <div class="info">
-                <div class="info-image-frame">
-                  <img :src="`https://kukarkab.go.id/uploads/banners/${infografis.foto}`" class="info-image" />
-                  <div class="info-content">
+
+        <!-- Content -->
+        <div v-else-if="data">
+          <template v-if="data.infografis.length > 0">
+            <!-- Infografis Gallery Grid -->
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <div
+                v-for="infografis in data.infografis"
+                :key="infografis.id"
+                class="group overflow-hidden rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+              >
+                <!-- Infografis Container -->
+                <div class="relative aspect-[3/4] overflow-hidden">
+                  <img
+                    :src="`https://kukarkab.go.id/uploads/banners/${infografis.foto}`"
+                    :alt="infografis.nama"
+                    class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    loading="lazy"
+                  />
+
+                  <!-- Overlay with View Button -->
+                  <div
+                    class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  >
                     <a
                       :href="`https://kukarkab.go.id/uploads/banners/${infografis.foto}`"
-                      data-lightbox="banner"
-                      target="_blank"
-                      class="doc-link"
-                      >{{ infografis.nama }}</a
+                      data-lightbox="infografis-gallery"
+                      :data-title="infografis.nama"
+                      class="flex h-15 w-15 cursor-pointer items-center justify-center rounded-full bg-white/90 p-1 text-gray-900 transition-all duration-200 hover:scale-110 hover:bg-white"
                     >
-                    <span class="info-date">
-                      <i class="bx bx-calendar"></i> {{ formatters.date(infografis.createdAt) }}
-                    </span>
+                      <i class="bx bx-zoom-in text-2xl"></i>
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Infografis Info -->
+                <div class="p-4">
+                  <!-- Title -->
+                  <a
+                    :href="`https://kukarkab.go.id/uploads/banners/${infografis.foto}`"
+                    data-lightbox="infografis-gallery-title"
+                    :data-title="infografis.nama"
+                    class="hover:text-portal-green mb-3 block text-lg font-semibold text-gray-900 transition-colors duration-200"
+                    style="
+                      display: -webkit-box;
+                      -webkit-line-clamp: 2;
+                      line-clamp: 2;
+                      -webkit-box-orient: vertical;
+                      overflow: hidden;
+                    "
+                  >
+                    {{ infografis.nama }}
+                  </a>
+
+                  <!-- Date -->
+                  <div class="flex items-center text-sm text-gray-500">
+                    <i class="bx bx-calendar mr-2"></i>
+                    <span>{{ formatters.date(infografis.createdAt) }}</span>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div class="row">
-            <div class="col-md-12">
+            <!-- Pagination -->
+            <div class="flex justify-center">
               <BasePagination
                 :page="currentPage"
                 :totalPages="totalPages"
@@ -47,16 +107,30 @@
                 @page="onPage"
               />
             </div>
-          </div>
-        </template>
+          </template>
 
-        <template v-else>
-          <div class="col-md-12">
-            <div class="alert alert-warning">Data kosong</div>
+          <!-- Empty State for no infografis -->
+          <template v-else>
+            <div class="mx-auto max-w-2xl">
+              <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
+                <i class="bx bx-file-blank mb-4 text-4xl text-yellow-600"></i>
+                <h4 class="mb-4 text-xl font-semibold text-yellow-800">Tidak Ada Infografis</h4>
+                <p class="text-yellow-700">Maaf, belum ada infografis yang tersedia saat ini.</p>
+              </div>
+            </div>
+          </template>
+        </div>
+
+        <!-- Empty State -->
+        <div v-else class="mx-auto max-w-2xl">
+          <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
+            <i class="bx bx-info-circle mb-4 text-4xl text-yellow-600"></i>
+            <h4 class="mb-4 text-xl font-semibold text-yellow-800">Data Tidak Ditemukan</h4>
+            <p class="text-yellow-700">Maaf, data yang Anda cari tidak tersedia saat ini.</p>
           </div>
-        </template>
+        </div>
       </div>
-    </div>
+    </main>
   </div>
 </template>
 
