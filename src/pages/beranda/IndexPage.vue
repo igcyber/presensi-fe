@@ -285,7 +285,7 @@
             <VueCarousel
               :items="banners"
               :items-per-view="3"
-              :autoplay="true"
+              :autoplay="false"
               :autoplay-delay="3000"
               :responsive="{
                 0: { itemsPerView: 1 },
@@ -367,7 +367,7 @@
             <VueCarousel
               :items="videos"
               :items-per-view="3"
-              :autoplay="true"
+              :autoplay="false"
               :autoplay-delay="4000"
               :responsive="{
                 0: { itemsPerView: 1 },
