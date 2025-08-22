@@ -313,9 +313,14 @@
                     <div
                       class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                     >
-                      <div class="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 text-gray-900">
+                      <a
+                        :href="`https://kukarkab.go.id/uploads/banners/${bannerItem.foto}`"
+                        data-lightbox="banner"
+                        :data-title="bannerItem.nama"
+                        class="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 text-gray-900"
+                      >
                         <i class="bx bx-zoom-in text-xl"></i>
-                      </div>
+                      </a>
                     </div>
                   </div>
 
@@ -323,9 +328,9 @@
                   <div class="p-4">
                     <a
                       :href="`https://kukarkab.go.id/uploads/banners/${bannerItem.foto}`"
-                      target="_blank"
-                      data-lightbox="banner"
-                      class="mb-2 block font-semibold text-gray-900 transition-colors duration-200 hover:text-purple-600"
+                      data-lightbox="banner-title"
+                      :data-title="bannerItem.nama"
+                      class="hover:text-portal-green mb-2 block font-semibold text-gray-900 transition-colors duration-200"
                       style="
                         display: -webkit-box;
                         -webkit-line-clamp: 2;
@@ -542,7 +547,7 @@
           >
             <template #default="{ item: opd }">
               <div
-                class="group h-75 max-h-75 overflow-hidden rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                class="group h-75 max-h-70 overflow-hidden rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
               >
                 <!-- OPD Logo -->
                 <div class="flex justify-center p-6 pb-4">
