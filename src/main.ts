@@ -1,9 +1,5 @@
-// Import CSS Bootstrap
 import $ from "jquery";
 
-// import "bootstrap/dist/css/bootstrap.min.css";
-// import "owl.carousel/dist/assets/owl.carousel.css";
-// import "owl.carousel/dist/assets/owl.theme.default.css";
 import "lightbox2/dist/css/lightbox.min.css";
 
 import { createPinia } from "pinia";
@@ -16,7 +12,6 @@ import "@/styles/icons.css";
 import "@/styles/main.css";
 import "@/styles/variables.css";
 
-// Set jQuery globally FIRST
 (window as any).$ = (window as any).jQuery = $;
 
 const lightboxModule = await import("lightbox2/dist/js/lightbox.js");
