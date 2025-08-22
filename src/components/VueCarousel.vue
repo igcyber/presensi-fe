@@ -33,7 +33,6 @@
 
       <!-- Next Button -->
       <button
-        v-if="currentIndex < maxIndex"
         @click="nextSlide"
         class="absolute top-1/2 -right-3 z-10 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/80 text-gray-700 shadow-lg transition-all duration-200 hover:scale-110 hover:bg-white"
       >
@@ -44,11 +43,11 @@
     <!-- Dots Indicator -->
     <div v-if="showDots && items.length > currentItemsPerView" class="mt-4 flex justify-center space-x-2">
       <button
-        v-for="n in Math.ceil(items.length / currentItemsPerView)"
+        v-for="n in totalSlides"
         :key="n"
         @click="goToSlide(n - 1)"
         class="h-2 w-2 rounded-full transition-all duration-200"
-        :class="[currentIndex === n - 1 ? 'bg-portal-green' : 'bg-gray-300 hover:bg-gray-400']"
+        :class="[currentSlideIndex === n - 1 ? 'bg-portal-green' : 'bg-gray-300 hover:bg-gray-400']"
       ></button>
     </div>
   </div>
@@ -84,27 +83,78 @@ const carouselContainer = ref<HTMLElement | null>(null);
 const currentIndex = ref(0);
 const autoplayInterval = ref<ReturnType<typeof setInterval> | null>(null);
 const currentItemsPerView = ref(props.itemsPerView);
+const isOddBeforeLast = ref(false);
 
 // Computed
 const maxIndex = computed(() => Math.max(0, props.items.length - currentItemsPerView.value));
+
+const totalSlides = computed(() => Math.ceil(props.items.length / currentItemsPerView.value));
+
+const currentSlideIndex = computed(() => {
+  if (isOddBeforeLast.value) {
+    return totalSlides.value - 1;
+  }
+  return Math.floor(currentIndex.value / currentItemsPerView.value);
+});
 
 // Methods
 const nextSlide = () => {
   if (currentIndex.value < maxIndex.value) {
     currentIndex.value++;
-  } else if (props.autoplay) {
-    currentIndex.value = 0; // Loop back to start
+
+    // Check if we've reached the last slide with odd number of items
+    const remainingItems = props.items.length % currentItemsPerView.value;
+    if (remainingItems !== 0 && currentIndex.value === maxIndex.value) {
+      isOddBeforeLast.value = true;
+    } else {
+      isOddBeforeLast.value = false;
+    }
+  } else {
+    // Loop back to start
+    currentIndex.value = 0;
+    isOddBeforeLast.value = false;
   }
 };
 
 const previousSlide = () => {
   if (currentIndex.value > 0) {
     currentIndex.value--;
+
+    // Check if we're at the last slide with odd number of items
+    const remainingItems = props.items.length % currentItemsPerView.value;
+    if (remainingItems !== 0 && currentIndex.value === maxIndex.value) {
+      isOddBeforeLast.value = true;
+    } else {
+      isOddBeforeLast.value = false;
+    }
   }
 };
 
 const goToSlide = (index: number) => {
-  currentIndex.value = Math.min(index, maxIndex.value);
+  // Jika ini adalah slide terakhir dan jumlah item tidak habis dibagi
+  if (index === totalSlides.value - 1) {
+    const remainingItems = props.items.length % currentItemsPerView.value;
+
+    // Jika ada sisa item (ganjil), sesuaikan posisi agar tidak ada slot kosong
+    if (remainingItems !== 0) {
+      // Posisikan agar item terakhir berada di ujung kanan
+      currentIndex.value = props.items.length - currentItemsPerView.value;
+      isOddBeforeLast.value = true;
+    } else {
+      // Jika genap, gunakan perhitungan normal
+      currentIndex.value = index * currentItemsPerView.value;
+      isOddBeforeLast.value = false;
+    }
+  } else {
+    // Untuk slide selain yang terakhir, gunakan perhitungan normal
+    currentIndex.value = index * currentItemsPerView.value;
+    isOddBeforeLast.value = false;
+  }
+
+  // Pastikan index tidak melebihi batas maksimum
+  if (currentIndex.value > maxIndex.value) {
+    currentIndex.value = maxIndex.value;
+  }
 };
 
 // Responsive handling
