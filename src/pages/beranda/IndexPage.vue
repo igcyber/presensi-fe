@@ -532,7 +532,7 @@
           <VueCarousel
             :items="opds"
             :items-per-view="3"
-            :autoplay="true"
+            :autoplay="false"
             :autoplay-delay="5000"
             :responsive="{
               0: { itemsPerView: 1 },
@@ -542,7 +542,7 @@
           >
             <template #default="{ item: opd }">
               <div
-                class="group overflow-hidden rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                class="group h-75 max-h-75 overflow-hidden rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
               >
                 <!-- OPD Logo -->
                 <div class="flex justify-center p-6 pb-4">

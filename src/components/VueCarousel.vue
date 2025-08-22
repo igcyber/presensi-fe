@@ -1,7 +1,7 @@
 <template>
   <div class="relative">
     <!-- Carousel Container -->
-    <div class="overflow-hidden rounded">
+    <div class="overflow-hidden rounded pb-5">
       <div
         ref="carouselContainer"
         class="flex transition-transform duration-300 ease-in-out"
