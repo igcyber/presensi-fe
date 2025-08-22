@@ -8,6 +8,20 @@
 
     <!-- Main Content -->
     <main class="py-12">
+      <div v-if="keyword" class="mx-auto mb-8 max-w-2xl">
+        <div class="border-portal-green bg-portal-green/10 rounded border p-8 text-center">
+          <i class="bx bx-search text-portal-green text-4xl"></i>
+          <h4 class="text-portal-green mb-2 text-xl font-semibold">Pencarian</h4>
+          <p class="text-portal-green">
+            {{
+              keyword
+                ? `Menampilkan hasil pencarian untuk "${keyword}" dengan total ${data?.beritas.length} berita.`
+                : "Maaf, belum ada berita yang tersedia saat ini."
+            }}
+          </p>
+        </div>
+      </div>
+
       <div class="container">
         <!-- Loading State -->
         <div v-if="isLoading" class="flex items-center justify-center py-20">
