@@ -34,7 +34,7 @@
         </div>
 
         <!-- Content -->
-        <div v-else-if="data">
+        <div v-else-if="data && data.data">
           <SelayangPandang
             :title="data.data.slug"
             :content="data.data.isi"

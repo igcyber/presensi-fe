@@ -10,7 +10,6 @@ import router from "@/router";
 
 import "@/styles/icons.css";
 import "@/styles/main.css";
-import "@/styles/variables.css";
 
 (window as any).$ = (window as any).jQuery = $;
 

@@ -34,7 +34,7 @@
         </div>
 
         <!-- Content -->
-        <div v-else-if="data">
+        <div v-else-if="visi && misi">
           <SelayangPandang
             :title="visi.nama"
             :content="visi.isi"

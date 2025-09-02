@@ -1,34 +1,48 @@
-import { globalIgnores } from 'eslint/config'
-import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript'
-import pluginVue from 'eslint-plugin-vue'
-import pluginVitest from '@vitest/eslint-plugin'
-import skipFormatting from '@vue/eslint-config-prettier/skip-formatting'
+import pluginVitest from "@vitest/eslint-plugin";
+import skipFormatting from "@vue/eslint-config-prettier/skip-formatting";
+import { defineConfigWithVueTs, vueTsConfigs } from "@vue/eslint-config-typescript";
+import pluginVue from "eslint-plugin-vue";
+import { globalIgnores } from "eslint/config";
 
-// To allow more languages other than `ts` in `.vue` files, uncomment the following lines:
-// import { configureVueProject } from '@vue/eslint-config-typescript'
-// configureVueProject({ scriptLangs: ['ts', 'tsx'] })
-// More info at https://github.com/vuejs/eslint-config-typescript/#advanced-setup
+// ⬇️ Pastikan file bernama eslint.config.ts (bukan eslint.configt.ts)
 
 export default defineConfigWithVueTs(
+  // files yang dilint
   {
-    name: 'app/files-to-lint',
-    files: ['**/*.{ts,mts,tsx,vue}'],
+    name: "app/files-to-lint",
+    files: ["**/*.{ts,mts,tsx,vue}"],
   },
 
-  globalIgnores(['**/dist/**', '**/dist-ssr/**', '**/coverage/**']),
+  // ignore build outputs
+  globalIgnores(["**/dist/**", "**/dist-ssr/**", "**/coverage/**"]),
 
-  pluginVue.configs['flat/essential'],
+  // Vue base rules
+  pluginVue.configs["flat/essential"],
+
+  // TS rekomendasi dari @vue/eslint-config-typescript
   vueTsConfigs.recommended,
 
+  // Vitest hanya untuk test files
   {
     ...pluginVitest.configs.recommended,
-    files: ['src/**/__tests__/*'],
+    files: ["**/__tests__/**", "**/*.test.*", "**/*.spec.*"],
   },
-  skipFormatting,
+
+  // Aturan tambahan: jangan ganggu formatting (biar Prettier yang pegang)
   {
     rules: {
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-unused-vars': 'off',
+      // Hindari “bentrok” opini format
+      "max-len": "off",
+      quotes: "off",
+      semi: "off",
+      "no-multiple-empty-lines": "off",
+
+      // Quality of life
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }],
     },
   },
-)
+
+  // ⬇️ Letakkan paling AKHIR agar menonaktifkan semua formatting rules yang bisa konflik dgn Prettier
+  skipFormatting,
+);

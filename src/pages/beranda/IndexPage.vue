@@ -13,41 +13,54 @@
       <!-- Emergency Hotline Section -->
       <section class="bg-portal-blue-dark py-8 text-white">
         <div class="container">
-          <div class="grid grid-cols-1 justify-center gap-8 lg:grid-cols-4">
+          <div class="grid grid-cols-1 items-center justify-center gap-8 lg:grid-cols-4">
             <!-- Hotline Header -->
             <div class="lg:col-span-1">
               <div class="flex items-center">
-                <div class="mr-4 flex h-16 w-16 items-center justify-center rounded-full bg-white/20">
-                  <i class="bx bx-phone-call text-2xl"></i>
+                <div
+                  class="mr-3 flex h-12 w-12 items-center justify-center rounded-full bg-white/20 sm:mr-4 sm:h-16 sm:w-16"
+                >
+                  <i class="bx bx-phone-call text-lg sm:text-xl"></i>
                 </div>
                 <div>
-                  <h2 class="hidden text-base font-medium lg:block">Kontak Emergency<br />Masyarakat KUKAR</h2>
-                  <h2 class="block text-lg font-bold lg:hidden">Kontak Emergency Masyarakat KUKAR</h2>
+                  <h2 class="text-sm font-medium sm:text-base md:hidden">Kontak Emergency<br />Masyarakat KUKAR</h2>
+                  <h2 class="hidden text-sm font-medium md:block lg:text-base xl:text-base">
+                    Kontak Emergency<br />Masyarakat KUKAR
+                  </h2>
                 </div>
               </div>
             </div>
 
-            <!-- Emergency Contacts -->
-            <div class="lg:col-span-3">
-              <div class="grid grid-cols-1 justify-evenly gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <div v-for="(emergency, idx) in emergencies" :key="idx" class="flex items-center">
-                  <div class="mr-3 flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
-                    <i :class="`bx bx-${emergency.icon}`" class="text-lg"></i>
-                  </div>
-                  <div>
-                    <p class="font-semibold">{{ emergency.nama }}</p>
-                    <p class="text-sm text-red-100">{{ emergency.isi }}</p>
+            <template v-if="emergencies.length">
+              <!-- Emergency Contacts -->
+              <div class="lg:col-span-3">
+                <div class="grid grid-cols-1 justify-evenly gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                  <div v-for="(emergency, idx) in emergencies" :key="idx" class="flex items-center">
+                    <div class="mr-3 flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
+                      <i :class="`bx bx-${emergency.icon}`" class="text-lg"></i>
+                    </div>
+                    <div>
+                      <p class="font-semibold">{{ emergency.nama }}</p>
+                      <p class="text-sm text-red-100">{{ emergency.isi }}</p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </template>
+            <template v-else>
+              <div class="lg:col-span-3">
+                <div class="rounded text-center">
+                  <p class="text-white">Belum ada kontak emergency tersedia</p>
+                </div>
+              </div>
+            </template>
           </div>
         </div>
       </section>
 
       <!-- Hero Banner Section -->
       <section
-        class="from-portal-green to-portal-green/90 relative bg-gradient-to-br bg-[url('/hero.png')] bg-cover bg-position-[bottom_right_-100px] bg-no-repeat py-30 text-white sm:bg-position-[bottom_right]"
+        class="relative bg-black/60 bg-gradient-to-br bg-[url('/hero.png')] bg-cover bg-position-[bottom_right_-100px] bg-no-repeat py-30 text-white bg-blend-multiply sm:bg-position-[bottom_right]"
       >
         <div class="container">
           <div class="mx-auto max-w-4xl text-center">
@@ -261,7 +274,9 @@
 
               <!-- Election Widget Container -->
               <div class="rounded bg-white p-6 shadow-md">
-                <div id="gpr-kominfo-widget-container"></div>
+                <div id="gpr-kominfo-widget-container">
+                  <p class="text-gray-500">Loading...</p>
+                </div>
               </div>
             </div>
           </div>
@@ -282,75 +297,83 @@
               </h2>
             </div>
 
-            <VueCarousel
-              :items="banners"
-              :items-per-view="3"
-              :autoplay="false"
-              :autoplay-delay="3000"
-              :responsive="{
-                0: { itemsPerView: 1 },
-                640: { itemsPerView: 2 },
-                1024: { itemsPerView: 3 },
-              }"
-            >
-              <template #default="{ item: bannerItem }">
-                <div
-                  class="group overflow-hidden rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-                >
-                  <!-- Image -->
-                  <div class="relative aspect-[3/4] overflow-hidden">
-                    <img
-                      :src="`https://kukarkab.go.id/uploads/banners/${bannerItem.foto}`"
-                      :alt="bannerItem.nama"
-                      class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                      loading="lazy"
-                    />
-                    <!-- Overlay -->
-                    <div
-                      class="absolute inset-0 bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                    ></div>
-                    <!-- Zoom Icon -->
-                    <div
-                      class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                    >
+            <template v-if="banners.length">
+              <VueCarousel
+                :items="banners"
+                :items-per-view="3"
+                :autoplay="false"
+                :autoplay-delay="3000"
+                :responsive="{
+                  0: { itemsPerView: 1 },
+                  640: { itemsPerView: 2 },
+                  1024: { itemsPerView: 3 },
+                }"
+              >
+                <template #default="{ item: bannerItem }">
+                  <div
+                    class="group overflow-hidden rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                  >
+                    <!-- Image -->
+                    <div class="relative aspect-[3/4] overflow-hidden">
+                      <img
+                        :src="`https://kukarkab.go.id/uploads/banners/${bannerItem.foto}`"
+                        :alt="bannerItem.nama"
+                        class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                      <!-- Overlay -->
+                      <div
+                        class="absolute inset-0 bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                      ></div>
+                      <!-- Zoom Icon -->
+                      <div
+                        class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                      >
+                        <a
+                          :href="`https://kukarkab.go.id/uploads/banners/${bannerItem.foto}`"
+                          data-lightbox="banner"
+                          :data-title="bannerItem.nama"
+                          class="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 text-gray-900"
+                        >
+                          <i class="bx bx-zoom-in text-xl"></i>
+                        </a>
+                      </div>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="p-4">
                       <a
                         :href="`https://kukarkab.go.id/uploads/banners/${bannerItem.foto}`"
-                        data-lightbox="banner"
+                        data-lightbox="banner-title"
                         :data-title="bannerItem.nama"
-                        class="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 text-gray-900"
+                        class="hover:text-portal-green mb-2 block font-semibold text-gray-900 transition-colors duration-200"
+                        style="
+                          display: -webkit-box;
+                          -webkit-line-clamp: 2;
+                          line-clamp: 2;
+                          -webkit-box-orient: vertical;
+                          overflow: hidden;
+                        "
                       >
-                        <i class="bx bx-zoom-in text-xl"></i>
+                        {{ bannerItem.nama }}
                       </a>
+                      <div class="flex items-center text-sm text-gray-500">
+                        <i class="bx bx-calendar mr-2"></i>
+                        <time :datetime="new Date(bannerItem.createdAt).toISOString()">{{
+                          formatters.date(bannerItem.createdAt)
+                        }}</time>
+                      </div>
                     </div>
                   </div>
-
-                  <!-- Content -->
-                  <div class="p-4">
-                    <a
-                      :href="`https://kukarkab.go.id/uploads/banners/${bannerItem.foto}`"
-                      data-lightbox="banner-title"
-                      :data-title="bannerItem.nama"
-                      class="hover:text-portal-green mb-2 block font-semibold text-gray-900 transition-colors duration-200"
-                      style="
-                        display: -webkit-box;
-                        -webkit-line-clamp: 2;
-                        line-clamp: 2;
-                        -webkit-box-orient: vertical;
-                        overflow: hidden;
-                      "
-                    >
-                      {{ bannerItem.nama }}
-                    </a>
-                    <div class="flex items-center text-sm text-gray-500">
-                      <i class="bx bx-calendar mr-2"></i>
-                      <time :datetime="new Date(bannerItem.createdAt).toISOString()">{{
-                        formatters.date(bannerItem.createdAt)
-                      }}</time>
-                    </div>
-                  </div>
-                </div>
-              </template>
-            </VueCarousel>
+                </template>
+              </VueCarousel>
+            </template>
+            <template v-else>
+              <div class="rounded bg-white p-8 text-center shadow-md">
+                <i class="bx bx-image mb-4 text-4xl text-gray-400"></i>
+                <p class="text-gray-600">Belum ada infografis tersedia</p>
+              </div>
+            </template>
           </div>
 
           <!-- Video Section -->
@@ -364,72 +387,80 @@
               </h2>
             </div>
 
-            <VueCarousel
-              :items="videos"
-              :items-per-view="3"
-              :autoplay="false"
-              :autoplay-delay="4000"
-              :responsive="{
-                0: { itemsPerView: 1 },
-                640: { itemsPerView: 2 },
-                1024: { itemsPerView: 3 },
-              }"
-            >
-              <template #default="{ item: video }">
-                <div
-                  class="group overflow-hidden rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-                >
-                  <!-- Video Thumbnail -->
-                  <div class="relative aspect-video overflow-hidden">
-                    <template v-if="formatters.youtubeInfo(video.link).id">
-                      <div
-                        class="relative cursor-pointer"
-                        @click="openVideoModal(formatters.youtubeInfo(video.link).embedUrl)"
-                      >
-                        <img
-                          :src="formatters.youtubeInfo(video.link).thumb"
-                          alt="Video Thumbnail"
-                          class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                          loading="lazy"
-                        />
-                        <!-- Play Button Overlay -->
-                        <div class="absolute inset-0 flex items-center justify-center bg-black/30">
-                          <div
-                            class="flex h-16 w-16 items-center justify-center rounded-full bg-red-600 text-white transition-transform duration-300 hover:scale-110"
-                          >
-                            <i class="bx bx-play text-2xl"></i>
+            <template v-if="videos.length">
+              <VueCarousel
+                :items="videos"
+                :items-per-view="3"
+                :autoplay="false"
+                :autoplay-delay="4000"
+                :responsive="{
+                  0: { itemsPerView: 1 },
+                  640: { itemsPerView: 2 },
+                  1024: { itemsPerView: 3 },
+                }"
+              >
+                <template #default="{ item: video }">
+                  <div
+                    class="group overflow-hidden rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                  >
+                    <!-- Video Thumbnail -->
+                    <div class="relative aspect-video overflow-hidden">
+                      <template v-if="formatters.youtubeInfo(video.link).id">
+                        <div
+                          class="relative cursor-pointer"
+                          @click="openVideoModal(formatters.youtubeInfo(video.link).embedUrl)"
+                        >
+                          <img
+                            :src="formatters.youtubeInfo(video.link).thumb"
+                            alt="Video Thumbnail"
+                            class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                            loading="lazy"
+                          />
+                          <!-- Play Button Overlay -->
+                          <div class="absolute inset-0 flex items-center justify-center bg-black/30">
+                            <div
+                              class="flex h-16 w-16 items-center justify-center rounded-full bg-red-600 text-white transition-transform duration-300 hover:scale-110"
+                            >
+                              <i class="bx bx-play text-2xl"></i>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </template>
-                    <template v-else>
-                      <video controls class="h-full w-full object-cover">
-                        <source :src="video.link" type="video/mp4" />
-                        <source :src="video.link" type="video/webm" />
-                        <source :src="video.link" type="video/ogg" />
-                        Browser Anda tidak mendukung tag video.
-                      </video>
-                    </template>
-                  </div>
+                      </template>
+                      <template v-else>
+                        <video controls class="h-full w-full object-cover">
+                          <source :src="video.link" type="video/mp4" />
+                          <source :src="video.link" type="video/webm" />
+                          <source :src="video.link" type="video/ogg" />
+                          Browser Anda tidak mendukung tag video.
+                        </video>
+                      </template>
+                    </div>
 
-                  <!-- Video Info -->
-                  <div class="p-4">
-                    <h3
-                      class="font-semibold text-gray-900"
-                      style="
-                        display: -webkit-box;
-                        -webkit-line-clamp: 2;
-                        line-clamp: 2;
-                        -webkit-box-orient: vertical;
-                        overflow: hidden;
-                      "
-                    >
-                      {{ video.nama || "Video" }}
-                    </h3>
+                    <!-- Video Info -->
+                    <div class="p-4">
+                      <h3
+                        class="font-semibold text-gray-900"
+                        style="
+                          display: -webkit-box;
+                          -webkit-line-clamp: 2;
+                          line-clamp: 2;
+                          -webkit-box-orient: vertical;
+                          overflow: hidden;
+                        "
+                      >
+                        {{ video.nama || "Video" }}
+                      </h3>
+                    </div>
                   </div>
-                </div>
-              </template>
-            </VueCarousel>
+                </template>
+              </VueCarousel>
+            </template>
+            <template v-else>
+              <div class="rounded bg-white p-8 text-center shadow-md">
+                <i class="bx bx-video mb-4 text-4xl text-gray-400"></i>
+                <p class="text-gray-600">Belum ada video tersedia</p>
+              </div>
+            </template>
           </div>
         </div>
       </section>
@@ -466,7 +497,7 @@
               </div>
             </template>
             <template v-else>
-              <div class="rounded-lg bg-white/10 p-8 text-center backdrop-blur-sm">
+              <div class="rounded bg-white/10 p-8 text-center backdrop-blur-sm">
                 <i class="bx bx-info-circle mb-4 text-4xl text-white/60"></i>
                 <p class="text-white/80">Belum ada layanan publik tersedia</p>
               </div>
@@ -502,7 +533,7 @@
               </div>
             </template>
             <template v-else>
-              <div class="rounded-lg bg-white/10 p-8 text-center backdrop-blur-sm">
+              <div class="rounded bg-white/10 p-8 text-center backdrop-blur-sm">
                 <i class="bx bx-info-circle mb-4 text-4xl text-white/60"></i>
                 <p class="text-white/80">Belum ada sistem administrasi tersedia</p>
               </div>
@@ -533,71 +564,79 @@
             </RouterLink>
           </div>
 
-          <!-- OPD Carousel -->
-          <VueCarousel
-            :items="opds"
-            :items-per-view="3"
-            :autoplay="false"
-            :autoplay-delay="5000"
-            :responsive="{
-              0: { itemsPerView: 1 },
-              640: { itemsPerView: 2 },
-              1024: { itemsPerView: 3 },
-            }"
-          >
-            <template #default="{ item: opd }">
-              <div
-                class="group h-100 min-h-90 rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-              >
-                <!-- OPD Logo -->
-                <div class="flex justify-center p-6 pb-4">
-                  <div class="flex h-40 w-full items-center justify-center overflow-hidden rounded">
-                    <img
-                      :src="`https://kukarkab.go.id/uploads/${opd.foto}`"
-                      :alt="`Logo ${opd.nama}`"
-                      class="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
-                      loading="lazy"
-                    />
-                  </div>
-                </div>
-
-                <!-- OPD Content -->
-                <div class="px-6 pb-6">
-                  <!-- OPD Name -->
-                  <RouterLink
-                    :to="{
-                      name: 'unit-kerja.opd.detail',
-                      params: { id: opd.id, slug: formatters.slugify(opd.nama) },
-                    }"
-                    class="hover:text-portal-green mb-3 block text-center font-semibold text-gray-900 transition-colors duration-200"
-                    style="
-                      display: -webkit-box;
-                      -webkit-line-clamp: 2;
-                      line-clamp: 2;
-                      -webkit-box-orient: vertical;
-                      overflow: hidden;
-                    "
-                  >
-                    {{ opd.nama }}
-                  </RouterLink>
-
-                  <!-- OPD Details -->
-                  <div class="space-y-2 text-sm text-gray-600">
-                    <!-- Website -->
-                    <div class="flex items-start">
-                      <i class="bx bx-globe text-portal-green mt-0.5 mr-2 flex-shrink-0"></i>
-                      <span class="break-all">{{ opd.website || "Website tidak tersedia" }}</span>
-                    </div>
-                    <!-- Address -->
-                    <div class="flex items-start">
-                      <i class="bx bx-map text-portal-green mt-0.5 mr-2 flex-shrink-0"></i>
-                      <span class="break-words">{{ opd.alamat || "Alamat tidak tersedia" }}</span>
+          <template v-if="opds.length">
+            <!-- OPD Carousel -->
+            <VueCarousel
+              :items="opds"
+              :items-per-view="3"
+              :autoplay="false"
+              :autoplay-delay="5000"
+              :responsive="{
+                0: { itemsPerView: 1 },
+                640: { itemsPerView: 2 },
+                1024: { itemsPerView: 3 },
+              }"
+            >
+              <template #default="{ item: opd }">
+                <div
+                  class="group h-100 min-h-90 rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                >
+                  <!-- OPD Logo -->
+                  <div class="flex justify-center p-6 pb-4">
+                    <div class="flex h-40 w-full items-center justify-center overflow-hidden rounded">
+                      <img
+                        :src="`https://kukarkab.go.id/uploads/${opd.foto}`"
+                        :alt="`Logo ${opd.nama}`"
+                        class="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
+                        loading="lazy"
+                      />
                     </div>
                   </div>
+
+                  <!-- OPD Content -->
+                  <div class="px-6 pb-6">
+                    <!-- OPD Name -->
+                    <RouterLink
+                      :to="{
+                        name: 'unit-kerja.opd.detail',
+                        params: { id: opd.id, slug: formatters.slugify(opd.nama) },
+                      }"
+                      class="hover:text-portal-green mb-3 block text-center font-semibold text-gray-900 transition-colors duration-200"
+                      style="
+                        display: -webkit-box;
+                        -webkit-line-clamp: 2;
+                        line-clamp: 2;
+                        -webkit-box-orient: vertical;
+                        overflow: hidden;
+                      "
+                    >
+                      {{ opd.nama }}
+                    </RouterLink>
+
+                    <!-- OPD Details -->
+                    <div class="space-y-2 text-sm text-gray-600">
+                      <!-- Website -->
+                      <div class="flex items-start">
+                        <i class="bx bx-globe text-portal-green mt-0.5 mr-2 flex-shrink-0"></i>
+                        <span class="break-all">{{ opd.website || "Website tidak tersedia" }}</span>
+                      </div>
+                      <!-- Address -->
+                      <div class="flex items-start">
+                        <i class="bx bx-map text-portal-green mt-0.5 mr-2 flex-shrink-0"></i>
+                        <span class="break-words">{{ opd.alamat || "Alamat tidak tersedia" }}</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </template>
-          </VueCarousel>
+              </template>
+            </VueCarousel>
+          </template>
+          <template v-else>
+            <div class="rounded bg-white p-8 text-center shadow-md">
+              <i class="bx bx-buildings mb-4 text-4xl text-gray-400"></i>
+              <p class="text-gray-600">Belum ada OPD tersedia</p>
+            </div>
+          </template>
         </div>
       </section>
 
