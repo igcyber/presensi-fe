@@ -1,3 +1,53 @@
+<script setup lang="ts">
+import { onBeforeUnmount, onMounted, watch } from "vue";
+import { useRoute } from "vue-router";
+
+import BeritaSide from "@/components/features/berita/BeritaSide.vue";
+import ShareLink from "@/components/features/media/ShareLink.vue";
+import AppBreadcrumb from "@/components/layout/partials/AppBreadcrumb.vue";
+
+import { useBreadcrumb } from "@/composables/useBreadcrumb";
+import { useFetch } from "@/composables/useFetch";
+import { useFormatters } from "@/composables/useFormatters";
+import type { ApiResponse, PayloadData } from "@/lib/api/core";
+import { type BeritaDetail, getBeritaById } from "@/lib/api/services/berita";
+
+const route = useRoute();
+const id = Number(route.params.id);
+
+const { setContext, clearContext } = useBreadcrumb();
+
+const { date, getSlugUrl } = useFormatters();
+
+const { data, isLoading, fetchData, isError, error } = useFetch<ApiResponse<PayloadData<BeritaDetail>>, BeritaDetail>(
+  () => getBeritaById(id),
+  {
+    immediate: false,
+    extractData: (response) => response.data.data,
+  },
+);
+
+// Update breadcrumb context ketika data sudah ada
+watch(
+  () => data.value?.judul,
+  (judul) => {
+    if (judul) {
+      setContext(judul);
+    }
+  },
+  { immediate: true },
+);
+
+onMounted(async () => {
+  await fetchData();
+});
+
+onBeforeUnmount(() => {
+  // Opsional: bersihkan agar tidak "nyangkut" ke halaman lain
+  clearContext();
+});
+</script>
+
 <template>
   <div class="min-h-screen bg-gray-50">
     <!-- Navigation Spacer -->
@@ -66,7 +116,7 @@
                 <div class="mb-4 flex flex-wrap items-center gap-4 text-sm text-gray-600">
                   <div class="flex items-center">
                     <i class="bx bx-calendar mr-2"></i>
-                    <time :datetime="data?.createdAt">{{ formatters.date(data?.createdAt) }}</time>
+                    <time :datetime="data?.createdAt">{{ date(data?.createdAt) }}</time>
                   </div>
                   <div class="flex items-center">
                     <i class="bx bx-buildings mr-2"></i>
@@ -88,7 +138,7 @@
                 <!-- Share Section -->
                 <div class="rounded bg-gray-50 p-4">
                   <h3 class="mb-3 text-lg font-semibold text-gray-900">Bagikan Artikel</h3>
-                  <ShareLink :url="formatters.getSlugUrl('berita', data.id, data.judul)" />
+                  <ShareLink :url="getSlugUrl('berita', data.id, data.judul)" />
                 </div>
               </div>
             </article>
@@ -114,52 +164,3 @@
     </main>
   </div>
 </template>
-
-<script setup lang="ts">
-import { onBeforeUnmount, onMounted, watch } from "vue";
-import { useRoute } from "vue-router";
-
-import BeritaSide from "@/components/BeritaSide.vue";
-import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
-import ShareLink from "@/components/ShareLink.vue";
-
-import { useBreadcrumb } from "@/composables/useBreadcrumb";
-import useFetch from "@/composables/useFetch";
-import { useFormatters } from "@/composables/useFormatters";
-import { type BeritaDetail, type BeritaDetailResponse, getBeritaDetail } from "@/lib/api/berita";
-
-const route = useRoute();
-const id = Number(route.params.id);
-
-const { setContext, clearContext } = useBreadcrumb();
-
-const formatters = useFormatters();
-
-const { data, isLoading, fetchData, isError, error } = useFetch<BeritaDetailResponse, BeritaDetail>(
-  () => getBeritaDetail(id),
-  {
-    immediate: false,
-    extractData: (response) => response.data.data,
-  },
-);
-
-// Update breadcrumb context ketika data sudah ada
-watch(
-  () => data.value?.judul,
-  (judul) => {
-    if (judul) {
-      setContext(judul);
-    }
-  },
-  { immediate: true },
-);
-
-onMounted(async () => {
-  await fetchData();
-});
-
-onBeforeUnmount(() => {
-  // Opsional: bersihkan agar tidak "nyangkut" ke halaman lain
-  clearContext();
-});
-</script>

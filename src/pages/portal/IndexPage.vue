@@ -1,3 +1,17 @@
+<script setup lang="ts">
+import { onMounted } from "vue";
+import { RouterLink } from "vue-router";
+
+import { usePortal } from "@/composables/usePortal";
+
+// Menggunakan composable
+const { menus, menuActive, openSubMenu, hasOpenSubMenu, toggleSubMenu, closeSubMenu, fetchData } = usePortal();
+
+onMounted(async () => {
+  await fetchData();
+});
+</script>
+
 <template>
   <!-- Main Portal container -->
   <div
@@ -6,7 +20,7 @@
   >
     <!-- Header Content -->
     <header class="mt-5 mb-0 flex w-full flex-col items-center">
-      <img class="h-[100px] md:h-[120px]" src="/kukar-logo.png" alt="logo-kukarkab" />
+      <img class="h-[100px] md:h-[120px]" src="/assets/images/logos/logo-kukar.png" alt="logo-kukarkab" />
 
       <div class="mt-2.5 flex w-fit flex-col text-center">
         <div class="flex flex-col text-[30px] font-bold text-white">
@@ -37,7 +51,7 @@
         >
           <img
             class="mx-auto my-auto max-h-[100px] w-fit max-w-[40px] text-white"
-            :src="`https://kukarkab.go.id/icon/portal-menu/${menulist.icon}`"
+            :src="`https://kukarkab.go.id/assets/icons/portal-menu/${menulist.icon}`"
             :alt="menulist.judul"
           />
           <p class="mx-auto my-[10px_auto_5px_auto] px-[5px] text-center text-[13px]">{{ menulist.judul }}</p>
@@ -133,20 +147,6 @@
 
   <!-- Background Video -->
   <video autoplay muted loop class="fixed inset-0 h-full w-full object-cover">
-    <source src="/portal-video.webm" type="video/webm" />
+    <source src="/assets/videos/portal-video.webm" type="video/webm" />
   </video>
 </template>
-
-<script setup lang="ts">
-import { onMounted } from "vue";
-import { RouterLink } from "vue-router";
-
-import { usePortal } from "@/composables/usePortal";
-
-// Menggunakan composable
-const { menus, menuActive, openSubMenu, hasOpenSubMenu, toggleSubMenu, closeSubMenu, fetchData } = usePortal();
-
-onMounted(async () => {
-  await fetchData();
-});
-</script>

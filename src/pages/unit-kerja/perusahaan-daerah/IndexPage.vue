@@ -1,3 +1,60 @@
+<script setup lang="ts">
+import { onMounted, watch } from "vue";
+
+import BasePagination from "@/components/base/BasePagination.vue";
+import SelayangPandang from "@/components/features/selayang-pandang/SelayangPandang.vue";
+import AppBreadcrumb from "@/components/layout/partials/AppBreadcrumb.vue";
+
+import { useFetch } from "@/composables/useFetch";
+import { usePagination } from "@/composables/usePagination";
+import { type ApiResponse } from "@/lib/api/core";
+import { getPerusahaanDaerah, type LayananListPayload } from "@/lib/api/services/unitKerja";
+
+const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
+
+const { data, isLoading, error, isError, fetchData } = useFetch<ApiResponse<LayananListPayload>, LayananListPayload>(
+  () => getPerusahaanDaerah({ page: currentPage.value }),
+  {
+    immediate: false,
+    extractData: (response) => response.data,
+  },
+);
+
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value -= 1;
+  }
+};
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value += 1;
+  }
+};
+
+const onPage = (page: number) => {
+  currentPage.value = page;
+};
+
+// Watchers
+watch(currentPage, () => {
+  fetchData();
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+onMounted(async () => {
+  await fetchData();
+
+  setPagination({
+    currentPage: data.value?.meta?.current_page ?? 1,
+    totalPages: data.value?.meta?.last_page ?? 1,
+    totalItems: data.value?.meta?.total ?? 0,
+    itemsPerPage: data.value?.meta?.per_page ?? 10,
+  });
+});
+</script>
+
 <template>
   <div class="min-h-screen bg-gray-50">
     <!-- Navigation Spacer -->
@@ -34,7 +91,7 @@
         </div>
 
         <!-- Content -->
-        <div v-else-if="data">
+        <div v-else-if="data && data.data">
           <SelayangPandang
             :title="data.data.slug"
             :content="data.data.isi"
@@ -154,63 +211,3 @@
     </main>
   </div>
 </template>
-
-<script setup lang="ts">
-import { onMounted, watch } from "vue";
-
-import BasePagination from "@/components/BasePagination.vue";
-import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
-import SelayangPandang from "@/components/SelayangPandang.vue";
-
-import useFetch from "@/composables/useFetch";
-import { usePagination } from "@/composables/usePagination";
-import {
-  getPerusahaanDaerah,
-  type PerusahaanDaerahListPayload,
-  type PerusahaanDaerahResponse,
-} from "@/lib/api/unitKerja";
-
-const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
-
-const { data, isLoading, error, isError, fetchData } = useFetch<PerusahaanDaerahResponse, PerusahaanDaerahListPayload>(
-  () => getPerusahaanDaerah(currentPage.value),
-  {
-    immediate: false,
-    extractData: (response) => response.data,
-  },
-);
-
-const prevPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value -= 1;
-  }
-};
-
-const nextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value += 1;
-  }
-};
-
-const onPage = (page: number) => {
-  currentPage.value = page;
-};
-
-// Watchers
-watch(currentPage, () => {
-  fetchData();
-
-  window.scrollTo({ top: 0, behavior: "smooth" });
-});
-
-onMounted(async () => {
-  await fetchData();
-
-  setPagination({
-    currentPage: data.value?.meta?.current_page ?? 1,
-    totalPages: data.value?.meta?.last_page ?? 1,
-    totalItems: data.value?.meta?.total ?? 0,
-    itemsPerPage: data.value?.meta?.per_page ?? 10,
-  });
-});
-</script>

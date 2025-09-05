@@ -1,5 +1,4 @@
-import AppLayout from "@/components/layout/AppLayout.vue";
-
+import AppLayout from "@/layouts/AppLayout.vue";
 import KependudukanPage from "@/pages/selayang-pandang/kependudukan/IndexPage.vue";
 import PotensiDaerahPage from "@/pages/selayang-pandang/potensi-daerah/IndexPage.vue";
 import PrestasiPage from "@/pages/selayang-pandang/prestasi-penghargaan/IndexPage.vue";
@@ -9,6 +8,11 @@ export default {
   path: "/selayang-pandang",
   component: AppLayout,
   children: [
+    {
+      // Route kosong untuk menangani akses langsung ke /selayang-pandang
+      path: "",
+      redirect: { name: "not-found" },
+    },
     {
       path: "sejarah",
       name: "selayang-pandang.sejarah",

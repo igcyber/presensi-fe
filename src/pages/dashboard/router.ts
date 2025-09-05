@@ -1,5 +1,4 @@
-import AppLayout from "@/components/layout/AppLayout.vue";
-
+import AppLayout from "@/layouts/AppLayout.vue";
 import DashboardPage from "@/pages/dashboard/IndexPage.vue";
 
 export default {

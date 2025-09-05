@@ -1,6 +1,6 @@
 import { computed, ref, watch } from "vue";
 
-import { getPortalMenu, type PortalMenu } from "@/lib/api/portalMenu";
+import { getPortalMenu, type PortalMenu } from "@/lib/api/services/portalMenu";
 
 export function usePortal() {
   // Data menu utama

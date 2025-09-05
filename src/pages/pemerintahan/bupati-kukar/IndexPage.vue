@@ -1,3 +1,31 @@
+<script setup lang="ts">
+import { computed, onMounted } from "vue";
+
+import SelayangPandang from "@/components/features/selayang-pandang/SelayangPandang.vue";
+import AppBreadcrumb from "@/components/layout/partials/AppBreadcrumb.vue";
+
+import { useFetch } from "@/composables/useFetch";
+import { type ApiResponse } from "@/lib/api/core";
+import { type BupatiPayload, getBupati } from "@/lib/api/services/pemerintahan";
+
+const { data, isLoading, fetchData, isError, error } = useFetch<ApiResponse<BupatiPayload>, BupatiPayload>(getBupati, {
+  immediate: false,
+  extractData: (response) => response.data,
+});
+
+const contentData = computed(() => {
+  return data.value?.data;
+});
+
+const bupatiData = computed(() => {
+  return data.value?.bupati;
+});
+
+onMounted(async () => {
+  await fetchData();
+});
+</script>
+
 <template>
   <div class="min-h-screen bg-gray-50">
     <!-- Navigation Spacer -->
@@ -123,31 +151,3 @@
     </main>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed, onMounted } from "vue";
-
-import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
-import SelayangPandang from "@/components/SelayangPandang.vue";
-
-import useFetch from "@/composables/useFetch";
-import type { ContentData } from "@/lib/api/apiResponse";
-import { type Bupati, type BupatiDataPayload, type BupatiResponse, getBupati } from "@/lib/api/pemerintahan";
-
-const { data, isLoading, fetchData, isError, error } = useFetch<BupatiResponse, BupatiDataPayload>(getBupati, {
-  immediate: false,
-  extractData: (response) => response.data,
-});
-
-const contentData = computed(() => {
-  return data.value?.data as ContentData;
-});
-
-const bupatiData = computed(() => {
-  return data.value?.bupati as Bupati[];
-});
-
-onMounted(async () => {
-  await fetchData();
-});
-</script>

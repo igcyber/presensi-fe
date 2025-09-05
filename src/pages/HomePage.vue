@@ -1,3 +1,41 @@
+<script setup lang="ts">
+import { ref } from "vue";
+
+import AppBreadcrumb from "@/components/layout/partials/AppBreadcrumb.vue";
+
+import { useFormatters } from "@/composables/useFormatters";
+
+const { date } = useFormatters();
+
+// Sample news data (in real app, this would come from API)
+const latestNews = ref([
+  {
+    id: 1,
+    title: "Pembangunan Infrastruktur Jalan di Kukar",
+    excerpt: "Pemerintah Kabupaten Kutai Kartanegara terus berkomitmen dalam pembangunan infrastruktur...",
+    image: "/images/news-1.jpg",
+    date: new Date("2024-01-15"),
+    slug: "pembangunan-infrastruktur-jalan-kukar",
+  },
+  {
+    id: 2,
+    title: "Program Pemberdayaan UMKM Kukar",
+    excerpt: "Dinas Koperasi dan UMKM Kabupaten Kutai Kartanegara meluncurkan program baru...",
+    image: "/images/news-2.jpg",
+    date: new Date("2024-01-12"),
+    slug: "program-pemberdayaan-umkm-kukar",
+  },
+  {
+    id: 3,
+    title: "Prestasi Tim Olahraga Kukar",
+    excerpt: "Tim olahraga Kabupaten Kutai Kartanegara berhasil meraih prestasi gemilang...",
+    image: "/images/news-3.jpg",
+    date: new Date("2024-01-10"),
+    slug: "prestasi-tim-olahraga-kukar",
+  },
+]);
+</script>
+
 <template>
   <div class="home-page">
     <!-- Breadcrumb -->
@@ -21,7 +59,7 @@
             </div>
           </div>
           <div class="col-lg-6">
-            <img src="/kukar-logo.png" alt="Logo Kukar" class="hero-image" />
+            <img src="/assets/images/logos/logo-kukar.png" alt="Logo Kukar" class="hero-image" />
           </div>
         </div>
       </div>
@@ -89,7 +127,7 @@
             <div class="news-card">
               <img :src="news.image" :alt="news.title" class="news-image" />
               <div class="news-content">
-                <div class="news-date">{{ formatters.date(news.date) }}</div>
+                <div class="news-date">{{ date(news.date) }}</div>
                 <h3 class="news-title">{{ news.title }}</h3>
                 <p class="news-excerpt">{{ news.excerpt }}</p>
                 <router-link :to="`/berita/${news.slug}`" class="btn btn-sm btn-primary">
@@ -103,43 +141,5 @@
     </section>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref } from "vue";
-
-import { AppBreadcrumb } from "@/components/layout";
-
-import { useFormatters } from "@/composables/useFormatters";
-
-const formatters = useFormatters();
-
-// Sample news data (in real app, this would come from API)
-const latestNews = ref([
-  {
-    id: 1,
-    title: "Pembangunan Infrastruktur Jalan di Kukar",
-    excerpt: "Pemerintah Kabupaten Kutai Kartanegara terus berkomitmen dalam pembangunan infrastruktur...",
-    image: "/images/news-1.jpg",
-    date: new Date("2024-01-15"),
-    slug: "pembangunan-infrastruktur-jalan-kukar",
-  },
-  {
-    id: 2,
-    title: "Program Pemberdayaan UMKM Kukar",
-    excerpt: "Dinas Koperasi dan UMKM Kabupaten Kutai Kartanegara meluncurkan program baru...",
-    image: "/images/news-2.jpg",
-    date: new Date("2024-01-12"),
-    slug: "program-pemberdayaan-umkm-kukar",
-  },
-  {
-    id: 3,
-    title: "Prestasi Tim Olahraga Kukar",
-    excerpt: "Tim olahraga Kabupaten Kutai Kartanegara berhasil meraih prestasi gemilang...",
-    image: "/images/news-3.jpg",
-    date: new Date("2024-01-10"),
-    slug: "prestasi-tim-olahraga-kukar",
-  },
-]);
-</script>
 
 <style scoped></style>

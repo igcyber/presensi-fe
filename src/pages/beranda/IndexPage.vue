@@ -1,3 +1,83 @@
+<script setup lang="ts">
+import { onMounted, ref } from "vue";
+import { RouterLink, useRouter } from "vue-router";
+
+import VueCarousel from "@/components/features/media/VueCarousel.vue";
+import VideoModal from "@/components/modals/VideoModal.vue";
+
+import { useFormatters } from "@/composables/useFormatters";
+import {
+  type BannerItem,
+  type EmergencyItem,
+  getBeranda,
+  type LayananItem,
+  type NewsItem,
+  type OpdItem,
+  type SistemItem,
+  type VideoItem,
+} from "@/lib/api/services/beranda";
+
+const router = useRouter();
+const formatters = useFormatters();
+
+const isLoading = ref<boolean>(false);
+
+const emergencies = ref<EmergencyItem[]>([]);
+
+const news = ref<NewsItem[]>([]);
+
+const banners = ref<BannerItem[]>([]);
+
+const videos = ref<VideoItem[]>([]);
+
+const layanans = ref<LayananItem[]>([]);
+
+const sistems = ref<SistemItem[]>([]);
+
+const opds = ref<OpdItem[]>([]);
+
+// Form Pencarian
+const keyword = ref<string>("");
+function submitSearch() {
+  const query = keyword.value ? { keyword: keyword.value } : {};
+  router.push({ path: "/berita", query });
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// Video Modal (Bootstrap 4)
+const videoModalRef = ref<InstanceType<typeof VideoModal> | null>(null);
+
+const openVideoModal = (embedUrl: string) => {
+  videoModalRef.value?.open(embedUrl);
+};
+
+// Fetch beranda
+const fetchBeranda = async () => {
+  try {
+    isLoading.value = true;
+    const response = await getBeranda();
+    const responseData = response.data;
+
+    emergencies.value = responseData.emergencies;
+    news.value = responseData.berita;
+    banners.value = responseData.banners;
+    videos.value = responseData.videos;
+    layanans.value = responseData.layanans;
+    sistems.value = responseData.sistems;
+    opds.value = responseData.opds;
+  } catch (error) {
+    console.error("Error fetching beranda:", error);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+onMounted(async () => {
+  await fetchBeranda();
+});
+</script>
+
 <template>
   <div class="min-h-screen">
     <!-- Navigation Spacer -->
@@ -60,7 +140,7 @@
 
       <!-- Hero Banner Section -->
       <section
-        class="relative bg-black/60 bg-gradient-to-br bg-[url('/hero.png')] bg-cover bg-position-[bottom_right_-100px] bg-no-repeat py-30 text-white bg-blend-multiply sm:bg-position-[bottom_right]"
+        class="relative bg-black/60 bg-gradient-to-br bg-[url('/assets/images/backgrounds/bg-hero.png')] bg-cover bg-position-[bottom_right_-100px] bg-no-repeat py-30 text-white bg-blend-multiply sm:bg-position-[bottom_right]"
       >
         <div class="container">
           <div class="mx-auto max-w-4xl text-center">
@@ -206,8 +286,8 @@
                       <!-- Date -->
                       <div class="mb-2 flex items-center text-sm text-gray-500">
                         <i class="bx bx-calendar mr-2"></i>
-                        <time :datetime="new Date(berita.createdAt).toISOString()">{{
-                          formatters.date(berita.createdAt)
+                        <time :datetime="berita.createdAt ? new Date(berita.createdAt).toISOString() : ''">{{
+                          berita.createdAt ? formatters.date(berita.createdAt) : "-"
                         }}</time>
                       </div>
 
@@ -644,85 +724,5 @@
     </template>
   </div>
 </template>
-
-<script setup lang="ts">
-import { onMounted, ref } from "vue";
-import { RouterLink, useRouter } from "vue-router";
-
-import VideoModal from "@/components/VideoModal.vue";
-import VueCarousel from "@/components/VueCarousel.vue";
-
-import { useFormatters } from "@/composables/useFormatters";
-import {
-  type BannerItem,
-  type EmergencyItem,
-  getBeranda,
-  type LayananItem,
-  type NewsItem,
-  type OpdItem,
-  type SistemItem,
-  type VideoItem,
-} from "@/lib/api/beranda";
-
-const router = useRouter();
-const formatters = useFormatters();
-
-const isLoading = ref<boolean>(false);
-
-const emergencies = ref<EmergencyItem[]>([]);
-
-const news = ref<NewsItem[]>([]);
-
-const banners = ref<BannerItem[]>([]);
-
-const videos = ref<VideoItem[]>([]);
-
-const layanans = ref<LayananItem[]>([]);
-
-const sistems = ref<SistemItem[]>([]);
-
-const opds = ref<OpdItem[]>([]);
-
-// Form Pencarian
-const keyword = ref<string>("");
-function submitSearch() {
-  const query = keyword.value ? { keyword: keyword.value } : {};
-  router.push({ path: "/berita", query });
-
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}
-
-// Video Modal (Bootstrap 4)
-const videoModalRef = ref<InstanceType<typeof VideoModal> | null>(null);
-
-const openVideoModal = (embedUrl: string) => {
-  videoModalRef.value?.open(embedUrl);
-};
-
-// Fetch beranda
-const fetchBeranda = async () => {
-  try {
-    isLoading.value = true;
-    const response = await getBeranda();
-    const responseData = response.data;
-
-    emergencies.value = responseData.emergencies;
-    news.value = responseData.berita;
-    banners.value = responseData.banners;
-    videos.value = responseData.videos;
-    layanans.value = responseData.layanans;
-    sistems.value = responseData.sistems;
-    opds.value = responseData.opds;
-  } catch (error) {
-    console.error("Error fetching beranda:", error);
-  } finally {
-    isLoading.value = false;
-  }
-};
-
-onMounted(async () => {
-  await fetchBeranda();
-});
-</script>
 
 <style scoped></style>

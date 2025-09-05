@@ -1,3 +1,77 @@
+<script setup lang="ts">
+import { onMounted, ref, watch } from "vue";
+import { RouterLink } from "vue-router";
+
+import BasePagination from "@/components/base/BasePagination.vue";
+import AppBreadcrumb from "@/components/layout/partials/AppBreadcrumb.vue";
+
+import { useFetch } from "@/composables/useFetch";
+import { useFormatters } from "@/composables/useFormatters";
+import { usePagination } from "@/composables/usePagination";
+import { type ApiResponse } from "@/lib/api/core";
+import { getTransparansiKeuangan, type TransparansiKeuanganListPayload } from "@/lib/api/services/pemerintahan";
+
+// Constants
+const STICKY_HEADER_OFFSET = 200;
+
+// Composables
+const { date } = useFormatters();
+
+const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
+
+const { data, isLoading, fetchData, isError, error } = useFetch<
+  ApiResponse<TransparansiKeuanganListPayload>,
+  TransparansiKeuanganListPayload
+>(() => getTransparansiKeuangan(currentPage.value), {
+  immediate: false,
+  extractData: (response) => response.data,
+});
+
+// Refs
+const tableTarget = ref<HTMLElement | null>(null);
+
+// Methods
+const scrollToTable = () => {
+  if (tableTarget.value) {
+    const y = tableTarget.value.getBoundingClientRect().top + window.scrollY - STICKY_HEADER_OFFSET;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  }
+};
+
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value -= 1;
+  }
+};
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value += 1;
+  }
+};
+
+const onPage = (page: number) => {
+  currentPage.value = page;
+};
+
+// Watchers
+watch(currentPage, () => {
+  fetchData();
+  scrollToTable();
+});
+
+onMounted(async () => {
+  await fetchData();
+
+  setPagination({
+    currentPage: data.value?.meta?.current_page || 1,
+    totalPages: data.value?.meta?.last_page || 1,
+    totalItems: data.value?.meta?.total || 0,
+    itemsPerPage: data.value?.meta?.per_page || 10,
+  });
+});
+</script>
+
 <template>
   <div class="min-h-screen bg-gray-50">
     <!-- Navigation Spacer -->
@@ -104,7 +178,7 @@
                         >
                       </td>
                       <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                        {{ formatters.date(item.tanggalPublikasi) }}
+                        {{ date(item.tanggalPublikasi) }}
                       </td>
                     </tr>
 
@@ -135,7 +209,7 @@
                     <span
                       class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800"
                     >
-                      {{ formatters.date(item.tanggalPublikasi) }}
+                      {{ date(item.tanggalPublikasi) }}
                     </span>
                   </div>
 
@@ -184,80 +258,3 @@
     </main>
   </div>
 </template>
-
-<script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
-import { RouterLink } from "vue-router";
-
-import BasePagination from "@/components/BasePagination.vue";
-import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
-
-import useFetch from "@/composables/useFetch";
-import { useFormatters } from "@/composables/useFormatters";
-import { usePagination } from "@/composables/usePagination";
-import {
-  getTransparansiKeuangan,
-  type TransparansiKeuanganListPayload,
-  type TransparansiKeuanganResponse,
-} from "@/lib/api/pemerintahan";
-
-// Constants
-const STICKY_HEADER_OFFSET = 200;
-
-// Composables
-const formatters = useFormatters();
-
-const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
-
-const { data, isLoading, fetchData, isError, error } = useFetch<
-  TransparansiKeuanganResponse,
-  TransparansiKeuanganListPayload
->(() => getTransparansiKeuangan(currentPage.value), {
-  immediate: false,
-  extractData: (response) => response.data,
-});
-
-// Refs
-const tableTarget = ref<HTMLElement | null>(null);
-
-// Methods
-const scrollToTable = () => {
-  if (tableTarget.value) {
-    const y = tableTarget.value.getBoundingClientRect().top + window.scrollY - STICKY_HEADER_OFFSET;
-    window.scrollTo({ top: y, behavior: "smooth" });
-  }
-};
-
-const prevPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value -= 1;
-  }
-};
-
-const nextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value += 1;
-  }
-};
-
-const onPage = (page: number) => {
-  currentPage.value = page;
-};
-
-// Watchers
-watch(currentPage, () => {
-  fetchData();
-  scrollToTable();
-});
-
-onMounted(async () => {
-  await fetchData();
-
-  setPagination({
-    currentPage: data.value?.meta?.current_page || 1,
-    totalPages: data.value?.meta?.last_page || 1,
-    totalItems: data.value?.meta?.total || 0,
-    itemsPerPage: data.value?.meta?.per_page || 10,
-  });
-});
-</script>

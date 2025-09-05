@@ -1,3 +1,62 @@
+<script lang="ts" setup>
+import { onMounted, watch } from "vue";
+
+import BasePagination from "@/components/base/BasePagination.vue";
+import AppBreadcrumb from "@/components/layout/partials/AppBreadcrumb.vue";
+
+import { useFetch } from "@/composables/useFetch";
+import { useFormatters } from "@/composables/useFormatters";
+import { usePagination } from "@/composables/usePagination";
+import { type ApiResponse } from "@/lib/api/core";
+import { getMajalahs, type MajalahListPayload } from "@/lib/api/services/media";
+
+const { date, monthName } = useFormatters();
+const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
+
+// Fetch videos data
+const { data, isLoading, error, isError, fetchData } = useFetch<ApiResponse<MajalahListPayload>, MajalahListPayload>(
+  () => getMajalahs(currentPage.value),
+  {
+    immediate: false,
+    extractData: (response) => response.data,
+  },
+);
+
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value -= 1;
+  }
+};
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value += 1;
+  }
+};
+
+const onPage = (page: number) => {
+  currentPage.value = page;
+};
+
+// Watchers
+watch(currentPage, () => {
+  fetchData();
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+onMounted(async () => {
+  await fetchData();
+
+  setPagination({
+    currentPage: data.value?.meta?.current_page ?? 1,
+    totalPages: data.value?.meta?.last_page ?? 1,
+    totalItems: data.value?.meta?.total ?? 0,
+    itemsPerPage: data.value?.meta?.per_page ?? 10,
+  });
+});
+</script>
+
 <template>
   <div class="min-h-screen bg-gray-50">
     <!-- Navigation Spacer -->
@@ -66,14 +125,14 @@
                         rel="noopener noreferrer"
                         class="hover:text-portal-green mb-2 block text-xl font-bold text-gray-900 transition-colors duration-200"
                       >
-                        {{ majalah.tahun }} - {{ formatters.monthName(majalah.bulan) }}
+                        {{ majalah.tahun }} - {{ monthName(majalah.bulan) }}
                       </a>
 
                       <!-- Date and Source -->
                       <div class="flex flex-col gap-2 text-sm text-gray-600 sm:flex-row sm:items-center sm:gap-4">
                         <div class="flex items-center">
                           <i class="bx bx-calendar mr-2"></i>
-                          <span>{{ formatters.date(majalah.createdAt) }}</span>
+                          <span>{{ date(majalah.createdAt) }}</span>
                         </div>
                         <div class="flex items-center">
                           <i class="bx bx-building mr-2"></i>
@@ -112,8 +171,6 @@
               />
             </div>
           </template>
-
-          <!-- Empty State for no majalahs -->
           <template v-else>
             <div class="mx-auto max-w-2xl">
               <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
@@ -124,74 +181,7 @@
             </div>
           </template>
         </div>
-
-        <!-- Empty State -->
-        <div v-else class="mx-auto max-w-2xl">
-          <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
-            <i class="bx bx-info-circle mb-4 text-4xl text-yellow-600"></i>
-            <h4 class="mb-4 text-xl font-semibold text-yellow-800">Data Tidak Ditemukan</h4>
-            <p class="text-yellow-700">Maaf, data yang Anda cari tidak tersedia saat ini.</p>
-          </div>
-        </div>
       </div>
     </main>
   </div>
 </template>
-
-<script lang="ts" setup>
-import { onMounted, watch } from "vue";
-
-import BasePagination from "@/components/BasePagination.vue";
-import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
-
-import useFetch from "@/composables/useFetch";
-import { useFormatters } from "@/composables/useFormatters";
-import { usePagination } from "@/composables/usePagination";
-import { getMajalahs, type MajalahListPayload, type MajalahResponse } from "@/lib/api/media";
-
-const formatters = useFormatters();
-const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
-
-// Fetch videos data
-const { data, isLoading, error, isError, fetchData } = useFetch<MajalahResponse, MajalahListPayload>(
-  () => getMajalahs(currentPage.value),
-  {
-    immediate: false,
-    extractData: (response) => response.data,
-  },
-);
-
-const prevPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value -= 1;
-  }
-};
-
-const nextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value += 1;
-  }
-};
-
-const onPage = (page: number) => {
-  currentPage.value = page;
-};
-
-// Watchers
-watch(currentPage, () => {
-  fetchData();
-
-  window.scrollTo({ top: 0, behavior: "smooth" });
-});
-
-onMounted(async () => {
-  await fetchData();
-
-  setPagination({
-    currentPage: data.value?.meta?.current_page ?? 1,
-    totalPages: data.value?.meta?.last_page ?? 1,
-    totalItems: data.value?.meta?.total ?? 0,
-    itemsPerPage: data.value?.meta?.per_page ?? 10,
-  });
-});
-</script>

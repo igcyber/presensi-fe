@@ -1,3 +1,77 @@
+<script setup lang="ts">
+import { onMounted, ref, watch } from "vue";
+
+import BasePagination from "@/components/base/BasePagination.vue";
+import SelayangPandang from "@/components/features/selayang-pandang/SelayangPandang.vue";
+import AppBreadcrumb from "@/components/layout/partials/AppBreadcrumb.vue";
+
+import { useFetch } from "@/composables/useFetch";
+import { usePagination } from "@/composables/usePagination";
+import { type ApiResponse } from "@/lib/api/core";
+import { getPrestasiPenghargaan, type PrestasiPenghargaanDataPayload } from "@/lib/api/services/selayangPandang";
+
+// Constants
+const STICKY_HEADER_OFFSET = window.visualViewport?.width && window.visualViewport.width < 1023 ? 190 : 265;
+
+// Composables
+const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
+
+const { data, isLoading, fetchData, isError, error } = useFetch<
+  ApiResponse<PrestasiPenghargaanDataPayload>,
+  PrestasiPenghargaanDataPayload
+>(() => getPrestasiPenghargaan(currentPage.value), {
+  immediate: false,
+  extractData: (response) => response.data,
+});
+
+// Refs
+const tableTarget = ref<HTMLElement | null>(null);
+
+// Computed properties can be added here if needed
+
+// Methods
+const scrollToTable = () => {
+  if (tableTarget.value) {
+    const y = tableTarget.value.getBoundingClientRect().top + window.scrollY - STICKY_HEADER_OFFSET;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  }
+};
+
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value -= 1;
+  }
+};
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value += 1;
+  }
+};
+
+const onPage = (page: number) => {
+  currentPage.value = page;
+};
+
+// Watchers
+watch(currentPage, () => {
+  fetchData();
+  scrollToTable();
+});
+
+// Lifecycle
+onMounted(async () => {
+  await fetchData();
+
+  setPagination({
+    currentPage: data.value?.meta?.current_page || 1,
+    totalPages: data.value?.meta?.last_page || 1,
+    totalItems: data.value?.meta?.total || 0,
+    itemsPerPage: data.value?.meta?.per_page || 10,
+  });
+});
+</script>
+
 <template>
   <div class="min-h-screen bg-gray-50">
     <!-- Navigation Spacer -->
@@ -185,80 +259,3 @@
     </main>
   </div>
 </template>
-
-<script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
-
-import BasePagination from "@/components/BasePagination.vue";
-import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
-import SelayangPandang from "@/components/SelayangPandang.vue";
-
-import useFetch from "@/composables/useFetch";
-import { usePagination } from "@/composables/usePagination";
-import {
-  getPrestasiPenghargaan,
-  type PrestasiPenghargaanDataPayload,
-  type PrestasiPenghargaanResponse,
-} from "@/lib/api/selayangPandang";
-
-// Constants
-const STICKY_HEADER_OFFSET = window.visualViewport?.width && window.visualViewport.width < 1023 ? 190 : 265;
-
-// Composables
-const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
-
-const { data, isLoading, fetchData, isError, error } = useFetch<
-  PrestasiPenghargaanResponse,
-  PrestasiPenghargaanDataPayload
->(() => getPrestasiPenghargaan(currentPage.value), {
-  immediate: false,
-  extractData: (response) => response.data,
-});
-
-// Refs
-const tableTarget = ref<HTMLElement | null>(null);
-
-// Computed properties can be added here if needed
-
-// Methods
-const scrollToTable = () => {
-  if (tableTarget.value) {
-    const y = tableTarget.value.getBoundingClientRect().top + window.scrollY - STICKY_HEADER_OFFSET;
-    window.scrollTo({ top: y, behavior: "smooth" });
-  }
-};
-
-const prevPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value -= 1;
-  }
-};
-
-const nextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value += 1;
-  }
-};
-
-const onPage = (page: number) => {
-  currentPage.value = page;
-};
-
-// Watchers
-watch(currentPage, () => {
-  fetchData();
-  scrollToTable();
-});
-
-// Lifecycle
-onMounted(async () => {
-  await fetchData();
-
-  setPagination({
-    currentPage: data.value?.meta?.current_page || 1,
-    totalPages: data.value?.meta?.last_page || 1,
-    totalItems: data.value?.meta?.total || 0,
-    itemsPerPage: data.value?.meta?.per_page || 10,
-  });
-});
-</script>

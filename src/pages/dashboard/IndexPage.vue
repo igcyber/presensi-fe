@@ -1,3 +1,5 @@
+<script setup lang="ts"></script>
+
 <template>
   <div class="container-fluid navbreaker">
     Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quae laborum, nulla sequi impedit provident at nesciunt,
@@ -9,5 +11,3 @@
     expedita esse necessitatibus qui veritatis unde non repudiandae?
   </div>
 </template>
-
-<script setup lang="ts"></script>

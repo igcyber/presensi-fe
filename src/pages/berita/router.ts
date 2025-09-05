@@ -1,5 +1,4 @@
-import AppLayout from "@/components/layout/AppLayout.vue";
-
+import AppLayout from "@/layouts/AppLayout.vue";
 import BeritaDetailPage from "@/pages/berita/DetailPage.vue";
 import BeritaPage from "@/pages/berita/IndexPage.vue";
 

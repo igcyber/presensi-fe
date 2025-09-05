@@ -1,3 +1,30 @@
+<script setup lang="ts">
+import { computed, onMounted } from "vue";
+
+import SelayangPandang from "@/components/features/selayang-pandang/SelayangPandang.vue";
+import AppBreadcrumb from "@/components/layout/partials/AppBreadcrumb.vue";
+
+import { useFetch } from "@/composables/useFetch";
+import { type ApiResponse } from "@/lib/api/core";
+import { getVisiMisi, type VisiMisiData } from "@/lib/api/services/pemerintahan";
+
+const { data, isLoading, fetchData, isError, error } = useFetch<ApiResponse<VisiMisiData>, VisiMisiData>(getVisiMisi, {
+  immediate: false,
+  extractData: (response) => response.data,
+});
+const visi = computed(() => {
+  return (data.value as VisiMisiData)?.visi;
+});
+
+const misi = computed(() => {
+  return (data.value as VisiMisiData)?.misi;
+});
+
+onMounted(async () => {
+  await fetchData();
+});
+</script>
+
 <template>
   <div class="min-h-screen bg-gray-50">
     <!-- Navigation Spacer -->
@@ -83,29 +110,3 @@
     </main>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed, onMounted } from "vue";
-
-import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
-import SelayangPandang from "@/components/SelayangPandang.vue";
-
-import useFetch from "@/composables/useFetch";
-import { getVisiMisi, type VisiMisiData, type VisiMisiResponse } from "@/lib/api/pemerintahan";
-
-const { data, isLoading, fetchData, isError, error } = useFetch<VisiMisiResponse, VisiMisiData>(getVisiMisi, {
-  immediate: false,
-  extractData: (response) => response.data,
-});
-const visi = computed(() => {
-  return (data.value as VisiMisiData)?.visi;
-});
-
-const misi = computed(() => {
-  return (data.value as VisiMisiData)?.misi;
-});
-
-onMounted(async () => {
-  await fetchData();
-});
-</script>

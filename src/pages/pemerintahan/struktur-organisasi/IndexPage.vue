@@ -1,3 +1,26 @@
+<script setup lang="ts">
+import { onMounted } from "vue";
+
+import SelayangPandang from "@/components/features/selayang-pandang/SelayangPandang.vue";
+import AppBreadcrumb from "@/components/layout/partials/AppBreadcrumb.vue";
+
+import { useFetch } from "@/composables/useFetch";
+import { type ApiResponse, type PayloadData } from "@/lib/api/core";
+import { getStrukturOrganisasi, type StrukturOrganisasiData } from "@/lib/api/services/pemerintahan";
+
+const { data, isLoading, fetchData, isError, error } = useFetch<
+  ApiResponse<PayloadData<StrukturOrganisasiData>>,
+  StrukturOrganisasiData
+>(getStrukturOrganisasi, {
+  immediate: false,
+  extractData: (response) => response.data.data,
+});
+
+onMounted(async () => {
+  await fetchData();
+});
+</script>
+
 <template>
   <div class="min-h-screen bg-gray-50">
     <!-- Navigation Spacer -->
@@ -54,29 +77,3 @@
     </main>
   </div>
 </template>
-
-<script setup lang="ts">
-import { onMounted } from "vue";
-
-import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
-import SelayangPandang from "@/components/SelayangPandang.vue";
-
-import useFetch from "@/composables/useFetch";
-import {
-  getStrukturOrganisasi,
-  type StrukturOrganisasiData,
-  type StrukturOrganisasiResponse,
-} from "@/lib/api/pemerintahan";
-
-const { data, isLoading, fetchData, isError, error } = useFetch<StrukturOrganisasiResponse, StrukturOrganisasiData>(
-  getStrukturOrganisasi,
-  {
-    immediate: false,
-    extractData: (response) => response.data.data,
-  },
-);
-
-onMounted(async () => {
-  await fetchData();
-});
-</script>

@@ -1,5 +1,4 @@
-import AppLayout from "@/components/layout/AppLayout.vue";
-
+import AppLayout from "@/layouts/AppLayout.vue";
 import IndexPage from "@/pages/beranda/IndexPage.vue";
 
 export default {

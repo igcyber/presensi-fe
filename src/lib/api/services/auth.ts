@@ -1,0 +1,172 @@
+import type { ApiResponse } from "../core/apiResponse";
+import httpInstance from "../core/httpInstance";
+import type {
+  AuthResponse,
+  ChangePasswordRequest,
+  LoginRequest,
+  RegisterRequest,
+  ResetPasswordConfirmRequest,
+  ResetPasswordRequest,
+  UpdateProfileRequest,
+  User,
+} from "../types/auth.types";
+
+/**
+ * Authenticate user with username and password
+ * @param credentials - Login credentials containing username and password
+ * @returns Promise resolving to authentication response with user data and token
+ * @endpoint POST /api/auth/login
+ * @example
+ * ```typescript
+ * const response = await login({ username: 'admin', password: 'password123' });
+ * console.log(response.data.user.name);
+ * ```
+ */
+export const login = async (credentials: LoginRequest): Promise<ApiResponse<AuthResponse>> => {
+  const response = await httpInstance.post<ApiResponse<AuthResponse>>("/api/auth/login", credentials, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return response.data;
+};
+
+/**
+ * Register a new user account
+ * @param userData - Registration data containing email and password
+ * @returns Promise resolving to authentication response with user data and token
+ * @endpoint POST /api/auth/register
+ * @example
+ * ```typescript
+ * const response = await register({ email: 'user@example.com', password: 'password123' });
+ * console.log(response.data.user.email);
+ * ```
+ */
+export const register = async (userData: RegisterRequest): Promise<ApiResponse<AuthResponse>> => {
+  const response = await httpInstance.post<ApiResponse<AuthResponse>>("/api/auth/register", userData, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return response.data;
+};
+
+/**
+ * Logout current user and invalidate token
+ * @returns Promise resolving to success response
+ * @endpoint POST /api/auth/logout
+ * @example
+ * ```typescript
+ * await logout();
+ * // User is now logged out
+ * ```
+ */
+export const logout = async (): Promise<ApiResponse<{ message: string }>> => {
+  const response = await httpInstance.post<ApiResponse<{ message: string }>>("/api/auth/logout");
+  return response.data;
+};
+
+/**
+ * Get current authenticated user profile
+ * @returns Promise resolving to user profile data
+ * @endpoint GET /api/auth/me
+ * @example
+ * ```typescript
+ * const response = await getCurrentUser();
+ * console.log(response.data.username);
+ * ```
+ */
+export const getCurrentUser = async (): Promise<ApiResponse<User>> => {
+  const response = await httpInstance.get<ApiResponse<User>>("/api/auth/me");
+  return response.data;
+};
+
+/**
+ * Update user profile information
+ * @param profileData - Profile data to update
+ * @returns Promise resolving to updated user data
+ * @endpoint PUT /api/auth/profile
+ * @example
+ * ```typescript
+ * const response = await updateProfile({ name: 'John Doe', email: 'john@example.com' });
+ * console.log(response.data.name);
+ * ```
+ */
+export const updateProfile = async (profileData: UpdateProfileRequest): Promise<ApiResponse<User>> => {
+  const response = await httpInstance.put<ApiResponse<User>>("/api/auth/profile", profileData);
+  return response.data;
+};
+
+/**
+ * Change user password
+ * @param passwordData - Password change data containing current and new passwords
+ * @returns Promise resolving to success response
+ * @endpoint PUT /api/auth/change-password
+ * @example
+ * ```typescript
+ * await changePassword({
+ *   currentPassword: 'oldpass',
+ *   newPassword: 'newpass',
+ *   confirmPassword: 'newpass'
+ * });
+ * ```
+ */
+export const changePassword = async (
+  passwordData: ChangePasswordRequest,
+): Promise<ApiResponse<{ message: string }>> => {
+  const response = await httpInstance.put<ApiResponse<{ message: string }>>("/api/auth/change-password", passwordData);
+  return response.data;
+};
+
+/**
+ * Request password reset
+ * @param resetData - Reset request data containing email
+ * @returns Promise resolving to success response
+ * @endpoint POST /api/auth/forgot-password
+ * @example
+ * ```typescript
+ * await requestPasswordReset({ email: 'user@example.com' });
+ * ```
+ */
+export const requestPasswordReset = async (
+  resetData: ResetPasswordRequest,
+): Promise<ApiResponse<{ message: string }>> => {
+  const response = await httpInstance.post<ApiResponse<{ message: string }>>("/api/auth/forgot-password", resetData);
+  return response.data;
+};
+
+/**
+ * Confirm password reset with token
+ * @param confirmData - Reset confirmation data containing token and new password
+ * @returns Promise resolving to success response
+ * @endpoint POST /api/auth/reset-password
+ * @example
+ * ```typescript
+ * await confirmPasswordReset({
+ *   token: 'reset-token',
+ *   password: 'newpass',
+ *   confirmPassword: 'newpass'
+ * });
+ * ```
+ */
+export const confirmPasswordReset = async (
+  confirmData: ResetPasswordConfirmRequest,
+): Promise<ApiResponse<{ message: string }>> => {
+  const response = await httpInstance.post<ApiResponse<{ message: string }>>("/api/auth/reset-password", confirmData);
+  return response.data;
+};
+
+/**
+ * Refresh authentication token
+ * @returns Promise resolving to new authentication response
+ * @endpoint POST /api/auth/refresh
+ * @example
+ * ```typescript
+ * const response = await refreshToken();
+ * console.log(response.data.token);
+ * ```
+ */
+export const refreshToken = async (): Promise<ApiResponse<AuthResponse>> => {
+  const response = await httpInstance.post<ApiResponse<AuthResponse>>("/api/auth/refresh");
+  return response.data;
+};
