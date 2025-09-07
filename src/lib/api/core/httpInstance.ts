@@ -5,8 +5,6 @@ import { useAuthStore } from "@/stores/authStore";
 
 import type { ApiError } from "./apiResponse";
 
-const authStore = useAuthStore();
-
 /**
  * HTTP instance configuration
  * Creates a pre-configured Axios instance with default settings
@@ -20,28 +18,27 @@ const httpInstance: AxiosInstance = axios.create({
   timeout: 10000, // 10 seconds
 });
 
-// Request interceptor untuk menambahkan token
+// ✅ Request interceptor: ambil store DI DALAM fungsi
 httpInstance.interceptors.request.use(
   (config) => {
+    const authStore = useAuthStore(); // baru dipanggil di sini
+
+    // Cek apakah token ada
     const token = authStore.accessToken;
+
     if (token) {
+      // Tambahkan token ke header
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  },
+  (error) => Promise.reject(error),
 );
 
-// Response interceptor untuk error handling
+// ✅ Response interceptor untuk error handling
 httpInstance.interceptors.response.use(
-  (response: AxiosResponse) => {
-    return response;
-  },
-  (error) => {
-    return handleError(error);
-  },
+  (response: AxiosResponse) => response,
+  (error) => handleError(error),
 );
 
 const handleError = (error: any) => {
@@ -52,22 +49,17 @@ const handleError = (error: any) => {
   };
 
   if (error.response) {
-    // Server responded with error status
     const { status, data } = error.response;
-
     apiError.status = status;
     apiError.message = data?.message || getDefaultErrorMessage(status);
 
     if (status === 422 && data?.errors) {
-      // Validation errors
       apiError.errors = data.errors;
     }
   } else if (error.request) {
-    // Network error
     apiError.message = "Tidak dapat terhubung ke server. Periksa koneksi internet Anda.";
     apiError.status = 0;
   } else {
-    // Other error
     apiError.message = error.message || "Terjadi kesalahan yang tidak diketahui";
   }
 
@@ -85,7 +77,6 @@ const getDefaultErrorMessage = (status: number) => {
     502: "Server tidak tersedia",
     503: "Server sedang maintenance",
   };
-
   return messages[status] || "Terjadi kesalahan yang tidak diketahui";
 };
 

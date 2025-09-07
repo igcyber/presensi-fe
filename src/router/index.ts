@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, type RouteRecordRaw, type RouterScrollBehavior } from "vue-router";
 
 import NotFound from "@/pages/NotFound.vue";
+import { useAuthStore } from "@/stores/authStore";
 
 /**
  * Tipe untuk modul yang diimpor dari direktori pages
@@ -70,7 +71,34 @@ const router = createRouter({
 });
 
 // Navigation Guard untuk Authentication
+// Navigation Guard untuk Authentication
 router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore();
+  const isAuthenticated = authStore.isAuthenticated;
+  const requiresAuth = to.meta.requiresAuth !== false; // Default true kecuali explicitly false
+  const isAuthRoute = to.name === "login.index";
+
+  // Jika sudah login dan mencoba akses halaman auth (login), redirect ke dashboard
+  if (isAuthenticated && isAuthRoute) {
+    next({ name: "app.dashboard" });
+    return;
+  }
+
+  // Jika belum login dan mencoba akses halaman yang perlu auth, redirect ke login
+  if (!isAuthenticated && requiresAuth) {
+    next({ name: "login.index" });
+    return;
+  }
+
+  // Jika token expired, clear auth dan redirect ke login
+  if (isAuthenticated && authStore.isTokenExpired) {
+    authStore.logout();
+    if (requiresAuth) {
+      next({ name: "login.index" });
+      return;
+    }
+  }
+
   next();
 });
 
