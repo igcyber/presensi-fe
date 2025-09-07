@@ -1,3 +1,44 @@
+<script setup lang="ts">
+import { onBeforeUnmount, onMounted, watch } from "vue";
+import { useRoute } from "vue-router";
+
+import AppBreadcrumb from "@/components/layout/partials/AppBreadcrumb.vue";
+
+import { useBreadcrumb } from "@/composables/useBreadcrumb";
+import { useFetch } from "@/composables/useFetch";
+import { getOpdDetail, type OpdDetail, type OpdDetailResponse } from "@/lib/api/services/unitKerja";
+
+const route = useRoute();
+const id = Number(route.params.id);
+
+const { setContext, clearContext } = useBreadcrumb();
+
+const { data, isLoading, fetchData, isError, error } = useFetch<OpdDetailResponse, OpdDetail>(() => getOpdDetail(id), {
+  immediate: false,
+  extractData: (response) => response.data.data,
+});
+
+// Update breadcrumb context ketika data sudah ada
+watch(
+  () => data.value?.nama,
+  (nama) => {
+    if (nama) {
+      setContext(nama);
+    }
+  },
+  { immediate: true },
+);
+
+onMounted(async () => {
+  await fetchData();
+});
+
+onBeforeUnmount(() => {
+  // Opsional: bersihkan agar tidak "nyangkut" ke halaman lain
+  clearContext();
+});
+</script>
+
 <template>
   <div class="min-h-screen bg-gray-50">
     <!-- Navigation Spacer -->
@@ -159,8 +200,6 @@
                         </div>
                       </div>
                     </template>
-
-                    <!-- Empty Applications State -->
                     <template v-else>
                       <div class="rounded-md bg-gray-50 p-6 text-center">
                         <i class="bx bx-devices mb-2 text-2xl text-gray-400"></i>
@@ -173,57 +212,7 @@
             </div>
           </div>
         </div>
-
-        <!-- Empty State -->
-        <div v-else class="mx-auto max-w-2xl">
-          <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
-            <i class="bx bx-info-circle mb-4 text-4xl text-yellow-600"></i>
-            <h4 class="mb-4 text-xl font-semibold text-yellow-800">Data Tidak Ditemukan</h4>
-            <p class="text-yellow-700">Maaf, data yang Anda cari tidak tersedia saat ini.</p>
-          </div>
-        </div>
       </div>
     </main>
   </div>
 </template>
-
-<script setup lang="ts">
-import { onBeforeUnmount, onMounted, watch } from "vue";
-import { useRoute } from "vue-router";
-
-import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
-
-import { useBreadcrumb } from "@/composables/useBreadcrumb";
-import useFetch from "@/composables/useFetch";
-import { getOpdDetail, type OpdDetail, type OpdDetailResponse } from "@/lib/api/unitKerja";
-
-const route = useRoute();
-const id = Number(route.params.id);
-
-const { setContext, clearContext } = useBreadcrumb();
-
-const { data, isLoading, fetchData, isError, error } = useFetch<OpdDetailResponse, OpdDetail>(() => getOpdDetail(id), {
-  immediate: false,
-  extractData: (response) => response.data.data,
-});
-
-// Update breadcrumb context ketika data sudah ada
-watch(
-  () => data.value?.nama,
-  (nama) => {
-    if (nama) {
-      setContext(nama);
-    }
-  },
-  { immediate: true },
-);
-
-onMounted(async () => {
-  await fetchData();
-});
-
-onBeforeUnmount(() => {
-  // Opsional: bersihkan agar tidak "nyangkut" ke halaman lain
-  clearContext();
-});
-</script>

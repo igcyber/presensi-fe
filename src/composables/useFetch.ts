@@ -7,7 +7,7 @@ export interface ApiResponse<T> {
 }
 
 // Enhanced useFetch with better TypeScript support
-export default function useFetch<TResponse, TData = TResponse>(
+export function useFetch<TResponse, TData = TResponse>(
   apiFn: () => Promise<TResponse>,
   options?: {
     immediate?: boolean;

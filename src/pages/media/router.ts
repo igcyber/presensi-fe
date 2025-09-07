@@ -1,5 +1,4 @@
-import AppLayout from "@/components/layout/AppLayout.vue";
-
+import AppLayout from "@/layouts/AppLayout.vue";
 import DokumenPage from "@/pages/media/dokumen/IndexPage.vue";
 import FotoPage from "@/pages/media/foto/IndexPage.vue";
 import InfografisPage from "@/pages/media/infografis/IndexPage.vue";
@@ -11,6 +10,11 @@ export default {
   path: "/media",
   component: AppLayout,
   children: [
+    {
+      // Route kosong untuk menangani akses langsung ke /selayang-pandang
+      path: "",
+      redirect: { name: "not-found" },
+    },
     {
       path: "foto",
       name: "media.foto",

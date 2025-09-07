@@ -40,6 +40,9 @@ export default defineConfigWithVueTs(
       // Quality of life
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }],
+
+      // Izinkan nama komponen satu kata (misal: IndexPage.vue)
+      "vue/multi-word-component-names": "off",
     },
   },
 

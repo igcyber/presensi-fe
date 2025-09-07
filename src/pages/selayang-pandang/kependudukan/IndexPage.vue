@@ -1,3 +1,26 @@
+<script setup lang="ts">
+import { onMounted } from "vue";
+
+import SelayangPandang from "@/components/features/selayang-pandang/SelayangPandang.vue";
+import AppBreadcrumb from "@/components/layout/partials/AppBreadcrumb.vue";
+
+import { useFetch } from "@/composables/useFetch";
+import { type ApiResponse, type PayloadData } from "@/lib/api/core";
+import { getKependudukan, type KependudukanData } from "@/lib/api/services/selayangPandang";
+
+const { data, isLoading, fetchData, isError, error } = useFetch<
+  ApiResponse<PayloadData<KependudukanData>>,
+  KependudukanData
+>(getKependudukan, {
+  immediate: false,
+  extractData: (response) => response.data.data,
+});
+
+onMounted(async () => {
+  await fetchData();
+});
+</script>
+
 <template>
   <div class="min-h-screen bg-gray-50">
     <!-- Navigation Spacer -->
@@ -53,25 +76,3 @@
     </main>
   </div>
 </template>
-
-<script setup lang="ts">
-import { onMounted } from "vue";
-
-import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
-import SelayangPandang from "@/components/SelayangPandang.vue";
-
-import useFetch from "@/composables/useFetch";
-import { getKependudukan, type KependudukanData, type KependudukanResponse } from "@/lib/api/selayangPandang";
-
-const { data, isLoading, fetchData, isError, error } = useFetch<KependudukanResponse, KependudukanData>(
-  getKependudukan,
-  {
-    immediate: false,
-    extractData: (response) => response.data.data,
-  },
-);
-
-onMounted(async () => {
-  await fetchData();
-});
-</script>

@@ -54,6 +54,10 @@ export function useBreadcrumb() {
     "unit-kerja.opd": "OPD",
     "unit-kerja.opd.detail": "Detail OPD",
     "unit-kerja.perusahaan-daerah": "Perusahaan Daerah",
+
+    // App
+    "app.dashboard": "Dashboard",
+    "app.user": "User",
   };
 
   /**
@@ -92,6 +96,10 @@ export function useBreadcrumb() {
     // Berita
     "berita.index": [],
     "berita.detail": ["berita.index"],
+
+    // App
+    "app.dashboard": ["Dashboard"],
+    "app.user": ["app.dashboard"],
   };
 
   /**

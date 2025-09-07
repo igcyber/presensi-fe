@@ -1,3 +1,62 @@
+<script lang="ts" setup>
+import { onMounted, watch } from "vue";
+
+import BasePagination from "@/components/base/BasePagination.vue";
+import AppBreadcrumb from "@/components/layout/partials/AppBreadcrumb.vue";
+
+import { useFetch } from "@/composables/useFetch";
+import { useFormatters } from "@/composables/useFormatters";
+import { usePagination } from "@/composables/usePagination";
+import { type ApiResponse } from "@/lib/api/core";
+import { getInfografis, type InfografisListPayload } from "@/lib/api/services/media";
+
+const { date } = useFormatters();
+const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
+
+// Fetch infografis data
+const { data, isLoading, error, isError, fetchData } = useFetch<
+  ApiResponse<InfografisListPayload>,
+  InfografisListPayload
+>(() => getInfografis(currentPage.value), {
+  immediate: false,
+  extractData: (response) => response.data,
+});
+
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value -= 1;
+  }
+};
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value += 1;
+  }
+};
+
+const onPage = (page: number) => {
+  currentPage.value = page;
+};
+
+// Watchers
+watch(currentPage, () => {
+  fetchData();
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+onMounted(async () => {
+  await fetchData();
+
+  setPagination({
+    currentPage: data.value?.meta?.current_page ?? 1,
+    totalPages: data.value?.meta?.last_page ?? 1,
+    totalItems: data.value?.meta?.total ?? 0,
+    itemsPerPage: data.value?.meta?.per_page ?? 10,
+  });
+});
+</script>
+
 <template>
   <div class="min-h-screen bg-gray-50">
     <!-- Navigation Spacer -->
@@ -89,7 +148,7 @@
                   <!-- Date -->
                   <div class="flex items-center text-sm text-gray-500">
                     <i class="bx bx-calendar mr-2"></i>
-                    <span>{{ formatters.date(infografis.createdAt) }}</span>
+                    <span>{{ date(infografis.createdAt) }}</span>
                   </div>
                 </div>
               </div>
@@ -108,8 +167,6 @@
               />
             </div>
           </template>
-
-          <!-- Empty State for no infografis -->
           <template v-else>
             <div class="mx-auto max-w-2xl">
               <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
@@ -120,74 +177,7 @@
             </div>
           </template>
         </div>
-
-        <!-- Empty State -->
-        <div v-else class="mx-auto max-w-2xl">
-          <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
-            <i class="bx bx-info-circle mb-4 text-4xl text-yellow-600"></i>
-            <h4 class="mb-4 text-xl font-semibold text-yellow-800">Data Tidak Ditemukan</h4>
-            <p class="text-yellow-700">Maaf, data yang Anda cari tidak tersedia saat ini.</p>
-          </div>
-        </div>
       </div>
     </main>
   </div>
 </template>
-
-<script lang="ts" setup>
-import { onMounted, watch } from "vue";
-
-import BasePagination from "@/components/BasePagination.vue";
-import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
-
-import useFetch from "@/composables/useFetch";
-import { useFormatters } from "@/composables/useFormatters";
-import { usePagination } from "@/composables/usePagination";
-import { getInfografis, type InfografisListPayload, type InfografisResponse } from "@/lib/api/media";
-
-const formatters = useFormatters();
-const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
-
-// Fetch infografis data
-const { data, isLoading, error, isError, fetchData } = useFetch<InfografisResponse, InfografisListPayload>(
-  () => getInfografis(currentPage.value),
-  {
-    immediate: false,
-    extractData: (response) => response.data,
-  },
-);
-
-const prevPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value -= 1;
-  }
-};
-
-const nextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value += 1;
-  }
-};
-
-const onPage = (page: number) => {
-  currentPage.value = page;
-};
-
-// Watchers
-watch(currentPage, () => {
-  fetchData();
-
-  window.scrollTo({ top: 0, behavior: "smooth" });
-});
-
-onMounted(async () => {
-  await fetchData();
-
-  setPagination({
-    currentPage: data.value?.meta?.current_page ?? 1,
-    totalPages: data.value?.meta?.last_page ?? 1,
-    totalItems: data.value?.meta?.total ?? 0,
-    itemsPerPage: data.value?.meta?.per_page ?? 10,
-  });
-});
-</script>

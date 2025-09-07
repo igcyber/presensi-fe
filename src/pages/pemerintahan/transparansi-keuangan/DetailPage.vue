@@ -1,3 +1,51 @@
+<script setup lang="ts">
+import { onBeforeUnmount, onMounted, watch } from "vue";
+import { useRoute } from "vue-router";
+
+import AppBreadcrumb from "@/components/layout/partials/AppBreadcrumb.vue";
+
+import { useBreadcrumb } from "@/composables/useBreadcrumb";
+import { useFetch } from "@/composables/useFetch";
+import { useFormatters } from "@/composables/useFormatters";
+import { type ApiResponse } from "@/lib/api/core";
+import { getTransparansiKeuanganDetail, type TransparansiKeuangan } from "@/lib/api/services/pemerintahan";
+
+const route = useRoute();
+const id = Number(route.params.id);
+
+const { setContext, clearContext } = useBreadcrumb();
+
+const { date } = useFormatters();
+
+const { data, isLoading, fetchData, isError, error } = useFetch<
+  ApiResponse<TransparansiKeuangan>,
+  TransparansiKeuangan
+>(() => getTransparansiKeuanganDetail(id), {
+  immediate: false,
+  extractData: (response) => response.data.data,
+});
+
+// Update breadcrumb context ketika data sudah ada
+watch(
+  () => data.value?.nama,
+  (nama) => {
+    if (nama) {
+      setContext(nama);
+    }
+  },
+  { immediate: true },
+);
+
+onMounted(async () => {
+  await fetchData();
+});
+
+onBeforeUnmount(() => {
+  // Opsional: bersihkan agar tidak "nyangkut" ke halaman lain
+  clearContext();
+});
+</script>
+
 <template>
   <div class="min-h-screen bg-gray-50">
     <!-- Navigation Spacer -->
@@ -66,7 +114,7 @@
                   <dd class="flex items-center text-gray-900">
                     <i class="bx bx-calendar text-portal-green mr-2"></i>
                     <time v-if="data.tanggalPublikasi" :datetime="data.tanggalPublikasi">
-                      {{ formatters.date(data.tanggalPublikasi) }}
+                      {{ date(data.tanggalPublikasi) }}
                     </time>
                     <span v-else class="text-gray-500">Tanggal tidak tersedia</span>
                   </dd>
@@ -137,54 +185,3 @@
     </main>
   </div>
 </template>
-
-<script setup lang="ts">
-import { onBeforeUnmount, onMounted, watch } from "vue";
-import { useRoute } from "vue-router";
-
-import AppBreadcrumb from "@/components/layout/AppBreadcrumb.vue";
-
-import { useBreadcrumb } from "@/composables/useBreadcrumb";
-import useFetch from "@/composables/useFetch";
-import { useFormatters } from "@/composables/useFormatters";
-import {
-  getTransparansiKeuanganDetail,
-  type TransparansiKeuangan,
-  type TransparansiKeuanganDetailResponse,
-} from "@/lib/api/pemerintahan";
-
-const route = useRoute();
-const id = Number(route.params.id);
-
-const { setContext, clearContext } = useBreadcrumb();
-
-const formatters = useFormatters();
-
-const { data, isLoading, fetchData, isError, error } = useFetch<
-  TransparansiKeuanganDetailResponse,
-  TransparansiKeuangan
->(() => getTransparansiKeuanganDetail(id), {
-  immediate: false,
-  extractData: (response) => response.data.data,
-});
-
-// Update breadcrumb context ketika data sudah ada
-watch(
-  () => data.value?.nama,
-  (nama) => {
-    if (nama) {
-      setContext(nama);
-    }
-  },
-  { immediate: true },
-);
-
-onMounted(async () => {
-  await fetchData();
-});
-
-onBeforeUnmount(() => {
-  // Opsional: bersihkan agar tidak "nyangkut" ke halaman lain
-  clearContext();
-});
-</script>

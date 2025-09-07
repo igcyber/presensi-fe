@@ -9,7 +9,7 @@ export const PORTAL_CONFIG = {
 
   // Asset paths
   assets: {
-    logo: "images/kukar-logo.png",
+    logo: "assets/images/logos/logo-kukar.png",
     icons: "icon/portal-menu/",
     uploads: "uploads/",
     miniImg: "mini-img/",

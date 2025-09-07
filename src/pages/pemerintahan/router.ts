@@ -1,5 +1,4 @@
-import AppLayout from "@/components/layout/AppLayout.vue";
-
+import AppLayout from "@/layouts/AppLayout.vue";
 import BupatiPage from "@/pages/pemerintahan/bupati-kukar/IndexPage.vue";
 import ProgramStrategisPage from "@/pages/pemerintahan/program-strategis/IndexPage.vue";
 import StrategiPage from "@/pages/pemerintahan/strategi/IndexPage.vue";
@@ -13,6 +12,11 @@ export default {
   path: "/pemerintahan",
   component: AppLayout,
   children: [
+    {
+      // Route kosong untuk menangani akses langsung ke /selayang-pandang
+      path: "",
+      redirect: { name: "not-found" },
+    },
     {
       path: "tugas-dan-fungsi",
       name: "pemerintahan.tugas-dan-fungsi",
