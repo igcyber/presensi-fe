@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import { BadgeCheck, Bell, ChevronsUpDown, CreditCard, LogOut, Sparkles } from "lucide-vue-next";
+import { ChevronsUpDown, LogOut, User } from "lucide-vue-next";
+import { useRouter } from "vue-router";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
+
+import { useAuthStore } from "@/stores/authStore";
 
 defineProps<{
   user: {
@@ -22,6 +24,15 @@ defineProps<{
 }>();
 
 const { isMobile } = useSidebar();
+
+const authStore = useAuthStore();
+
+const router = useRouter();
+
+const handleLogout = () => {
+  authStore.logout();
+  router.push({ name: "login.index" });
+};
 </script>
 
 <template>
@@ -65,29 +76,14 @@ const { isMobile } = useSidebar();
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <DropdownMenuItem>
-              <Sparkles />
-              Upgrade to Pro
+              <User />
+              Profile
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <BadgeCheck />
-              Account
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <CreditCard />
-              Billing
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Bell />
-              Notifications
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>
+          <DropdownMenuItem @click="handleLogout">
             <LogOut />
-            Log out
+            Logout
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
