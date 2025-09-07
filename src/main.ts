@@ -11,6 +11,8 @@ import router from "@/router";
 import "@/styles/icons.css";
 import "@/styles/main.css";
 
+import { useAuthStore } from "@/stores/authStore";
+
 (window as any).$ = (window as any).jQuery = $;
 
 const lightboxModule = await import("lightbox2/dist/js/lightbox.js");
@@ -32,5 +34,9 @@ const app = createApp(App);
 
 app.use(createPinia());
 app.use(router);
+
+// Inisialisasi auth store setelah pinia dipasang
+const authStore = useAuthStore();
+authStore.initializeAuth();
 
 app.mount("#app");

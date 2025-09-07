@@ -13,6 +13,9 @@ export default {
       path: "dashboard",
       name: "app.dashboard",
       component: DashboardPage,
+      meta: {
+        requiresAuth: true,
+      },
     },
   ],
 };
