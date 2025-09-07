@@ -9,7 +9,7 @@ import type {
   ResetPasswordConfirmRequest,
   ResetPasswordRequest,
   UpdateProfileRequest,
-  User,
+  UserAuth,
 } from "../types/auth.types";
 
 /**
@@ -78,8 +78,8 @@ export const logout = async (): Promise<ApiResponse<{ message: string }>> => {
  * console.log(response.data.username);
  * ```
  */
-export const getCurrentUser = async (): Promise<ApiResponse<User>> => {
-  const response = await httpInstance.get<ApiResponse<User>>("/api/auth/me");
+export const getCurrentUser = async (): Promise<ApiResponse<UserAuth>> => {
+  const response = await httpInstance.get<ApiResponse<UserAuth>>("/api/auth/me");
   return response.data;
 };
 
@@ -94,8 +94,8 @@ export const getCurrentUser = async (): Promise<ApiResponse<User>> => {
  * console.log(response.data.name);
  * ```
  */
-export const updateProfile = async (profileData: UpdateProfileRequest): Promise<ApiResponse<User>> => {
-  const response = await httpInstance.put<ApiResponse<User>>("/api/auth/profile", profileData);
+export const updateProfile = async (profileData: UpdateProfileRequest): Promise<ApiResponse<UserAuth>> => {
+  const response = await httpInstance.put<ApiResponse<UserAuth>>("/api/auth/profile", profileData);
   return response.data;
 };
 

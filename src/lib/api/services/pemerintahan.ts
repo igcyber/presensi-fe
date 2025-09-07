@@ -23,7 +23,6 @@ export type {
   VisiMisiPayload,
   TugasFungsiData,
   StrukturOrganisasiData,
-  PotensiDaerahData,
   StrategiDaerahData,
   ProgramStrategisData,
   BupatiContentData,
@@ -108,21 +107,6 @@ export const getStrukturOrganisasi = async (): Promise<ApiResponse<PayloadData<C
  */
 export const getTugasFungsi = async (): Promise<ApiResponse<PayloadData<ContentData>>> => {
   const response = await httpInstance.get<ApiResponse<PayloadData<ContentData>>>("/pemerintahan/tugas-dan-fungsi");
-  return response.data;
-};
-
-/**
- * Get regional potential content
- * @returns Promise resolving to regional potential data
- * @endpoint GET /pemerintahan/potensi-daerah
- * @example
- * ```typescript
- * const response = await getPotensiDaerah();
- * console.log(response.data.isi);
- * ```
- */
-export const getPotensiDaerah = async (): Promise<ApiResponse<PayloadData<ContentData>>> => {
-  const response = await httpInstance.get<ApiResponse<PayloadData<ContentData>>>("/pemerintahan/potensi-daerah");
   return response.data;
 };
 

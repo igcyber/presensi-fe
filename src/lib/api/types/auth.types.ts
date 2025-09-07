@@ -1,4 +1,4 @@
-import type { BaseEntity } from "../core/apiResponse";
+import type { User } from "./user.types";
 
 /**
  * Login request payload
@@ -18,22 +18,10 @@ export interface RegisterRequest {
 }
 
 /**
- * Role entity interface
- */
-export interface Role extends BaseEntity {
-  name: string;
-}
-
-/**
- * User entity interface for login response
+ * UserAuth entity interface for login response
  * Represents the authenticated user data returned from login API
  */
-export interface User extends BaseEntity {
-  fullName: string;
-  email: string;
-  username: string;
-  nip: string;
-}
+export type UserAuth = Omit<User, "roles">;
 
 /**
  * Token object interface for authentication
@@ -50,7 +38,7 @@ export interface Token {
  * Represents the data payload in successful login response
  */
 export interface AuthResponse {
-  user: User;
+  user: UserAuth;
   token: Token;
 }
 
