@@ -18,24 +18,51 @@ export interface RegisterRequest {
 }
 
 /**
- * User entity interface
+ * Role entity interface
  */
-export interface User extends BaseEntity {
-  username: string;
-  email: string;
-  name?: string;
-  role?: string;
-  isActive?: boolean;
+export interface Role extends BaseEntity {
+  name: string;
 }
 
 /**
- * Authentication response
+ * User entity interface for login response
+ * Represents the authenticated user data returned from login API
+ */
+export interface User extends BaseEntity {
+  fullName: string;
+  email: string;
+  username: string;
+  nip: string;
+}
+
+/**
+ * Token object interface for authentication
+ * Contains the bearer token and its expiration information
+ */
+export interface Token {
+  type: string;
+  value: string;
+  expiresAt: string;
+}
+
+/**
+ * Auth response interface combining user and token
+ * Represents the data payload in successful login response
  */
 export interface AuthResponse {
   user: User;
-  token: string;
-  refreshToken?: string;
-  expiresIn?: number;
+  token: Token;
+}
+
+/**
+ * Complete login response interface
+ * Represents the full API response structure for successful login
+ */
+export interface LoginResponse {
+  success: boolean;
+  message: string;
+  timestamp: string;
+  data: AuthResponse;
 }
 
 /**

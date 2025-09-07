@@ -1,21 +1,51 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { toast } from "vue-sonner";
 
 import BaseForm from "@/components/forms/BaseForm.vue";
 import BaseInput from "@/components/forms/BaseInput.vue";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
+import { login } from "@/lib/api/services/auth";
 import { type LoginFormData, loginSchema } from "@/schemas/authSchema";
+import { useAuthStore } from "@/stores/authStore";
 
 const props = defineProps<{
   class?: HTMLAttributes["class"];
 }>();
 
+const router = useRouter();
+const authStore = useAuthStore();
+const isLoading = ref(false);
+
 // Handle submit
 async function handleSubmit(values: LoginFormData) {
-  console.log("Login values:", values);
-  // TODO: panggil authService.login(values)
+  try {
+    isLoading.value = true;
+
+    // Call login API
+    const response = await login(values);
+
+    // Handle successful login
+    authStore.handleLoginSuccess(response);
+
+    // Show success message
+    toast.success(response.message || "Login berhasil!");
+
+    // Redirect to dashboard or intended page
+    await router.push({ name: "dashboard.index" });
+  } catch (error: any) {
+    // Handle error response
+    const errorMessage =
+      error.status === 400 ? "Username atau password salah" : "Terjadi kesalahan saat login. Silakan coba lagi.";
+
+    toast.error(errorMessage);
+  } finally {
+    isLoading.value = false;
+  }
 }
 </script>
 
@@ -43,7 +73,13 @@ async function handleSubmit(values: LoginFormData) {
             <BaseInput name="password" label="Password" type="password" placeholder="Masukkan password" />
 
             <!-- Submit -->
-            <Button type="submit" class="w-full">Login</Button>
+            <Button type="submit" class="w-full" :disabled="isLoading">
+              <span
+                v-if="isLoading"
+                class="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"
+              ></span>
+              {{ isLoading ? "Memproses..." : "Login" }}
+            </Button>
 
             <!-- Divider -->
             <div

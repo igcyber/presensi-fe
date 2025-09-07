@@ -1,43 +1,37 @@
 import { useLocalStorage } from "@vueuse/core";
-import { jwtDecode } from "jwt-decode";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
+import type { LoginResponse, User } from "@/lib/api/types/auth.types";
+
 interface StoredAuth {
   accessToken: string;
-  refreshToken: string;
-  payload?: any;
+  user?: User;
+  tokenExpiresAt?: string;
 }
 
 export const useAuthStore = defineStore("auth", () => {
   // State
   const accessToken = ref("");
-  const refreshToken = ref("");
-  const userPayload = ref<any | null>(null);
+  const user = ref<User | null>(null);
+  const tokenExpiresAt = ref<string>("");
   const isLoading = ref(false);
 
   // Computed
   const isAuthenticated = computed(() => {
-    return !!accessToken.value && !!refreshToken.value;
-  });
-
-  const user: any = computed(() => {
-    if (!userPayload.value) return null;
-    return {
-      ...userPayload.value,
-    };
+    return !!accessToken.value && !!user.value && !isTokenExpired.value;
   });
 
   const isTokenExpired = computed(() => {
-    if (!userPayload.value?.exp) return true;
-    return userPayload.value.exp < Date.now() / 1000;
+    if (!tokenExpiresAt.value) return true;
+    return new Date(tokenExpiresAt.value) < new Date();
   });
 
   // Reactive localStorage
   const storedAuth = useLocalStorage<StoredAuth>("app", {
     accessToken: "",
-    refreshToken: "",
-    payload: undefined,
+    user: undefined,
+    tokenExpiresAt: undefined,
   });
 
   // Actions
@@ -46,63 +40,76 @@ export const useAuthStore = defineStore("auth", () => {
     storedAuth.value.accessToken = token;
   };
 
-  const setRefreshToken = (token: string) => {
-    refreshToken.value = token;
-    storedAuth.value.refreshToken = token;
+  const setUser = (userData: User) => {
+    user.value = userData;
+    storedAuth.value.user = userData;
   };
 
-  const setDataRegularLogin = (data: { accessToken: string; refreshToken: string }) => {
-    setAccessToken(data.accessToken);
-    setRefreshToken(data.refreshToken);
+  const setTokenExpiresAt = (expiresAt: string) => {
+    tokenExpiresAt.value = expiresAt;
+    storedAuth.value.tokenExpiresAt = expiresAt;
   };
 
-  const getPlayloadDataRegularLogin = () => {
-    const token = accessToken.value;
-    const decoded = jwtDecode(token);
-    return decoded as any;
+  /**
+   * Handle successful login response
+   * @param loginResponse - Complete login response from API
+   */
+  const handleLoginSuccess = (loginResponse: LoginResponse) => {
+    const { user: userData, token } = loginResponse.data;
+
+    // Set tokens
+    setAccessToken(token.value);
+
+    // Set user data
+    setUser(userData);
+
+    // Set token expiration
+    setTokenExpiresAt(token.expiresAt);
   };
 
   const initializeAuth = () => {
     // Restore dari localStorage saat aplikasi dimuat
     if (storedAuth.value.accessToken) {
       accessToken.value = storedAuth.value.accessToken;
-      refreshToken.value = storedAuth.value.refreshToken;
 
-      if (storedAuth.value.payload) {
-        const userPlayload = getPlayloadDataRegularLogin();
-        userPayload.value = userPlayload;
+      if (storedAuth.value.user) {
+        user.value = storedAuth.value.user;
+      }
+
+      if (storedAuth.value.tokenExpiresAt) {
+        tokenExpiresAt.value = storedAuth.value.tokenExpiresAt;
       }
     }
   };
 
   const logout = () => {
     accessToken.value = "";
-    refreshToken.value = "";
-    userPayload.value = null;
+    user.value = null;
+    tokenExpiresAt.value = "";
 
     storedAuth.value = {
       accessToken: "",
-      refreshToken: "",
-      payload: undefined,
+      user: undefined,
+      tokenExpiresAt: undefined,
     };
   };
 
   return {
     // State
     accessToken,
-    refreshToken,
-    userPayload,
+    user,
+    tokenExpiresAt,
     isLoading,
 
     // Computed
     isAuthenticated,
-    user,
     isTokenExpired,
 
     // Actions
     setAccessToken,
-    setRefreshToken,
-    setDataRegularLogin,
+    setUser,
+    setTokenExpiresAt,
+    handleLoginSuccess,
     initializeAuth,
     logout,
   };

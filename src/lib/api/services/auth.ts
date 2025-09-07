@@ -4,6 +4,7 @@ import type {
   AuthResponse,
   ChangePasswordRequest,
   LoginRequest,
+  LoginResponse,
   RegisterRequest,
   ResetPasswordConfirmRequest,
   ResetPasswordRequest,
@@ -14,16 +15,17 @@ import type {
 /**
  * Authenticate user with username and password
  * @param credentials - Login credentials containing username and password
- * @returns Promise resolving to authentication response with user data and token
+ * @returns Promise resolving to complete login response with user data and token
  * @endpoint POST /api/auth/login
  * @example
  * ```typescript
  * const response = await login({ username: 'admin', password: 'password123' });
- * console.log(response.data.user.name);
+ * console.log(response.data.user.fullName);
+ * console.log(response.data.token.value);
  * ```
  */
-export const login = async (credentials: LoginRequest): Promise<ApiResponse<AuthResponse>> => {
-  const response = await httpInstance.post<ApiResponse<AuthResponse>>("/api/auth/login", credentials, {
+export const login = async (credentials: LoginRequest): Promise<LoginResponse> => {
+  const response = await httpInstance.post<LoginResponse>("/api/auth/login", credentials, {
     headers: {
       "Content-Type": "application/json",
     },
