@@ -36,7 +36,7 @@ async function handleSubmit(values: LoginFormData) {
     toast.success(response.message || "Login berhasil!");
 
     // Redirect to dashboard or intended page
-    await router.push({ name: "dashboard.index" });
+    await router.push({ name: "app.dashboard" });
   } catch (error: any) {
     // Handle error response
     const errorMessage =

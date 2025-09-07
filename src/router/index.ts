@@ -71,7 +71,6 @@ const router = createRouter({
 });
 
 // Navigation Guard untuk Authentication
-// Navigation Guard untuk Authentication
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
   const isAuthenticated = authStore.isAuthenticated;
