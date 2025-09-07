@@ -7,3 +7,4 @@ export * from "./portalMenu";
 export * from "./selayangPandang";
 export * from "./unitKerja";
 export * from "./beranda";
+export * from "./user";

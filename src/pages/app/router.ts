@@ -1,6 +1,8 @@
 import AuthLayout from "@/layouts/AuthLayout.vue";
 import DashboardPage from "@/pages/dashboard/IndexPage.vue";
 
+// import userRoute from "./user/route";
+
 export default {
   path: "/app",
   component: AuthLayout,
@@ -17,5 +19,6 @@ export default {
         requiresAuth: true,
       },
     },
+    // ...userRoute,
   ],
 };

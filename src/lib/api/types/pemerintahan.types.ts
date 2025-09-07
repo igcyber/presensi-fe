@@ -5,7 +5,6 @@ import type { BaseEntity, ContentData, PaginationMeta } from "../core/apiRespons
  */
 export type TugasFungsiData = ContentData;
 export type StrukturOrganisasiData = ContentData;
-export type PotensiDaerahData = ContentData;
 export type StrategiDaerahData = ContentData;
 export type ProgramStrategisData = ContentData;
 export type BupatiContentData = ContentData;

@@ -13,9 +13,6 @@ import { type Column, DataTable } from "@/components/ui/datatable";
 import { useConfirmDialog, useDialog } from "@/composables/useDialog";
 import { usePaginationApp } from "@/composables/usePaginationApp";
 import { deleteUser, getUsers, type User } from "@/services/userService";
-import { useAuthStore } from "@/stores/authStore";
-
-const authStore = useAuthStore();
 
 // Setup pagination
 const { loading, query, pagination, setPagination, setPage, setSearch } = usePaginationApp(10);
@@ -80,7 +77,7 @@ const columns: Column<User>[] = [
 const loadUsers = async () => {
   try {
     loading.value = true;
-    const response = await getUsers(query.value, authStore.accessToken);
+    const response = await getUsers(query.value);
     users.value = response.data;
     setPagination(response.pagination);
   } catch (error) {
@@ -112,7 +109,7 @@ const confirmDelete = async () => {
 
   try {
     confirmDialog.setLoading(true);
-    await deleteUser(confirmDialog.data.value.id, authStore.accessToken);
+    await deleteUser(confirmDialog.data.value.id);
 
     loadUsers();
 
