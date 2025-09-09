@@ -3,7 +3,7 @@ import { PlusIcon } from "lucide-vue-next";
 import { watch } from "vue";
 import { toast } from "vue-sonner";
 
-import ConfirmDialog from "@/components/dialogs/ConfirmDialog.vue";
+import BaseConfirmDialog from "@/components/dialogs/BaseConfirmDialog.vue";
 import UserDialog from "@/components/dialogs/UserDialog.vue";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -110,11 +110,6 @@ const handleUserDialogSuccess = (): void => {
   useDialogUser.closeDialog();
 };
 
-const handleUserDialogUpdateOpen = (value: boolean): void => {
-  useDialogUser.state.value.open = value;
-  useDialogUser.state.value.data = null;
-};
-
 // Watchers
 watch(
   query,
@@ -171,15 +166,14 @@ watch(
 
       <!-- User Dialog -->
       <UserDialog
-        :open="useDialogUser.state.value.open"
+        v-model:open="useDialogUser.state.value.open"
         :mode="useDialogUser.state.value.mode"
         :user="useDialogUser.state.value.data"
         @success="handleUserDialogSuccess"
-        @update:open="handleUserDialogUpdateOpen"
       />
 
       <!-- Confirm Delete Dialog -->
-      <ConfirmDialog
+      <BaseConfirmDialog
         v-model:open="confirmDialog.open.value"
         title="Hapus User"
         :description="`Apakah Anda yakin ingin menghapus user '${confirmDialog.data.value?.fullName}'? Tindakan ini tidak dapat dibatalkan.`"
