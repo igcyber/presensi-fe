@@ -1,10 +1,9 @@
 // components/dialogs/BaseFormDialog.vue
 <script setup lang="ts">
-import { toTypedSchema } from "@vee-validate/zod";
-import { Form } from "vee-validate";
 import { computed, ref, watch } from "vue";
 import type { z, ZodTypeAny } from "zod";
 
+import BaseForm from "@/components/forms/BaseForm.vue";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -15,7 +14,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-// --- Types
+// Types
 export type DialogMode = "create" | "edit" | "view";
 
 interface Props<TSchema extends ZodTypeAny = ZodTypeAny> {
@@ -28,7 +27,7 @@ interface Props<TSchema extends ZodTypeAny = ZodTypeAny> {
   description?: string; // override desc
 
   /** VeeValidate/Zod */
-  schema?: TSchema; // optional for simple dialogs
+  schema: TSchema; // optional for simple dialogs
   initialValues?: Partial<z.infer<TSchema>> | Record<string, any>;
 
   /** Submit handler: return Promise to show loading */
@@ -46,6 +45,7 @@ interface Props<TSchema extends ZodTypeAny = ZodTypeAny> {
   /** Optional simple config-driven fields */
 }
 
+// Props
 const props = withDefaults(defineProps<Props>(), {
   mode: "create",
   resourceName: undefined,
@@ -58,15 +58,18 @@ const props = withDefaults(defineProps<Props>(), {
   closeOnSuccess: true,
 });
 
+// Emits
 const emit = defineEmits<{
   (e: "update:open", value: boolean): void;
   (e: "success", payload: any): void;
   (e: "cancel"): void;
 }>();
 
+// Reactive State
 const isSubmitting = ref(false);
 const serverErrors = ref<Record<string, string | string[]>>({});
 
+// Computed Properties
 const computedTitle = computed(
   () =>
     props.title ??
@@ -89,6 +92,7 @@ const computedDesc = computed(
 
 const isView = computed(() => props.mode === "view");
 
+// Methods
 function close() {
   emit("update:open", false);
   emit("cancel");
@@ -99,8 +103,10 @@ async function handleSubmit(values: any) {
   try {
     isSubmitting.value = true;
     serverErrors.value = {};
+
     await props.onSubmit(values, { mode: props.mode! });
     emit("success", values);
+
     if (props.closeOnSuccess) emit("update:open", false);
   } catch (e: any) {
     // Normalize 422 errors if shape is { errors: { field: [msg] }}
@@ -112,6 +118,7 @@ async function handleSubmit(values: any) {
   }
 }
 
+// Watchers
 watch(
   () => props.open,
   (open) => {
@@ -130,12 +137,7 @@ watch(
         <DialogTitle>{{ computedTitle }}</DialogTitle>
         <DialogDescription>{{ computedDesc }}</DialogDescription>
       </DialogHeader>
-      <Form
-        :validation-schema="schema ? toTypedSchema(schema) : undefined"
-        :initial-values="initialValues"
-        @submit="handleSubmit"
-        class="space-y-4"
-      >
+      <BaseForm :schema="schema" :initial-values="initialValues ?? {}" :on-submit="handleSubmit" class="space-y-4">
         <!-- server side errors -->
         <div
           v-if="Object.keys(serverErrors).length"
@@ -155,7 +157,7 @@ watch(
             submitText ?? (mode === "create" ? "Simpan" : "Update")
           }}</Button>
         </DialogFooter>
-      </Form>
+      </BaseForm>
     </DialogContent>
   </Dialog>
 </template>

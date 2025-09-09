@@ -10,8 +10,7 @@ import { createUser, updateUser } from "@/lib/api/services/user";
 import type { User } from "@/lib/api/types/user.types";
 import { createUserSchema, updateUserSchema } from "@/schemas/userSchema";
 
-// zod schema milikmu
-
+// Interface definitions
 interface Props {
   open: boolean;
   mode: "create" | "edit" | "view";
@@ -24,9 +23,13 @@ interface Emits {
   (e: "success"): void;
 }
 
+// Props
 const props = withDefaults(defineProps<Props>(), { user: null, roleOptions: () => [] });
+
+// Emits
 const emit = defineEmits<Emits>();
 
+// Computed properties
 const initialValues = computed(() =>
   props.mode === "create"
     ? { fullName: "", username: "", email: "", nip: "", password: "", confirmPassword: "", roleIds: [] as number[] }
@@ -41,6 +44,14 @@ const initialValues = computed(() =>
 
 const schema = computed(() => (props.mode === "create" ? createUserSchema : updateUserSchema));
 
+const open = computed({
+  get: () => props.open,
+  set(value: boolean) {
+    emit("update:open", value);
+  },
+});
+
+// Methods
 async function onSubmit(values: any) {
   if (props.mode === "create") {
     await createUser(values);
@@ -51,13 +62,6 @@ async function onSubmit(values: any) {
   }
   emit("success");
 }
-
-const open = computed({
-  get: () => props.open,
-  set(value: boolean) {
-    emit("update:open", value);
-  },
-});
 </script>
 
 <template>

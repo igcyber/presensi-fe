@@ -155,7 +155,13 @@ const formatCellValue = (item: T, column: Column<T>) => {
   <div class="space-y-4">
     <!-- Search -->
     <div v-if="searchable" class="flex items-center space-x-2">
-      <Input v-model="searchQuery" placeholder="Cari data..." class="max-w-sm" @input="handleSearch" />
+      <Input
+        v-model="searchQuery"
+        placeholder="Cari data..."
+        id="searchKeyword"
+        class="max-w-sm"
+        @input="handleSearch"
+      />
     </div>
 
     <!-- Loading State -->

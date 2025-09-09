@@ -25,7 +25,7 @@ const props = defineProps<Props>();
 <template>
   <FormField :name="props.name" v-slot="{ componentField }">
     <FormItem>
-      <FormLabel>{{ props.label }}</FormLabel>
+      <FormLabel :custom-for="props.name">{{ props.label }}</FormLabel>
       <FormControl>
         <Select
           :model-value="
@@ -40,7 +40,7 @@ const props = defineProps<Props>();
           "
           :disabled="props.disabled"
         >
-          <SelectTrigger>
+          <SelectTrigger :id="props.name">
             <SelectValue :placeholder="props.placeholder ?? 'Pilih…'" />
           </SelectTrigger>
           <SelectContent>

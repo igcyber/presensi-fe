@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { PlusIcon } from "lucide-vue-next";
-import { watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { toast } from "vue-sonner";
 
 import BaseConfirmDialog from "@/components/dialogs/BaseConfirmDialog.vue";
@@ -12,16 +12,20 @@ import ErrorState from "@/components/ui/error-state/ErrorState.vue";
 
 import { useConfirmDialog, useDialog } from "@/composables/useDialog";
 import { useResourceList } from "@/composables/useResourceList";
+import { getRoles } from "@/lib/api/services/role";
 import { deleteUser, getUsers } from "@/lib/api/services/user";
 import type { Role } from "@/lib/api/types/role.types";
 import type { User } from "@/lib/api/types/user.types";
 
-// init reusable list
+// Composables initialization
 const { items, isLoading, isError, error, pagination, query, fetchData, handleSearch, handlePageChange } =
   useResourceList<User>((params) => getUsers(params), { perPage: 10, searchDebounce: 500 });
 
 const useDialogUser = useDialog<User>();
 const confirmDialog = useConfirmDialog();
+
+// Reactive state
+const roleOptions = ref<{ label: string; value: number }[]>([]);
 
 // Data definitions
 const columns: Column<User>[] = [
@@ -105,6 +109,16 @@ const confirmDelete = async (): Promise<void> => {
   }
 };
 
+const loadRoleOptions = async (): Promise<void> => {
+  try {
+    const roles = await getRoles();
+    roleOptions.value = roles.data.data.map((role: Role) => ({ label: role.name, value: role.id }));
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "Gagal memuat data role";
+    toast.error("Gagal", { description: errorMessage });
+  }
+};
+
 const handleUserDialogSuccess = (): void => {
   fetchData();
   useDialogUser.closeDialog();
@@ -118,6 +132,11 @@ watch(
   },
   { immediate: true, deep: true },
 );
+
+// Lifecycle hooks
+onMounted(() => {
+  loadRoleOptions();
+});
 </script>
 
 <template>
@@ -169,6 +188,7 @@ watch(
         v-model:open="useDialogUser.state.value.open"
         :mode="useDialogUser.state.value.mode"
         :user="useDialogUser.state.value.data"
+        :role-options="roleOptions"
         @success="handleUserDialogSuccess"
       />
 
