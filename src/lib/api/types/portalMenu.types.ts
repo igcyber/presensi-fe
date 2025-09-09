@@ -1,4 +1,4 @@
-import type { BaseEntity } from "../core/apiResponse";
+import type { BaseEntity } from "@/lib/api/core/apiResponse";
 
 /**
  * Portal Menu Sub data structure

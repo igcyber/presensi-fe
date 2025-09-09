@@ -1,4 +1,3 @@
-<!-- src/components/forms/BaseInput.vue -->
 <script setup lang="ts">
 import { useFormContext } from "vee-validate";
 

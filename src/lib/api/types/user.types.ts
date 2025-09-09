@@ -1,4 +1,5 @@
-import type { BaseEntity, PaginatedPayload } from "../core/apiResponse";
+import type { BaseEntity, PaginatedPayload } from "@/lib/api/core/apiResponse";
+
 import type { Role } from "./role.types";
 
 /**

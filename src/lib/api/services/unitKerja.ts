@@ -1,5 +1,5 @@
-import type { ApiResponse, PayloadData } from "../core/apiResponse";
-import httpInstance from "../core/httpInstance";
+import type { ApiResponse, PayloadData } from "@/lib/api/core/apiResponse";
+import httpInstance from "@/lib/api/core/httpInstance";
 import type {
   CreateLayananRequest,
   CreateOpdRequest,
@@ -13,7 +13,7 @@ import type {
   OpdSearchParams,
   UpdateLayananRequest,
   UpdateOpdRequest,
-} from "../types/unitKerja.types";
+} from "@/lib/api/types/unitKerja.types";
 
 // ==================== OPD SERVICES ====================
 
@@ -344,4 +344,4 @@ export type {
   LayananSearchParams,
   CreateLayananRequest,
   UpdateLayananRequest,
-} from "../types/unitKerja.types";
+} from "@/lib/api/types/unitKerja.types";

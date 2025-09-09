@@ -1,5 +1,5 @@
-import type { ApiResponse, PayloadData } from "../core/apiResponse";
-import httpInstance from "../core/httpInstance";
+import type { ApiResponse, PayloadData } from "@/lib/api/core/apiResponse";
+import httpInstance from "@/lib/api/core/httpInstance";
 import type {
   Berita,
   BeritaDetail,
@@ -7,7 +7,7 @@ import type {
   BeritaSidebar,
   CreateBeritaRequest,
   UpdateBeritaRequest,
-} from "../types/berita.types";
+} from "@/lib/api/types/berita.types";
 
 // Re-export types for convenience
 export type {
@@ -18,7 +18,7 @@ export type {
   BeritaSidebar,
   CreateBeritaRequest,
   UpdateBeritaRequest,
-} from "../types/berita.types";
+} from "@/lib/api/types/berita.types";
 
 /**
  * Get paginated list of berita articles

@@ -1,5 +1,5 @@
-import type { ApiResponse } from "../core/apiResponse";
-import httpInstance from "../core/httpInstance";
+import type { ApiResponse } from "@/lib/api/core/apiResponse";
+import httpInstance from "@/lib/api/core/httpInstance";
 import type {
   BgVideo,
   CreatePortalMenuRequest,
@@ -9,7 +9,7 @@ import type {
   PortalMenuSub,
   UpdatePortalMenuRequest,
   UpdatePortalMenuSubRequest,
-} from "../types/portalMenu.types";
+} from "@/lib/api/types/portalMenu.types";
 
 // Re-export types for convenience
 export type {
@@ -21,7 +21,7 @@ export type {
   PortalMenuSub,
   UpdatePortalMenuRequest,
   UpdatePortalMenuSubRequest,
-} from "../types/portalMenu.types";
+} from "@/lib/api/types/portalMenu.types";
 
 /**
  * Get portal menu data including main menu, sub menus, and background video

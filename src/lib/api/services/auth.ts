@@ -1,5 +1,5 @@
-import type { ApiResponse } from "../core/apiResponse";
-import httpInstance from "../core/httpInstance";
+import type { ApiResponse } from "@/lib/api/core/apiResponse";
+import httpInstance from "@/lib/api/core/httpInstance";
 import type {
   AuthResponse,
   ChangePasswordRequest,
@@ -8,7 +8,7 @@ import type {
   RegisterRequest,
   UpdateProfileRequest,
   UserAuth,
-} from "../types/auth.types";
+} from "@/lib/api/types/auth.types";
 
 /**
  * Authenticate user with username and password

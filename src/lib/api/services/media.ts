@@ -1,5 +1,5 @@
-import type { ApiResponse, PayloadData } from "../core/apiResponse";
-import httpInstance from "../core/httpInstance";
+import type { ApiResponse, PayloadData } from "@/lib/api/core/apiResponse";
+import httpInstance from "@/lib/api/core/httpInstance";
 import type {
   CreateDokumenRequest,
   CreateFotoRequest,
@@ -17,7 +17,7 @@ import type {
   RadioListPayload,
   VideoData,
   VideoListPayload,
-} from "../types/media.types";
+} from "@/lib/api/types/media.types";
 
 // Re-export types for convenience
 export type {
@@ -38,7 +38,7 @@ export type {
   RadioListPayload,
   VideoData,
   VideoListPayload,
-} from "../types/media.types";
+} from "@/lib/api/types/media.types";
 
 // ==================== FOTO SERVICES ====================
 

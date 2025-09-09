@@ -1,4 +1,4 @@
-import type { BaseEntity, ContentData, PaginationMeta } from "../core/apiResponse";
+import type { BaseEntity, ContentData, PaginationMeta } from "@/lib/api/core/apiResponse";
 
 /**
  * Unit Kerja (OPD) data structure

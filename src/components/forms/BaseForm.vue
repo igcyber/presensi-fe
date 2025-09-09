@@ -1,4 +1,3 @@
-<!-- src/components/forms/BaseForm.vue -->
 <script setup lang="ts">
 import { toTypedSchema } from "@vee-validate/zod";
 import { Form } from "vee-validate";

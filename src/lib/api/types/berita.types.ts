@@ -1,4 +1,4 @@
-import type { BaseEntity, PaginationMeta } from "../core/apiResponse";
+import type { BaseEntity, PaginationMeta } from "@/lib/api/core/apiResponse";
 
 /**
  * Berita entity interface
