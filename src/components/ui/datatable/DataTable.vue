@@ -4,6 +4,7 @@ import { computed, ref } from "vue";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import TableSkeleton from "@/components/ui/loading/TableSkeleton.vue";
 import {
   Pagination,
   PaginationContent,
@@ -128,8 +129,8 @@ const formatCellValue = (item: T, column: Column<T>) => {
     case "total":
     case "biaya":
       return formatters.currency(value as number);
-    case "created_at":
-    case "updated_at":
+    case "createdAt":
+    case "updatedAt":
     case "tanggal":
       return formatters.date(value as string);
     case "is_active":
@@ -158,9 +159,8 @@ const formatCellValue = (item: T, column: Column<T>) => {
     </div>
 
     <!-- Loading State -->
-    <div v-if="loading" class="flex justify-center py-8">
-      <div class="border-primary h-8 w-8 animate-spin rounded-full border-b-2"></div>
-    </div>
+
+    <TableSkeleton v-if="loading" />
 
     <!-- Table -->
     <div v-else class="rounded-md border">

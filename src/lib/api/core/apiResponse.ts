@@ -1,24 +1,4 @@
 /**
- * Generic API Response interface
- * @template T - The data type returned by the API
- */
-export interface ApiResponse<T> {
-  data: T;
-  message: string;
-  status: number;
-  success: boolean;
-}
-
-/**
- * API Error interface for consistent error handling
- */
-export interface ApiError {
-  message: string;
-  status: number;
-  errors: Record<string, string[]>;
-}
-
-/**
  * Base interface for entities with common fields
  */
 export interface BaseEntity {
@@ -29,13 +9,24 @@ export interface BaseEntity {
 }
 
 /**
- * Content data structure for pages and articles
+ * Generic API Response interface
+ * @template T - The data type returned by the API
  */
-export interface ContentData extends BaseEntity {
-  nama: string;
-  isi: string;
-  slug: string;
-  foto: string;
+export interface ApiResponse<T> {
+  success: boolean;
+  message: string;
+  timestamp?: string;
+  status?: number;
+  data: T;
+}
+
+/**
+ * API Error interface for consistent error handling
+ */
+export interface ApiError {
+  message: string;
+  status: number;
+  errors: Record<string, string[]>;
 }
 
 /**
@@ -53,16 +44,7 @@ export interface PayloadData<T> {
 export interface PaginatedPayload<T> {
   data: T[];
   meta?: PaginationMeta;
-}
-
-/**
- * Pagination links interface
- */
-export interface PaginationLinks {
-  first: string | null;
-  last: string | null;
-  next: string | null;
-  prev: string | null;
+  links?: PaginationLinks;
 }
 
 /**
@@ -79,39 +61,13 @@ export interface PaginationMeta {
 }
 
 /**
- * Complete pagination response interface
+ * Pagination links interface
  */
-export interface PaginationResponse {
-  links: PaginationLinks;
-  meta: PaginationMeta;
-}
-
-/**
- * Page metadata interface for SEO and navigation
- */
-export interface PageMeta {
-  links?: PaginationLinks;
-  meta?: PaginationMeta;
-  pagers: string[];
-  position: string;
-  pagetitle: string;
-}
-
-/**
- * Generic list response interface
- * @template T - The item type in the list
- */
-export interface ListResponse<T> {
-  data: T[];
-  meta?: PaginationMeta;
-}
-
-/**
- * Generic detail response interface
- * @template T - The data type
- */
-export interface DetailResponse<T> {
-  data: T;
+export interface PaginationLinks {
+  first: string | null;
+  last: string | null;
+  next: string | null;
+  prev: string | null;
 }
 
 /**
@@ -126,8 +82,28 @@ export interface SearchParams {
 }
 
 /**
+ * Sort parameters interface
+ */
+export interface Sort {
+  field: string;
+  direction: "asc" | "desc";
+}
+
+/**
  * Filter parameters interface
  */
-export interface FilterParams {
-  [key: string]: any;
+export interface Filter {
+  field: string;
+  value: unknown;
+  operator?: "eq" | "ne" | "gt" | "gte" | "lt" | "lte" | "like" | "in" | "nin";
+}
+
+/**
+ * Content data structure for pages and articles
+ */
+export interface ContentData extends BaseEntity {
+  nama: string;
+  isi: string;
+  slug: string;
+  foto: string;
 }

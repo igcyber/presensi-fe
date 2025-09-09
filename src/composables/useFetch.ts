@@ -12,6 +12,8 @@ export function useFetch<TResponse, TData = TResponse>(
   options?: {
     immediate?: boolean;
     extractData?: (response: TResponse) => TData;
+    onSuccess?: (data: TData) => void;
+    onError?: (error: Error) => void;
   },
 ) {
   const data = ref<TData | null>(null);
@@ -35,9 +37,17 @@ export function useFetch<TResponse, TData = TResponse>(
         // Default behavior: assume response has nested data structure
         data.value = response as TData;
       }
+
+      if (options?.onSuccess) {
+        options.onSuccess(data.value);
+      }
     } catch (e) {
       error.value = e instanceof Error ? e : new Error(String(e));
       data.value = null;
+
+      if (options?.onError) {
+        options.onError(error.value);
+      }
     } finally {
       isLoading.value = false;
     }
@@ -47,8 +57,8 @@ export function useFetch<TResponse, TData = TResponse>(
 
   const reset = () => {
     data.value = null;
-    error.value = null;
     isLoading.value = false;
+    error.value = null;
   };
 
   // Auto-fetch if immediate is true (default: false)

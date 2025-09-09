@@ -6,8 +6,6 @@ import type {
   LoginRequest,
   LoginResponse,
   RegisterRequest,
-  ResetPasswordConfirmRequest,
-  ResetPasswordRequest,
   UpdateProfileRequest,
   UserAuth,
 } from "../types/auth.types";
@@ -79,7 +77,7 @@ export const logout = async (): Promise<ApiResponse<{ message: string }>> => {
  * ```
  */
 export const getCurrentUser = async (): Promise<ApiResponse<UserAuth>> => {
-  const response = await httpInstance.get<ApiResponse<UserAuth>>("/api/auth/me");
+  const response = await httpInstance.get<ApiResponse<UserAuth>>("/api/auth/profile");
   return response.data;
 };
 
@@ -117,44 +115,6 @@ export const changePassword = async (
   passwordData: ChangePasswordRequest,
 ): Promise<ApiResponse<{ message: string }>> => {
   const response = await httpInstance.put<ApiResponse<{ message: string }>>("/api/auth/change-password", passwordData);
-  return response.data;
-};
-
-/**
- * Request password reset
- * @param resetData - Reset request data containing email
- * @returns Promise resolving to success response
- * @endpoint POST /api/auth/forgot-password
- * @example
- * ```typescript
- * await requestPasswordReset({ email: 'user@example.com' });
- * ```
- */
-export const requestPasswordReset = async (
-  resetData: ResetPasswordRequest,
-): Promise<ApiResponse<{ message: string }>> => {
-  const response = await httpInstance.post<ApiResponse<{ message: string }>>("/api/auth/forgot-password", resetData);
-  return response.data;
-};
-
-/**
- * Confirm password reset with token
- * @param confirmData - Reset confirmation data containing token and new password
- * @returns Promise resolving to success response
- * @endpoint POST /api/auth/reset-password
- * @example
- * ```typescript
- * await confirmPasswordReset({
- *   token: 'reset-token',
- *   password: 'newpass',
- *   confirmPassword: 'newpass'
- * });
- * ```
- */
-export const confirmPasswordReset = async (
-  confirmData: ResetPasswordConfirmRequest,
-): Promise<ApiResponse<{ message: string }>> => {
-  const response = await httpInstance.post<ApiResponse<{ message: string }>>("/api/auth/reset-password", confirmData);
   return response.data;
 };
 

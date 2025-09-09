@@ -1,5 +1,4 @@
 // Core API exports
-export { default as apiClient, ApiClient } from "./apiClient";
 export { default as httpInstance } from "./httpInstance";
 export type {
   ApiResponse,
@@ -10,11 +9,7 @@ export type {
   PaginatedPayload,
   PaginationLinks,
   PaginationMeta,
-  PaginationResponse,
-  PageMeta,
-  ListResponse,
-  DetailResponse,
   SearchParams,
-  FilterParams,
+  Sort,
+  Filter,
 } from "./apiResponse";
-export type { ApiClientConfig, RequestConfig } from "./apiClient";

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Calendar, ChartBar, GalleryVerticalEnd, HomeIcon, Scale, UserIcon, UserRound } from "lucide-vue-next";
+import { Calendar, ChartBar, Globe, HomeIcon, Scale, UserIcon, UserRound } from "lucide-vue-next";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 
@@ -10,10 +10,13 @@ import TeamSwitcher from "@/components/navigation/TeamSwitcher.vue";
 import type { SidebarProps } from "@/components/ui/sidebar";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from "@/components/ui/sidebar";
 
+import { useAuthStore } from "@/stores/authStore";
+
 const props = withDefaults(defineProps<SidebarProps>(), {
   collapsible: "icon",
 });
 
+const authStore = useAuthStore();
 const route = useRoute();
 
 // Computed route name active
@@ -24,21 +27,20 @@ const routNameActive = computed(() => {
 // Computed user data
 const userData = computed(() => {
   return {
-    fullname: "shadcn",
-    username: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    fullname: authStore.user?.fullName || "",
+    username: authStore.user?.email || "",
+    avatar: (authStore.user as unknown as { avatar: string }).avatar || "",
   };
 });
 
 // Computed data untuk navigation dengan active state
 const data = computed(() => ({
-  teams: [
-    {
-      name: "Kesra",
-      logo: GalleryVerticalEnd,
-      plan: "Kesra",
-    },
-  ],
+  teams: {
+    name: "Portal",
+    logo: Globe,
+    plan: "Portal Beranda",
+    url: "/",
+  },
   navDashboard: [
     {
       title: "Dashboard",
@@ -104,7 +106,7 @@ const data = computed(() => ({
 <template>
   <Sidebar v-bind="props">
     <SidebarHeader>
-      <TeamSwitcher :teams="data.teams" />
+      <TeamSwitcher :team="data.teams" />
     </SidebarHeader>
     <SidebarContent>
       <NavDashboard :items="data.navDashboard" />

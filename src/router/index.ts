@@ -35,10 +35,33 @@ Object.keys(modules).forEach((key) => {
   }
 });
 
+const sortedRoutes = dynamicRoutes.sort((a, b) => {
+  // helper: cek apakah route punya requiresAuth
+  const aAuth = a.meta?.requiresAuth ?? false;
+  const bAuth = b.meta?.requiresAuth ?? false;
+
+  // helper: cek apakah route punya children
+  const aHasChildren = Array.isArray(a.children) && a.children.length > 0;
+  const bHasChildren = Array.isArray(b.children) && b.children.length > 0;
+
+  // rule utama:
+  // - route tanpa requiresAuth lebih dulu
+  if (aAuth !== bAuth) {
+    return aAuth ? 1 : -1;
+  }
+
+  // - route tanpa children lebih dulu
+  if (aHasChildren !== bHasChildren) {
+    return aHasChildren ? 1 : -1;
+  }
+
+  return 0; // kalau sama, tidak berubah
+});
+
 // Routes
 const routes: RouteRecordRaw[] = [
   // Dynamic Routes yang ada di folder pages
-  ...dynamicRoutes,
+  ...sortedRoutes,
 
   {
     path: "/:pathMatch(.*)*",
@@ -74,7 +97,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
   const isAuthenticated = authStore.isAuthenticated;
-  const requiresAuth = to.meta.requiresAuth !== false; // Default true kecuali explicitly false
+  const requiresAuth = to.meta?.requiresAuth === true; // Default false, kecuali explicitly true
   const isAuthRoute = to.name === "login.index";
 
   // Jika sudah login dan mencoba akses halaman auth (login), redirect ke dashboard

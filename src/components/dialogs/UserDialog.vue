@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
+import { toast } from "vue-sonner";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -12,15 +13,9 @@ import {
 } from "@/components/ui/dialog";
 import { FormField } from "@/components/ui/form";
 
-// import { useFormValidation } from "@/composables/useForm";
-import {
-  type CreateUserFormData,
-  createUserSchema,
-  type UpdateUserFormData,
-  updateUserSchema,
-} from "@/schemas/userSchema";
-import { createUser, updateUser, type User } from "@/services/userService";
-import { useAuthStore } from "@/stores/authStore";
+import { createUser, updateUser } from "@/lib/api/services/user";
+import type { User } from "@/lib/api/types/user.types";
+import { type CreateUserFormData, type UpdateUserFormData } from "@/schemas/userSchema";
 
 interface Props {
   open: boolean;
@@ -37,63 +32,48 @@ const props = withDefaults(defineProps<Props>(), {
   user: null,
 });
 
-// Pinia store
-const authStore = useAuthStore();
-
 const emit = defineEmits<Emits>();
 
-// Form initial values
-const initialCreateValues: CreateUserFormData = {
-  name: `User Test ${Math.floor(Math.random() * 1000)}`,
-  username: `user${Math.floor(Math.random() * 10000)}`,
-  email: `user${Math.floor(Math.random() * 10000)}@test.com`,
-  no_hp: `081${Math.floor(Math.random() * 100000000)
-    .toString()
-    .padStart(8, "0")}`,
-  role: Math.random() > 0.5 ? 1 : 2,
-  password: "password",
-  password_confirmation: "password",
-};
+// Form state
+const isSubmitting = ref(false);
+const formErrors = ref<Record<string, string>>({});
 
-const initialUpdateValues: UpdateUserFormData = {
-  id: "",
-  name: "",
-  username: "",
+// Form data
+const createFormData = ref<CreateUserFormData>({
+  fullName: "",
   email: "",
-  no_hp: "",
-  role: 0,
-};
+  username: "",
+  nip: "",
+  password: "",
+  confirmPassword: "",
+  roleIds: [],
+});
 
-// Form validation setup
-// const createForm = useFormValidation(createUserSchema, initialCreateValues);
-// const updateForm = useFormValidation(updateUserSchema, initialUpdateValues);
+const updateFormData = ref<UpdateUserFormData>({
+  fullName: "",
+  email: "",
+  username: "",
+  nip: "",
+  roleIds: [],
+});
 
 // Computed values
-const currentForm = computed(() => (props.mode === "create" ? createForm : updateForm));
+const currentFormData = computed(() => (props.mode === "create" ? createFormData.value : updateFormData.value));
 const dialogTitle = computed(() => (props.mode === "create" ? "Tambah User Baru" : "Edit User"));
 const submitButtonText = computed(() => (props.mode === "create" ? "Simpan" : "Update"));
-
-// Role options (you can modify this based on your needs)
-const roleOptions = ref([
-  { value: 1, label: "Superadmin" },
-  { value: 2, label: "Admin" },
-]);
 
 // Watch for user changes
 watch(
   () => props.user,
   (newUser) => {
     if (newUser && props.mode === "edit") {
-      updateForm.setValues({
-        id: newUser.id.toString() || "",
-        name: newUser.name || "",
+      updateFormData.value = {
+        fullName: newUser.fullName || "",
         username: newUser.username || "",
         email: newUser.email || "",
-        no_hp: newUser.no_hp.toString() || "",
-        role: roleOptions.value.find((role) => {
-          return role.label === newUser?.user_roles[0]?.role?.nama;
-        })?.value,
-      });
+        nip: newUser.nip || "",
+        roleIds: newUser.roles.map((role) => role.id),
+      };
     }
   },
   { immediate: true },
@@ -103,44 +83,62 @@ watch(
 watch(
   () => props.open,
   (isOpen) => {
-    if (!isOpen) {
-      // Reset forms when dialog closes
-      createForm.resetForm();
-      updateForm.resetForm();
-    } else if (isOpen && props.mode === "create") {
-      // Reset create form when opening in create mode
-      createForm.resetForm();
+    if (isOpen) {
+      formErrors.value = {};
+
+      if (props.mode === "create") {
+        // Reset create form
+        createFormData.value = {
+          fullName: "",
+          email: "",
+          username: "",
+          nip: "",
+          password: "",
+          confirmPassword: "",
+          roleIds: [],
+        };
+      }
     }
   },
 );
 
-const onSubmit = async (values: CreateUserFormData | UpdateUserFormData) => {
-  try {
-    if (props.mode === "create") {
-      await createUser(values as any, authStore.accessToken);
-    } else {
-      const updateValues = values as any;
-      const id = parseInt(updateValues.id);
-      // Hapus id dari updateValues
-      delete updateValues.id;
+// Handle form submission
+const handleSubmit = async () => {
+  if (isSubmitting.value) return;
 
-      await updateUser(id, updateValues as any, authStore.accessToken);
+  try {
+    isSubmitting.value = true;
+    formErrors.value = {};
+
+    if (props.mode === "create") {
+      await createUser(createFormData.value);
+      toast.success("Berhasil", {
+        description: "User berhasil ditambahkan",
+      });
+    } else if (props.user) {
+      await updateUser(props.user.id, updateFormData.value);
+      toast.success("Berhasil", {
+        description: "User berhasil diperbarui",
+      });
     }
 
     emit("success");
-  } catch (error) {
-    throw error;
-  } finally {
     emit("update:open", false);
-  }
-};
+  } catch (error: any) {
+    console.error("Form submission error:", error);
 
-// Handle form submission
-const handleSubmit = async () => {
-  currentForm.value.handleSubmit(onSubmit, {
-    showSuccessToast: true,
-    successMessage: props.mode === "create" ? "User berhasil ditambahkan" : "User berhasil diperbarui",
-  });
+    // Handle validation errors
+    if (error.response?.data?.errors) {
+      formErrors.value = error.response.data.errors;
+    } else {
+      const errorMessage = error.response?.data?.message || error.message || "Terjadi kesalahan";
+      toast.error("Gagal", {
+        description: errorMessage,
+      });
+    }
+  } finally {
+    isSubmitting.value = false;
+  }
 };
 
 // Close dialog
@@ -162,16 +160,19 @@ const closeDialog = () => {
       <form @submit.prevent="handleSubmit" class="space-y-4">
         <!-- Fullname -->
         <FormField
-          name="name"
+          name="fullName"
           label="Nama Lengkap"
           placeholder="John Doe"
           required
-          :value="currentForm.fields.name.value"
-          :error="currentForm.fields.name.error"
-          :touched="currentForm.fields.name.touched"
-          :disabled="currentForm.isSubmitting.value"
-          @update:value="(value: string | number) => currentForm.setValue('name', value)"
-          @blur="() => currentForm.touchField('name')"
+          :value="currentFormData.fullName"
+          :error="formErrors.fullName"
+          :disabled="isSubmitting"
+          @update:value="
+            (value: string | number) => {
+              if (mode === 'create') createFormData.fullName = value.toString();
+              else updateFormData.fullName = value.toString();
+            }
+          "
         />
 
         <!-- Username -->
@@ -180,12 +181,15 @@ const closeDialog = () => {
           label="Username"
           placeholder="Masukkan username"
           required
-          :value="currentForm.fields.username.value"
-          :error="currentForm.fields.username.error"
-          :touched="currentForm.fields.username.touched"
-          :disabled="currentForm.isSubmitting.value"
-          @update:value="(value: string | number) => currentForm.setValue('username', value)"
-          @blur="() => currentForm.touchField('username')"
+          :value="currentFormData.username"
+          :error="formErrors.username"
+          :disabled="isSubmitting"
+          @update:value="
+            (value: string | number) => {
+              if (mode === 'create') createFormData.username = value.toString();
+              else updateFormData.username = value.toString();
+            }
+          "
         />
 
         <!-- Email -->
@@ -195,44 +199,32 @@ const closeDialog = () => {
           type="email"
           placeholder="Masukkan email"
           required
-          :value="currentForm.fields.email.value"
-          :error="currentForm.fields.email.error"
-          :touched="currentForm.fields.email.touched"
-          :disabled="currentForm.isSubmitting.value"
-          @update:value="(value: string | number) => currentForm.setValue('email', value)"
-          @blur="() => currentForm.touchField('email')"
+          :value="currentFormData.email"
+          :error="formErrors.email"
+          :disabled="isSubmitting"
+          @update:value="
+            (value: string | number) => {
+              if (mode === 'create') createFormData.email = value.toString();
+              else updateFormData.email = value.toString();
+            }
+          "
         />
 
-        <!-- No HP -->
+        <!-- NIP -->
         <FormField
-          name="no_hp"
-          label="No HP"
-          type="number"
-          placeholder="Masukkan no hp"
+          name="nip"
+          label="NIP"
+          placeholder="Masukkan NIP"
           required
-          :value="currentForm.fields.no_hp.value"
-          :error="currentForm.fields.no_hp.error"
-          :touched="currentForm.fields.no_hp.touched"
-          :disabled="currentForm.isSubmitting.value"
-          @update:value="(value: string | number) => currentForm.setValue('no_hp', value.toString())"
-          @blur="() => currentForm.touchField('no_hp')"
-        />
-
-        <!-- Role -->
-        <FormField
-          name="role"
-          label="Role"
-          type="select"
-          placeholder="Pilih role"
-          required
-          :options="roleOptions"
-          option-group-label="Role"
-          :value="currentForm.fields.role.value"
-          :error="currentForm.fields.role.error"
-          :touched="currentForm.fields.role.touched"
-          :disabled="currentForm.isSubmitting.value"
-          @update:value="(value: string | number) => currentForm.setValue('role', value)"
-          @blur="() => currentForm.touchField('role')"
+          :value="currentFormData.nip"
+          :error="formErrors.nip"
+          :disabled="isSubmitting"
+          @update:value="
+            (value: string | number) => {
+              if (mode === 'create') createFormData.nip = value.toString();
+              else updateFormData.nip = value.toString();
+            }
+          "
         />
 
         <!-- Password fields (only for create mode) -->
@@ -243,33 +235,29 @@ const closeDialog = () => {
             type="password"
             placeholder="Masukkan password"
             required
-            :value="currentForm.fields.password.value"
-            :error="currentForm.fields.password.error"
-            :touched="currentForm.fields.password.touched"
-            :disabled="currentForm.isSubmitting.value"
-            @update:value="(value: string | number) => currentForm.setValue('password', value)"
-            @blur="() => currentForm.touchField('password')"
+            :value="createFormData.password"
+            :error="formErrors.password"
+            :disabled="isSubmitting"
+            @update:value="(value: string | number) => (createFormData.password = value.toString())"
           />
 
           <FormField
-            name="password_confirmation"
+            name="confirmPassword"
             label="Konfirmasi Password"
             type="password"
             placeholder="Konfirmasi password"
             required
-            :value="currentForm.fields.password_confirmation.value"
-            :error="currentForm.fields.password_confirmation.error"
-            :touched="currentForm.fields.password_confirmation.touched"
-            :disabled="currentForm.isSubmitting.value"
-            @update:value="(value: string | number) => currentForm.setValue('password_confirmation', value)"
-            @blur="() => currentForm.touchField('password_confirmation')"
+            :value="createFormData.confirmPassword"
+            :error="formErrors.confirmPassword"
+            :disabled="isSubmitting"
+            @update:value="(value: string | number) => (createFormData.confirmPassword = value.toString())"
           />
         </template>
 
         <DialogFooter>
           <Button type="button" variant="outline" @click="closeDialog"> Batal </Button>
-          <Button type="submit" :disabled="currentForm.isSubmitting.value">
-            {{ currentForm.isSubmitting.value ? "Loading..." : submitButtonText }}
+          <Button type="submit" :disabled="isSubmitting">
+            {{ isSubmitting ? "Loading..." : submitButtonText }}
           </Button>
         </DialogFooter>
       </form>

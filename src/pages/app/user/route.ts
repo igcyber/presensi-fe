@@ -2,7 +2,7 @@ import UserPage from "./IndexPage.vue";
 
 export default [
   {
-    path: "user",
+    path: "users",
     name: "app.user",
     component: UserPage,
     meta: {

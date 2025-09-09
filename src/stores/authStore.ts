@@ -2,18 +2,18 @@ import { useLocalStorage } from "@vueuse/core";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
-import type { LoginResponse, User } from "@/lib/api/types/auth.types";
+import type { LoginResponse, UserAuth } from "@/lib/api/types/auth.types";
 
 interface StoredAuth {
   accessToken: string;
-  user?: User;
+  user?: UserAuth;
   tokenExpiresAt?: string;
 }
 
 export const useAuthStore = defineStore("auth", () => {
   // State
   const accessToken = ref("");
-  const user = ref<User | null>(null);
+  const user = ref<UserAuth | null>(null);
   const tokenExpiresAt = ref<string>("");
   const isLoading = ref(false);
 
@@ -40,7 +40,7 @@ export const useAuthStore = defineStore("auth", () => {
     storedAuth.value.accessToken = token;
   };
 
-  const setUser = (userData: User) => {
+  const setUser = (userData: UserAuth) => {
     user.value = userData;
     storedAuth.value.user = userData;
   };

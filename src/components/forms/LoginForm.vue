@@ -55,7 +55,7 @@ async function handleSubmit(values: LoginFormData) {
       <CardContent class="grid p-0 md:grid-cols-2">
         <BaseForm
           :schema="loginSchema"
-          :initial-values="{ username: '', password: '' }"
+          :initial-values="{ username: 'superadmin', password: 'superadmin123' }"
           :on-submit="handleSubmit"
           class="bg-white p-6 md:p-8"
         >

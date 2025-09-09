@@ -60,21 +60,6 @@ export const updateUserSchema = z.object({
     .optional(),
 });
 
-// Schema untuk change user password
-export const changeUserPasswordSchema = z
-  .object({
-    password: z
-      .string()
-      .min(1, "Password wajib diisi")
-      .min(6, "Password minimal 6 karakter")
-      .max(50, "Password maksimal 50 karakter"),
-    confirmPassword: z.string().min(1, "Konfirmasi password wajib diisi"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Konfirmasi password tidak cocok",
-    path: ["confirmPassword"],
-  });
-
 // Schema untuk user query parameters
 export const userQuerySchema = z.object({
   page: z.number().int().positive("Halaman harus berupa angka positif").optional().default(1),
@@ -94,5 +79,4 @@ export const userQuerySchema = z.object({
 // Types dari schema
 export type CreateUserFormData = z.infer<typeof createUserSchema>;
 export type UpdateUserFormData = z.infer<typeof updateUserSchema>;
-export type ChangeUserPasswordFormData = z.infer<typeof changeUserPasswordSchema>;
 export type UserQueryFormData = z.infer<typeof userQuerySchema>;
