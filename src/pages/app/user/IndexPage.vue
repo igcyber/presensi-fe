@@ -18,7 +18,7 @@ import { deleteUser, getUsers } from "@/lib/api/services/user";
 import type { Role } from "@/lib/api/types/role.types";
 import type { User } from "@/lib/api/types/user.types";
 
-// Composables initialization
+// Initialize composables
 const { items, isLoading, isError, error, pagination, query, fetchData, handleSearch, handlePageChange } =
   useResourceList<User>((params) => getUsers(params), { perPage: 10, searchDebounce: 500 });
 
@@ -29,7 +29,7 @@ const { capitalize } = useFormatters();
 // Reactive state
 const roleOptions = ref<{ label: string; value: number }[]>([]);
 
-// Data definitions
+// Column definitions
 const columns: Column<User>[] = [
   {
     key: "fullName",
@@ -72,6 +72,17 @@ const columns: Column<User>[] = [
   },
 ];
 
+// Helper functions
+const loadRoleOptions = async (): Promise<void> => {
+  try {
+    const roles = await getRoles();
+    roleOptions.value = roles.data.data.map((role: Role) => ({ label: role.name, value: role.id }));
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "Gagal memuat data role";
+    toast.error("Gagal", { description: errorMessage });
+  }
+};
+
 // Event handlers
 const handleRowClick = (_item: User): void => {};
 
@@ -108,16 +119,6 @@ const confirmDelete = async (): Promise<void> => {
   } finally {
     confirmDialog.setLoading(false);
     confirmDialog.hideConfirm();
-  }
-};
-
-const loadRoleOptions = async (): Promise<void> => {
-  try {
-    const roles = await getRoles();
-    roleOptions.value = roles.data.data.map((role: Role) => ({ label: role.name, value: role.id }));
-  } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : "Gagal memuat data role";
-    toast.error("Gagal", { description: errorMessage });
   }
 };
 
