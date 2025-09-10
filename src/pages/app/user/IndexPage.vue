@@ -123,8 +123,8 @@ const confirmDelete = async (): Promise<void> => {
 };
 
 const handleUserDialogSuccess = (): void => {
-  fetchData();
   dialog.closeDialog();
+  fetchData();
 };
 
 // Watchers

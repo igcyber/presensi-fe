@@ -60,7 +60,6 @@ async function onSubmit(values: any) {
     await updateUser(props.user.id, values);
     toast.success("Berhasil", { description: "User berhasil diperbarui" });
   }
-  emit("success");
 }
 </script>
 
