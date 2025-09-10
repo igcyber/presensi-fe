@@ -27,7 +27,7 @@ export const createUserSchema = z
       .min(6, "Password minimal 6 karakter")
       .max(50, "Password maksimal 50 karakter"),
     confirmPassword: z.string().min(1, "Konfirmasi password wajib diisi"),
-    roleIds: z.array(z.number().int().positive("Role ID harus berupa angka positif")).min(1, "Minimal pilih satu role"),
+    roles: z.array(z.number().int().positive("Role ID harus berupa angka positif")).min(1, "Minimal pilih satu role"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Konfirmasi password tidak cocok",
@@ -54,7 +54,7 @@ export const updateUserSchema = z.object({
     .max(20, "NIP maksimal 20 karakter")
     .regex(/^[0-9]+$/, "NIP hanya boleh mengandung angka")
     .optional(),
-  roleIds: z
+  roles: z
     .array(z.number().int().positive("Role ID harus berupa angka positif"))
     .min(1, "Minimal pilih satu role")
     .optional(),

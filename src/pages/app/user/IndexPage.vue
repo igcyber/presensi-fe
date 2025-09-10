@@ -11,6 +11,7 @@ import { type Column, DataTable } from "@/components/ui/datatable";
 import ErrorState from "@/components/ui/error-state/ErrorState.vue";
 
 import { useConfirmDialog, useDialog } from "@/composables/useDialog";
+import { useFormatters } from "@/composables/useFormatters";
 import { useResourceList } from "@/composables/useResourceList";
 import { getRoles } from "@/lib/api/services/role";
 import { deleteUser, getUsers } from "@/lib/api/services/user";
@@ -21,8 +22,9 @@ import type { User } from "@/lib/api/types/user.types";
 const { items, isLoading, isError, error, pagination, query, fetchData, handleSearch, handlePageChange } =
   useResourceList<User>((params) => getUsers(params), { perPage: 10, searchDebounce: 500 });
 
-const useDialogUser = useDialog<User>();
+const dialog = useDialog<User>();
 const confirmDialog = useConfirmDialog();
+const { capitalize } = useFormatters();
 
 // Reactive state
 const roleOptions = ref<{ label: string; value: number }[]>([]);
@@ -59,7 +61,7 @@ const columns: Column<User>[] = [
     sortable: true,
     width: "150px",
     render: (item: User): string => {
-      return item.roles.map((role: Role) => role.name).join(", ");
+      return item.roles.map((role: Role) => capitalize(role.name)).join(", ");
     },
   },
   {
@@ -74,11 +76,11 @@ const columns: Column<User>[] = [
 const handleRowClick = (_item: User): void => {};
 
 const openCreateDialog = (): void => {
-  useDialogUser.openCreate();
+  dialog.openCreate();
 };
 
 const handleEdit = (item: User): void => {
-  useDialogUser.openEdit(item);
+  dialog.openEdit(item);
 };
 
 const handleDelete = (item: User): void => {
@@ -121,7 +123,7 @@ const loadRoleOptions = async (): Promise<void> => {
 
 const handleUserDialogSuccess = (): void => {
   fetchData();
-  useDialogUser.closeDialog();
+  dialog.closeDialog();
 };
 
 // Watchers
@@ -185,9 +187,9 @@ onMounted(() => {
 
       <!-- User Dialog -->
       <UserDialog
-        v-model:open="useDialogUser.state.value.open"
-        :mode="useDialogUser.state.value.mode"
-        :user="useDialogUser.state.value.data"
+        v-model:open="dialog.state.value.open"
+        :mode="dialog.state.value.mode"
+        :user="dialog.state.value.data"
         :role-options="roleOptions"
         @success="handleUserDialogSuccess"
       />

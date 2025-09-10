@@ -30,7 +30,7 @@ export interface CreateUserRequest {
   nip: string;
   password: string;
   confirmPassword?: string;
-  roleIds: number[];
+  roles: number[];
 }
 
 /**
@@ -41,7 +41,7 @@ export interface UpdateUserRequest {
   email?: string;
   username?: string;
   nip?: string;
-  roleIds?: number[];
+  roles?: number[];
 }
 
 /**

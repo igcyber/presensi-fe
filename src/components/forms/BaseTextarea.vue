@@ -8,6 +8,7 @@ interface Props {
   placeholder?: string;
   rows?: number;
   autoResize?: boolean;
+  required?: boolean;
   maxlength?: number;
   showCounter?: boolean;
 }
@@ -24,7 +25,10 @@ function handleAutoResize(e: Event) {
 <template>
   <FormField :name="props.name" v-slot="{ componentField }">
     <FormItem>
-      <FormLabel>{{ props.label }}</FormLabel>
+      <FormLabel>
+        {{ props.label }}
+        <span v-if="props.required" class="text-red-500">*</span>
+      </FormLabel>
       <FormControl>
         <Textarea
           v-bind="componentField"

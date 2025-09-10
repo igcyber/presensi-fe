@@ -6,6 +6,7 @@ interface Props {
   name: string;
   label: string;
   disabled?: boolean;
+  required?: boolean;
 }
 
 const props = defineProps<Props>();
@@ -22,7 +23,10 @@ const props = defineProps<Props>();
         />
       </FormControl>
       <div class="space-y-1 leading-none">
-        <FormLabel>{{ props.label }}</FormLabel>
+        <FormLabel>
+          {{ props.label }}
+          <span v-if="props.required" class="text-red-500">*</span>
+        </FormLabel>
         <FormMessage />
       </div>
     </FormItem>

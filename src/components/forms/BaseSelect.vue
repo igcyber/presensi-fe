@@ -16,33 +16,63 @@ interface Props {
   placeholder?: string;
   options: Option[];
   disabled?: boolean;
+  required?: boolean;
   valueAsNumber?: boolean; // konversi ke number saat submit
+  multiple?: boolean; // <-- tambahkan
 }
 
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  valueAsNumber: false,
+  multiple: false,
+});
 </script>
 
 <template>
-  <FormField :name="props.name" v-slot="{ componentField }">
+  <FormField :name="props.name" v-slot="{ componentField, meta, errorMessage }">
     <FormItem>
-      <FormLabel :custom-for="props.name">{{ props.label }}</FormLabel>
+      <FormLabel :custom-for="props.name">
+        {{ props.label }}
+        <span v-if="props.required" class="text-red-500">*</span>
+      </FormLabel>
+
       <FormControl>
         <Select
+          :multiple="props.multiple"
           :model-value="
-            props.valueAsNumber
-              ? componentField.modelValue != null
-                ? String(componentField.modelValue)
-                : undefined
-              : componentField.modelValue
+            props.multiple
+              ? // MULTIPLE: UI butuh string[]; normalisasi dari model ke string[]
+                props.valueAsNumber
+                ? Array.isArray(componentField.modelValue)
+                  ? componentField.modelValue.map((v: any) => String(v))
+                  : []
+                : Array.isArray(componentField.modelValue)
+                  ? componentField.modelValue
+                  : []
+              : props.valueAsNumber
+                ? componentField.modelValue != null
+                  ? String(componentField.modelValue)
+                  : undefined
+                : componentField.modelValue
           "
           @update:model-value="
-            (val: AcceptableValue) => componentField.onChange(props.valueAsNumber ? Number(val) : val)
+            (val: AcceptableValue) => {
+              if (props.multiple) {
+                // MULTIPLE: val => string[] → kirim array ke VeeValidate
+                const arr = Array.isArray(val) ? val : [];
+                componentField.onChange(props.valueAsNumber ? arr.map((s: string) => Number(s)) : arr);
+              } else {
+                // SINGLE: val => string → kirim primitif
+                const s = val as string | undefined;
+                componentField.onChange(props.valueAsNumber && s != null ? Number(s) : s);
+              }
+            }
           "
           :disabled="props.disabled"
         >
-          <SelectTrigger :id="props.name">
+          <SelectTrigger :id="props.name" class="w-full" :aria-invalid="!!(!meta.valid && errorMessage)">
             <SelectValue :placeholder="props.placeholder ?? 'Pilih…'" />
           </SelectTrigger>
+
           <SelectContent>
             <SelectGroup>
               <SelectItem
@@ -57,6 +87,7 @@ const props = defineProps<Props>();
           </SelectContent>
         </Select>
       </FormControl>
+
       <FormMessage />
     </FormItem>
   </FormField>

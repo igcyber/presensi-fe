@@ -152,7 +152,7 @@ export function formatDate(
  * formatRelativeDate('2024-01-14') // "1 hari yang lalu"
  * formatRelativeDate('2024-01-01') // "2 minggu yang lalu"
  */
-export function formatRelativeDate(date: string | Date | null | undefined, locale: string = "id-ID"): string {
+export function formatRelativeDate(date: string | Date | null | undefined, _locale: string = "id-ID"): string {
   if (!date) {
     return "-";
   }

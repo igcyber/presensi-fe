@@ -9,6 +9,7 @@ interface Props {
   label: string;
   type?: string;
   placeholder?: string;
+  required?: boolean;
 }
 
 const props = defineProps<Props>();
@@ -19,7 +20,10 @@ const { isFieldDirty } = useFormContext();
 <template>
   <FormField v-slot="{ componentField }" :name="props.name" :validate-on-blur="!isFieldDirty(props.name)">
     <FormItem>
-      <FormLabel>{{ props.label }}</FormLabel>
+      <FormLabel>
+        {{ props.label }}
+        <span v-if="props.required" class="text-red-500">*</span>
+      </FormLabel>
       <FormControl>
         <Input v-bind="componentField" :type="props.type || 'text'" :placeholder="props.placeholder" />
       </FormControl>

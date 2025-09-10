@@ -52,7 +52,7 @@ export const getUserById = (id: number): Promise<ApiResponse<User>> => userServi
  *   username: 'johndoe',
  *   nip: '123456789',
  *   password: 'password123',
- *   roleIds: [1, 2]
+ *   roles: [1, 2]
  * });
  * console.log(response.data.id);
  * ```
@@ -69,7 +69,8 @@ export const createUser = (payload: CreateUserRequest) => userService.create(pay
  * ```typescript
  * const response = await updateUser(123, {
  *   fullName: 'John Doe Updated',
- *   email: 'john.updated@example.com'
+ *   email: 'john.updated@example.com',
+ *   roles: [1, 2]
  * });
  * console.log(response.data.fullName);
  * ```

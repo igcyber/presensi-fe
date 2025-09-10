@@ -32,13 +32,13 @@ const emit = defineEmits<Emits>();
 // Computed properties
 const initialValues = computed(() =>
   props.mode === "create"
-    ? { fullName: "", username: "", email: "", nip: "", password: "", confirmPassword: "", roleIds: [] as number[] }
+    ? { fullName: "", username: "", email: "", nip: "", password: "", confirmPassword: "", roles: [] as number[] }
     : {
         fullName: props.user?.fullName ?? "",
         username: props.user?.username ?? "",
         email: props.user?.email ?? "",
         nip: props.user?.nip ?? "",
-        roleIds: (props.user?.roles ?? []).map((r) => r.id),
+        roles: (props.user?.roles ?? []).map((r) => r.id),
       },
 );
 
@@ -75,17 +75,25 @@ async function onSubmit(values: any) {
     @success="() => $emit('success')"
   >
     <div class="grid grid-cols-1 gap-3">
-      <BaseInput name="fullName" label="Nama Lengkap" placeholder="John Doe" />
-      <BaseInput name="username" label="Username" placeholder="Masukkan username" />
-      <BaseInput name="email" label="Email" type="email" placeholder="Masukkan email" />
-      <BaseInput name="nip" label="NIP" placeholder="Masukkan NIP" />
+      <BaseInput name="fullName" label="Nama Lengkap" placeholder="John Doe" required />
+      <BaseInput name="username" label="Username" placeholder="Masukkan username" required />
+      <BaseInput name="email" label="Email" type="email" placeholder="Masukkan email" required />
+      <BaseInput name="nip" label="NIP" placeholder="Masukkan NIP" required />
 
       <template v-if="mode === 'create'">
-        <BaseInput name="password" label="Password" type="password" placeholder="••••••" />
-        <BaseInput name="confirmPassword" label="Konfirmasi Password" type="password" placeholder="••••••" />
+        <BaseInput name="password" label="Password" type="password" placeholder="••••••" required />
+        <BaseInput name="confirmPassword" label="Konfirmasi Password" type="password" placeholder="••••••" required />
       </template>
 
-      <BaseSelect name="roleIds" label="Role" :options="roleOptions" placeholder="Pilih role" :value-as-number="true" />
+      <BaseSelect
+        name="roles"
+        label="Role"
+        :options="roleOptions"
+        placeholder="Pilih role"
+        required
+        :value-as-number="true"
+        :multiple="true"
+      />
     </div>
   </BaseFormDialog>
 </template>
