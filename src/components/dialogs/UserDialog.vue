@@ -80,8 +80,14 @@ async function onSubmit(values: any) {
       <BaseInput name="nip" label="NIP" placeholder="Masukkan NIP" required />
 
       <template v-if="mode === 'create'">
-        <BaseInput name="password" label="Password" type="password" placeholder="••••••" required />
-        <BaseInput name="confirmPassword" label="Konfirmasi Password" type="password" placeholder="••••••" required />
+        <BaseInput name="password" label="Password" type="password" placeholder="Masukkan password" required />
+        <BaseInput
+          name="confirmPassword"
+          label="Konfirmasi Password"
+          type="password"
+          placeholder="Masukkan konfirmasi password"
+          required
+        />
       </template>
 
       <BaseSelect
