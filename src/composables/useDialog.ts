@@ -48,34 +48,3 @@ export function useDialog<T = any>(initialState?: Partial<DialogState<T>>) {
     setLoading,
   };
 }
-
-// Confirm dialog specific composable
-export function useConfirmDialog() {
-  const open = ref(false);
-  const loading = ref(false);
-  const data = ref<any>(null);
-
-  const showConfirm = (item?: any) => {
-    data.value = item;
-    open.value = true;
-  };
-
-  const hideConfirm = () => {
-    open.value = false;
-    data.value = null;
-    loading.value = false;
-  };
-
-  const setLoading = (value: boolean) => {
-    loading.value = value;
-  };
-
-  return {
-    open,
-    loading,
-    data,
-    showConfirm,
-    hideConfirm,
-    setLoading,
-  };
-}

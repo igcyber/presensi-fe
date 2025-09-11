@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { type Column, DataTable } from "@/components/ui/datatable";
 import ErrorState from "@/components/ui/error-state/ErrorState.vue";
 
-import { useConfirmDialog, useDialog } from "@/composables/useDialog";
+import { useDialog } from "@/composables/useDialog";
 import { useFormatters } from "@/composables/useFormatters";
 import { useResourceList } from "@/composables/useResourceList";
 import { getRoles } from "@/lib/api/services/role";
@@ -18,12 +18,13 @@ import { deleteUser, getUsers } from "@/lib/api/services/user";
 import type { Role } from "@/lib/api/types/role.types";
 import type { User } from "@/lib/api/types/user.types";
 
-// Initialize composables
+// Composables
 const { items, isLoading, isError, error, pagination, query, fetchData, handleSearch, handlePageChange } =
   useResourceList<User>((params) => getUsers(params), { perPage: 10, searchDebounce: 500 });
 
 const dialog = useDialog<User>();
-const confirmDialog = useConfirmDialog();
+const confirmDialog = useDialog<User>();
+
 const { capitalize } = useFormatters();
 
 // Reactive state
@@ -72,7 +73,7 @@ const columns: Column<User>[] = [
   },
 ];
 
-// Helper functions
+// Methods
 const loadRoleOptions = async (): Promise<void> => {
   try {
     const roles = await getRoles();
@@ -83,27 +84,26 @@ const loadRoleOptions = async (): Promise<void> => {
   }
 };
 
-// Event handlers
-const handleRowClick = (_item: User): void => {};
-
 const openCreateDialog = (): void => {
   dialog.openCreate();
 };
+
+const handleRowClick = (_item: User): void => {};
 
 const handleEdit = (item: User): void => {
   dialog.openEdit(item);
 };
 
 const handleDelete = (item: User): void => {
-  confirmDialog.showConfirm(item);
+  confirmDialog.openView(item);
 };
 
 const confirmDelete = async (): Promise<void> => {
-  if (!confirmDialog.data.value) return;
+  if (!confirmDialog.state.value.data) return;
 
   try {
     confirmDialog.setLoading(true);
-    await deleteUser(confirmDialog.data.value.id);
+    await deleteUser(confirmDialog.state.value.data.id);
 
     fetchData();
 
@@ -118,7 +118,7 @@ const confirmDelete = async (): Promise<void> => {
     });
   } finally {
     confirmDialog.setLoading(false);
-    confirmDialog.hideConfirm();
+    confirmDialog.closeDialog();
   }
 };
 
@@ -197,12 +197,12 @@ onMounted(() => {
 
       <!-- Confirm Delete Dialog -->
       <BaseConfirmDialog
-        v-model:open="confirmDialog.open.value"
+        v-model:open="confirmDialog.state.value.open"
         title="Hapus User"
-        :description="`Apakah Anda yakin ingin menghapus user '${confirmDialog.data.value?.fullName}'? Tindakan ini tidak dapat dibatalkan.`"
+        :description="`Apakah Anda yakin ingin menghapus user '${confirmDialog.state.value.data?.fullName}'? Tindakan ini tidak dapat dibatalkan.`"
         confirm-text="Hapus"
         variant="destructive"
-        :loading="confirmDialog.loading.value"
+        :loading="confirmDialog.state.value.loading"
         @confirm="confirmDelete"
       />
     </div>
