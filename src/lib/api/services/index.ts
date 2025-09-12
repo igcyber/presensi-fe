@@ -2,6 +2,7 @@
 export * from "./auth";
 export * from "./berita";
 export * from "./media";
+export * from "./opd";
 export * from "./pemerintahan";
 export * from "./portalMenu";
 export * from "./selayangPandang";

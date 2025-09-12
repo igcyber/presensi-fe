@@ -1,122 +1,15 @@
 import type { ApiResponse, PayloadData } from "@/lib/api/core/apiResponse";
 import httpInstance from "@/lib/api/core/httpInstance";
+import type { OpdQueryParams } from "@/lib/api/types/opd.types";
 import type {
   CreateLayananRequest,
-  CreateOpdRequest,
   Layanan,
   LayananDetail,
   LayananListPayload,
   LayananSearchParams,
-  Opd,
-  OpdDetail,
   OpdListPayload,
-  OpdSearchParams,
   UpdateLayananRequest,
-  UpdateOpdRequest,
 } from "@/lib/api/types/unitKerja.types";
-
-// ==================== OPD SERVICES ====================
-
-/**
- * Get paginated list of OPD (Organisasi Perangkat Daerah)
- * @param params - Search parameters including page, keyword, and filters
- * @returns Promise resolving to OPD list with pagination metadata
- * @endpoint GET /unit-kerja/opd
- * @example
- * ```typescript
- * const response = await getOpdList({ page: 1, keyword: 'sekretariat' });
- * console.log(response.data.opds);
- * ```
- */
-export const getOpdList = async (params: OpdSearchParams = {}): Promise<ApiResponse<OpdListPayload>> => {
-  const searchParams = new URLSearchParams();
-
-  if (params.page) searchParams.append("page", params.page.toString());
-  if (params.keyword) searchParams.append("keyword", params.keyword);
-  if (params.sort) searchParams.append("sort", params.sort);
-
-  const queryString = searchParams.toString();
-  const url = queryString ? `/unit-kerja/opd?${queryString}` : "/unit-kerja/opd";
-
-  const response = await httpInstance.get<ApiResponse<OpdListPayload>>(url);
-  return response.data;
-};
-
-/**
- * Get OPD by ID with full details including services
- * @param id - OPD ID
- * @returns Promise resolving to OPD detail with related data
- * @endpoint GET /unit-kerja/opd/{id}
- * @example
- * ```typescript
- * const response = await getOpdById(123);
- * console.log(response.data.nama);
- * console.log(response.data.layanans);
- * ```
- */
-export const getOpdById = async (id: number): Promise<ApiResponse<PayloadData<OpdDetail>>> => {
-  const response = await httpInstance.get<ApiResponse<PayloadData<OpdDetail>>>(`/unit-kerja/opd/${id}`);
-  return response.data;
-};
-
-/**
- * Create new OPD
- * @param opdData - OPD creation data
- * @returns Promise resolving to created OPD data
- * @endpoint POST /unit-kerja/opd
- * @example
- * ```typescript
- * const response = await createOpd({
- *   nama: 'Sekretariat Daerah',
- *   alamat: 'Jl. Pemerintahan No. 1',
- *   maps: 'https://maps.google.com/...',
- *   keterangan: 'Deskripsi OPD',
- *   foto: 'opd.jpg',
- *   website: 'https://sekda.kukarkab.go.id'
- * });
- * console.log(response.data.id);
- * ```
- */
-export const createOpd = async (opdData: CreateOpdRequest): Promise<ApiResponse<PayloadData<Opd>>> => {
-  const response = await httpInstance.post<ApiResponse<PayloadData<Opd>>>("/unit-kerja/opd", opdData);
-  return response.data;
-};
-
-/**
- * Update OPD
- * @param id - OPD ID to update
- * @param opdData - Updated OPD data
- * @returns Promise resolving to updated OPD data
- * @endpoint PUT /unit-kerja/opd/{id}
- * @example
- * ```typescript
- * const response = await updateOpd(123, {
- *   nama: 'Sekretariat Daerah - Updated',
- *   alamat: 'Jl. Pemerintahan No. 1 Updated'
- * });
- * console.log(response.data.nama);
- * ```
- */
-export const updateOpd = async (id: number, opdData: UpdateOpdRequest): Promise<ApiResponse<PayloadData<Opd>>> => {
-  const response = await httpInstance.put<ApiResponse<PayloadData<Opd>>>(`/unit-kerja/opd/${id}`, opdData);
-  return response.data;
-};
-
-/**
- * Delete OPD
- * @param id - OPD ID to delete
- * @returns Promise resolving to success response
- * @endpoint DELETE /unit-kerja/opd/{id}
- * @example
- * ```typescript
- * await deleteOpd(123);
- * // OPD deleted successfully
- * ```
- */
-export const deleteOpd = async (id: number): Promise<ApiResponse<{ message: string }>> => {
-  const response = await httpInstance.delete<ApiResponse<{ message: string }>>(`/unit-kerja/opd/${id}`);
-  return response.data;
-};
 
 // ==================== LAYANAN SERVICES ====================
 
@@ -296,23 +189,8 @@ export const getLayananByJenis = async (
  * console.log(response.data.opds);
  * ```
  */
-export const getOpd = async (params: OpdSearchParams = {}): Promise<ApiResponse<OpdListPayload>> => {
-  return getOpdList(params);
-};
-
-/**
- * Get OPD detail by ID
- * @param id - OPD ID
- * @returns Promise resolving to OPD detail
- * @endpoint GET /unit-kerja/opd/{id}
- * @example
- * ```typescript
- * const response = await getOpdDetail(123);
- * console.log(response.data.nama);
- * ```
- */
-export const getOpdDetail = async (id: number): Promise<ApiResponse<PayloadData<OpdDetail>>> => {
-  return getOpdById(id);
+export const getOpd = async (params: OpdQueryParams = {}): Promise<ApiResponse<OpdListPayload>> => {
+  return getOpd(params);
 };
 
 /**
@@ -326,18 +204,14 @@ export const getOpdDetail = async (id: number): Promise<ApiResponse<PayloadData<
  * console.log(response.data.perusahaanDaerah);
  * ```
  */
-export const getPerusahaanDaerah = async (params: OpdSearchParams = {}): Promise<ApiResponse<OpdListPayload>> => {
-  return getOpdList(params);
+export const getPerusahaanDaerah = async (params: OpdQueryParams = {}): Promise<ApiResponse<OpdListPayload>> => {
+  return getOpd(params);
 };
 
 // Re-export types for convenience
 export type {
-  Opd,
   OpdDetail,
   OpdListPayload,
-  OpdSearchParams,
-  CreateOpdRequest,
-  UpdateOpdRequest,
   Layanan,
   LayananDetail,
   LayananListPayload,

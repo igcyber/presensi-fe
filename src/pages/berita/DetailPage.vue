@@ -9,8 +9,9 @@ import AppBreadcrumb from "@/components/layout/partials/AppBreadcrumb.vue";
 import { useBreadcrumb } from "@/composables/useBreadcrumb";
 import { useFetch } from "@/composables/useFetch";
 import { useFormatters } from "@/composables/useFormatters";
-import type { ApiResponse, PayloadData } from "@/lib/api/core";
-import { type BeritaDetail, getBeritaById } from "@/lib/api/services/berita";
+import type { ApiResponse } from "@/lib/api/core";
+import { getBeritaByIdPublic } from "@/lib/api/services/berita";
+import type { BeritaDetailPublicResponse } from "@/lib/api/types/berita.types";
 
 const route = useRoute();
 const id = Number(route.params.id);
@@ -19,13 +20,13 @@ const { setContext, clearContext } = useBreadcrumb();
 
 const { date, getSlugUrl } = useFormatters();
 
-const { data, isLoading, fetchData, isError, error } = useFetch<ApiResponse<PayloadData<BeritaDetail>>, BeritaDetail>(
-  () => getBeritaById(id),
-  {
-    immediate: false,
-    extractData: (response) => response.data.data,
-  },
-);
+const { data, isLoading, fetchData, isError, error } = useFetch<
+  ApiResponse<BeritaDetailPublicResponse>,
+  BeritaDetailPublicResponse
+>(() => getBeritaByIdPublic(id), {
+  immediate: false,
+  extractData: (response) => response.data,
+});
 
 // Update breadcrumb context ketika data sudah ada
 watch(

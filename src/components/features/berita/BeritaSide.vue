@@ -5,7 +5,8 @@ import { useRoute, useRouter } from "vue-router";
 import { useFetch } from "@/composables/useFetch";
 import { useFormatters } from "@/composables/useFormatters";
 import type { ApiResponse } from "@/lib/api/core";
-import { type BeritaSidebar, getBeritaSidebar } from "@/lib/api/services/berita";
+import { getBeritaSidebar } from "@/lib/api/services/berita";
+import type { BeritaSidebar } from "@/lib/api/types/berita.types";
 
 const { data, isLoading, fetchData, isError, error } = useFetch<ApiResponse<BeritaSidebar[]>, BeritaSidebar[]>(
   () => getBeritaSidebar(),

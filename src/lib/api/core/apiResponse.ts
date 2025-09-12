@@ -5,6 +5,8 @@ export interface BaseEntity {
   id: number;
   createdAt?: string;
   updatedAt?: string;
+  createdBy?: number;
+  updatedBy?: number;
   deletedAt?: string;
 }
 
@@ -48,6 +50,17 @@ export interface PaginatedPayload<T> {
 }
 
 /**
+ * Generic payload wrapper for paginated list responses for public
+ * @template T - The item type in the list
+ */
+export interface PaginatedPayloadPublic<T> {
+  data: ContentData;
+  [key: string]: T[] | unknown;
+  meta?: PaginationMeta;
+  links?: PaginationLinks;
+}
+
+/**
  * Pagination metadata interface
  */
 export interface PaginationMeta {
@@ -76,7 +89,8 @@ export interface PaginationLinks {
 export interface SearchParams {
   page?: number;
   limit?: number;
-  keyword?: string;
+  search?: string;
+  keyword?: string; // public
   sort?: string;
   order?: "asc" | "desc";
 }

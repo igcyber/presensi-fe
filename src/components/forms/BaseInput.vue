@@ -36,32 +36,30 @@ const togglePasswordVisibility = () => {
 
 <template>
   <FormField v-slot="{ componentField }" :name="props.name" :validate-on-blur="!isFieldDirty(props.name)">
-    <FormItem>
+    <FormItem class="relative">
       <FormLabel>
         {{ props.label }}
         <span v-if="props.required" class="text-red-500">*</span>
       </FormLabel>
       <FormControl>
-        <div class="relative">
-          <Input
-            v-bind="componentField"
-            :type="inputType"
-            :placeholder="props.placeholder"
-            :class="props.type === 'password' ? 'pr-10' : ''"
-          />
-          <Button
-            v-if="props.type === 'password'"
-            type="button"
-            variant="ghost"
-            size="sm"
-            class="absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent"
-            @click="togglePasswordVisibility"
-            :aria-label="showPassword ? 'Sembunyikan password' : 'Tampilkan password'"
-          >
-            <EyeOff v-if="showPassword" class="h-4 w-4" />
-            <Eye v-else class="h-4 w-4" />
-          </Button>
-        </div>
+        <Input
+          v-bind="componentField"
+          :type="inputType"
+          :placeholder="props.placeholder"
+          :class="props.type === 'password' ? 'pr-10' : ''"
+        />
+        <Button
+          v-if="props.type === 'password'"
+          type="button"
+          variant="ghost"
+          size="sm"
+          class="absolute top-2.5 right-0 h-full px-3 py-2 hover:bg-transparent"
+          @click="togglePasswordVisibility"
+          :aria-label="showPassword ? 'Sembunyikan password' : 'Tampilkan password'"
+        >
+          <EyeOff v-if="showPassword" class="h-4 w-4" />
+          <Eye v-else class="h-4 w-4" />
+        </Button>
       </FormControl>
       <FormMessage />
     </FormItem>

@@ -10,7 +10,8 @@ import { useFetch } from "@/composables/useFetch";
 import { useFormatters } from "@/composables/useFormatters";
 import { usePagination } from "@/composables/usePagination";
 import type { ApiResponse } from "@/lib/api/core";
-import { type BeritaListPayload, getBeritaList } from "@/lib/api/services/berita";
+import { getBeritaPublic } from "@/lib/api/services/berita";
+import type { BeritaListPublicResponse } from "@/lib/api/types/berita.types";
 
 const route = useRoute();
 
@@ -21,13 +22,13 @@ const { date, slugify } = useFormatters();
 const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
 
 // Fetch dokumen data
-const { data, isLoading, error, isError, fetchData } = useFetch<ApiResponse<BeritaListPayload>, BeritaListPayload>(
-  () => getBeritaList(currentPage.value, keyword.value),
-  {
-    immediate: false,
-    extractData: (response) => response.data,
-  },
-);
+const { data, isLoading, error, isError, fetchData } = useFetch<
+  ApiResponse<BeritaListPublicResponse>,
+  BeritaListPublicResponse
+>(() => getBeritaPublic({ page: currentPage.value, keyword: keyword.value }), {
+  immediate: false,
+  extractData: (response) => response.data,
+});
 
 const prevPage = () => {
   if (currentPage.value > 1) {
@@ -92,7 +93,7 @@ onMounted(async () => {
           <p class="text-portal-green">
             {{
               keyword
-                ? `Menampilkan hasil pencarian untuk "${keyword}" dengan total ${data?.beritas.length} berita.`
+                ? `Menampilkan hasil pencarian untuk "${keyword}" dengan total ${data?.data.length} berita.`
                 : "Maaf, belum ada berita yang tersedia saat ini."
             }}
           </p>
@@ -126,18 +127,18 @@ onMounted(async () => {
 
         <!-- Content -->
         <div v-else-if="data">
-          <template v-if="data.beritas.length > 0">
+          <template v-if="data.data.length > 0">
             <!-- News Grid -->
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               <article
-                v-for="news in data.beritas"
+                v-for="news in data.data"
                 :key="news.id"
                 class="group overflow-hidden rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
               >
                 <!-- News Image -->
                 <div class="relative aspect-[16/10] overflow-hidden">
                   <img
-                    :src="`https://kukarkab.go.id/uploads/beritas/${news.foto}`"
+                    :src="news.fotoUrl"
                     :alt="news.judul"
                     class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     loading="lazy"

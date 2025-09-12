@@ -239,7 +239,7 @@ const formatCellValue = (item: T, column: Column<T>) => {
               </template>
 
               <!-- Date columns -->
-              <template v-else-if="['created_at', 'updated_at', 'tanggal'].includes(column.key)">
+              <template v-else-if="['createdAt', 'updatedAt', 'tanggal'].includes(column.key)">
                 {{ formatCellValue(item, column) }}
               </template>
 

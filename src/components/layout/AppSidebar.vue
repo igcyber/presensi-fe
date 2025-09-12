@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Calendar, ChartBar, Globe, HomeIcon, Scale, UserIcon, UserRound } from "lucide-vue-next";
+import { Calendar, ChartBar, Globe, HomeIcon, NewspaperIcon, Scale, UserIcon, UserRound } from "lucide-vue-next";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 
@@ -91,6 +91,13 @@ const data = computed(() => ({
           url: "#",
         },
       ],
+    },
+    {
+      title: "Berita",
+      url: "/app/berita",
+      name: "app.berita",
+      icon: NewspaperIcon,
+      isActive: routNameActive.value === "app.berita",
     },
     {
       title: "Satuan",

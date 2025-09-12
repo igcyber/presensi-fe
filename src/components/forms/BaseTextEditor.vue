@@ -77,6 +77,8 @@ const editor = useEditor({
   extensions: [
     StarterKit.configure({
       codeBlock: false, // We'll use CodeBlockLowlight instead
+      underline: false, // We'll add Underline separately
+      strike: false, // We'll add Strike separately
     }),
     Underline,
     Strike,
@@ -222,7 +224,7 @@ onBeforeUnmount(() => {
 <template>
   <FormField :name="props.name" v-slot="{}">
     <FormItem>
-      <FormLabel>
+      <FormLabel :custom-for="props.name">
         {{ props.label }}
         <span v-if="props.required" class="text-red-500">*</span>
       </FormLabel>
@@ -414,7 +416,7 @@ onBeforeUnmount(() => {
 
           <!-- Editor Content -->
           <div
-            class="min-h-[200px] rounded-lg border focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500"
+            class="border-ring/50 focus-within:border-ring focus-within:ring-ring/50 min-h-[200px] rounded-lg border transition-colors focus-within:ring-[3px]"
           >
             <EditorContent :editor="editor" />
           </div>
@@ -430,6 +432,7 @@ onBeforeUnmount(() => {
             ref="imageInputRef"
             type="file"
             accept="image/*"
+            :id="props.name"
             class="hidden"
             @change="onImageSelect"
           />

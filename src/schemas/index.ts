@@ -1,5 +1,6 @@
 // Export semua schema
 export * from "./authSchema";
+export * from "./beritaSchema";
 export * from "./userSchema";
 export * from "./roleSchema";
 

@@ -59,6 +59,7 @@ export function useBreadcrumb() {
     "app.dashboard": "Dashboard",
     "app.dashboard-data": "Dashboard Data",
     "app.user": "User",
+    "app.berita": "Berita",
   };
 
   /**
@@ -102,6 +103,7 @@ export function useBreadcrumb() {
     "app.dashboard": [],
     "app.dashboard-data": [],
     "app.user": ["app.dashboard"],
+    "app.berita": ["app.dashboard"],
   };
 
   /**
