@@ -50,20 +50,25 @@ interface Props {
   label: string;
   placeholder?: string;
   required?: boolean;
+  disabled?: boolean;
   maxLength?: number;
   showToolbar?: boolean;
   enableImageUpload?: boolean;
   enableTable?: boolean;
   enableCodeBlock?: boolean;
   imageUploadHandler?: (file: File) => Promise<string>;
+  description?: string;
+  minHeight?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   placeholder: "Mulai menulis...",
+  disabled: false,
   showToolbar: true,
   enableImageUpload: true,
   enableTable: true,
   enableCodeBlock: true,
+  minHeight: 200,
 });
 
 // register field ke vee-validate
@@ -74,6 +79,7 @@ const imageInputRef = ref<HTMLInputElement>();
 // init editor
 const editor = useEditor({
   content: value.value || "",
+  editable: !props.disabled,
   extensions: [
     StarterKit.configure({ codeBlock: false, underline: false, strike: false }),
     Underline,
@@ -86,12 +92,17 @@ const editor = useEditor({
   ],
   editorProps: {
     attributes: {
-      class: "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl p-4 min-h-[200px] focus:outline-none",
+      class: `prose prose-sm sm:prose lg:prose-lg xl:prose-2xl p-4 focus:outline-none ${props.disabled ? "opacity-50 cursor-not-allowed" : ""}`,
       "data-placeholder": props.placeholder,
+      style: `min-height: ${props.minHeight}px`,
+      "aria-label": props.label,
+      "aria-describedby": props.description ? `${props.name}-description` : "",
     },
   },
   onUpdate: ({ editor }) => {
-    value.value = editor.getHTML(); // sync ke vee-validate
+    if (!props.disabled) {
+      value.value = editor.getHTML(); // sync ke vee-validate
+    }
   },
 });
 
@@ -102,6 +113,14 @@ watch(
     if (newVal !== editor.value?.getHTML()) {
       editor.value?.commands.setContent(newVal || "");
     }
+  },
+);
+
+// Watch disabled state changes
+watch(
+  () => props.disabled,
+  (disabled) => {
+    editor.value?.setEditable(!disabled);
   },
 );
 
@@ -181,7 +200,7 @@ const onImageSelect = async (event: Event) => {
 
     <!-- Toolbar -->
     <div
-      v-if="props.showToolbar"
+      v-if="props.showToolbar && !props.disabled"
       class="bg-muted/50 dark:bg-muted/20 border-ring/50 flex flex-wrap items-center gap-1 rounded-lg border p-2"
     >
       <Button
@@ -313,14 +332,30 @@ const onImageSelect = async (event: Event) => {
     <!-- Editor -->
     <div
       class="focus-within:ring-ring/50 border-ring/50 focus-within:border-ring bg-background dark:bg-background rounded-lg border transition-colors focus-within:ring-[3px]"
-      :class="{ '!ring-destructive/20 dark:!ring-destructive/40 !border-destructive': errorMessage }"
+      :class="{
+        '!ring-destructive/20 dark:!ring-destructive/40 !border-destructive': errorMessage,
+        'opacity-50': props.disabled,
+      }"
     >
-      <EditorContent :editor="editor" :aria-label="props.label" />
+      <EditorContent :editor="editor" />
     </div>
 
+    <!-- Description -->
+    <p v-if="props.description" :id="`${props.name}-description`" class="text-muted-foreground text-sm">
+      {{ props.description }}
+    </p>
+
     <!-- Counter -->
-    <div v-if="props.maxLength" class="text-muted-foreground text-left text-sm">
-      {{ editor?.storage.characterCount?.characters() || 0 }}/{{ props.maxLength }}
+    <div v-if="props.maxLength" class="flex items-center justify-between text-sm">
+      <span class="text-muted-foreground">
+        {{ editor?.storage.characterCount?.characters() || 0 }}/{{ props.maxLength }}
+      </span>
+      <span
+        v-if="props.maxLength && (editor?.storage.characterCount?.characters() || 0) > props.maxLength * 0.9"
+        class="text-warning"
+      >
+        Mendekati batas maksimal
+      </span>
     </div>
 
     <!-- Error -->
@@ -342,12 +377,67 @@ const onImageSelect = async (event: Event) => {
 <style>
 .ProseMirror {
   outline: none;
-  min-height: 200px;
 }
+
 .ProseMirror p.is-editor-empty:first-child::before {
   content: attr(data-placeholder);
   color: #adb5bd;
   pointer-events: none;
   height: 0;
+  float: left;
+  width: 100%;
+}
+
+/* Improve focus styles */
+.ProseMirror:focus {
+  outline: none;
+}
+
+/* Better table styles */
+.ProseMirror table {
+  border-collapse: collapse;
+  margin: 0;
+  overflow: hidden;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.ProseMirror table td,
+.ProseMirror table th {
+  border: 2px solid #ced4da;
+  box-sizing: border-box;
+  min-width: 1em;
+  padding: 3px 5px;
+  position: relative;
+  vertical-align: top;
+}
+
+.ProseMirror table th {
+  font-weight: bold;
+  text-align: left;
+  background-color: #f1f3f4;
+}
+
+/* Code block improvements */
+.ProseMirror pre {
+  background: #0d1117;
+  color: #c9d1d9;
+  font-family: "JetBrainsMono", "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+}
+
+.ProseMirror code {
+  background-color: #f6f8fa;
+  border-radius: 6px;
+  font-size: 85%;
+  margin: 0;
+  padding: 0.2em 0.4em;
+}
+
+.ProseMirror blockquote {
+  border-left: 3px solid #d0d7de;
+  margin: 0;
+  padding-left: 1rem;
 }
 </style>

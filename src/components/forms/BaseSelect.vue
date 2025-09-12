@@ -1,52 +1,78 @@
 <script setup lang="ts">
 import type { AcceptableValue } from "reka-ui";
+import { computed } from "vue";
 
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-interface Option {
+export interface SelectOption {
   label: string;
   value: string | number;
   disabled?: boolean;
+  group?: string;
 }
 
 interface Props {
   name: string;
   label: string;
   placeholder?: string;
-  options: Option[];
+  options: SelectOption[];
   disabled?: boolean;
   required?: boolean;
   valueAsNumber?: boolean;
   multiple?: boolean;
-  emptyOption?: string; // opsional
+  emptyOption?: string;
+  description?: string;
+  searchable?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   valueAsNumber: false,
   multiple: false,
+  placeholder: "Pilih opsi...",
 });
 
-const toStringValue = (val: string | number) => String(val);
+const toStringValue = (val: string | number): string => String(val);
 
 const normalizedValue = (modelValue: AcceptableValue) => {
-  const mv = modelValue;
   if (props.multiple) {
-    if (!Array.isArray(mv)) return [];
-    return props.valueAsNumber ? mv.map(toStringValue) : mv;
+    if (!Array.isArray(modelValue)) return [];
+    return modelValue.map(toStringValue);
   }
-  return props.valueAsNumber && mv != null ? String(mv) : mv;
+  return modelValue != null ? String(modelValue) : modelValue;
 };
 
 const handleChange = (val: AcceptableValue, onChange: (val: any) => void) => {
   if (props.multiple) {
     const arr = Array.isArray(val) ? val : [];
-    onChange(props.valueAsNumber ? arr.map(Number) : arr);
+    const result = props.valueAsNumber ? arr.map(Number) : arr;
+    onChange(result.length > 0 ? result : null);
   } else {
-    const s = val as string | undefined;
-    onChange(props.valueAsNumber && s != null ? Number(s) : s);
+    const stringValue = val as string | undefined;
+    if (!stringValue) {
+      onChange(null);
+      return;
+    }
+    onChange(props.valueAsNumber ? Number(stringValue) : stringValue);
   }
 };
+
+// Group options by group property
+const groupedOptions = computed(() => {
+  const grouped = props.options.reduce(
+    (acc, option) => {
+      const group = option.group || "default";
+      if (!acc[group]) acc[group] = [];
+      acc[group].push(option);
+      return acc;
+    },
+    {} as Record<string, SelectOption[]>,
+  );
+
+  return grouped;
+});
+
+const hasGroups = computed(() => Object.keys(groupedOptions.value).length > 1 || !groupedOptions.value.default);
 </script>
 
 <template>
@@ -65,15 +91,39 @@ const handleChange = (val: AcceptableValue, onChange: (val: any) => void) => {
           :disabled="props.disabled"
           @update:model-value="(val) => handleChange(val, componentField.onChange)"
         >
-          <SelectTrigger :id="props.name" class="w-full" :aria-invalid="!!(!meta.valid && errorMessage)">
-            <SelectValue :placeholder="props.placeholder ?? 'Pilih…'" />
+          <SelectTrigger
+            :id="props.name"
+            class="w-full"
+            :aria-invalid="!!(!meta.valid && errorMessage)"
+            :aria-describedby="props.description ? `${props.name}-description` : undefined"
+          >
+            <SelectValue :placeholder="props.placeholder" />
           </SelectTrigger>
 
           <SelectContent>
-            <SelectGroup>
-              <SelectItem v-if="props.emptyOption" value="">
+            <!-- Empty option if provided -->
+            <SelectGroup v-if="props.emptyOption">
+              <SelectItem value="">
                 {{ props.emptyOption }}
               </SelectItem>
+            </SelectGroup>
+
+            <!-- Grouped options -->
+            <template v-if="hasGroups">
+              <SelectGroup v-for="(groupOptions, groupName) in groupedOptions" :key="groupName">
+                <SelectItem
+                  v-for="opt in groupOptions"
+                  :key="toStringValue(opt.value)"
+                  :value="toStringValue(opt.value)"
+                  :disabled="opt.disabled"
+                >
+                  {{ opt.label }}
+                </SelectItem>
+              </SelectGroup>
+            </template>
+
+            <!-- Ungrouped options -->
+            <SelectGroup v-else>
               <SelectItem
                 v-for="opt in props.options"
                 :key="toStringValue(opt.value)"
@@ -86,6 +136,10 @@ const handleChange = (val: AcceptableValue, onChange: (val: any) => void) => {
           </SelectContent>
         </Select>
       </FormControl>
+
+      <FormDescription v-if="props.description">
+        {{ props.description }}
+      </FormDescription>
 
       <FormMessage />
     </FormItem>
