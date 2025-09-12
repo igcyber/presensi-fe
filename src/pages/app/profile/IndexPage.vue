@@ -72,9 +72,9 @@ const activityStats = [
 </script>
 
 <template>
-  <div class="bg-background min-h-screen p-4 md:p-6 lg:p-8">
+  <div class="bg-background p-4 md:p-6 lg:p-8">
     <!-- Loading State -->
-    <div v-if="isLoading" class="mx-auto max-w-7xl space-y-8">
+    <div v-if="isLoading" class="space-y-8">
       <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div class="space-y-1">
           <div class="h-8 w-48 animate-pulse rounded bg-gray-200"></div>
@@ -119,7 +119,7 @@ const activityStats = [
     </div>
 
     <!-- Error State -->
-    <div v-else-if="isError" class="mx-auto max-w-7xl">
+    <div v-else-if="isError">
       <Card class="border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/20">
         <CardContent class="p-6">
           <div class="flex items-center space-x-4">
@@ -147,7 +147,7 @@ const activityStats = [
     </div>
 
     <!-- Main Content -->
-    <div v-else class="mx-auto max-w-7xl space-y-8">
+    <div v-else class="space-y-8">
       <!-- Header Section -->
       <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div class="space-y-1">

@@ -41,7 +41,6 @@ const initialValues = computed(() =>
         opdId: props.berita?.opdId ?? 0,
         judul: props.berita?.judul ?? "",
         isi: props.berita?.isi ?? "",
-        foto: props.berita?.fotoUrl ?? "",
         keterangan: props.berita?.keterangan ?? "",
         tag: props.berita?.tag ?? "",
       },

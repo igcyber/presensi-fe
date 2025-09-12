@@ -180,17 +180,36 @@ const onImageSelect = async (event: Event) => {
     </label>
 
     <!-- Toolbar -->
-    <div v-if="props.showToolbar" class="flex flex-wrap items-center gap-1 rounded-lg border bg-gray-50 p-2">
-      <Button variant="ghost" size="sm" :class="{ 'bg-gray-200': isBold }" @click.stop.prevent="toggleBold"
+    <div
+      v-if="props.showToolbar"
+      class="bg-muted/50 dark:bg-muted/20 border-ring/50 flex flex-wrap items-center gap-1 rounded-lg border p-2"
+    >
+      <Button
+        variant="ghost"
+        size="sm"
+        :class="{ 'bg-muted dark:bg-muted/60': isBold }"
+        @click.stop.prevent="toggleBold"
         ><Bold class="h-4 w-4"
       /></Button>
-      <Button variant="ghost" size="sm" :class="{ 'bg-gray-200': isItalic }" @click.stop.prevent="toggleItalic"
+      <Button
+        variant="ghost"
+        size="sm"
+        :class="{ 'bg-muted dark:bg-muted/60': isItalic }"
+        @click.stop.prevent="toggleItalic"
         ><Italic class="h-4 w-4"
       /></Button>
-      <Button variant="ghost" size="sm" :class="{ 'bg-gray-200': isUnderline }" @click.stop.prevent="toggleUnderline"
+      <Button
+        variant="ghost"
+        size="sm"
+        :class="{ 'bg-muted dark:bg-muted/60': isUnderline }"
+        @click.stop.prevent="toggleUnderline"
         ><UnderlineIcon class="h-4 w-4"
       /></Button>
-      <Button variant="ghost" size="sm" :class="{ 'bg-gray-200': isStrike }" @click.stop.prevent="toggleStrike"
+      <Button
+        variant="ghost"
+        size="sm"
+        :class="{ 'bg-muted dark:bg-muted/60': isStrike }"
+        @click.stop.prevent="toggleStrike"
         ><Strikethrough class="h-4 w-4"
       /></Button>
 
@@ -207,84 +226,100 @@ const onImageSelect = async (event: Event) => {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <Separator orientation="vertical" class="h-6" />
+      <Separator orientation="vertical" class="hidden h-6 sm:block" />
 
-      <Button
-        variant="ghost"
-        size="sm"
-        :class="{ 'bg-gray-200': currentAlignment === 'left' }"
-        @click.stop.prevent="setTextAlign('left')"
-        ><AlignLeft class="h-4 w-4"
-      /></Button>
-      <Button
-        variant="ghost"
-        size="sm"
-        :class="{ 'bg-gray-200': currentAlignment === 'center' }"
-        @click.stop.prevent="setTextAlign('center')"
-        ><AlignCenter class="h-4 w-4"
-      /></Button>
-      <Button
-        variant="ghost"
-        size="sm"
-        :class="{ 'bg-gray-200': currentAlignment === 'right' }"
-        @click.stop.prevent="setTextAlign('right')"
-        ><AlignRight class="h-4 w-4"
-      /></Button>
-      <Button
-        variant="ghost"
-        size="sm"
-        :class="{ 'bg-gray-200': currentAlignment === 'justify' }"
-        @click.stop.prevent="setTextAlign('justify')"
-        ><AlignJustify class="h-4 w-4"
-      /></Button>
+      <div class="flex items-center gap-1">
+        <Button
+          variant="ghost"
+          size="sm"
+          :class="{ 'bg-muted dark:bg-muted/60': currentAlignment === 'left' }"
+          @click.stop.prevent="setTextAlign('left')"
+          ><AlignLeft class="h-4 w-4"
+        /></Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          :class="{ 'bg-muted dark:bg-muted/60': currentAlignment === 'center' }"
+          @click.stop.prevent="setTextAlign('center')"
+          ><AlignCenter class="h-4 w-4"
+        /></Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          :class="{ 'bg-muted dark:bg-muted/60': currentAlignment === 'right' }"
+          @click.stop.prevent="setTextAlign('right')"
+          ><AlignRight class="h-4 w-4"
+        /></Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          :class="{ 'bg-muted dark:bg-muted/60': currentAlignment === 'justify' }"
+          @click.stop.prevent="setTextAlign('justify')"
+          ><AlignJustify class="h-4 w-4"
+        /></Button>
+      </div>
 
-      <Separator orientation="vertical" class="h-6" />
+      <Separator orientation="vertical" class="hidden h-6 sm:block" />
 
-      <Button variant="ghost" size="sm" :class="{ 'bg-gray-200': isBulletList }" @click.stop.prevent="toggleBulletList"
-        ><List class="h-4 w-4"
-      /></Button>
-      <Button
-        variant="ghost"
-        size="sm"
-        :class="{ 'bg-gray-200': isOrderedList }"
-        @click.stop.prevent="toggleOrderedList"
-        ><ListOrdered class="h-4 w-4"
-      /></Button>
+      <div class="flex items-center gap-1">
+        <Button
+          variant="ghost"
+          size="sm"
+          :class="{ 'bg-muted dark:bg-muted/60': isBulletList }"
+          @click.stop.prevent="toggleBulletList"
+          ><List class="h-4 w-4"
+        /></Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          :class="{ 'bg-muted dark:bg-muted/60': isOrderedList }"
+          @click.stop.prevent="toggleOrderedList"
+          ><ListOrdered class="h-4 w-4"
+        /></Button>
+      </div>
 
-      <Separator orientation="vertical" class="h-6" />
+      <Separator orientation="vertical" class="hidden h-6 sm:block" />
 
-      <Button variant="ghost" size="sm" :class="{ 'bg-gray-200': isBlockquote }" @click.stop.prevent="toggleBlockquote"
-        ><Quote class="h-4 w-4"
-      /></Button>
-      <Button
-        v-if="props.enableCodeBlock"
-        variant="ghost"
-        size="sm"
-        :class="{ 'bg-gray-200': isCodeBlock }"
-        @click.stop.prevent="toggleCodeBlock"
-        ><Code class="h-4 w-4"
-      /></Button>
+      <div class="flex items-center gap-1">
+        <Button
+          variant="ghost"
+          size="sm"
+          :class="{ 'bg-muted dark:bg-muted/60': isBlockquote }"
+          @click.stop.prevent="toggleBlockquote"
+          ><Quote class="h-4 w-4"
+        /></Button>
+        <Button
+          v-if="props.enableCodeBlock"
+          variant="ghost"
+          size="sm"
+          :class="{ 'bg-muted dark:bg-muted/60': isCodeBlock }"
+          @click.stop.prevent="toggleCodeBlock"
+          ><Code class="h-4 w-4"
+        /></Button>
+      </div>
 
-      <Separator orientation="vertical" class="h-6" />
+      <Separator orientation="vertical" class="hidden h-6 sm:block" />
 
-      <Button v-if="props.enableImageUpload" variant="ghost" size="sm" @click.stop.prevent="handleImageUpload"
-        ><ImageIcon class="h-4 w-4"
-      /></Button>
-      <Button v-if="props.enableTable" variant="ghost" size="sm" @click.stop.prevent="insertTable"
-        ><TableIcon class="h-4 w-4"
-      /></Button>
+      <div class="flex items-center gap-1">
+        <Button v-if="props.enableImageUpload" variant="ghost" size="sm" @click.stop.prevent="handleImageUpload"
+          ><ImageIcon class="h-4 w-4"
+        /></Button>
+        <Button v-if="props.enableTable" variant="ghost" size="sm" @click.stop.prevent="insertTable"
+          ><TableIcon class="h-4 w-4"
+        /></Button>
+      </div>
     </div>
 
     <!-- Editor -->
     <div
-      class="focus-within:ring-ring/50 focus-within:border-ring rounded-lg border transition-colors focus-within:ring-[3px]"
+      class="focus-within:ring-ring/50 border-ring/50 focus-within:border-ring bg-background dark:bg-background rounded-lg border transition-colors focus-within:ring-[3px]"
       :class="{ '!ring-destructive/20 dark:!ring-destructive/40 !border-destructive': errorMessage }"
     >
       <EditorContent :editor="editor" :aria-label="props.label" />
     </div>
 
     <!-- Counter -->
-    <div v-if="props.maxLength" class="text-left text-sm text-gray-500">
+    <div v-if="props.maxLength" class="text-muted-foreground text-left text-sm">
       {{ editor?.storage.characterCount?.characters() || 0 }}/{{ props.maxLength }}
     </div>
 

@@ -90,7 +90,7 @@ const openFileDialog = () => fileInputRef.value?.click();
           />
 
           <div
-            class="cursor-pointer rounded-lg border-2 border-dashed p-6 text-center transition-colors hover:border-gray-400"
+            class="border-ring/50 hover:border-ring/80 cursor-pointer rounded-lg border-2 border-dashed p-6 text-center transition-colors"
             :class="{
               'border-blue-500 bg-blue-50': dragOver,
               'border-destructive bg-destructive/10': meta.valid === false && errorMessage,

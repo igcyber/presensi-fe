@@ -143,7 +143,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="bg-background min-h-screen p-4 md:p-6 lg:p-8">
+  <div class="bg-background p-4 md:p-6 lg:p-8">
     <div class="space-y-8">
       <!-- Header Section -->
       <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
