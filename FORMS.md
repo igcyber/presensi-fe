@@ -229,13 +229,15 @@ const fileSchema = z.object({
 
 ### 📖 Description
 
-Component select dropdown yang mendukung single dan multiple selection. Terintegrasi dengan Shadcn Select primitives dan mendukung konversi tipe data serta validasi yang comprehensive.
+Component select dropdown yang mendukung single dan multiple selection, pencarian lokal, dan pencarian server-side (AJAX). Terintegrasi dengan Shadcn Select primitives dan mendukung konversi tipe data, validasi yang comprehensive, serta UX yang smooth dengan loading states dan debounced search.
 
 ### ⚡ Usage Example
 
 ```vue
 <script setup lang="ts">
-import { BaseSelect } from "@/components/forms";
+import { BaseSelect, type SelectOption } from "@/components/forms";
+
+import { userService } from "@/lib/api";
 
 const roleOptions = [
   { label: "Administrator", value: "admin" },
@@ -248,6 +250,31 @@ const categoryOptions = [
   { label: "Bisnis", value: 2 },
   { label: "Pendidikan", value: 3 },
 ];
+
+const productOptions = [
+  { label: "Laptop Dell XPS 13", value: "dell-xps-13" },
+  { label: "MacBook Pro M3", value: "macbook-pro-m3" },
+  { label: "ThinkPad X1 Carbon", value: "thinkpad-x1" },
+  { label: "Surface Laptop Studio", value: "surface-studio" },
+];
+
+// Server-side search function
+const searchUsers = async (query: string): Promise<SelectOption[]> => {
+  try {
+    const response = await userService.search({
+      q: query,
+      limit: 20,
+    });
+
+    return response.data.map((user) => ({
+      label: `${user.name} (${user.email})`,
+      value: user.id,
+    }));
+  } catch (error) {
+    console.error("Error searching users:", error);
+    return [];
+  }
+};
 </script>
 
 <template>
@@ -265,25 +292,143 @@ const categoryOptions = [
 
   <!-- Select dengan value as number -->
   <BaseSelect name="categoryId" label="Kategori" :options="categoryOptions" :value-as-number="true" required />
+
+  <!-- Searchable select (pencarian lokal) -->
+  <BaseSelect
+    name="product"
+    label="Produk"
+    :options="productOptions"
+    searchable
+    search-placeholder="Cari produk..."
+    placeholder="Pilih produk..."
+  />
+
+  <!-- Remote search select (pencarian server-side) -->
+  <BaseSelect
+    name="user"
+    label="Pilih User"
+    :options="[]"
+    remote
+    searchable
+    :on-search="searchUsers"
+    search-placeholder="Ketik nama user..."
+    loading-text="Mencari user..."
+    empty-text="User tidak ditemukan"
+    :min-search-length="2"
+  />
+
+  <!-- Multiple searchable select -->
+  <BaseSelect
+    name="tags"
+    label="Tag"
+    :options="tagOptions"
+    multiple
+    searchable
+    search-placeholder="Cari tag..."
+    placeholder="Pilih tag..."
+  />
 </template>
 ```
 
 ### 🛠 Best Practices
 
-- **Options Structure**: Gunakan struktur `{ label, value, disabled? }` untuk options
+#### **Basic Usage**
+
+- **Options Structure**: Gunakan struktur `{ label, value, disabled?, group? }` untuk options
 - **Multiple Selection**: Gunakan `multiple` prop untuk multi-select
 - **Type Conversion**: Gunakan `valueAsNumber` untuk konversi string ke number
 - **Disabled Options**: Gunakan `disabled` property pada option untuk disable item tertentu
 - **Placeholder**: Berikan placeholder yang jelas dan informatif
 - **Accessibility**: Select otomatis terhubung dengan label melalui Shadcn FormLabel
 
+#### **Search Features**
+
+- **Local Search**: Gunakan `searchable` untuk pencarian data statis
+- **Remote Search**: Gunakan `remote` + `onSearch` untuk pencarian server-side
+- **Search Optimization**: Set `minSearchLength` yang sesuai untuk remote search (minimal 2-3 karakter)
+- **Debouncing**: Built-in debouncing 300ms untuk optimasi performa API calls
+- **Error Handling**: Selalu handle error dalam `onSearch` callback
+- **UX Feedback**: Customize `loadingText` dan `emptyText` sesuai konteks aplikasi
+
+#### **Performance & UX**
+
+- **Loading States**: Tampilkan loading indicator saat fetch data remote
+- **Empty States**: Berikan feedback yang jelas saat tidak ada data
+- **Auto Focus**: Search input otomatis focus saat dropdown dibuka
+- **Keyboard Navigation**: Support ESC untuk clear search
+- **Memory Management**: Search query dan remote data otomatis clear saat dropdown ditutup
+
 ### 🔗 Integration Notes
 
+#### **UI Components**
+
 - **Shadcn Select**: Menggunakan Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue
+- **Shadcn Button**: Untuk clear search button dengan proper styling
+- **Lucide Icons**: Search, Loader2, X icons untuk UI consistency
 - **Reka UI**: Base Select components dari Reka UI
-- **Type Safety**: Mendukung konversi tipe data otomatis
+
+#### **Functionality**
+
+- **Type Safety**: Mendukung konversi tipe data otomatis dengan TypeScript
 - **Multiple Values**: Handle array values untuk multiple selection
-- **Accessibility**: Proper ARIA attributes dan keyboard navigation dari Shadcn
+- **VueUse Integration**: useDebounceFn untuk debounced search
+- **Vue 3 Features**: Composition API, computed, ref, watch, nextTick
+
+#### **Search Implementation**
+
+- **Local Filtering**: Client-side filtering berdasarkan label option
+- **Remote Search**: Server-side search dengan Promise-based callback
+- **Debounced Requests**: 300ms delay untuk optimasi API calls
+- **Loading States**: Built-in loading dan empty states dengan proper UX
+- **Error Handling**: Graceful error handling untuk failed API requests
+
+#### **Accessibility & UX**
+
+- **ARIA Support**: Proper ARIA attributes dan keyboard navigation dari Shadcn
+- **Focus Management**: Auto-focus search input saat dropdown dibuka
+- **Keyboard Support**: ESC key untuk clear search
+- **Screen Reader**: Compatible dengan screen readers
+- **Visual Feedback**: Loading spinner dan empty state messages
+
+### 📋 Props
+
+#### **Basic Props**
+
+| Prop            | Type             | Default           | Description                    |
+| --------------- | ---------------- | ----------------- | ------------------------------ |
+| `name`          | `string`         | -                 | Field name untuk form binding  |
+| `label`         | `string`         | -                 | Label yang ditampilkan         |
+| `options`       | `SelectOption[]` | -                 | Array options untuk select     |
+| `placeholder`   | `string`         | `"Pilih opsi..."` | Placeholder text               |
+| `disabled`      | `boolean`        | `false`           | Disable select                 |
+| `required`      | `boolean`        | `false`           | Required field dengan asterisk |
+| `multiple`      | `boolean`        | `false`           | Multiple selection             |
+| `valueAsNumber` | `boolean`        | `false`           | Konversi value ke number       |
+| `emptyOption`   | `string`         | -                 | Empty option text              |
+| `description`   | `string`         | -                 | Help text di bawah select      |
+
+#### **Search Props**
+
+| Prop                | Type                                         | Default            | Description                        |
+| ------------------- | -------------------------------------------- | ------------------ | ---------------------------------- |
+| `searchable`        | `boolean`                                    | `false`            | Enable pencarian lokal             |
+| `remote`            | `boolean`                                    | `false`            | Enable pencarian server-side       |
+| `onSearch`          | `(query: string) => Promise<SelectOption[]>` | -                  | Callback untuk remote search       |
+| `searchPlaceholder` | `string`                                     | `"Cari..."`        | Placeholder untuk search input     |
+| `loadingText`       | `string`                                     | `"Memuat..."`      | Text saat loading                  |
+| `emptyText`         | `string`                                     | `"Tidak ada data"` | Text saat tidak ada data           |
+| `minSearchLength`   | `number`                                     | `1`                | Minimum length untuk remote search |
+
+#### **SelectOption Interface**
+
+```typescript
+interface SelectOption {
+  label: string; // Text yang ditampilkan
+  value: string | number; // Value untuk form
+  disabled?: boolean; // Disable option
+  group?: string; // Group name untuk grouped options
+}
+```
 
 ---
 
@@ -626,6 +771,173 @@ watch(selectedCountry, async (countryId) => {
 <template>
   <BaseSelect name="country" label="Negara" :options="countryOptions" v-model="selectedCountry" />
   <BaseSelect name="city" label="Kota" :options="cityOptions" :disabled="!selectedCountry" />
+</template>
+```
+
+### BaseSelect dengan Pencarian Lokal dan Remote
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+
+import { BaseSelect, type SelectOption } from "@/components/forms";
+
+import { companyService, userService } from "@/lib/api";
+
+// Data untuk pencarian lokal
+const products = ref([
+  { label: "Laptop Dell XPS 13", value: "dell-xps-13" },
+  { label: "MacBook Pro M3", value: "macbook-pro-m3" },
+  { label: "ThinkPad X1 Carbon", value: "thinkpad-x1" },
+  { label: "Surface Laptop Studio", value: "surface-studio" },
+  { label: "ASUS ZenBook Pro", value: "asus-zenbook" },
+  { label: "HP Spectre x360", value: "hp-spectre" },
+]);
+
+// Grouped options dengan pencarian
+const locations = ref([
+  // Jakarta
+  { label: "Jakarta Pusat", value: "jkt-pusat", group: "Jakarta" },
+  { label: "Jakarta Selatan", value: "jkt-selatan", group: "Jakarta" },
+  { label: "Jakarta Utara", value: "jkt-utara", group: "Jakarta" },
+
+  // Bandung
+  { label: "Bandung Kota", value: "bdg-kota", group: "Bandung" },
+  { label: "Bandung Barat", value: "bdg-barat", group: "Bandung" },
+
+  // Surabaya
+  { label: "Surabaya Kota", value: "sby-kota", group: "Surabaya" },
+  { label: "Surabaya Timur", value: "sby-timur", group: "Surabaya" },
+]);
+
+// Remote search untuk users dengan error handling
+const searchUsers = async (query: string): Promise<SelectOption[]> => {
+  if (!query || query.length < 2) {
+    return [];
+  }
+
+  try {
+    const response = await userService.search({
+      q: query,
+      limit: 15,
+      active: true,
+    });
+
+    return response.data.map((user) => ({
+      label: `${user.name} (${user.email})`,
+      value: user.id,
+      disabled: !user.is_active,
+    }));
+  } catch (error) {
+    console.error("Error searching users:", error);
+    // Bisa menampilkan toast error di sini
+    return [];
+  }
+};
+
+// Remote search untuk companies dengan caching
+const companyCache = new Map();
+const searchCompanies = async (query: string): Promise<SelectOption[]> => {
+  if (!query || query.length < 3) {
+    return [];
+  }
+
+  // Check cache first
+  if (companyCache.has(query)) {
+    return companyCache.get(query);
+  }
+
+  try {
+    const response = await companyService.search({
+      name: query,
+      limit: 20,
+      active: true,
+    });
+
+    const results = response.data.map((company) => ({
+      label: `${company.name} - ${company.industry}`,
+      value: company.id,
+      disabled: !company.is_active,
+    }));
+
+    // Cache results for 5 minutes
+    companyCache.set(query, results);
+    setTimeout(() => companyCache.delete(query), 5 * 60 * 1000);
+
+    return results;
+  } catch (error) {
+    console.error("Error searching companies:", error);
+    return [];
+  }
+};
+</script>
+
+<template>
+  <div class="space-y-6">
+    <!-- Pencarian lokal dengan produk -->
+    <BaseSelect
+      name="product"
+      label="Produk Favorit"
+      :options="products"
+      searchable
+      search-placeholder="Cari produk..."
+      placeholder="Pilih produk favorit..."
+    />
+
+    <!-- Multiple selection dengan pencarian lokal -->
+    <BaseSelect
+      name="locations"
+      label="Lokasi Kerja"
+      :options="locations"
+      multiple
+      searchable
+      search-placeholder="Cari lokasi..."
+      placeholder="Pilih lokasi kerja..."
+    />
+
+    <!-- Remote search untuk users -->
+    <BaseSelect
+      name="assignedUser"
+      label="Assign ke User"
+      :options="[]"
+      remote
+      searchable
+      :on-search="searchUsers"
+      search-placeholder="Ketik nama atau email user..."
+      loading-text="Mencari user..."
+      empty-text="User tidak ditemukan"
+      :min-search-length="2"
+    />
+
+    <!-- Remote search dengan caching untuk companies -->
+    <BaseSelect
+      name="company"
+      label="Perusahaan"
+      :options="[]"
+      remote
+      searchable
+      :on-search="searchCompanies"
+      search-placeholder="Ketik nama perusahaan..."
+      loading-text="Mencari perusahaan..."
+      empty-text="Perusahaan tidak ditemukan"
+      :min-search-length="3"
+    />
+
+    <!-- Multiple remote search -->
+    <BaseSelect
+      name="collaborators"
+      label="Kolaborator"
+      :options="[]"
+      multiple
+      remote
+      searchable
+      :on-search="searchUsers"
+      search-placeholder="Cari kolaborator..."
+      loading-text="Mencari user..."
+      empty-text="Tidak ada user yang ditemukan"
+      :min-search-length="2"
+    />
+  </div>
 </template>
 ```
 
