@@ -91,7 +91,13 @@ async function onSubmit(values: any) {
 
       <BaseInput name="judul" label="Judul Berita" placeholder="Masukkan judul berita" required />
 
-      <BaseTextEditor name="isi" label="Isi Berita" placeholder="Masukkan isi berita" required />
+      <BaseTextEditor
+        :model-value="initialValues.isi"
+        name="isi"
+        label="Isi Berita"
+        placeholder="Masukkan isi berita"
+        required
+      />
 
       <BaseInputFile
         name="foto"
