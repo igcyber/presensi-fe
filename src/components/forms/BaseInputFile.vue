@@ -95,7 +95,6 @@ const removeFile = (index: number, onChange: (val: any) => void) => {
 
 <template>
   <FormField :name="props.name" v-slot="{ componentField }">
-    {{ componentField }}
     <FormItem>
       <FormLabel :custom-for="props.name">
         {{ props.label }}

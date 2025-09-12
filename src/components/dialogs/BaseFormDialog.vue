@@ -132,32 +132,40 @@ watch(
 
 <template>
   <Dialog :open="open" @update:open="(v) => emit('update:open', v)">
-    <DialogContent :class="widthClass">
-      <DialogHeader>
+    <DialogContent class="flex max-h-[90vh] flex-col p-0 sm:max-w-[425px]" :class="widthClass">
+      <DialogHeader class="flex-shrink-0 p-6 pb-0">
         <DialogTitle>{{ computedTitle }}</DialogTitle>
         <DialogDescription>{{ computedDesc }}</DialogDescription>
       </DialogHeader>
-      <BaseForm :schema="schema" :initial-values="initialValues ?? {}" :on-submit="handleSubmit" class="space-y-4">
-        <!-- server side errors -->
-        <div
-          v-if="Object.keys(serverErrors).length"
-          class="border-destructive/30 bg-destructive/10 rounded-md border p-3 text-sm"
+
+      <div class="flex-1 overflow-y-auto px-6">
+        <BaseForm
+          :schema="schema"
+          :initial-values="initialValues ?? {}"
+          :on-submit="handleSubmit"
+          class="space-y-4 py-4"
         >
-          <ul class="list-disc pl-5">
-            <li v-for="(msg, key) in serverErrors" :key="key">{{ Array.isArray(msg) ? msg.join(", ") : msg }}</li>
-          </ul>
-        </div>
+          <!-- server side errors -->
+          <div
+            v-if="Object.keys(serverErrors).length"
+            class="border-destructive/30 bg-destructive/10 rounded-md border p-3 text-sm"
+          >
+            <ul class="list-disc pl-5">
+              <li v-for="(msg, key) in serverErrors" :key="key">{{ Array.isArray(msg) ? msg.join(", ") : msg }}</li>
+            </ul>
+          </div>
 
-        <!-- Slot-based fields (full control) -->
-        <slot :disabled="isView" />
+          <!-- Slot-based fields (full control) -->
+          <slot :disabled="isView" />
 
-        <DialogFooter v-if="!hideFooter">
-          <Button type="button" variant="outline" @click="close">{{ cancelText }}</Button>
-          <Button type="submit" :disabled="isSubmitting || isView">{{
-            submitText ?? (mode === "create" ? "Simpan" : "Update")
-          }}</Button>
-        </DialogFooter>
-      </BaseForm>
+          <DialogFooter v-if="!hideFooter" class="pt-4">
+            <Button type="button" variant="outline" @click="close">{{ cancelText }}</Button>
+            <Button type="submit" :disabled="isSubmitting || isView">{{
+              submitText ?? (mode === "create" ? "Simpan" : "Update")
+            }}</Button>
+          </DialogFooter>
+        </BaseForm>
+      </div>
     </DialogContent>
   </Dialog>
 </template>
