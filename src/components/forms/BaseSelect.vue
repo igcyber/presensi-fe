@@ -61,8 +61,9 @@ const handleChange = (val: AcceptableValue, onChange: (val: any) => void) => {
         <Select
           :multiple="props.multiple"
           :model-value="normalizedValue(componentField.modelValue)"
-          @update:model-value="(val) => handleChange(val, componentField.onChange)"
+          :name="props.name"
           :disabled="props.disabled"
+          @update:model-value="(val) => handleChange(val, componentField.onChange)"
         >
           <SelectTrigger :id="props.name" class="w-full" :aria-invalid="!!(!meta.valid && errorMessage)">
             <SelectValue :placeholder="props.placeholder ?? 'Pilih…'" />
