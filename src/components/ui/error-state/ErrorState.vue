@@ -35,7 +35,7 @@ const iconClass = computed(() => {
     case "info":
       return "text-blue-500";
     default:
-      return "text-red-500";
+      return "text-destructive";
   }
 });
 

@@ -17,14 +17,36 @@ interface Props {
   options: Option[];
   disabled?: boolean;
   required?: boolean;
-  valueAsNumber?: boolean; // konversi ke number saat submit
-  multiple?: boolean; // <-- tambahkan
+  valueAsNumber?: boolean;
+  multiple?: boolean;
+  emptyOption?: string; // opsional
 }
 
 const props = withDefaults(defineProps<Props>(), {
   valueAsNumber: false,
   multiple: false,
 });
+
+const toStringValue = (val: string | number) => String(val);
+
+const normalizedValue = (modelValue: AcceptableValue) => {
+  const mv = modelValue;
+  if (props.multiple) {
+    if (!Array.isArray(mv)) return [];
+    return props.valueAsNumber ? mv.map(toStringValue) : mv;
+  }
+  return props.valueAsNumber && mv != null ? String(mv) : mv;
+};
+
+const handleChange = (val: AcceptableValue, onChange: (val: any) => void) => {
+  if (props.multiple) {
+    const arr = Array.isArray(val) ? val : [];
+    onChange(props.valueAsNumber ? arr.map(Number) : arr);
+  } else {
+    const s = val as string | undefined;
+    onChange(props.valueAsNumber && s != null ? Number(s) : s);
+  }
+};
 </script>
 
 <template>
@@ -32,41 +54,14 @@ const props = withDefaults(defineProps<Props>(), {
     <FormItem>
       <FormLabel :custom-for="props.name">
         {{ props.label }}
-        <span v-if="props.required" class="text-red-500">*</span>
+        <span v-if="props.required" class="text-destructive">*</span>
       </FormLabel>
 
       <FormControl>
         <Select
           :multiple="props.multiple"
-          :model-value="
-            props.multiple
-              ? // MULTIPLE: UI butuh string[]; normalisasi dari model ke string[]
-                props.valueAsNumber
-                ? Array.isArray(componentField.modelValue)
-                  ? componentField.modelValue.map((v: any) => String(v))
-                  : []
-                : Array.isArray(componentField.modelValue)
-                  ? componentField.modelValue
-                  : []
-              : props.valueAsNumber
-                ? componentField.modelValue != null
-                  ? String(componentField.modelValue)
-                  : undefined
-                : componentField.modelValue
-          "
-          @update:model-value="
-            (val: AcceptableValue) => {
-              if (props.multiple) {
-                // MULTIPLE: val => string[] → kirim array ke VeeValidate
-                const arr = Array.isArray(val) ? val : [];
-                componentField.onChange(props.valueAsNumber ? arr.map((s: string) => Number(s)) : arr);
-              } else {
-                // SINGLE: val => string → kirim primitif
-                const s = val as string | undefined;
-                componentField.onChange(props.valueAsNumber && s != null ? Number(s) : s);
-              }
-            }
-          "
+          :model-value="normalizedValue(componentField.modelValue)"
+          @update:model-value="(val) => handleChange(val, componentField.onChange)"
           :disabled="props.disabled"
         >
           <SelectTrigger :id="props.name" class="w-full" :aria-invalid="!!(!meta.valid && errorMessage)">
@@ -75,10 +70,13 @@ const props = withDefaults(defineProps<Props>(), {
 
           <SelectContent>
             <SelectGroup>
+              <SelectItem v-if="props.emptyOption" value="">
+                {{ props.emptyOption }}
+              </SelectItem>
               <SelectItem
                 v-for="opt in props.options"
-                :key="String(opt.value)"
-                :value="String(opt.value)"
+                :key="toStringValue(opt.value)"
+                :value="toStringValue(opt.value)"
                 :disabled="opt.disabled"
               >
                 {{ opt.label }}

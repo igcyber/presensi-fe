@@ -1028,7 +1028,7 @@ const props = defineProps<Props>();
     <FormItem>
       <FormLabel>
         {{ props.label }}
-        <span v-if="props.required" class="text-red-500">*</span>
+        <span v-if="props.required" class="text-destructive">*</span>
       </FormLabel>
       <FormControl>
         <RadioGroup v-bind="componentField" class="flex flex-col space-y-2">

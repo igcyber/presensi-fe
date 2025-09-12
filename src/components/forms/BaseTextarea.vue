@@ -13,7 +13,12 @@ interface Props {
   showCounter?: boolean;
 }
 
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  rows: 4,
+  autoResize: false,
+  required: false,
+  showCounter: false,
+});
 
 function handleAutoResize(e: Event) {
   const el = e.target as HTMLTextAreaElement;
@@ -27,12 +32,12 @@ function handleAutoResize(e: Event) {
     <FormItem>
       <FormLabel>
         {{ props.label }}
-        <span v-if="props.required" class="text-red-500">*</span>
+        <span v-if="props.required" class="text-destructive">*</span>
       </FormLabel>
       <FormControl>
         <Textarea
           v-bind="componentField"
-          :rows="props.rows ?? 4"
+          :rows="props.rows"
           :placeholder="props.placeholder"
           :maxlength="props.maxlength"
           @input="
