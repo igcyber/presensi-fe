@@ -43,8 +43,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 
+// Inisialisasi lowlight
 const lowlight = createLowlight();
 
+// Interface untuk props
 interface Props {
   name: string;
   label: string;
@@ -61,6 +63,7 @@ interface Props {
   minHeight?: number;
 }
 
+// Props dengan default values
 const props = withDefaults(defineProps<Props>(), {
   placeholder: "Mulai menulis...",
   disabled: false,
@@ -71,12 +74,13 @@ const props = withDefaults(defineProps<Props>(), {
   minHeight: 200,
 });
 
-// register field ke vee-validate
+// Registrasi field ke vee-validate
 const { value, errorMessage } = useField<string>(props.name);
 
+// Refs
 const imageInputRef = ref<HTMLInputElement>();
 
-// init editor
+// Inisialisasi editor
 const editor = useEditor({
   content: value.value || "",
   editable: !props.disabled,
@@ -106,29 +110,7 @@ const editor = useEditor({
   },
 });
 
-// sync external value → editor
-watch(
-  () => value.value,
-  (newVal) => {
-    if (newVal !== editor.value?.getHTML()) {
-      editor.value?.commands.setContent(newVal || "");
-    }
-  },
-);
-
-// Watch disabled state changes
-watch(
-  () => props.disabled,
-  (disabled) => {
-    editor.value?.setEditable(!disabled);
-  },
-);
-
-onBeforeUnmount(() => {
-  editor.value?.destroy();
-});
-
-// toolbar states
+// Computed properties untuk toolbar states
 const isBold = computed(() => editor.value?.isActive("bold"));
 const isItalic = computed(() => editor.value?.isActive("italic"));
 const isUnderline = computed(() => editor.value?.isActive("underline"));
@@ -145,7 +127,7 @@ const currentAlignment = computed(() => {
   return "left";
 });
 
-// toolbar actions
+// Toolbar actions
 const toggleBold = () => editor.value?.chain().focus().toggleBold().run();
 const toggleItalic = () => editor.value?.chain().focus().toggleItalic().run();
 const toggleUnderline = () => editor.value?.chain().focus().toggleUnderline().run();
@@ -159,7 +141,7 @@ const toggleBlockquote = () => editor.value?.chain().focus().toggleBlockquote().
 const toggleCodeBlock = () => editor.value?.chain().focus().toggleCodeBlock().run();
 const insertTable = () => editor.value?.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run();
 
-// image upload
+// Image upload handlers
 const handleImageUpload = () => requestAnimationFrame(() => imageInputRef.value?.click());
 const onImageSelect = async (event: Event) => {
   const target = event.target as HTMLInputElement;
@@ -184,6 +166,30 @@ const onImageSelect = async (event: Event) => {
     reader.readAsDataURL(file);
   }
 };
+
+// Watchers
+// Sync external value → editor
+watch(
+  () => value.value,
+  (newVal) => {
+    if (newVal !== editor.value?.getHTML()) {
+      editor.value?.commands.setContent(newVal || "");
+    }
+  },
+);
+
+// Watch disabled state changes
+watch(
+  () => props.disabled,
+  (disabled) => {
+    editor.value?.setEditable(!disabled);
+  },
+);
+
+// Lifecycle hooks
+onBeforeUnmount(() => {
+  editor.value?.destroy();
+});
 </script>
 
 <template>

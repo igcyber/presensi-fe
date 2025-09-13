@@ -84,6 +84,8 @@ async function onSubmit(values: any) {
         label="OPD"
         :options="opdOptions"
         placeholder="Pilih OPD"
+        searchable
+        search-placeholder="Cari OPD..."
         required
         :value-as-number="true"
       />

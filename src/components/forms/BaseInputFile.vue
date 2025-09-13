@@ -5,6 +5,7 @@ import { toast } from "vue-sonner";
 
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
+// Interface Props
 interface Props {
   name: string;
   label: string;
@@ -19,6 +20,7 @@ interface Props {
   description?: string;
 }
 
+// Props dengan default values
 const props = withDefaults(defineProps<Props>(), {
   accept: "image/*",
   multiple: false,
@@ -29,23 +31,34 @@ const props = withDefaults(defineProps<Props>(), {
   previewType: "image",
 });
 
+// Reactive references
 const fileInputRef = ref<HTMLInputElement>();
 const dragOver = ref(false);
 const files = ref<File[]>([]);
 const previews = ref<string[]>([]);
 
-// Remove unused computed
+// Computed properties
 const acceptedTypes = computed(() => {
   if (props.accept === "image/*") return "PNG, JPG, GIF";
   if (props.accept.includes("pdf")) return "PDF";
   return "Semua file";
 });
 
+// Utility functions
+const formatFileSize = (bytes: number): string => {
+  if (bytes === 0) return "0 Bytes";
+  const k = 1024;
+  const sizes = ["Bytes", "KB", "MB", "GB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+};
+
 const revokePreviews = () => {
   previews.value.forEach((src) => URL.revokeObjectURL(src));
   previews.value = [];
 };
 
+// Validation functions
 const validateFiles = (newFiles: File[]): string | null => {
   // Check file size
   const oversized = newFiles.filter((file) => file.size > props.maxSize * 1024 * 1024);
@@ -84,6 +97,7 @@ const validateFiles = (newFiles: File[]): string | null => {
   return null;
 };
 
+// File handling functions
 const handleFiles = (newFiles: File[], onChange: (val: File[] | File | null) => void) => {
   const error = validateFiles(newFiles);
   if (error) {
@@ -142,17 +156,7 @@ const openFileDialog = () => {
   }
 };
 
-const formatFileSize = (bytes: number): string => {
-  if (bytes === 0) return "0 Bytes";
-  const k = 1024;
-  const sizes = ["Bytes", "KB", "MB", "GB"];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-};
-
-onUnmounted(revokePreviews);
-
-// Watch for external value changes to sync files
+// Watchers
 watch(
   () => props.name,
   () => {
@@ -161,6 +165,9 @@ watch(
     revokePreviews();
   },
 );
+
+// Lifecycle hooks
+onUnmounted(revokePreviews);
 </script>
 
 <template>

@@ -128,6 +128,11 @@ const handleBeritaDialogSuccess = (): void => {
   fetchData();
 };
 
+// Lifecycle hooks
+onMounted(() => {
+  loadOpdOptions();
+});
+
 // Watchers
 watch(
   query,
@@ -136,11 +141,6 @@ watch(
   },
   { immediate: true, deep: true },
 );
-
-// Lifecycle hooks
-onMounted(() => {
-  loadOpdOptions();
-});
 </script>
 
 <template>
