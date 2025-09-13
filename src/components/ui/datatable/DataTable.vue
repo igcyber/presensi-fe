@@ -174,7 +174,7 @@ const formatCellValue = (item: T, column: Column<T>) => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>No</TableHead>
+              <TableHead class="p-4">No</TableHead>
               <TableHead
                 v-for="column in columns"
                 :key="column.key"
@@ -215,7 +215,7 @@ const formatCellValue = (item: T, column: Column<T>) => {
               class="hover:bg-muted/50 cursor-pointer"
               @click="handleRowClick(item)"
             >
-              <TableCell>
+              <TableCell class="p-4 text-center">
                 {{ index + 1 + (currentPage - 1) * pageSize }}
               </TableCell>
               <TableCell

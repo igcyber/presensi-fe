@@ -8,15 +8,7 @@ export const createBeritaSchema = z.object({
     .min(1, "Judul wajib diisi")
     .min(5, "Judul minimal 5 karakter")
     .max(200, "Judul maksimal 200 karakter"),
-  isi: z
-    .string()
-    .min(1, "Isi berita wajib diisi")
-    .refine((value) => {
-      // Hapus semua tag HTML dan hitung karakter alphabet saja
-      const textOnly = value.replace(/<[^>]*>/g, "").replace(/&[^;]+;/g, "");
-      const alphabetOnly = textOnly.replace(/[^a-zA-Z]/g, "");
-      return alphabetOnly.length >= 10;
-    }, "Isi berita minimal 10 karakter alphabet"),
+  isi: z.string().min(10, "Isi berita wajib diisi"),
   foto: z.any().refine((file) => {
     if (!file) return false; // Foto wajib diisi
     if (typeof file === "string") return true; // URL string
@@ -35,7 +27,7 @@ export const createBeritaSchema = z.object({
 export const updateBeritaSchema = z.object({
   opdId: z.number().int().positive("OPD ID harus berupa angka positif").min(1, "OPD wajib dipilih").optional(),
   judul: z.string().min(5, "Judul minimal 5 karakter").max(200, "Judul maksimal 200 karakter").optional(),
-  isi: z.string().min(10, "Isi berita minimal 10 karakter").optional(),
+  isi: z.string().min(1, "Isi berita wajib diisi"),
   foto: z
     .any()
     .optional()
