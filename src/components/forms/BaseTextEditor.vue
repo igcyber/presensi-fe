@@ -445,26 +445,29 @@ const onImageSelect = async (event: Event) => {
   const file = target.files?.[0];
   if (!file) return;
 
-  if (props.imageUploadHandler) {
-    try {
+  try {
+    if (props.imageUploadHandler) {
       const url = await props.imageUploadHandler(file);
       editor.value
         ?.chain()
         .focus()
         .setImage({ src: url, size: "medium" } as ExtendedSetImageOptions)
         .run();
-    } catch (error) {
-      console.error("Image upload failed:", error);
+    } else {
+      const reader = new FileReader();
+      reader.onload = (e) =>
+        editor.value
+          ?.chain()
+          .focus()
+          .setImage({ src: e.target?.result as string, size: "medium" } as ExtendedSetImageOptions)
+          .run();
+      reader.readAsDataURL(file);
     }
-  } else {
-    const reader = new FileReader();
-    reader.onload = (e) =>
-      editor.value
-        ?.chain()
-        .focus()
-        .setImage({ src: e.target?.result as string, size: "medium" } as ExtendedSetImageOptions)
-        .run();
-    reader.readAsDataURL(file);
+  } catch (error) {
+    console.error("Image upload failed:", error);
+  } finally {
+    // Reset input value agar file yang sama bisa diupload lagi
+    target.value = "";
   }
 };
 
