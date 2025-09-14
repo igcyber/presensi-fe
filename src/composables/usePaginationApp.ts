@@ -17,6 +17,7 @@ export function usePaginationApp(initialPerPage: number = 10) {
   const search = ref("");
   const sorts = ref<Sort[]>([]);
   const filters = ref<Filter[]>([]);
+  const customFilters = ref<Array<Record<string, any>>>([]);
 
   // Computed
   const hasData = computed(() => pagination.total > 0);
@@ -32,6 +33,7 @@ export function usePaginationApp(initialPerPage: number = 10) {
     search: search.value || undefined,
     sort: sorts.value.length > 0 ? sorts.value.map((s) => `${s.field}:${s.direction}`).join(",") : undefined,
     filters: filters.value.length > 0 ? filters.value : undefined,
+    customFilters: customFilters.value.length > 0 ? customFilters.value : undefined,
   }));
 
   // Methods
@@ -73,6 +75,10 @@ export function usePaginationApp(initialPerPage: number = 10) {
   const setSearch = (searchValue: string) => {
     search.value = searchValue;
     pagination.current_page = 1; // Reset ke page 1 ketika search
+  };
+
+  const setCustomFilter = (filters: Array<Record<string, any>>) => {
+    customFilters.value = filters;
   };
 
   const addSort = (field: string, direction: "asc" | "desc") => {
@@ -128,6 +134,7 @@ export function usePaginationApp(initialPerPage: number = 10) {
     search.value = "";
     sorts.value = [];
     filters.value = [];
+    customFilters.value = [];
   };
 
   // Generate page numbers untuk pagination UI
@@ -170,7 +177,7 @@ export function usePaginationApp(initialPerPage: number = 10) {
     search,
     sorts,
     filters,
-
+    customFilters,
     // Computed
     hasData,
     hasNextPage,
@@ -196,5 +203,6 @@ export function usePaginationApp(initialPerPage: number = 10) {
     clearFilters,
     reset,
     getPageNumbers,
+    setCustomFilter,
   };
 }

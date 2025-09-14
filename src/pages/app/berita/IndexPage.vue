@@ -23,8 +23,18 @@ import type { Berita } from "@/lib/api/types/berita.types";
 import type { Opd } from "@/lib/api/types/opd.types";
 
 // Composables
-const { items, isLoading, isError, error, pagination, query, fetchData, handleSearch, handlePageChange } =
-  useResourceList<Berita>((params) => getBeritas(params), { perPage: 10, searchDebounce: 500 });
+const {
+  items,
+  isLoading,
+  isError,
+  error,
+  pagination,
+  query,
+  fetchData,
+  handleSearch,
+  handlePageChange,
+  handleFilterChange,
+} = useResourceList<Berita>((params) => getBeritas(params), { perPage: 10, searchDebounce: 500 });
 
 const dialog = useDialog<Berita>();
 const confirmDialog = useDialog<Berita>();
@@ -135,18 +145,18 @@ const handleBeritaDialogSuccess = (): void => {
   fetchData();
 };
 
+const customFilters = ref<Array<Record<string, any>>>([]);
 const selectedDate = ref<any>();
 
-const applyDateFilter = (onFilterChange: (filters: Record<string, any>) => void) => {
-  if (selectedDate.value) {
-    const date = format(selectedDate.value, "yyyy-MM-dd");
-    onFilterChange({ date });
-  }
+const applyCustomFilter = (onFilterChange: (filters: Array<Record<string, any>>) => void) => {
+  customFilters.value = [{ date: selectedDate.value ? format(selectedDate.value, "yyyy-MM-dd") : null }];
+  onFilterChange(customFilters.value);
 };
 
-const resetDateFilter = (onFilterChange: (filters: Record<string, any>) => void) => {
+const resetCustomFilter = (onFilterChange: (filters: Array<Record<string, any>>) => void) => {
   selectedDate.value = undefined;
-  onFilterChange({ date: null });
+  customFilters.value = [];
+  onFilterChange([]);
 };
 
 // Lifecycle hooks
@@ -158,6 +168,7 @@ onMounted(() => {
 watch(
   query,
   () => {
+    console.log("query", query.value);
     fetchData();
   },
   { immediate: true, deep: true },
@@ -201,6 +212,7 @@ watch(
             :loading="isLoading"
             @page-change="handlePageChange"
             @search="handleSearch"
+            @filter-change="handleFilterChange"
             @row-click="handleRowClick"
             @edit="handleEdit"
             @delete="handleDelete"
@@ -224,8 +236,8 @@ watch(
                 </Popover>
 
                 <!-- Tombol action -->
-                <Button variant="secondary" @click="applyDateFilter(onFilterChange)"> Terapkan Filter </Button>
-                <Button variant="ghost" @click="resetDateFilter(onFilterChange)"> Reset </Button>
+                <Button variant="secondary" @click="applyCustomFilter(onFilterChange)"> Terapkan Filter </Button>
+                <Button variant="ghost" @click="resetCustomFilter(onFilterChange)"> Reset </Button>
               </div>
             </template>
           </DataTable>

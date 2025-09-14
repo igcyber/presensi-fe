@@ -53,7 +53,7 @@ const emit = defineEmits<{
   delete: [item: T];
   pageChange: [page: number];
   search: [search: string];
-  filterChange: [filters: Record<string, any>];
+  filterChange: [filters: Array<Record<string, any>>];
 }>();
 
 // Use formatters
@@ -118,10 +118,9 @@ const handleSearch = () => {
 };
 
 // Handle filter changes
-const handleFilterChange = (filters: Record<string, any>) => {
+const handleFilterChange = (filters: Array<Record<string, any>>) => {
   currentPage.value = 1;
   emit("filterChange", filters);
-  console.log(filters);
 };
 
 // Format cell value based on column type

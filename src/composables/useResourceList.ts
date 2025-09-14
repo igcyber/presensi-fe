@@ -12,7 +12,9 @@ export function useResourceList<TItem>(
   listFn: (params?: SearchParams) => Promise<ApiResponse<PaginatedPayload<TItem>>>,
   options?: { perPage?: number; searchDebounce?: number },
 ) {
-  const { pagination, query, setPagination, setPage, setSearch } = usePaginationApp(options?.perPage ?? 10);
+  const { pagination, query, setPagination, setPage, setSearch, setCustomFilter } = usePaginationApp(
+    options?.perPage ?? 10,
+  );
 
   const fetcher = async (): Promise<ApiResponse<PaginatedPayload<TItem>>> => {
     return await listFn(query.value);
@@ -35,6 +37,7 @@ export function useResourceList<TItem>(
   // search debounced
   const debouncedSearch = useDebounceFn((v: string) => setSearch(v), options?.searchDebounce ?? 500);
   const handleSearch = (val: string) => debouncedSearch(val);
+  const handleFilterChange = (filters: Array<Record<string, any>>) => setCustomFilter(filters);
   const handlePageChange = (page: number) => setPage(page);
 
   // auto fetch ketika query berubah & fetch pertama
@@ -53,5 +56,6 @@ export function useResourceList<TItem>(
     fetchData,
     handleSearch,
     handlePageChange,
+    handleFilterChange,
   };
 }

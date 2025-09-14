@@ -85,6 +85,7 @@ export interface BeritaQueryParams {
   date?: string;
   sort_by?: "judul" | "createdAt" | "updatedAt";
   sort_order?: "asc" | "desc";
+  customFilters?: Array<Record<string, any>>;
 }
 
 /**

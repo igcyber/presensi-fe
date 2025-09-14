@@ -29,8 +29,28 @@ export const beritaService = createCrudService<Berita, Berita, CreateBeritaReque
  * console.log(response.data.meta.total); // Total count
  * ```
  */
-export const getBeritas = (params?: BeritaQueryParams): Promise<ApiResponse<BeritaListResponse>> =>
-  beritaService.get(params);
+export const getBeritas = (params?: BeritaQueryParams): Promise<ApiResponse<BeritaListResponse>> => {
+  // Destructure customFilters jika ada
+  if (params?.customFilters && params.customFilters.length > 0) {
+    const { customFilters, ...restParams } = params;
+
+    // Gabungkan semua properti dari customFilters ke dalam params utama
+    const flattenedCustomFilters = customFilters.reduce((acc, filter) => {
+      return { ...acc, ...filter };
+    }, {});
+
+    const finalParams = {
+      ...restParams,
+      ...flattenedCustomFilters,
+    };
+
+    console.log("params", finalParams);
+    return beritaService.get(finalParams);
+  }
+
+  console.log("params", params);
+  return beritaService.get(params);
+};
 
 /**
  * Mendapatkan berita berdasarkan ID
