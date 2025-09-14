@@ -11,6 +11,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
+// Types
 interface Props {
   open: boolean;
   title?: string;
@@ -21,6 +22,7 @@ interface Props {
   loading?: boolean;
 }
 
+// Props
 const props = withDefaults(defineProps<Props>(), {
   title: "Konfirmasi",
   description: "Apakah Anda yakin?",
@@ -30,14 +32,17 @@ const props = withDefaults(defineProps<Props>(), {
   loading: false,
 });
 
+// Emits
 const emit = defineEmits<{
   (e: "update:open", v: boolean): void;
   (e: "confirm"): void;
   (e: "cancel"): void;
 }>();
 
+// Computed
 const btnVariant = computed(() => props.variant);
 
+// Methods
 function close() {
   emit("update:open", false);
   emit("cancel");

@@ -41,30 +41,25 @@ const columns: Column<Berita>[] = [
     label: "OPD",
     sortable: true,
     width: "200px",
-    render: (item: Berita): string => {
-      return item.opd.nama;
-    },
+    render: (item: Berita): string => item.opd.nama,
   },
   {
     key: "tag",
     label: "Tag",
     sortable: true,
     width: "150px",
-    render: (item: Berita): string => {
-      return item.tag
+    render: (item: Berita): string =>
+      item.tag
         .split(",")
         .map((tag) => tag.trim())
-        .join(", ");
-    },
+        .join(", "),
   },
   {
     key: "creator",
     label: "Pembuat",
     sortable: true,
     width: "150px",
-    render: (item: Berita): string => {
-      return item.creator.fullName;
-    },
+    render: (item: Berita): string => item.creator.fullName,
   },
   {
     key: "createdAt",
@@ -74,7 +69,6 @@ const columns: Column<Berita>[] = [
   },
 ];
 
-// Methods
 const loadOpdOptions = async (): Promise<void> => {
   try {
     const opds = await getOpds();
@@ -85,11 +79,15 @@ const loadOpdOptions = async (): Promise<void> => {
   }
 };
 
+// Event handlers
 const openCreateDialog = (): void => {
   dialog.openCreate();
 };
 
-const handleRowClick = (_item: Berita): void => {};
+const handleRowClick = (item: Berita): void => {
+  // Navigasi ke detail
+  window.location.href = `/app/berita/${item.id}`;
+};
 
 const handleEdit = (item: Berita): void => {
   dialog.openEdit(item);
@@ -104,19 +102,17 @@ const confirmDelete = async (): Promise<void> => {
 
   try {
     confirmDialog.setLoading(true);
-    await deleteBerita(confirmDialog.state.value.data.id);
+    const berita = confirmDialog.state.value.data;
 
+    await deleteBerita(berita.id);
     fetchData();
 
-    toast.success("Berhasil", {
-      description: "Berita berhasil dihapus",
+    toast.success("Berhasil menghapus berita", {
+      description: `Berita "${berita.judul}" telah dihapus`,
     });
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : "Gagal menghapus berita";
-
-    toast.error("Gagal", {
-      description: errorMessage,
-    });
+    toast.error("Gagal menghapus berita", { description: errorMessage });
   } finally {
     confirmDialog.setLoading(false);
     confirmDialog.closeDialog();
@@ -159,7 +155,7 @@ watch(
       </div>
 
       <Card>
-        <CardHeader>
+        <CardHeader class="px-8">
           <CardTitle>Berita</CardTitle>
           <CardDescription>List of berita dengan fitur pencarian, sorting, dan pagination</CardDescription>
         </CardHeader>

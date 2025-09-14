@@ -152,7 +152,7 @@ const formatCellValue = (item: T, column: Column<T>) => {
 </script>
 
 <template>
-  <div class="space-y-4 overflow-x-auto">
+  <div class="space-y-4 overflow-x-auto p-2">
     <!-- Search -->
     <div v-if="searchable" class="flex items-center space-x-2">
       <Input
@@ -212,7 +212,7 @@ const formatCellValue = (item: T, column: Column<T>) => {
             <TableRow
               v-for="(item, index) in props.data"
               :key="index"
-              class="hover:bg-muted/50 cursor-pointer"
+              class="hover:bg-muted/50 dark:hover:bg-accent cursor-pointer"
               @click="handleRowClick(item)"
             >
               <TableCell class="p-4 text-center">
@@ -268,7 +268,7 @@ const formatCellValue = (item: T, column: Column<T>) => {
     </div>
 
     <!-- Pagination -->
-    <div class="flex flex-col items-center justify-between gap-4 space-x-2 py-4 sm:flex-row">
+    <div class="flex flex-col items-center justify-between gap-4 space-x-2 sm:flex-row">
       <div class="text-muted-foreground w-full text-center text-sm sm:text-left">
         Menampilkan {{ startIndex }} - {{ endIndex }} dari {{ totalData }} data
       </div>

@@ -4,6 +4,7 @@ import { createCrudService } from "@/lib/api/factories/crudServiceFactory";
 import type {
   Berita,
   BeritaDetailPublicResponse,
+  BeritaDetailResponse,
   BeritaListPublicResponse,
   BeritaListResponse,
   BeritaQueryParams,
@@ -42,7 +43,7 @@ export const getBeritas = (params?: BeritaQueryParams): Promise<ApiResponse<Beri
  * console.log(response.data.judul);
  * ```
  */
-export const getBeritaById = (id: number): Promise<ApiResponse<Berita>> => beritaService.getById(id);
+export const getBeritaById = (id: number): Promise<ApiResponse<BeritaDetailResponse>> => beritaService.getById(id);
 
 /**
  * Membuat berita baru

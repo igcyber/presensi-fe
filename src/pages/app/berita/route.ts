@@ -1,3 +1,4 @@
+import BeritaDetailPage from "./DetailPage.vue";
 import BeritaPage from "./IndexPage.vue";
 
 export default [
@@ -8,6 +9,15 @@ export default [
     meta: {
       requiresAuth: true,
       title: "Berita",
+    },
+  },
+  {
+    path: "berita/:id",
+    name: "app.berita.detail",
+    component: BeritaDetailPage,
+    meta: {
+      requiresAuth: true,
+      title: "Detail Berita",
     },
   },
 ];

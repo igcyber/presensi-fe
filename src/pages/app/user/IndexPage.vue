@@ -158,7 +158,7 @@ onMounted(() => {
       </div>
 
       <Card>
-        <CardHeader>
+        <CardHeader class="px-8">
           <CardTitle>Users</CardTitle>
           <CardDescription>List of users dengan fitur pencarian, sorting, dan pagination</CardDescription>
         </CardHeader>

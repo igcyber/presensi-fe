@@ -25,6 +25,7 @@ interface Props {
 interface Emits {
   (e: "update:open", v: boolean): void;
   (e: "success"): void;
+  (e: "cancel"): void;
 }
 
 // Props
@@ -77,6 +78,7 @@ async function onSubmit(values: any) {
     :onSubmit="onSubmit"
     :width-class="widthClass"
     @success="() => $emit('success')"
+    @cancel="() => $emit('cancel')"
   >
     <div class="grid grid-cols-1 gap-3">
       <BaseSelect
