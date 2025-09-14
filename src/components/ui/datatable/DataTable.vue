@@ -174,7 +174,7 @@ const formatCellValue = (item: T, column: Column<T>) => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead class="p-4">No</TableHead>
+              <TableHead class="w-14 text-center">No</TableHead>
               <TableHead
                 v-for="column in columns"
                 :key="column.key"
@@ -215,7 +215,7 @@ const formatCellValue = (item: T, column: Column<T>) => {
               class="hover:bg-muted/50 dark:hover:bg-accent cursor-pointer"
               @click="handleRowClick(item)"
             >
-              <TableCell class="p-4 text-center">
+              <TableCell class="text-center">
                 {{ index + 1 + (currentPage - 1) * pageSize }}
               </TableCell>
               <TableCell
@@ -250,7 +250,7 @@ const formatCellValue = (item: T, column: Column<T>) => {
                 </template>
               </TableCell>
               <TableCell class="py-2 text-center">
-                <div class="flex items-center space-x-2">
+                <div class="flex items-center justify-center space-x-2">
                   <Button variant="secondary" size="sm" @click.stop="handleEdit(item)">
                     <EditIcon class="h-4 w-4" />
                     Edit

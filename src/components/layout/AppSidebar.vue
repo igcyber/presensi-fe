@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Calendar, ChartBar, Globe, HomeIcon, NewspaperIcon, UserIcon, UserRound } from "lucide-vue-next";
+import { Calendar, ChartBar, Globe, HomeIcon, NewspaperIcon, UserIcon, UserRound, VideoIcon } from "lucide-vue-next";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 
@@ -98,6 +98,13 @@ const data = computed(() => ({
       name: "app.berita",
       icon: NewspaperIcon,
       isActive: routNameActive.value === "app.berita" || routNameActive.value === "app.berita.detail",
+    },
+    {
+      title: "Video",
+      url: "/app/video",
+      name: "app.video",
+      icon: VideoIcon,
+      isActive: routNameActive.value === "app.video" || routNameActive.value === "app.video.detail",
     },
   ],
 }));

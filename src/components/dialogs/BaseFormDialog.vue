@@ -132,7 +132,11 @@ watch(
 
 <template>
   <Dialog :open="open" @update:open="(v) => emit('update:open', v)">
-    <DialogContent class="flex max-h-[90vh] flex-col p-0 sm:max-w-[425px]" :class="widthClass">
+    <DialogContent
+      class="flex max-h-[90vh] flex-col p-0 sm:max-w-[425px]"
+      :class="widthClass"
+      @open-auto-focus="(e) => e.preventDefault()"
+    >
       <DialogHeader class="flex-shrink-0 p-6 pb-0">
         <DialogTitle>{{ computedTitle }}</DialogTitle>
         <DialogDescription>{{ computedDesc }}</DialogDescription>
