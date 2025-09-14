@@ -82,6 +82,7 @@ export interface BeritaQueryParams {
   limit?: number;
   search?: string;
   keyword?: string; // public
+  date?: string;
   sort_by?: "judul" | "createdAt" | "updatedAt";
   sort_order?: "asc" | "desc";
 }

@@ -53,6 +53,7 @@ const emit = defineEmits<{
   delete: [item: T];
   pageChange: [page: number];
   search: [search: string];
+  filterChange: [filters: Record<string, any>];
 }>();
 
 // Use formatters
@@ -116,6 +117,13 @@ const handleSearch = () => {
   emit("search", searchQuery.value);
 };
 
+// Handle filter changes
+const handleFilterChange = (filters: Record<string, any>) => {
+  currentPage.value = 1;
+  emit("filterChange", filters);
+  console.log(filters);
+};
+
 // Format cell value based on column type
 const formatCellValue = (item: T, column: Column<T>) => {
   const value = getCellValue(item, column);
@@ -153,15 +161,25 @@ const formatCellValue = (item: T, column: Column<T>) => {
 
 <template>
   <div class="space-y-4 overflow-x-auto p-2">
-    <!-- Search -->
-    <div v-if="searchable" class="flex items-center space-x-2">
-      <Input
-        v-model="searchQuery"
-        placeholder="Cari data..."
-        id="searchKeyword"
-        class="max-w-sm"
-        @input="handleSearch"
-      />
+    <!-- Search and Filters -->
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <!-- Search -->
+      <div v-if="searchable" class="flex items-center space-x-2">
+        <Input
+          v-model="searchQuery"
+          placeholder="Cari data..."
+          id="searchKeyword"
+          class="max-w-sm"
+          @input="handleSearch"
+        />
+      </div>
+
+      <!-- Custom Filters Slot -->
+      <div class="flex items-center space-x-2">
+        <slot name="filters" :search="searchQuery" :on-filter-change="handleFilterChange">
+          <!-- Default: no filters -->
+        </slot>
+      </div>
     </div>
 
     <!-- Loading State -->
