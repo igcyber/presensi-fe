@@ -44,11 +44,9 @@ export const getBeritas = (params?: BeritaQueryParams): Promise<ApiResponse<Beri
       ...flattenedCustomFilters,
     };
 
-    console.log("params", finalParams);
     return beritaService.get(finalParams);
   }
 
-  console.log("params", params);
   return beritaService.get(params);
 };
 

@@ -17,7 +17,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 
 import { useFormatters } from "@/composables/useFormatters";
 
-// Define column interface
+// Interfaces
 export interface Column<T = any> {
   key: string;
   label: string;
@@ -27,7 +27,6 @@ export interface Column<T = any> {
   render?: (item: T) => string | number;
 }
 
-// Props
 export interface Props<T = unknown> {
   data: T[];
   columns: Column<T>[];
@@ -39,6 +38,7 @@ export interface Props<T = unknown> {
   loading?: boolean;
 }
 
+// Props
 const props = withDefaults(defineProps<Props<T>>(), {
   searchable: true,
   pagination: true,
@@ -53,10 +53,10 @@ const emit = defineEmits<{
   delete: [item: T];
   pageChange: [page: number];
   search: [search: string];
-  filterChange: [filters: Array<Record<string, any>>];
+  customFilter: [filters: Array<Record<string, any>>];
 }>();
 
-// Use formatters
+// Composables
 const formatters = useFormatters();
 
 // State
@@ -65,6 +65,7 @@ const currentPage = ref<number>(1);
 const sortColumn = ref<string>("");
 const sortDirection = ref<"asc" | "desc">("asc");
 
+// Computed
 const startIndex = computed(() => {
   if (!props.pagination || !props.totalData) return 1;
   return (currentPage.value - 1) * props.pageSize + 1;
@@ -106,24 +107,21 @@ const goToPage = (page: number) => {
   }
 };
 
-const getCellValue = (item: T, column: Column<T>) => {
-  const value = item[column.key as keyof T];
-  return column.render ? column.render(item) : value;
-};
-
-// Reset pagination when search changes
 const handleSearch = () => {
   currentPage.value = 1;
   emit("search", searchQuery.value);
 };
 
-// Handle filter changes
-const handleFilterChange = (filters: Array<Record<string, any>>) => {
+const handleCustomFilter = (filters: Array<Record<string, any>>) => {
   currentPage.value = 1;
-  emit("filterChange", filters);
+  emit("customFilter", filters);
 };
 
-// Format cell value based on column type
+const getCellValue = (item: T, column: Column<T>) => {
+  const value = item[column.key as keyof T];
+  return column.render ? column.render(item) : value;
+};
+
 const formatCellValue = (item: T, column: Column<T>) => {
   const value = getCellValue(item, column);
 
@@ -175,7 +173,7 @@ const formatCellValue = (item: T, column: Column<T>) => {
 
       <!-- Custom Filters Slot -->
       <div class="flex items-center space-x-2">
-        <slot name="filters" :search="searchQuery" :on-filter-change="handleFilterChange">
+        <slot name="filters" :search="searchQuery" :on-filter-change="handleCustomFilter">
           <!-- Default: no filters -->
         </slot>
       </div>

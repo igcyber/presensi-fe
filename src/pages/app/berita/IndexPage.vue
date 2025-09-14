@@ -33,7 +33,7 @@ const {
   fetchData,
   handleSearch,
   handlePageChange,
-  handleFilterChange,
+  handleCustomFilter,
 } = useResourceList<Berita>((params) => getBeritas(params), { perPage: 10, searchDebounce: 500 });
 
 const dialog = useDialog<Berita>();
@@ -168,7 +168,6 @@ onMounted(() => {
 watch(
   query,
   () => {
-    console.log("query", query.value);
     fetchData();
   },
   { immediate: true, deep: true },
@@ -212,7 +211,7 @@ watch(
             :loading="isLoading"
             @page-change="handlePageChange"
             @search="handleSearch"
-            @filter-change="handleFilterChange"
+            @custom-filter="handleCustomFilter"
             @row-click="handleRowClick"
             @edit="handleEdit"
             @delete="handleDelete"

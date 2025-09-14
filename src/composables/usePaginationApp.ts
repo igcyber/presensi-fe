@@ -36,7 +36,7 @@ export function usePaginationApp(initialPerPage: number = 10) {
     customFilters: customFilters.value.length > 0 ? customFilters.value : undefined,
   }));
 
-  // Methods
+  // Pagination Methods
   const setPagination = (newPagination: PaginationMeta) => {
     Object.assign(pagination, newPagination);
   };
@@ -72,72 +72,6 @@ export function usePaginationApp(initialPerPage: number = 10) {
     pagination.current_page = pagination.last_page;
   };
 
-  const setSearch = (searchValue: string) => {
-    search.value = searchValue;
-    pagination.current_page = 1; // Reset ke page 1 ketika search
-  };
-
-  const setCustomFilter = (filters: Array<Record<string, any>>) => {
-    customFilters.value = filters;
-  };
-
-  const addSort = (field: string, direction: "asc" | "desc") => {
-    const existingIndex = sorts.value.findIndex((s) => s.field === field);
-    if (existingIndex >= 0) {
-      sorts.value[existingIndex].direction = direction;
-    } else {
-      sorts.value.push({ field, direction });
-    }
-    pagination.current_page = 1; // Reset ke page 1 ketika sort
-  };
-
-  const removeSort = (field: string) => {
-    const index = sorts.value.findIndex((s) => s.field === field);
-    if (index >= 0) {
-      sorts.value.splice(index, 1);
-    }
-  };
-
-  const clearSorts = () => {
-    sorts.value = [];
-  };
-
-  const addFilter = (field: string, value: any, operator: Filter["operator"] = "eq") => {
-    const existingIndex = filters.value.findIndex((f) => f.field === field);
-    if (existingIndex >= 0) {
-      filters.value[existingIndex] = { field, value, operator };
-    } else {
-      filters.value.push({ field, value, operator });
-    }
-    pagination.current_page = 1; // Reset ke page 1 ketika filter
-  };
-
-  const removeFilter = (field: string) => {
-    const index = filters.value.findIndex((f) => f.field === field);
-    if (index >= 0) {
-      filters.value.splice(index, 1);
-    }
-  };
-
-  const clearFilters = () => {
-    filters.value = [];
-  };
-
-  const reset = () => {
-    pagination.current_page = 1;
-    pagination.per_page = initialPerPage;
-    pagination.total = 0;
-    pagination.last_page = 0;
-    pagination.first_page = 0;
-    pagination.from = 0;
-    pagination.to = 0;
-    search.value = "";
-    sorts.value = [];
-    filters.value = [];
-    customFilters.value = [];
-  };
-
-  // Generate page numbers untuk pagination UI
   const getPageNumbers = (maxVisible: number = 5) => {
     const pages: number[] = [];
     const totalPages = pagination.last_page;
@@ -171,6 +105,80 @@ export function usePaginationApp(initialPerPage: number = 10) {
     return pages;
   };
 
+  // Search Methods
+  const setSearch = (searchValue: string) => {
+    search.value = searchValue;
+    pagination.current_page = 1; // Reset ke page 1 ketika search
+  };
+
+  // Sort Methods
+  const addSort = (field: string, direction: "asc" | "desc") => {
+    const existingIndex = sorts.value.findIndex((s) => s.field === field);
+    if (existingIndex >= 0) {
+      sorts.value[existingIndex].direction = direction;
+    } else {
+      sorts.value.push({ field, direction });
+    }
+    pagination.current_page = 1; // Reset ke page 1 ketika sort
+  };
+
+  const removeSort = (field: string) => {
+    const index = sorts.value.findIndex((s) => s.field === field);
+    if (index >= 0) {
+      sorts.value.splice(index, 1);
+    }
+  };
+
+  const clearSorts = () => {
+    sorts.value = [];
+  };
+
+  // Filter Methods
+  const addFilter = (field: string, value: any, operator: Filter["operator"] = "eq") => {
+    const existingIndex = filters.value.findIndex((f) => f.field === field);
+    if (existingIndex >= 0) {
+      filters.value[existingIndex] = { field, value, operator };
+    } else {
+      filters.value.push({ field, value, operator });
+    }
+    pagination.current_page = 1; // Reset ke page 1 ketika filter
+  };
+
+  const removeFilter = (field: string) => {
+    const index = filters.value.findIndex((f) => f.field === field);
+    if (index >= 0) {
+      filters.value.splice(index, 1);
+    }
+  };
+
+  const clearFilters = () => {
+    filters.value = [];
+  };
+
+  // Custom Filter Methods
+  const setCustomFilter = (filters: Array<Record<string, any>>) => {
+    customFilters.value = filters;
+  };
+
+  const clearCustomFilter = () => {
+    customFilters.value = [];
+  };
+
+  // Reset Method
+  const reset = () => {
+    pagination.current_page = 1;
+    pagination.per_page = initialPerPage;
+    pagination.total = 0;
+    pagination.last_page = 0;
+    pagination.first_page = 0;
+    pagination.from = 0;
+    pagination.to = 0;
+    search.value = "";
+    sorts.value = [];
+    filters.value = [];
+    customFilters.value = [];
+  };
+
   return {
     // State
     pagination,
@@ -178,6 +186,7 @@ export function usePaginationApp(initialPerPage: number = 10) {
     sorts,
     filters,
     customFilters,
+
     // Computed
     hasData,
     hasNextPage,
@@ -186,7 +195,7 @@ export function usePaginationApp(initialPerPage: number = 10) {
     endItem,
     query,
 
-    // Methods
+    // Pagination Methods
     setPagination,
     setPage,
     setPerPage,
@@ -194,15 +203,25 @@ export function usePaginationApp(initialPerPage: number = 10) {
     prevPage,
     firstPage,
     lastPage,
+    getPageNumbers,
+
+    // Search Methods
     setSearch,
+
+    // Sort Methods
     addSort,
     removeSort,
     clearSorts,
+
+    // Filter Methods
     addFilter,
     removeFilter,
     clearFilters,
-    reset,
-    getPageNumbers,
+
+    // Custom Filter Methods
     setCustomFilter,
+    clearCustomFilter,
+    // Reset Method
+    reset,
   };
 }

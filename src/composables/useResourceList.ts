@@ -37,7 +37,7 @@ export function useResourceList<TItem>(
   // search debounced
   const debouncedSearch = useDebounceFn((v: string) => setSearch(v), options?.searchDebounce ?? 500);
   const handleSearch = (val: string) => debouncedSearch(val);
-  const handleFilterChange = (filters: Array<Record<string, any>>) => setCustomFilter(filters);
+  const handleCustomFilter = (filters: Array<Record<string, any>>) => setCustomFilter(filters);
   const handlePageChange = (page: number) => setPage(page);
 
   // auto fetch ketika query berubah & fetch pertama
@@ -56,6 +56,6 @@ export function useResourceList<TItem>(
     fetchData,
     handleSearch,
     handlePageChange,
-    handleFilterChange,
+    handleCustomFilter,
   };
 }
