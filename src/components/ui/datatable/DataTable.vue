@@ -4,6 +4,7 @@ import { computed, ref } from "vue";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import TableSkeleton from "@/components/ui/loading/TableSkeleton.vue";
 import {
   Pagination,
   PaginationContent,
@@ -128,8 +129,8 @@ const formatCellValue = (item: T, column: Column<T>) => {
     case "total":
     case "biaya":
       return formatters.currency(value as number);
-    case "created_at":
-    case "updated_at":
+    case "createdAt":
+    case "updatedAt":
     case "tanggal":
       return formatters.date(value as string);
     case "is_active":
@@ -151,116 +152,123 @@ const formatCellValue = (item: T, column: Column<T>) => {
 </script>
 
 <template>
-  <div class="space-y-4">
+  <div class="space-y-4 overflow-x-auto p-2">
     <!-- Search -->
     <div v-if="searchable" class="flex items-center space-x-2">
-      <Input v-model="searchQuery" placeholder="Cari data..." class="max-w-sm" @input="handleSearch" />
+      <Input
+        v-model="searchQuery"
+        placeholder="Cari data..."
+        id="searchKeyword"
+        class="max-w-sm"
+        @input="handleSearch"
+      />
     </div>
 
     <!-- Loading State -->
-    <div v-if="loading" class="flex justify-center py-8">
-      <div class="border-primary h-8 w-8 animate-spin rounded-full border-b-2"></div>
-    </div>
+
+    <TableSkeleton v-if="loading" />
 
     <!-- Table -->
     <div v-else class="rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>No</TableHead>
-            <TableHead
-              v-for="column in columns"
-              :key="column.key"
-              :style="{ width: column.width }"
-              :class="[column.sortable ? 'hover:bg-muted/50 cursor-pointer' : '', 'select-none']"
-              @click="handleSort(column)"
-            >
-              <div class="flex items-center space-x-2">
-                <span>{{ column.label }}</span>
-                <div v-if="column.sortable" class="flex flex-col">
-                  <svg
-                    :class="[
-                      'h-3 w-3 transition-colors',
-                      sortColumn === column.key && sortDirection === 'asc'
-                        ? 'text-foreground'
-                        : 'text-muted-foreground',
-                    ]"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                    />
-                  </svg>
+      <div class="max-w-full overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead class="p-4">No</TableHead>
+              <TableHead
+                v-for="column in columns"
+                :key="column.key"
+                :style="{ width: column.width }"
+                :class="[column.sortable ? 'hover:bg-muted/50 cursor-pointer' : '', 'select-none']"
+                @click="handleSort(column)"
+              >
+                <div class="flex items-center space-x-2">
+                  <span>{{ column.label }}</span>
+                  <div v-if="column.sortable" class="flex flex-col">
+                    <svg
+                      :class="[
+                        'h-3 w-3 transition-colors',
+                        sortColumn === column.key && sortDirection === 'asc'
+                          ? 'text-foreground'
+                          : 'text-muted-foreground',
+                      ]"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      />
+                    </svg>
+                  </div>
                 </div>
-              </div>
-            </TableHead>
-            <TableHead class="w-[100px] text-center">Aksi</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow v-if="props.data.length === 0">
-            <TableCell :colspan="columns.length + 1" class="h-24 text-center"> Tidak ada data. </TableCell>
-          </TableRow>
-          <TableRow
-            v-for="(item, index) in props.data"
-            :key="index"
-            class="hover:bg-muted/50 cursor-pointer"
-            @click="handleRowClick(item)"
-          >
-            <TableCell>
-              {{ index + 1 + (currentPage - 1) * pageSize }}
-            </TableCell>
-            <TableCell
-              v-for="column in columns"
-              :key="column.key"
-              :class="[
-                'py-2',
-                column.key === 'status' ? 'capitalize' : '',
-                ['amount', 'harga', 'total', 'biaya'].includes(column.key) ? 'text-right font-medium' : '',
-              ]"
+              </TableHead>
+              <TableHead class="w-[100px] text-center">Aksi</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow v-if="props.data.length === 0">
+              <TableCell :colspan="columns.length + 1" class="h-24 text-center"> Tidak ada data. </TableCell>
+            </TableRow>
+            <TableRow
+              v-for="(item, index) in props.data"
+              :key="index"
+              class="hover:bg-muted/50 dark:hover:bg-accent cursor-pointer"
+              @click="handleRowClick(item)"
             >
-              <!-- Status, Aktif, Inaktif columns -->
-              <template v-if="['status', 'is_active', 'aktif'].includes(column.key)">
-                <span :class="['rounded-full px-2 py-1 text-xs', (formatCellValue(item, column) as any).class]">
-                  {{ (formatCellValue(item, column) as any).label }}
-                </span>
-              </template>
+              <TableCell class="p-4 text-center">
+                {{ index + 1 + (currentPage - 1) * pageSize }}
+              </TableCell>
+              <TableCell
+                v-for="column in columns"
+                :key="column.key"
+                :class="[
+                  'py-2',
+                  column.key === 'status' ? 'capitalize' : '',
+                  ['amount', 'harga', 'total', 'biaya'].includes(column.key) ? 'text-right font-medium' : '',
+                ]"
+              >
+                <!-- Status, Aktif, Inaktif columns -->
+                <template v-if="['status', 'is_active', 'aktif'].includes(column.key)">
+                  <span :class="['rounded-full px-2 py-1 text-xs', (formatCellValue(item, column) as any).class]">
+                    {{ (formatCellValue(item, column) as any).label }}
+                  </span>
+                </template>
 
-              <!-- Currency columns -->
-              <template v-else-if="['amount', 'harga', 'total', 'biaya'].includes(column.key)">
-                {{ formatCellValue(item, column) }}
-              </template>
+                <!-- Currency columns -->
+                <template v-else-if="['amount', 'harga', 'total', 'biaya'].includes(column.key)">
+                  {{ formatCellValue(item, column) }}
+                </template>
 
-              <!-- Date columns -->
-              <template v-else-if="['created_at', 'updated_at', 'tanggal'].includes(column.key)">
-                {{ formatCellValue(item, column) }}
-              </template>
+                <!-- Date columns -->
+                <template v-else-if="['createdAt', 'updatedAt', 'tanggal'].includes(column.key)">
+                  {{ formatCellValue(item, column) }}
+                </template>
 
-              <!-- Other columns -->
-              <template v-else>
-                {{ formatCellValue(item, column) }}
-              </template>
-            </TableCell>
-            <TableCell class="py-2 text-center">
-              <div class="flex items-center space-x-2">
-                <Button variant="secondary" size="sm" @click.stop="handleEdit(item)">
-                  <EditIcon class="h-4 w-4" />
-                  Edit
-                </Button>
-                <Button variant="destructive" size="sm" @click.stop="handleDelete(item)">
-                  <TrashIcon class="h-4 w-4" />
-                  Hapus
-                </Button>
-              </div>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+                <!-- Other columns -->
+                <template v-else>
+                  {{ formatCellValue(item, column) }}
+                </template>
+              </TableCell>
+              <TableCell class="py-2 text-center">
+                <div class="flex items-center space-x-2">
+                  <Button variant="secondary" size="sm" @click.stop="handleEdit(item)">
+                    <EditIcon class="h-4 w-4" />
+                    Edit
+                  </Button>
+                  <Button variant="destructive" size="sm" @click.stop="handleDelete(item)">
+                    <TrashIcon class="h-4 w-4" />
+                    Hapus
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </div>
     </div>
 
     <!-- Pagination -->
-    <div class="flex flex-col items-center justify-between gap-4 space-x-2 py-4 sm:flex-row">
+    <div class="flex flex-col items-center justify-between gap-4 space-x-2 sm:flex-row">
       <div class="text-muted-foreground w-full text-center text-sm sm:text-left">
         Menampilkan {{ startIndex }} - {{ endIndex }} dari {{ totalData }} data
       </div>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, watch } from "vue";
+import { computed, onMounted, watch } from "vue";
 
 import BasePagination from "@/components/base/BasePagination.vue";
 import SelayangPandang from "@/components/features/selayang-pandang/SelayangPandang.vue";
@@ -9,20 +9,26 @@ import { useFetch } from "@/composables/useFetch";
 import { useFormatters } from "@/composables/useFormatters";
 import { usePagination } from "@/composables/usePagination";
 import { type ApiResponse } from "@/lib/api/core";
-import { getOpd, type OpdListPayload } from "@/lib/api/services/unitKerja";
+import { getOpdPublic } from "@/lib/api/services/opd";
+import type { Opd, OpdListPublicResponse } from "@/lib/api/types/opd.types";
 
+// Initialize composables
 const formatters = useFormatters();
-
 const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
 
-const { data, isLoading, error, isError, fetchData } = useFetch<ApiResponse<OpdListPayload>, OpdListPayload>(
-  () => getOpd({ page: currentPage.value }),
-  {
-    immediate: false,
-    extractData: (response) => response.data,
-  },
-);
+// Fetch data
+const { data, isLoading, error, isError, fetchData } = useFetch<
+  ApiResponse<OpdListPublicResponse>,
+  OpdListPublicResponse
+>(() => getOpdPublic({ page: currentPage.value }), {
+  immediate: false,
+  extractData: (response) => response.data,
+});
 
+// Computed properties
+const opds = computed(() => (data.value?.opds as Opd[]) ?? []);
+
+// Methods
 const prevPage = () => {
   if (currentPage.value > 1) {
     currentPage.value -= 1;
@@ -42,10 +48,10 @@ const onPage = (page: number) => {
 // Watchers
 watch(currentPage, () => {
   fetchData();
-
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
+// Lifecycle hooks
 onMounted(async () => {
   await fetchData();
 
@@ -80,7 +86,7 @@ onMounted(async () => {
         <!-- Error State -->
         <div v-else-if="isError" class="mx-auto max-w-2xl">
           <div class="rounded border border-red-200 bg-red-50 p-8 text-center">
-            <i class="bx bx-error-circle mb-4 text-4xl text-red-500"></i>
+            <i class="bx bx-error-circle text-destructive mb-4 text-4xl"></i>
             <h4 class="mb-4 text-xl font-semibold text-red-800">Terjadi Kesalahan</h4>
             <p class="mb-6 text-red-700">{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
             <button
@@ -104,8 +110,8 @@ onMounted(async () => {
               <!-- OPD Grid -->
               <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
                 <div
-                  v-for="opd in data.opds"
-                  :key="opd.id"
+                  v-for="(opd, index) in opds"
+                  :key="index"
                   class="group overflow-hidden rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
                 >
                   <div class="flex h-full">

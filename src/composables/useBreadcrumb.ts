@@ -57,7 +57,10 @@ export function useBreadcrumb() {
 
     // App
     "app.dashboard": "Dashboard",
+    "app.dashboard-data": "Dashboard Data",
     "app.user": "User",
+    "app.berita": "Berita",
+    "app.berita.detail": "Detail Berita",
   };
 
   /**
@@ -98,8 +101,11 @@ export function useBreadcrumb() {
     "berita.detail": ["berita.index"],
 
     // App
-    "app.dashboard": ["Dashboard"],
+    "app.dashboard": [],
+    "app.dashboard-data": [],
     "app.user": ["app.dashboard"],
+    "app.berita": ["app.dashboard"],
+    "app.berita.detail": ["app.dashboard", "app.berita"],
   };
 
   /**

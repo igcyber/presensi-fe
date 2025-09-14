@@ -27,7 +27,7 @@ export const createUserSchema = z
       .min(6, "Password minimal 6 karakter")
       .max(50, "Password maksimal 50 karakter"),
     confirmPassword: z.string().min(1, "Konfirmasi password wajib diisi"),
-    roleIds: z.array(z.number().int().positive("Role ID harus berupa angka positif")).min(1, "Minimal pilih satu role"),
+    roles: z.array(z.number().int().positive("Role ID harus berupa angka positif")).min(1, "Minimal pilih satu role"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Konfirmasi password tidak cocok",
@@ -54,26 +54,11 @@ export const updateUserSchema = z.object({
     .max(20, "NIP maksimal 20 karakter")
     .regex(/^[0-9]+$/, "NIP hanya boleh mengandung angka")
     .optional(),
-  roleIds: z
+  roles: z
     .array(z.number().int().positive("Role ID harus berupa angka positif"))
     .min(1, "Minimal pilih satu role")
     .optional(),
 });
-
-// Schema untuk change user password
-export const changeUserPasswordSchema = z
-  .object({
-    password: z
-      .string()
-      .min(1, "Password wajib diisi")
-      .min(6, "Password minimal 6 karakter")
-      .max(50, "Password maksimal 50 karakter"),
-    confirmPassword: z.string().min(1, "Konfirmasi password wajib diisi"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Konfirmasi password tidak cocok",
-    path: ["confirmPassword"],
-  });
 
 // Schema untuk user query parameters
 export const userQuerySchema = z.object({
@@ -94,5 +79,4 @@ export const userQuerySchema = z.object({
 // Types dari schema
 export type CreateUserFormData = z.infer<typeof createUserSchema>;
 export type UpdateUserFormData = z.infer<typeof updateUserSchema>;
-export type ChangeUserPasswordFormData = z.infer<typeof changeUserPasswordSchema>;
 export type UserQueryFormData = z.infer<typeof userQuerySchema>;

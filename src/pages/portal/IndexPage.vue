@@ -70,7 +70,7 @@ onMounted(async () => {
           @click="closeSubMenu"
         >
           <svg
-            class="animate-up-down mt-2.5 -ml-5 w-10 cursor-pointer hover:translate-y-2.5"
+            class="animate-up-down mt-2.5 -ml-5 w-10 cursor-pointer"
             xmlns="http://www.w3.org/2000/svg"
             width="50"
             height="50"

@@ -1,76 +1,78 @@
 import { computed, reactive, ref } from "vue";
 
-import type { Filter, Pagination, PaginationQuery, Sort } from "@/types/common";
+import type { Filter, PaginationMeta, SearchParams, Sort } from "@/lib/api/core";
 
 export function usePaginationApp(initialPerPage: number = 10) {
   // State
-  const pagination = reactive<Pagination>({
-    page: 1,
-    limit: initialPerPage,
+  const pagination = reactive<PaginationMeta>({
+    current_page: 1,
+    per_page: initialPerPage,
     total: 0,
-    totalPages: 0,
+    last_page: 0,
+    first_page: 0,
+    from: 0,
+    to: 0,
   });
 
-  const loading = ref(false);
   const search = ref("");
   const sorts = ref<Sort[]>([]);
   const filters = ref<Filter[]>([]);
 
   // Computed
   const hasData = computed(() => pagination.total > 0);
-  const hasNextPage = computed(() => pagination.page < pagination.totalPages);
-  const hasPrevPage = computed(() => pagination.page > 1);
-  const startItem = computed(() => (pagination.page - 1) * pagination.limit + 1);
-  const endItem = computed(() => Math.min(pagination.page * pagination.limit, pagination.total));
+  const hasNextPage = computed(() => pagination.current_page < pagination.last_page);
+  const hasPrevPage = computed(() => pagination.current_page > 1);
+  const startItem = computed(() => (pagination.current_page - 1) * pagination.per_page + 1);
+  const endItem = computed(() => Math.min(pagination.current_page * pagination.per_page, pagination.total));
 
   // Query object untuk API
-  const query = computed<PaginationQuery>(() => ({
-    page: pagination.page,
-    limit: pagination.limit,
+  const query = computed<SearchParams>(() => ({
+    page: pagination.current_page,
+    limit: pagination.per_page,
     search: search.value || undefined,
-    sort: sorts.value.length > 0 ? sorts.value : undefined,
+    sort: sorts.value.length > 0 ? sorts.value.map((s) => `${s.field}:${s.direction}`).join(",") : undefined,
     filters: filters.value.length > 0 ? filters.value : undefined,
   }));
 
   // Methods
-  const setPagination = (newPagination: Pagination) => {
+  const setPagination = (newPagination: PaginationMeta) => {
     Object.assign(pagination, newPagination);
   };
 
   const setPage = (page: number) => {
-    if (page >= 1 && page <= pagination.totalPages) {
-      pagination.page = page;
+    if (page >= 1 && page <= pagination.last_page) {
+      pagination.current_page = page;
     }
   };
 
   const setPerPage = (perPage: number) => {
-    pagination.limit = perPage;
-    pagination.page = 1; // Reset ke page 1 ketika mengubah per_page
+    pagination.per_page = perPage;
+    pagination.current_page = 1; // Reset ke page 1 ketika mengubah per_page
   };
 
   const nextPage = () => {
     if (hasNextPage.value) {
-      pagination.page++;
+      pagination.current_page++;
     }
   };
 
   const prevPage = () => {
     if (hasPrevPage.value) {
-      pagination.page--;
+      pagination.current_page--;
     }
   };
 
   const firstPage = () => {
-    pagination.page = 1;
+    pagination.current_page = 1;
   };
 
   const lastPage = () => {
-    pagination.page = pagination.totalPages;
+    pagination.current_page = pagination.last_page;
   };
 
   const setSearch = (searchValue: string) => {
     search.value = searchValue;
-    pagination.page = 1; // Reset ke page 1 ketika search
+    pagination.current_page = 1; // Reset ke page 1 ketika search
   };
 
   const addSort = (field: string, direction: "asc" | "desc") => {
@@ -80,7 +82,7 @@ export function usePaginationApp(initialPerPage: number = 10) {
     } else {
       sorts.value.push({ field, direction });
     }
-    pagination.page = 1; // Reset ke page 1 ketika sort
+    pagination.current_page = 1; // Reset ke page 1 ketika sort
   };
 
   const removeSort = (field: string) => {
@@ -101,7 +103,7 @@ export function usePaginationApp(initialPerPage: number = 10) {
     } else {
       filters.value.push({ field, value, operator });
     }
-    pagination.page = 1; // Reset ke page 1 ketika filter
+    pagination.current_page = 1; // Reset ke page 1 ketika filter
   };
 
   const removeFilter = (field: string) => {
@@ -116,10 +118,13 @@ export function usePaginationApp(initialPerPage: number = 10) {
   };
 
   const reset = () => {
-    pagination.page = 1;
-    pagination.limit = initialPerPage;
+    pagination.current_page = 1;
+    pagination.per_page = initialPerPage;
     pagination.total = 0;
-    pagination.totalPages = 0;
+    pagination.last_page = 0;
+    pagination.first_page = 0;
+    pagination.from = 0;
+    pagination.to = 0;
     search.value = "";
     sorts.value = [];
     filters.value = [];
@@ -128,8 +133,8 @@ export function usePaginationApp(initialPerPage: number = 10) {
   // Generate page numbers untuk pagination UI
   const getPageNumbers = (maxVisible: number = 5) => {
     const pages: number[] = [];
-    const totalPages = pagination.totalPages;
-    const currentPage = pagination.page;
+    const totalPages = pagination.last_page;
+    const currentPage = pagination.current_page;
 
     if (totalPages <= maxVisible) {
       // Jika total pages <= maxVisible, tampilkan semua
@@ -162,7 +167,6 @@ export function usePaginationApp(initialPerPage: number = 10) {
   return {
     // State
     pagination,
-    loading,
     search,
     sorts,
     filters,

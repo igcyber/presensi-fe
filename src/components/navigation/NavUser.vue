@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ChevronsUpDown, LogOut, User } from "lucide-vue-next";
 import { useRouter } from "vue-router";
+import { toast } from "vue-sonner";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -31,7 +32,14 @@ const router = useRouter();
 
 const handleLogout = () => {
   authStore.logout();
+
   router.push({ name: "login.index" });
+
+  toast.success("Logout berhasil!");
+};
+
+const handleProfile = () => {
+  router.push({ name: "app.profile" });
 };
 </script>
 
@@ -46,7 +54,7 @@ const handleLogout = () => {
           >
             <Avatar class="h-8 w-8 rounded-lg">
               <AvatarImage :src="user.avatar" :alt="user.fullname" />
-              <AvatarFallback class="rounded-lg"> CN </AvatarFallback>
+              <AvatarFallback class="rounded-lg"> SA </AvatarFallback>
             </Avatar>
             <div class="grid flex-1 text-left text-sm leading-tight">
               <span class="truncate font-medium">{{ user.fullname }}</span>
@@ -74,12 +82,10 @@ const handleLogout = () => {
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <User />
-              Profile
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
+          <DropdownMenuItem @click="handleProfile">
+            <User />
+            Profile
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem @click="handleLogout">
             <LogOut />

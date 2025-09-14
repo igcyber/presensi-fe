@@ -1,5 +1,5 @@
-import type { ApiResponse, PayloadData } from "../core/apiResponse";
-import httpInstance from "../core/httpInstance";
+import type { ApiResponse, PayloadData } from "@/lib/api/core/apiResponse";
+import httpInstance from "@/lib/api/core/httpInstance";
 import type {
   CreatePrestasiRequest,
   KependudukanData,
@@ -10,7 +10,7 @@ import type {
   PrestasiSearchParams,
   SejarahData,
   UpdatePrestasiRequest,
-} from "../types/selayangPandang.types";
+} from "@/lib/api/types/selayangPandang.types";
 
 // ==================== CONTENT SERVICES ====================
 
@@ -243,4 +243,4 @@ export type {
   PrestasiSearchParams,
   CreatePrestasiRequest,
   UpdatePrestasiRequest,
-} from "../types/selayangPandang.types";
+} from "@/lib/api/types/selayangPandang.types";

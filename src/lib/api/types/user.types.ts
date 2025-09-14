@@ -1,4 +1,6 @@
-import type { BaseEntity } from "../core/apiResponse";
+import type { BaseEntity, PaginatedPayload } from "@/lib/api/core/apiResponse";
+
+import type { Role } from "./role.types";
 
 /**
  * User entity interface
@@ -13,34 +15,10 @@ export interface User extends BaseEntity {
 }
 
 /**
- * Role entity interface
- */
-export interface Role extends BaseEntity {
-  name: string;
-}
-
-/**
  * User list response interface
  * Represents paginated user data from API
  */
-export interface UserListResponse {
-  data: User[];
-  meta: {
-    total: number;
-    per_page: number;
-    current_page: number;
-    last_page: number;
-    first_page: number;
-    from: number;
-    to: number;
-  };
-  links: {
-    first: string;
-    last: string;
-    next: string | null;
-    prev: string | null;
-  };
-}
+export type UserListResponse = PaginatedPayload<User>;
 
 /**
  * User create request payload
@@ -52,7 +30,7 @@ export interface CreateUserRequest {
   nip: string;
   password: string;
   confirmPassword?: string;
-  roleIds: number[];
+  roles: number[];
 }
 
 /**
@@ -63,15 +41,7 @@ export interface UpdateUserRequest {
   email?: string;
   username?: string;
   nip?: string;
-  roleIds?: number[];
-}
-
-/**
- * User password change request
- */
-export interface ChangeUserPasswordRequest {
-  password: string;
-  confirmPassword: string;
+  roles?: number[];
 }
 
 /**
@@ -82,7 +52,7 @@ export interface UserQueryParams {
   per_page?: number;
   search?: string;
   role?: string;
-  sort_by?: string;
+  sort_by?: "fullName" | "email" | "username" | "nip" | "createdAt" | "updatedAt";
   sort_order?: "asc" | "desc";
 }
 
@@ -94,14 +64,4 @@ export interface UserDetailResponse {
   message: string;
   timestamp: string;
   data: User;
-}
-
-/**
- * User list API response interface
- */
-export interface UserListApiResponse {
-  success: boolean;
-  message: string;
-  timestamp: string;
-  data: UserListResponse;
 }

@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 import { useFormField } from "./useFormField";
 
-const props = defineProps<LabelProps & { class?: HTMLAttributes["class"] }>();
+const props = defineProps<LabelProps & { class?: HTMLAttributes["class"]; customFor?: string }>();
 
 const { error, formItemId } = useFormField();
 </script>
@@ -18,7 +18,7 @@ const { error, formItemId } = useFormField();
     data-slot="form-label"
     :data-error="!!error"
     :class="cn('data-[error=true]:text-destructive', props.class)"
-    :for="formItemId"
+    :for="props.customFor || formItemId"
   >
     <slot />
   </Label>

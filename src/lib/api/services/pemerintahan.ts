@@ -1,5 +1,5 @@
-import type { ApiResponse, ContentData, PayloadData } from "../core/apiResponse";
-import httpInstance from "../core/httpInstance";
+import type { ApiResponse, ContentData, PayloadData } from "@/lib/api/core/apiResponse";
+import httpInstance from "@/lib/api/core/httpInstance";
 import type {
   BupatiPayload,
   CreateTransparansiRequest,
@@ -7,7 +7,7 @@ import type {
   TransparansiKeuanganListPayload,
   UpdateTransparansiRequest,
   VisiMisiData,
-} from "../types/pemerintahan.types";
+} from "@/lib/api/types/pemerintahan.types";
 
 // Re-export types for convenience
 export type {
@@ -26,7 +26,7 @@ export type {
   StrategiDaerahData,
   ProgramStrategisData,
   BupatiContentData,
-} from "../types/pemerintahan.types";
+} from "@/lib/api/types/pemerintahan.types";
 
 // ==================== BUPATI SERVICES ====================
 

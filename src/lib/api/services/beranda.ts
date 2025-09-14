@@ -1,6 +1,6 @@
-import type { ApiResponse } from "../core/apiResponse";
-import httpInstance from "../core/httpInstance";
-import type { BerandaData } from "../types/beranda.types";
+import type { ApiResponse } from "@/lib/api/core/apiResponse";
+import httpInstance from "@/lib/api/core/httpInstance";
+import type { BerandaData } from "@/lib/api/types/beranda.types";
 
 // Re-export types for convenience
 export type {
@@ -12,7 +12,7 @@ export type {
   NewsItem,
   OpdItem,
   VideoItem,
-} from "../types/beranda.types";
+} from "@/lib/api/types/beranda.types";
 
 /**
  * Get homepage data including emergencies, news, banners, videos, services, systems, and OPDs

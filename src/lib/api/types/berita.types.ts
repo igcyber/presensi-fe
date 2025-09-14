@@ -1,74 +1,97 @@
-import type { BaseEntity, PaginationMeta } from "../core/apiResponse";
+import type { BaseEntity, PaginatedPayload } from "@/lib/api/core/apiResponse";
+
+import type { Opd } from "./opd.types";
+import type { User } from "./user.types";
+
+/**
+ * User entity interface untuk creator/updater
+ */
 
 /**
  * Berita entity interface
+ * Represents a news article in the system
  */
 export interface Berita extends BaseEntity {
   opdId: number;
   judul: string;
   isi: string;
   foto: string;
+  keterangan?: string | null;
+  tag: string;
+  createdBy: number;
+  updatedBy: number;
+  opd: Opd;
+  creator: Omit<User, "id,nip,roles">;
+  updater: Omit<User, "id,nip,roles">;
+  fotoUrl: string;
 }
 
 /**
- * Berita detail with related data
+ * Berita sidebar interface
+ * Represents simplified berita data for sidebar display
  */
-export interface BeritaDetail extends Berita {
-  opd: {
-    nama: string;
-  };
-}
-
-/**
- * Berita sidebar item (simplified version)
- */
-export interface BeritaSidebar extends BaseEntity {
+export interface BeritaSidebar {
+  id: number;
   judul: string;
   foto: string;
+  createdAt: string;
+  fotoUrl: string;
 }
 
 /**
- * Berita list payload
+ * Berita list response interface
+ * Represents paginated berita data from API
  */
-export interface BeritaListPayload {
-  beritas: Berita[];
-  meta?: PaginationMeta;
-}
+export type BeritaListResponse = PaginatedPayload<Berita>;
 
 /**
- * Berita search parameters
+ * Berita list public response interface
+ * Represents paginated berita data from API
  */
-export interface BeritaSearchParams {
-  page?: number;
-  keyword?: string;
-  opdId?: number;
-  category?: string;
-  sort?: "latest" | "popular" | "trending";
-}
+export type BeritaListPublicResponse = PaginatedPayload<Omit<Berita, "opd,creator,updater">>;
 
 /**
- * Create berita request
+ * Berita create request payload
  */
 export interface CreateBeritaRequest {
   opdId: number;
   judul: string;
   isi: string;
-  foto: string;
-  slug?: string;
-  excerpt?: string;
-  tags?: string[];
+  foto?: File | string;
+  keterangan?: string;
+  tag: string;
 }
 
 /**
- * Update berita request
+ * Berita update request payload
  */
 export interface UpdateBeritaRequest {
   opdId?: number;
   judul?: string;
   isi?: string;
-  foto?: string;
-  slug?: string;
-  excerpt?: string;
-  tags?: string[];
-  isPublished?: boolean;
+  foto?: File | string;
+  keterangan?: string;
+  tag?: string;
 }
+
+/**
+ * Berita query parameters for listing
+ */
+export interface BeritaQueryParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  keyword?: string; // public
+  sort_by?: "judul" | "createdAt" | "updatedAt";
+  sort_order?: "asc" | "desc";
+}
+
+/**
+ * Berita detail response interface
+ */
+export type BeritaDetailResponse = Berita;
+
+/**
+ * Berita detail public response interface
+ */
+export type BeritaDetailPublicResponse = Omit<Berita, "creator,updater">;

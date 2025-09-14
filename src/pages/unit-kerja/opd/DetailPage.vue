@@ -6,16 +6,21 @@ import AppBreadcrumb from "@/components/layout/partials/AppBreadcrumb.vue";
 
 import { useBreadcrumb } from "@/composables/useBreadcrumb";
 import { useFetch } from "@/composables/useFetch";
-import { getOpdDetail, type OpdDetail, type OpdDetailResponse } from "@/lib/api/services/unitKerja";
+import type { ApiResponse } from "@/lib/api/core";
+import { getOpdByIdPublic } from "@/lib/api/services/opd";
+import type { OpdDetailPublicResponse } from "@/lib/api/types/opd.types";
 
 const route = useRoute();
 const id = Number(route.params.id);
 
 const { setContext, clearContext } = useBreadcrumb();
 
-const { data, isLoading, fetchData, isError, error } = useFetch<OpdDetailResponse, OpdDetail>(() => getOpdDetail(id), {
+const { data, isLoading, fetchData, isError, error } = useFetch<
+  ApiResponse<OpdDetailPublicResponse>,
+  OpdDetailPublicResponse & { layanans?: any[] }
+>(() => getOpdByIdPublic(id), {
   immediate: false,
-  extractData: (response) => response.data.data,
+  extractData: (response) => response.data,
 });
 
 // Update breadcrumb context ketika data sudah ada
@@ -61,7 +66,7 @@ onBeforeUnmount(() => {
         <!-- Error State -->
         <div v-else-if="isError" class="mx-auto max-w-2xl">
           <div class="rounded border border-red-200 bg-red-50 p-8 text-center">
-            <i class="bx bx-error-circle mb-4 text-4xl text-red-500"></i>
+            <i class="bx bx-error-circle text-destructive mb-4 text-4xl"></i>
             <h4 class="mb-4 text-xl font-semibold text-red-800">Terjadi Kesalahan</h4>
             <p class="mb-6 text-red-700">{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
             <button
@@ -95,7 +100,7 @@ onBeforeUnmount(() => {
                 <!-- OPD Logo -->
                 <div class="overflow-hidden rounded bg-white shadow-md">
                   <img
-                    :src="`https://kukarkab.go.id/uploads/${data.foto}`"
+                    :src="data.fotoUrl"
                     :alt="`Logo ${data.nama}`"
                     class="h-full w-full object-cover"
                     loading="lazy"
@@ -112,7 +117,7 @@ onBeforeUnmount(() => {
                   </div>
                   <div class="aspect-[4/3]">
                     <iframe
-                      :src="data.maps"
+                      :src="data.maps || ''"
                       class="h-full w-full"
                       style="border: 0"
                       allowfullscreen
@@ -160,7 +165,7 @@ onBeforeUnmount(() => {
                   </div>
 
                   <div class="p-6">
-                    <template v-if="data.layanans.length > 0">
+                    <template v-if="data.layanans && data.layanans.length > 0">
                       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <div
                           v-for="(layanan, index) in data.layanans"

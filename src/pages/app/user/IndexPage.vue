@@ -1,34 +1,40 @@
 <script setup lang="ts">
-import { useDebounceFn } from "@vueuse/core";
 import { PlusIcon } from "lucide-vue-next";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { toast } from "vue-sonner";
 
-import ConfirmDialog from "@/components/dialogs/ConfirmDialog.vue";
+import BaseConfirmDialog from "@/components/dialogs/BaseConfirmDialog.vue";
 import UserDialog from "@/components/dialogs/UserDialog.vue";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { type Column, DataTable } from "@/components/ui/datatable";
+import ErrorState from "@/components/ui/error-state/ErrorState.vue";
 
-import { useConfirmDialog, useDialog } from "@/composables/useDialog";
-import { usePaginationApp } from "@/composables/usePaginationApp";
-import { deleteUser, getUsers, type User } from "@/services/userService";
+import { useDialog } from "@/composables/useDialog";
+import { useFormatters } from "@/composables/useFormatters";
+import { useResourceList } from "@/composables/useResourceList";
+import { getRoles } from "@/lib/api/services/role";
+import { deleteUser, getUsers } from "@/lib/api/services/user";
+import type { Role } from "@/lib/api/types/role.types";
+import type { User } from "@/lib/api/types/user.types";
 
-// Setup pagination
-const { loading, query, pagination, setPagination, setPage, setSearch } = usePaginationApp(10);
+// Composables
+const { items, isLoading, isError, error, pagination, query, fetchData, handleSearch, handlePageChange } =
+  useResourceList<User>((params) => getUsers(params), { perPage: 10, searchDebounce: 500 });
 
-// Data
-const users = ref<User[]>([]);
+const dialog = useDialog<User>();
+const confirmDialog = useDialog<User>();
 
-// Dialog states using composables
-const useDialogUser = useDialog<User>();
-const confirmDialog = useConfirmDialog();
+const { capitalize } = useFormatters();
 
-// Definisi kolom
+// Reactive state
+const roleOptions = ref<{ label: string; value: number }[]>([]);
+
+// Column definitions
 const columns: Column<User>[] = [
   {
-    key: "name",
-    label: "Name",
+    key: "fullName",
+    label: "Nama",
     sortable: true,
     searchable: true,
   },
@@ -45,172 +51,160 @@ const columns: Column<User>[] = [
     searchable: true,
   },
   {
-    key: "no_hp",
-    label: "No HP",
+    key: "nip",
+    label: "NIP",
     sortable: true,
     width: "150px",
   },
   {
-    key: "is_active",
-    label: "Status",
-    sortable: true,
-    width: "120px",
-  },
-  {
-    key: "role",
+    key: "roles",
     label: "Role",
     sortable: true,
     width: "150px",
-    render: (item: any) => {
-      return item.user_roles[0].role.nama;
+    render: (item: User): string => {
+      return item.roles.map((role: Role) => capitalize(role.name)).join(", ");
     },
   },
   {
-    key: "created_at",
+    key: "createdAt",
     label: "Dibuat",
     sortable: true,
     width: "150px",
   },
 ];
 
-// Load users data
-const loadUsers = async () => {
+// Methods
+const loadRoleOptions = async (): Promise<void> => {
   try {
-    loading.value = true;
-    const response = await getUsers(query.value);
-    users.value = response.data;
-    setPagination(response.pagination);
-  } catch (error) {
-    toast.error("Error", {
-      description: "Gagal memuat data users",
-    });
-  } finally {
-    loading.value = false;
+    const roles = await getRoles();
+    roleOptions.value = roles.data.data.map((role: Role) => ({ label: role.name, value: role.id }));
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "Gagal memuat data role";
+    toast.error("Gagal", { description: errorMessage });
   }
 };
 
-// Event handlers
-const handleRowClick = (item: User) => {};
-
-const openCreateDialog = () => {
-  useDialogUser.openCreate();
+const openCreateDialog = (): void => {
+  dialog.openCreate();
 };
 
-const handleEdit = (item: User) => {
-  useDialogUser.openEdit(item);
+const handleRowClick = (_item: User): void => {};
+
+const handleEdit = (item: User): void => {
+  dialog.openEdit(item);
 };
 
-const handleDelete = (item: User) => {
-  confirmDialog.showConfirm(item);
+const handleDelete = (item: User): void => {
+  confirmDialog.openView(item);
 };
 
-const confirmDelete = async () => {
-  if (!confirmDialog.data.value) return;
+const confirmDelete = async (): Promise<void> => {
+  if (!confirmDialog.state.value.data) return;
 
   try {
     confirmDialog.setLoading(true);
-    await deleteUser(confirmDialog.data.value.id);
+    await deleteUser(confirmDialog.state.value.data.id);
 
-    loadUsers();
+    fetchData();
 
     toast.success("Berhasil", {
       description: "User berhasil dihapus",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "Gagal menghapus user";
+
     toast.error("Gagal", {
-      description: error.message || "Gagal menghapus user",
+      description: errorMessage,
     });
   } finally {
     confirmDialog.setLoading(false);
-    confirmDialog.hideConfirm();
+    confirmDialog.closeDialog();
   }
 };
 
-const handleUserDialogSuccess = () => {
-  // Reload data after successful create/update
-  loadUsers();
-  useDialogUser.closeDialog();
+const handleUserDialogSuccess = (): void => {
+  dialog.closeDialog();
+  fetchData();
 };
 
-const handleUserDialogUpdateOpen = (value: boolean) => {
-  // Reset dialog state
-  useDialogUser.state.value.open = value;
-  useDialogUser.state.value.data = null;
-};
+// Watchers
+watch(
+  query,
+  () => {
+    fetchData();
+  },
+  { immediate: true, deep: true },
+);
 
-const handlePageChange = (page: number) => {
-  setPage(page);
-  loadUsers();
-};
-
-// Gunakan debouce agar delat hit endpoint
-const debounceFnSearch = useDebounceFn((search: string) => {
-  setSearch(search);
-  loadUsers();
-}, 500);
-
-const handleSearch = (search: string) => {
-  debounceFnSearch(search);
-};
-
-// Mount
+// Lifecycle hooks
 onMounted(() => {
-  loadUsers();
+  loadRoleOptions();
 });
 </script>
 
 <template>
-  <div class="px-5 py-6">
-    <div class="mb-6 flex items-center justify-between">
-      <h1 class="text-2xl font-bold">Users</h1>
-      <Button @click="openCreateDialog" class="flex items-center gap-2">
-        <PlusIcon class="h-4 w-4" />
-        Tambah User
-      </Button>
+  <div class="bg-background p-4 md:p-6 lg:p-8">
+    <div class="space-y-8">
+      <!-- Header Section -->
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div class="space-y-1">
+          <h1 class="text-3xl font-bold tracking-tight">User</h1>
+          <p class="text-muted-foreground">Daftar pengguna dengan fitur pencarian, pengurutan, dan paginasi</p>
+        </div>
+        <Button @click="openCreateDialog" class="flex items-center gap-2 self-start sm:self-auto">
+          <PlusIcon class="h-4 w-4" />
+          Tambah Baru
+        </Button>
+      </div>
+
+      <Card>
+        <CardHeader class="px-8">
+          <CardTitle>Users</CardTitle>
+          <CardDescription>List of users dengan fitur pencarian, sorting, dan pagination</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <!-- Error State -->
+          <ErrorState v-if="isError" :message="error?.message || 'Gagal memuat data user'" @retry="fetchData" />
+
+          <!-- Data Table -->
+          <DataTable
+            v-else
+            :data="items"
+            :columns="columns"
+            :searchable="true"
+            :pagination="true"
+            :page-size="pagination.per_page"
+            :total-data="pagination.total"
+            :total-pages="pagination.last_page"
+            :loading="isLoading"
+            @page-change="handlePageChange"
+            @search="handleSearch"
+            @row-click="handleRowClick"
+            @edit="handleEdit"
+            @delete="handleDelete"
+          />
+        </CardContent>
+      </Card>
+
+      <!-- User Dialog -->
+      <UserDialog
+        v-model:open="dialog.state.value.open"
+        :mode="dialog.state.value.mode"
+        :user="dialog.state.value.data"
+        :role-options="roleOptions"
+        @success="handleUserDialogSuccess"
+      />
+
+      <!-- Confirm Delete Dialog -->
+      <BaseConfirmDialog
+        v-model:open="confirmDialog.state.value.open"
+        title="Hapus User"
+        :description="`Apakah Anda yakin ingin menghapus user '${confirmDialog.state.value.data?.fullName}'? Tindakan ini tidak dapat dibatalkan.`"
+        confirm-text="Hapus"
+        variant="destructive"
+        :loading="confirmDialog.state.value.loading"
+        @confirm="confirmDelete"
+      />
     </div>
-
-    <Card>
-      <CardHeader>
-        <CardTitle>Users</CardTitle>
-        <CardDescription>List of users dengan fitur pencarian, sorting, dan pagination</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <DataTable
-          :data="users"
-          :columns="columns"
-          :searchable="true"
-          :pagination="true"
-          :page-size="10"
-          :total-data="pagination.total"
-          :total-pages="pagination.totalPages"
-          :loading="loading"
-          @page-change="handlePageChange"
-          @search="handleSearch"
-          @row-click="handleRowClick"
-          @edit="handleEdit"
-          @delete="handleDelete"
-        />
-      </CardContent>
-    </Card>
-
-    <!-- User Dialog -->
-    <UserDialog
-      :open="useDialogUser.state.value.open"
-      :mode="useDialogUser.state.value.mode"
-      :user="useDialogUser.state.value.data"
-      @success="handleUserDialogSuccess"
-      @update:open="handleUserDialogUpdateOpen"
-    />
-
-    <!-- Confirm Delete Dialog -->
-    <ConfirmDialog
-      v-model:open="confirmDialog.open.value"
-      title="Hapus User"
-      :description="`Apakah Anda yakin ingin menghapus user '${confirmDialog.data.value?.name}'? Tindakan ini tidak dapat dibatalkan.`"
-      confirm-text="Hapus"
-      variant="destructive"
-      :loading="confirmDialog.loading.value"
-      @confirm="confirmDelete"
-    />
   </div>
 </template>

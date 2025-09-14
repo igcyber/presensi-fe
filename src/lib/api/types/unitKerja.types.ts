@@ -1,19 +1,6 @@
-import type { BaseEntity, ContentData, PaginationMeta } from "../core/apiResponse";
+import type { BaseEntity, ContentData, PaginationMeta } from "@/lib/api/core/apiResponse";
 
-/**
- * Unit Kerja (OPD) data structure
- */
-export interface Opd extends BaseEntity {
-  nama: string;
-  alamat: string;
-  maps: string;
-  keterangan: string;
-  foto: string;
-  website: string;
-  phone?: string;
-  email?: string;
-  isActive?: boolean;
-}
+import type { Opd } from "./opd.types";
 
 /**
  * Layanan (Service) data structure
@@ -75,15 +62,6 @@ export interface LayananListPayload {
 }
 
 /**
- * Search parameters for OPD
- */
-export interface OpdSearchParams {
-  page?: number;
-  keyword?: string;
-  sort?: "nama" | "latest";
-}
-
-/**
  * Search parameters for Layanan
  */
 export interface LayananSearchParams {
@@ -92,36 +70,6 @@ export interface LayananSearchParams {
   jenis?: string;
   opdId?: number;
   sort?: "nama" | "latest" | "jenis";
-}
-
-/**
- * Create OPD request
- */
-export interface CreateOpdRequest {
-  nama: string;
-  alamat: string;
-  maps: string;
-  keterangan: string;
-  foto: string;
-  website: string;
-  phone?: string;
-  email?: string;
-  isActive?: boolean;
-}
-
-/**
- * Update OPD request
- */
-export interface UpdateOpdRequest {
-  nama?: string;
-  alamat?: string;
-  maps?: string;
-  keterangan?: string;
-  foto?: string;
-  website?: string;
-  phone?: string;
-  email?: string;
-  isActive?: boolean;
 }
 
 /**

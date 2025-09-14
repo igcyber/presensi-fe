@@ -63,22 +63,6 @@ export interface ChangePasswordRequest {
 }
 
 /**
- * Password reset request
- */
-export interface ResetPasswordRequest {
-  email: string;
-}
-
-/**
- * Password reset confirm request
- */
-export interface ResetPasswordConfirmRequest {
-  token: string;
-  password: string;
-  confirmPassword: string;
-}
-
-/**
  * Profile update request
  */
 export interface UpdateProfileRequest {
