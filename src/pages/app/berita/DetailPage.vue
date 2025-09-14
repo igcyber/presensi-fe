@@ -43,7 +43,7 @@ const {
   },
 });
 
-// Dialogs
+// Composables
 const editDialog = useDialog<BeritaDetailResponse>();
 const confirmDialog = useDialog<BeritaDetailResponse>();
 

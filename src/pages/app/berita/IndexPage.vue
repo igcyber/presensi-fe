@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { PlusIcon } from "lucide-vue-next";
 import { onMounted, ref, watch } from "vue";
+import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 
 import BaseConfirmDialog from "@/components/dialogs/BaseConfirmDialog.vue";
@@ -23,6 +24,9 @@ const { items, isLoading, isError, error, pagination, query, fetchData, handleSe
 
 const dialog = useDialog<Berita>();
 const confirmDialog = useDialog<Berita>();
+
+// Router
+const router = useRouter();
 
 // Reactive state
 const opdOptions = ref<{ label: string; value: number }[]>([]);
@@ -86,7 +90,7 @@ const openCreateDialog = (): void => {
 
 const handleRowClick = (item: Berita): void => {
   // Navigasi ke detail
-  window.location.href = `/app/berita/${item.id}`;
+  router.push({ name: "app.berita.detail", params: { id: item.id.toString() } });
 };
 
 const handleEdit = (item: Berita): void => {
@@ -110,12 +114,13 @@ const confirmDelete = async (): Promise<void> => {
     toast.success("Berhasil menghapus berita", {
       description: `Berita "${berita.judul}" telah dihapus`,
     });
+
+    confirmDialog.closeDialog();
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : "Gagal menghapus berita";
     toast.error("Gagal menghapus berita", { description: errorMessage });
   } finally {
     confirmDialog.setLoading(false);
-    confirmDialog.closeDialog();
   }
 };
 
