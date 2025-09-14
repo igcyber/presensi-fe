@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { PlusIcon } from "lucide-vue-next";
 import { onMounted, ref, watch } from "vue";
+import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 
 import BaseConfirmDialog from "@/components/dialogs/BaseConfirmDialog.vue";
@@ -19,6 +20,8 @@ import type { Role } from "@/lib/api/types/role.types";
 import type { User } from "@/lib/api/types/user.types";
 
 // Composables
+const router = useRouter();
+
 const { items, isLoading, isError, error, pagination, query, fetchData, handleSearch, handlePageChange } =
   useResourceList<User>((params) => getUsers(params), { perPage: 10, searchDebounce: 500 });
 
@@ -88,7 +91,9 @@ const openCreateDialog = (): void => {
   dialog.openCreate();
 };
 
-const handleRowClick = (_item: User): void => {};
+const handleRowClick = (item: User): void => {
+  router.push({ name: "app.user.detail", params: { id: item.id } });
+};
 
 const handleEdit = (item: User): void => {
   dialog.openEdit(item);

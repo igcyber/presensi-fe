@@ -1,59 +1,64 @@
 <script setup lang="ts">
 import { Edit, Trash2 } from "lucide-vue-next";
-import { computed, onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 
 import BaseConfirmDialog from "@/components/dialogs/BaseConfirmDialog.vue";
-import BeritaDialog from "@/components/dialogs/BeritaDialog.vue";
-import BeritaDetailView from "@/components/features/berita/BeritaDetailView.vue";
+import UserDialog from "@/components/dialogs/UserDialog.vue";
+import UserDetailView from "@/components/features/user/UserDetailView.vue";
 import { Button } from "@/components/ui/button";
 import ErrorState from "@/components/ui/error-state/ErrorState.vue";
 
 import { useDialog } from "@/composables/useDialog";
 import { useFetch } from "@/composables/useFetch";
 import type { ApiResponse } from "@/lib/api/core";
-import { deleteBerita, getBeritaById } from "@/lib/api/services/berita";
-import type { BeritaDetailResponse } from "@/lib/api/types/berita.types";
+import { getRoles } from "@/lib/api/services/role";
+import { deleteUser, getUserById } from "@/lib/api/services/user";
+import type { Role } from "@/lib/api/types/role.types";
+import type { User } from "@/lib/api/types/user.types";
 
 // Router and router
 const route = useRoute();
 const router = useRouter();
 
-// Get berita ID from route params
-const beritaId = computed(() => {
+// Get user ID from route params
+const userId = computed(() => {
   const id = route.params.id;
   return typeof id === "string" ? parseInt(id, 10) : 0;
 });
 
 // Composables
-const editDialog = useDialog<BeritaDetailResponse>();
-const confirmDialog = useDialog<BeritaDetailResponse>();
+const editDialog = useDialog<User>();
+const confirmDialog = useDialog<User>();
 
-const { data, isLoading, isError, error, fetchData } = useFetch<
-  ApiResponse<BeritaDetailResponse>,
-  BeritaDetailResponse
->(() => getBeritaById(beritaId.value), {
-  immediate: false,
-  extractData: (response) => response.data,
-  onError: (error) => {
-    toast.error("Gagal memuat detail berita", {
-      description: error.message,
-    });
+// Reactive state
+const roleOptions = ref<{ label: string; value: number }[]>([]);
+
+const { data, isLoading, isError, error, fetchData } = useFetch<ApiResponse<User>, User>(
+  () => getUserById(userId.value),
+  {
+    immediate: false,
+    extractData: (response) => response.data,
+    onError: (error) => {
+      toast.error("Gagal memuat detail user", {
+        description: error.message,
+      });
+    },
   },
-});
+);
 
 // Methods
 const handleBack = () => {
-  router.push({ name: "app.berita" });
+  router.push({ name: "app.user" });
 };
 
-const handleEdit = (berita: BeritaDetailResponse) => {
-  editDialog.openEdit(berita);
+const handleEdit = (user: User) => {
+  editDialog.openEdit(user);
 };
 
-const handleDelete = (berita: BeritaDetailResponse) => {
-  confirmDialog.openView(berita);
+const handleDelete = (user: User) => {
+  confirmDialog.openView(user);
 };
 
 const confirmDelete = async () => {
@@ -61,29 +66,40 @@ const confirmDelete = async () => {
 
   try {
     confirmDialog.setLoading(true);
-    const berita = confirmDialog.state.value.data;
-    await deleteBerita(berita.id);
+    const user = confirmDialog.state.value.data;
+    await deleteUser(user.id);
 
-    toast.success("Berhasil menghapus berita", {
-      description: `Berita "${berita.judul}" telah dihapus`,
+    toast.success("Berhasil menghapus user", {
+      description: `User "${user.fullName}" telah dihapus`,
     });
 
     confirmDialog.closeDialog();
     handleBack(); // kembali ke list setelah delete
   } catch (err: unknown) {
-    const errorMessage = err instanceof Error ? err.message : "Gagal menghapus berita";
-    toast.error("Gagal menghapus berita", { description: errorMessage });
+    const errorMessage = err instanceof Error ? err.message : "Gagal menghapus user";
+    toast.error("Gagal menghapus user", { description: errorMessage });
   } finally {
     confirmDialog.setLoading(false);
   }
 };
 
+const loadRoleOptions = async (): Promise<void> => {
+  try {
+    const roles = await getRoles();
+    roleOptions.value = roles.data.data.map((role: Role) => ({ label: role.name, value: role.id }));
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "Gagal memuat data role";
+    toast.error("Gagal", { description: errorMessage });
+  }
+};
+
 // Lifecycle
 onMounted(() => {
-  if (beritaId.value > 0) {
+  if (userId.value > 0) {
     fetchData();
+    loadRoleOptions();
   } else {
-    toast.error("ID berita tidak valid");
+    toast.error("ID user tidak valid");
     handleBack();
   }
 });
@@ -95,7 +111,7 @@ onMounted(() => {
     <div v-if="isLoading" class="flex min-h-screen items-center justify-center">
       <div class="flex items-center gap-2">
         <div class="border-primary h-8 w-8 animate-spin rounded-full border-2 border-t-transparent"></div>
-        <span class="text-muted-foreground">Memuat detail berita...</span>
+        <span class="text-muted-foreground">Memuat detail user...</span>
       </div>
     </div>
 
@@ -106,8 +122,8 @@ onMounted(() => {
 
     <!-- Content -->
     <div v-else-if="data" class="py-6">
-      <BeritaDetailView
-        :berita="data"
+      <UserDetailView
+        :user="data"
         :show-back-button="true"
         @back="handleBack"
         @edit="handleEdit"
@@ -116,29 +132,33 @@ onMounted(() => {
         <!-- Custom action buttons via slot -->
         <template #actions="{ onEdit, onDelete }">
           <div class="flex flex-wrap gap-2">
-            <Button variant="outline" size="sm" @click="onEdit"> <Edit class="mr-2 h-4 w-4" /> Edit Berita </Button>
+            <Button variant="outline" size="sm" @click="onEdit">
+              <Edit class="mr-2 h-4 w-4" />
+              Edit User
+            </Button>
             <Button variant="destructive" size="sm" @click="onDelete">
-              <Trash2 class="mr-2 h-4 w-4" /> Hapus Berita
+              <Trash2 class="mr-2 h-4 w-4" />
+              Hapus User
             </Button>
           </div>
         </template>
-      </BeritaDetailView>
+      </UserDetailView>
     </div>
 
     <!-- Edit Dialog -->
-    <BeritaDialog
+    <UserDialog
       v-model:open="editDialog.state.value.open"
       :mode="editDialog.state.value.mode"
-      :berita="editDialog.state.value.data"
-      widthClass="sm:max-w-[1000px]"
+      :user="editDialog.state.value.data"
+      :role-options="roleOptions"
       @success="fetchData"
     />
 
     <!-- Confirm Delete Dialog -->
     <BaseConfirmDialog
       v-model:open="confirmDialog.state.value.open"
-      title="Hapus Berita"
-      :description="`Apakah Anda yakin ingin menghapus berita '${confirmDialog.state.value.data?.judul}'? Tindakan ini tidak dapat dibatalkan.`"
+      title="Hapus User"
+      :description="`Apakah Anda yakin ingin menghapus user '${confirmDialog.state.value.data?.fullName}'? Tindakan ini tidak dapat dibatalkan.`"
       confirm-text="Hapus"
       variant="destructive"
       :loading="confirmDialog.state.value.loading"

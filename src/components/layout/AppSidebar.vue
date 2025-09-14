@@ -63,7 +63,7 @@ const data = computed(() => ({
       url: "/app/users",
       name: "app.user",
       icon: UserIcon,
-      isActive: routNameActive.value === "app.user",
+      isActive: routNameActive.value === "app.user" || routNameActive.value === "app.user.detail",
     },
     {
       title: "Kegiatan",
@@ -97,7 +97,7 @@ const data = computed(() => ({
       url: "/app/berita",
       name: "app.berita",
       icon: NewspaperIcon,
-      isActive: routNameActive.value === "app.berita",
+      isActive: routNameActive.value === "app.berita" || routNameActive.value === "app.berita.detail",
     },
   ],
 }));

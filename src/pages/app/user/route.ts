@@ -1,3 +1,4 @@
+import UserDetailPage from "./DetailPage.vue";
 import UserPage from "./IndexPage.vue";
 
 export default [
@@ -8,6 +9,15 @@ export default [
     meta: {
       requiresAuth: true,
       title: "User",
+    },
+  },
+  {
+    path: "users/:id",
+    name: "app.user.detail",
+    component: UserDetailPage,
+    meta: {
+      requiresAuth: true,
+      title: "Detail User",
     },
   },
 ];

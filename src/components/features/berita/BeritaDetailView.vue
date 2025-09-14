@@ -174,7 +174,7 @@ const handleDelete = () => {
 
     <!-- Footer Information -->
     <Card class="bg-muted/50">
-      <CardContent class="pt-6">
+      <CardContent>
         <div class="grid gap-4 text-sm sm:grid-cols-2">
           <!-- Created Info -->
           <div class="space-y-1">
@@ -208,12 +208,5 @@ const handleDelete = () => {
         </div>
       </CardContent>
     </Card>
-
-    <!-- Additional Actions Slot -->
-    <div class="flex justify-center">
-      <slot name="footer-actions" :berita="berita">
-        <!-- Default footer actions (empty by default) -->
-      </slot>
-    </div>
   </div>
 </template>
