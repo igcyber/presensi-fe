@@ -341,7 +341,7 @@ defineExpose({
 
 @media screen and (min-width: 341px) and (max-width: 418px) {
   .echo-editor {
-    width: 81vw !important;
+    width: 79vw !important;
   }
 }
 
