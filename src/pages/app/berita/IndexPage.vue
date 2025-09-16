@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { format } from "date-fns";
-import { PlusIcon } from "lucide-vue-next";
+import { PlusIcon, RotateCcw } from "lucide-vue-next";
+import { Filter } from "lucide-vue-next";
 import { onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
@@ -192,7 +193,7 @@ watch(
       <Card>
         <CardHeader class="px-8">
           <CardTitle>Berita</CardTitle>
-          <CardDescription>List of berita dengan fitur pencarian, sorting, dan pagination</CardDescription>
+          <CardDescription>List daftar berita dengan fitur pencarian, sorting, dan pagination</CardDescription>
         </CardHeader>
         <CardContent>
           <!-- Error State -->
@@ -218,15 +219,18 @@ watch(
           >
             <!-- Custom Filter -->
             <template #filters="{ onFilterChange }">
-              <div class="flex items-center gap-2">
+              <div class="flex w-full flex-col gap-2 sm:flex-row sm:items-end sm:justify-end">
                 <!-- Popover buat calendar -->
                 <Popover>
                   <PopoverTrigger as-child>
-                    <Button variant="outline" class="w-[200px] justify-start text-left font-normal">
+                    <Button
+                      variant="ghost"
+                      class="border-ring/50 dark:bg-input/30 justify-start border bg-transparent text-left font-normal hover:bg-transparent sm:w-[200px]"
+                    >
                       <span v-if="selectedDate">
                         {{ date(new Date(selectedDate)) }}
                       </span>
-                      <span v-else class="text-muted-foreground">Pilih tanggal</span>
+                      <span v-else class="text-muted-foreground text-base">Pilih tanggal</span>
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent class="w-auto p-0">
@@ -235,8 +239,20 @@ watch(
                 </Popover>
 
                 <!-- Tombol action -->
-                <Button variant="secondary" @click="applyCustomFilter(onFilterChange)"> Terapkan Filter </Button>
-                <Button variant="ghost" @click="resetCustomFilter(onFilterChange)"> Reset </Button>
+                <div class="flex gap-2">
+                  <Button variant="secondary" class="flex-1 sm:flex-none" @click="applyCustomFilter(onFilterChange)">
+                    <Filter class="h-4 w-4" />
+                    Terapkan Filter
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    class="flex-1 bg-yellow-500 text-black sm:flex-none"
+                    @click="resetCustomFilter(onFilterChange)"
+                  >
+                    <RotateCcw class="h-4 w-4" />
+                    Reset
+                  </Button>
+                </div>
               </div>
             </template>
           </DataTable>

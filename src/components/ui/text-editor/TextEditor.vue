@@ -28,7 +28,6 @@ import {
   locale,
   MoreMark,
   OrderedList,
-  Preview,
   Printer,
   SlashCommand,
   Strike,
@@ -38,7 +37,7 @@ import {
   Underline,
   Video,
 } from "echo-editor";
-import { computed, onMounted, onUnmounted } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 
 import "echo-editor/style.css";
 
@@ -46,7 +45,13 @@ import { ENV_CONFIG } from "@/lib/config/environment";
 import { ImageDeleteListener } from "@/lib/utils/ImageDeleteListener";
 import { useAuthStore } from "@/stores/authStore";
 
+import CustomPreview from "./CustomPreview.vue";
+import CustomPreviewExtension from "./CustomPreviewExtension";
+
 const authStore = useAuthStore();
+
+// State untuk pratinjau kustom
+const showPreview = ref(false);
 
 // Props / Emits
 const props = defineProps<{
@@ -186,6 +191,11 @@ async function removeImageFromServer(imageUrl: string) {
 // Event handler untuk update konten
 function onEditorUpdate() {}
 
+// Fungsi untuk membuka pratinjau kustom
+function openCustomPreview() {
+  showPreview.value = true;
+}
+
 // Echo-Editor Extensions Configuration - Memoized untuk performa
 const extensions = computed(() => [
   BaseKit.configure({
@@ -232,7 +242,9 @@ const extensions = computed(() => [
   Code,
   FindAndReplace.configure({ spacer: true }),
   Printer,
-  Preview,
+  CustomPreviewExtension.configure({
+    onPreview: openCustomPreview,
+  }),
   Iframe,
   // Listener khusus hapus-gambar
   ImageDeleteListener,
@@ -278,26 +290,35 @@ onMounted(() => {
 onUnmounted(() => {
   delete (window as any).__echoRemoveImageFromServer;
 });
+
+defineExpose({
+  openCustomPreview,
+});
 </script>
 
 <template>
-  <EchoEditor
-    class="rounded-md border border-[#1DA1F1]/50 focus-within:border-[#1DA1F1] focus-within:ring-[3px] focus-within:ring-[#1DA1F1]/50"
-    :class="{
-      '!border-red-500 !ring-red-500/20 dark:!ring-red-500/40': error,
-    }"
-    v-model="content"
-    :extensions="extensions"
-    output="html"
-    :hideToolbar="hideToolbar"
-    :hideMenubar="hideMenubar"
-    :disabled="disabled"
-    :maxHeight="512"
-    :minHeight="200"
-    :locale="localeCustom"
-    :dark="false"
-    @update="onEditorUpdate"
-  />
+  <div>
+    <EchoEditor
+      class="rounded-md border border-[#1DA1F1]/50 focus-within:border-[#1DA1F1] focus-within:ring-[3px] focus-within:ring-[#1DA1F1]/50"
+      :class="{
+        '!border-red-500 !ring-red-500/20 dark:!ring-red-500/40': error,
+      }"
+      v-model="content"
+      :extensions="extensions"
+      output="html"
+      :hideToolbar="hideToolbar"
+      :hideMenubar="hideMenubar"
+      :disabled="disabled"
+      :maxHeight="512"
+      :minHeight="200"
+      :locale="localeCustom"
+      :dark="false"
+      @update="onEditorUpdate"
+    />
+
+    <!-- Custom Preview Component -->
+    <CustomPreview :content="content" v-model:isOpen="showPreview" />
+  </div>
 </template>
 
 <style>
@@ -316,5 +337,29 @@ onUnmounted(() => {
 /* Matikan submit default di toolbar echo-editor */
 .echo-editor button {
   pointer-events: auto !important;
+}
+
+@media screen and (min-width: 341px) and (max-width: 418px) {
+  .echo-editor {
+    width: 81vw !important;
+  }
+}
+
+@media screen and (min-width: 419px) and (max-width: 479px) {
+  .echo-editor {
+    width: 83vw !important;
+  }
+}
+
+@media screen and (min-width: 480px) and (max-width: 600px) {
+  .echo-editor {
+    width: 84vw !important;
+  }
+}
+
+@media screen and (min-width: 601px) and (max-width: 639px) {
+  .echo-editor {
+    width: 87vw !important;
+  }
 }
 </style>

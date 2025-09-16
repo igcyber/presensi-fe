@@ -165,7 +165,7 @@ onMounted(() => {
       <Card>
         <CardHeader class="px-8">
           <CardTitle>Users</CardTitle>
-          <CardDescription>List of users dengan fitur pencarian, sorting, dan pagination</CardDescription>
+          <CardDescription>List daftar users dengan fitur pencarian, sorting, dan pagination</CardDescription>
         </CardHeader>
         <CardContent>
           <!-- Error State -->

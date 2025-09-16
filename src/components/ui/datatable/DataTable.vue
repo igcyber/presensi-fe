@@ -161,7 +161,7 @@ const formatCellValue = (item: T, column: Column<T>) => {
     <!-- Search and Filters -->
     <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
       <!-- Search -->
-      <div v-if="searchable" class="flex items-center space-x-2">
+      <div v-if="searchable" class="flex w-full items-center space-x-2">
         <Input
           v-model="searchQuery"
           placeholder="Cari data..."
@@ -172,7 +172,7 @@ const formatCellValue = (item: T, column: Column<T>) => {
       </div>
 
       <!-- Custom Filters Slot -->
-      <div class="flex items-center space-x-2">
+      <div class="flex w-full items-center space-x-2">
         <slot name="filters" :search="searchQuery" :on-filter-change="handleCustomFilter">
           <!-- Default: no filters -->
         </slot>
@@ -283,8 +283,8 @@ const formatCellValue = (item: T, column: Column<T>) => {
     </div>
 
     <!-- Pagination -->
-    <div class="flex flex-col items-center justify-between gap-4 space-x-2 sm:flex-row">
-      <div class="text-muted-foreground w-full text-center text-sm sm:text-left">
+    <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
+      <div class="text-muted-foreground w-full text-center text-sm sm:w-auto sm:text-left">
         Menampilkan {{ startIndex }} - {{ endIndex }} dari {{ totalData }} data
       </div>
 
@@ -296,17 +296,22 @@ const formatCellValue = (item: T, column: Column<T>) => {
         :show-edges="true"
         :sibling-count="0"
         @update:page="goToPage"
-        class="flex items-center justify-end"
+        class="flex w-full items-center justify-center sm:w-auto sm:justify-end"
       >
         <PaginationContent v-slot="{ items }">
           <PaginationPrevious />
 
           <template v-for="(item, index) in items" :key="index">
-            <PaginationItem v-if="item.type === 'page'" :value="item.value" :is-active="item.value === page">
+            <PaginationItem
+              v-if="item.type === 'page'"
+              :value="item.value"
+              :is-active="item.value === page"
+              class="h-8 w-8 text-sm sm:h-10 sm:w-10"
+            >
               {{ item.value }}
             </PaginationItem>
 
-            <PaginationEllipsis v-else :index="index" />
+            <PaginationEllipsis v-else :index="index" class="hidden sm:flex" />
           </template>
 
           <PaginationNext />

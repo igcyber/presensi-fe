@@ -140,7 +140,7 @@ watch(
       <Card>
         <CardHeader class="px-8">
           <CardTitle>Video</CardTitle>
-          <CardDescription>List of video dengan fitur pencarian, sorting, dan pagination</CardDescription>
+          <CardDescription>List daftar video dengan fitur pencarian, sorting, dan pagination</CardDescription>
         </CardHeader>
         <CardContent>
           <!-- Error State -->
