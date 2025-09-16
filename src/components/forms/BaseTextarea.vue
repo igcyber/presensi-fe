@@ -71,8 +71,8 @@ const handleInput = (e: Event, componentFieldOnInput: (e: Event) => void) => {
           :minlength="props.minlength"
           :spellcheck="props.spellcheck"
           :aria-describedby="props.description ? `${props.name}-description` : undefined"
-          @input="(e: Event) => handleInput(e, componentField.onInput)"
           :style="props.autoResize ? { resize: 'none', overflow: 'hidden' } : {}"
+          @input="(e: Event) => handleInput(e, componentField.onInput)"
         />
       </FormControl>
       <p v-if="props.description" :id="`${props.name}-description`" class="text-muted-foreground text-sm">

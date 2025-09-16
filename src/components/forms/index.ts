@@ -5,3 +5,4 @@ export { default as BaseSelect } from "./BaseSelect.vue";
 export { default as BaseCheckbox } from "./BaseCheckbox.vue";
 export { default as BaseTextarea } from "./BaseTextarea.vue";
 export { default as BaseTextEditor } from "./BaseTextEditor.vue";
+export { default as BaseTextEditorEcho } from "./BaseTextEditorEcho.vue";

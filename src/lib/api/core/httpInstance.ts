@@ -10,7 +10,7 @@ import type { ApiError } from "./apiResponse";
  * Creates a pre-configured Axios instance with default settings
  */
 const httpInstance: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8000",
+  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:8000",
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",

@@ -8,7 +8,7 @@ export const createBeritaSchema = z.object({
     .min(1, "Judul wajib diisi")
     .min(5, "Judul minimal 5 karakter")
     .max(200, "Judul maksimal 200 karakter"),
-  isi: z.string().min(10, "Isi berita wajib diisi"),
+  isi: z.string().min(8, "Isi berita wajib diisi"),
   foto: z.any().refine((file) => {
     if (!file) return false; // Foto wajib diisi
     if (typeof file === "string") return true; // URL string

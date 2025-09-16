@@ -541,7 +541,7 @@ Component rich text editor yang terintegrasi dengan Shadcn FormField system. Men
 <script setup lang="ts">
 import { z } from "zod";
 
-import { BaseForm, BaseTextEditor } from "@/components/forms";
+import { BaseForm, BaseTextEditor, BaseTextEditorEcho } from "@/components/forms";
 
 const articleSchema = z.object({
   title: z.string().min(1, "Judul wajib diisi"),
@@ -676,6 +676,289 @@ const editor = useEditor({
 
 ---
 
+## BaseTextEditorEcho.vue
+
+### 📖 Description
+
+Component rich text editor yang dibangun di atas Echo Editor dengan lazy loading untuk performa optimal. Menggunakan defineAsyncComponent untuk memuat editor secara asynchronous, memberikan pengalaman yang smooth saat membuka dialog atau form. Terintegrasi dengan Shadcn FormField system dan mendukung semua fitur advanced Echo Editor termasuk image upload, table editing, dan berbagai formatting options.
+
+### ⚡ Usage Example
+
+```vue
+<script setup lang="ts">
+import { z } from "zod";
+
+import { BaseForm, BaseTextEditorEcho } from "@/components/forms";
+
+const articleSchema = z.object({
+  title: z.string().min(1, "Judul wajib diisi"),
+  content: z.string().min(10, "Konten minimal 10 karakter"),
+});
+
+const initialValues = {
+  title: "",
+  content: "",
+};
+
+async function handleSubmit(values: z.infer<typeof articleSchema>) {
+  console.log("Article data:", values);
+  // Kirim ke API
+}
+</script>
+
+<template>
+  <BaseForm :schema="articleSchema" :initial-values="initialValues" @submit="handleSubmit">
+    <BaseInput name="title" label="Judul Artikel" required />
+
+    <!-- Basic Echo Editor -->
+    <BaseTextEditorEcho name="content" label="Konten Artikel" placeholder="Mulai menulis artikel Anda..." required />
+
+    <!-- Echo Editor dengan custom upload URL -->
+    <BaseTextEditorEcho
+      name="description"
+      label="Deskripsi"
+      placeholder="Tulis deskripsi singkat..."
+      :upload-url="`${ENV_CONFIG.apiBaseUrl}/api/temporary`"
+      description="Deskripsi akan ditampilkan di preview artikel"
+    />
+
+    <!-- Echo Editor tanpa toolbar -->
+    <BaseTextEditorEcho
+      name="summary"
+      label="Ringkasan"
+      placeholder="Tulis ringkasan..."
+      :hide-toolbar="true"
+      :max-length="500"
+    />
+
+    <!-- Echo Editor dengan locale Indonesia -->
+    <BaseTextEditorEcho
+      name="contentId"
+      label="Konten Bahasa Indonesia"
+      placeholder="Mulai menulis dalam bahasa Indonesia..."
+      locale-custom="id"
+    />
+
+    <Button type="submit" class="w-full">Publish Artikel</Button>
+  </BaseForm>
+</template>
+```
+
+### 🛠 Best Practices
+
+#### **Performance & Loading**
+
+- **Lazy Loading**: Component menggunakan `defineAsyncComponent` untuk loading yang optimal
+- **Suspense Fallback**: Menampilkan loading state yang user-friendly saat editor dimuat
+- **Dialog Performance**: Ideal untuk digunakan dalam dialog karena tidak memperlambat opening time
+- **Memory Management**: Editor hanya dimuat saat benar-benar diperlukan
+
+#### **Validation & Error Handling**
+
+- **Schema Validation**: Terintegrasi dengan Zod schema untuk validasi konten
+- **Error Display**: Error messages ditampilkan melalui FormMessage dengan styling yang konsisten
+- **Required Fields**: Proper handling untuk required fields dengan visual indicator
+
+#### **File Upload Integration**
+
+- **Custom Upload URL**: Support custom endpoint untuk image upload
+- **Authentication**: Otomatis menggunakan Bearer token dari auth store
+- **Error Handling**: Graceful handling untuk upload failures dengan fallback
+- **Progress Feedback**: Built-in progress indication untuk upload process
+
+#### **Accessibility & UX**
+
+- **Loading State**: Clear loading indicator saat editor sedang dimuat
+- **Keyboard Navigation**: Full keyboard support dari Echo Editor
+- **Screen Reader**: Compatible dengan screen readers
+- **Focus Management**: Proper focus handling dalam form context
+
+### 🔗 Integration Notes
+
+#### **Echo Editor Features**
+
+- **Full Extensions**: Mendukung semua extensions Echo Editor (Bold, Italic, Lists, Tables, Images, dll)
+- **Image Upload**: Built-in image upload dengan authentication
+- **Table Support**: Advanced table editing capabilities
+- **Code Blocks**: Syntax highlighting untuk code blocks
+- **Slash Commands**: Quick formatting dengan slash commands
+
+#### **Shadcn FormField Integration**
+
+- **FormField**: Terintegrasi dengan FormField, FormItem, FormLabel, FormMessage
+- **Validation**: Error messages ditampilkan melalui FormMessage
+- **Form Context**: Menggunakan VeeValidate form context untuk validation
+- **Styling**: Consistent styling dengan Shadcn design system
+
+#### **Performance Optimizations**
+
+- **Lazy Loading**: Editor dimuat secara asynchronous untuk performa optimal
+- **Suspense**: Menggunakan Vue Suspense untuk loading states
+- **Memoized Extensions**: Extensions di-memoize untuk menghindari re-creation
+- **Optimized Bundle**: Reduced bundle size dengan selective imports
+
+### 📋 Props
+
+| Prop           | Type      | Default              | Description                       |
+| -------------- | --------- | -------------------- | --------------------------------- |
+| `name`         | `string`  | -                    | Field name untuk form binding     |
+| `label`        | `string`  | -                    | Label yang ditampilkan            |
+| `hideToolbar`  | `boolean` | `false`              | Sembunyikan toolbar editor        |
+| `hideMenubar`  | `boolean` | `false`              | Sembunyikan menubar editor        |
+| `required`     | `boolean` | `false`              | Required field dengan asterisk    |
+| `disabled`     | `boolean` | `false`              | Disable editor                    |
+| `uploadUrl`    | `string`  | -                    | Custom URL untuk image upload     |
+| `description`  | `string`  | -                    | Help text di bawah editor         |
+| `placeholder`  | `string`  | `"Mulai menulis..."` | Placeholder text untuk editor     |
+| `localeCustom` | `string`  | `"en"`               | Locale untuk editor (en, id, dll) |
+| `maxLength`    | `number`  | -                    | Maximum character limit           |
+
+### 🚀 Advanced Usage
+
+#### **Custom Upload Handler**
+
+```vue
+<script setup lang="ts">
+import { ENV_CONFIG } from "@/lib/config/environment";
+
+// Custom upload endpoint dengan authentication
+const customUploadUrl = `${ENV_CONFIG.apiBaseUrl}/api/custom-upload`;
+</script>
+
+<template>
+  <BaseTextEditorEcho
+    name="content"
+    label="Konten dengan Custom Upload"
+    :upload-url="customUploadUrl"
+    placeholder="Upload gambar akan menggunakan endpoint custom..."
+  />
+</template>
+```
+
+#### **Multilingual Support**
+
+```vue
+<template>
+  <!-- Editor bahasa Indonesia -->
+  <BaseTextEditorEcho
+    name="contentId"
+    label="Konten Bahasa Indonesia"
+    locale-custom="id"
+    placeholder="Tulis dalam bahasa Indonesia..."
+  />
+
+  <!-- Editor bahasa Inggris -->
+  <BaseTextEditorEcho name="contentEn" label="English Content" locale-custom="en" placeholder="Write in English..." />
+</template>
+```
+
+#### **Minimal Editor Configuration**
+
+```vue
+<template>
+  <!-- Editor minimal untuk komentar -->
+  <BaseTextEditorEcho
+    name="comment"
+    label="Komentar"
+    :hide-toolbar="true"
+    :hide-menubar="true"
+    placeholder="Tulis komentar Anda..."
+    description="Gunakan format text biasa untuk komentar"
+  />
+</template>
+```
+
+#### **Form Integration dengan Validation**
+
+```vue
+<script setup lang="ts">
+import { z } from "zod";
+
+const blogSchema = z.object({
+  title: z.string().min(5, "Judul minimal 5 karakter"),
+  excerpt: z.string().min(20, "Excerpt minimal 20 karakter"),
+  content: z.string().min(100, "Konten minimal 100 karakter"),
+  tags: z.string().optional(),
+});
+
+const initialValues = {
+  title: "",
+  excerpt: "",
+  content: "",
+  tags: "",
+};
+</script>
+
+<template>
+  <BaseForm :schema="blogSchema" :initial-values="initialValues" @submit="handleSubmit">
+    <div class="space-y-6">
+      <BaseInput name="title" label="Judul Blog" placeholder="Masukkan judul menarik..." required />
+
+      <BaseTextEditorEcho
+        name="excerpt"
+        label="Excerpt"
+        placeholder="Tulis ringkasan singkat untuk preview..."
+        description="Excerpt akan ditampilkan di halaman daftar artikel"
+        :hide-menubar="true"
+        required
+      />
+
+      <BaseTextEditorEcho
+        name="content"
+        label="Konten Blog"
+        placeholder="Tulis konten lengkap artikel Anda..."
+        description="Gunakan toolbar untuk formatting teks, menambah gambar, dan tabel"
+        required
+      />
+
+      <BaseInput name="tags" label="Tags" placeholder="tag1, tag2, tag3" />
+
+      <div class="flex gap-4">
+        <Button type="button" variant="outline" class="flex-1">Simpan Draft</Button>
+        <Button type="submit" class="flex-1">Publish</Button>
+      </div>
+    </div>
+  </BaseForm>
+</template>
+```
+
+### 🎯 Comparison: BaseTextEditor vs BaseTextEditorEcho
+
+| Feature                | BaseTextEditor | BaseTextEditorEcho |
+| ---------------------- | -------------- | ------------------ |
+| **Editor Engine**      | Tiptap         | Echo Editor        |
+| **Loading Strategy**   | Synchronous    | Lazy Loading       |
+| **Bundle Impact**      | Immediate      | Deferred           |
+| **Dialog Performance** | Slower         | Faster             |
+| **Extensions**         | Custom         | Built-in           |
+| **Image Upload**       | Custom         | Built-in           |
+| **Table Support**      | Basic          | Advanced           |
+| **Slash Commands**     | No             | Yes                |
+| **Code Highlighting**  | Yes            | Yes                |
+| **Customization**      | High           | Medium             |
+| **Maintenance**        | More           | Less               |
+
+### 💡 When to Use Each
+
+#### **Use BaseTextEditorEcho when:**
+
+- ✅ Editor digunakan dalam dialog/modal
+- ✅ Performa loading penting
+- ✅ Butuh fitur advanced out-of-the-box
+- ✅ Ingin maintenance yang minimal
+- ✅ Slash commands diperlukan
+- ✅ Advanced table editing diperlukan
+
+#### **Use BaseTextEditor when:**
+
+- ✅ Butuh customization yang sangat spesifik
+- ✅ Editor selalu visible di halaman
+- ✅ Perlu kontrol penuh atas extensions
+- ✅ Custom node views diperlukan
+- ✅ Integrasi dengan library lain
+
+---
+
 ## 🚀 Getting Started
 
 ### 1. Import Components
@@ -689,6 +972,7 @@ import {
   BaseSelect,
   BaseTextarea,
   BaseTextEditor,
+  BaseTextEditorEcho,
 } from "@/components/forms";
 ```
 
@@ -720,6 +1004,7 @@ const formSchema = z.object({
     <BaseCheckbox name="isActive" label="Aktif" />
     <BaseTextarea name="description" label="Deskripsi" />
     <BaseTextEditor name="content" label="Konten Rich Text" />
+    <BaseTextEditorEcho name="contentEcho" label="Konten dengan Echo Editor" />
 
     <Button type="submit" class="w-full">Submit</Button>
   </BaseForm>
@@ -971,6 +1256,35 @@ const handleFileUpload = (files) => {
 
 ```vue
 <script setup lang="ts">
+import { ENV_CONFIG } from "@/lib/config/environment";
+</script>
+
+<template>
+  <!-- Echo Editor dengan built-in image upload -->
+  <BaseTextEditorEcho
+    name="content"
+    label="Konten dengan Image Upload (Echo Editor)"
+    placeholder="Tulis konten dan upload gambar dengan drag & drop..."
+    :upload-url="`${ENV_CONFIG.apiBaseUrl}/api/temporary`"
+    description="Drag & drop gambar langsung ke editor atau gunakan toolbar"
+  />
+
+  <!-- Tiptap Editor dengan custom image upload -->
+  <BaseTextEditor
+    name="contentTiptap"
+    label="Konten dengan Custom Image Upload (Tiptap)"
+    :image-upload-handler="handleImageUpload"
+    :enable-image-upload="true"
+    :enable-table="true"
+    :enable-code-block="true"
+  />
+</template>
+```
+
+### Custom Image Upload Handler (Tiptap)
+
+```vue
+<script setup lang="ts">
 import { ref } from "vue";
 import { toast } from "vue-sonner";
 
@@ -1014,7 +1328,7 @@ const handleImageUpload = async (file: File): Promise<string> => {
 <template>
   <BaseTextEditor
     name="content"
-    label="Konten dengan Image Upload"
+    label="Konten dengan Custom Image Upload"
     :image-upload-handler="handleImageUpload"
     :enable-image-upload="true"
     :enable-table="true"
@@ -1038,14 +1352,15 @@ const handleImageUpload = async (file: File): Promise<string> => {
 
 ```vue
 <script setup lang="ts">
-import { debounce, ref, watch } from "vue";
+import { useDebounceFn } from "@vueuse/core";
+import { ref, watch } from "vue";
 
 const content = ref("");
 const isSaving = ref(false);
 const lastSaved = ref<Date | null>(null);
 
-// Debounced auto-save
-const debouncedSave = debounce(async (content: string) => {
+// Debounced auto-save function
+const debouncedSave = useDebounceFn(async (content: string) => {
   if (!content.trim()) return;
 
   isSaving.value = true;
@@ -1071,12 +1386,21 @@ watch(content, (newContent) => {
 
 <template>
   <div class="space-y-4">
-    <BaseTextEditor name="content" label="Konten dengan Auto-save" v-model="content" />
+    <!-- Echo Editor dengan auto-save -->
+    <BaseTextEditorEcho
+      name="content"
+      label="Konten dengan Auto-save (Echo Editor)"
+      v-model="content"
+      placeholder="Konten akan otomatis tersimpan saat Anda mengetik..."
+    />
+
+    <!-- Tiptap Editor dengan auto-save -->
+    <BaseTextEditor name="contentTiptap" label="Konten dengan Auto-save (Tiptap)" v-model="content" />
 
     <!-- Auto-save status -->
-    <div class="flex items-center gap-2 text-sm text-gray-600">
+    <div class="text-muted-foreground flex items-center gap-2 text-sm">
       <div v-if="isSaving" class="flex items-center gap-1">
-        <div class="h-3 w-3 animate-spin rounded-full border-2 border-blue-600 border-t-transparent"></div>
+        <div class="border-primary h-3 w-3 animate-spin rounded-full border-2 border-t-transparent"></div>
         <span>Menyimpan...</span>
       </div>
       <div v-else-if="lastSaved" class="flex items-center gap-1">

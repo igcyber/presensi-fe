@@ -7,7 +7,7 @@ import BaseInput from "@/components/forms/BaseInput.vue";
 import BaseInputFile from "@/components/forms/BaseInputFile.vue";
 import BaseSelect from "@/components/forms/BaseSelect.vue";
 import BaseTextarea from "@/components/forms/BaseTextarea.vue";
-import BaseTextEditor from "@/components/forms/BaseTextEditor.vue";
+import BaseTextEditorEcho from "@/components/forms/BaseTextEditorEcho.vue";
 
 import { createBerita, updateBerita } from "@/lib/api/services/berita";
 import type { Berita } from "@/lib/api/types/berita.types";
@@ -94,7 +94,7 @@ async function onSubmit(values: any) {
 
       <BaseInput name="judul" label="Judul Berita" placeholder="Masukkan judul berita" required />
 
-      <BaseTextEditor name="isi" label="Isi Berita" placeholder="Masukkan isi berita" required :max-length="500" />
+      <BaseTextEditorEcho name="isi" label="Isi Berita" placeholder="Masukkan isi berita" required />
 
       <BaseInputFile
         name="foto"

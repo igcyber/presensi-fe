@@ -82,6 +82,8 @@ const togglePasswordVisibility = () => {
           :autocomplete="autocompleteValue"
           :class="props.type === 'password' ? 'pr-10' : ''"
         />
+
+        <!-- Toggle Password Visibility -->
         <Button
           v-if="props.type === 'password'"
           type="button"
