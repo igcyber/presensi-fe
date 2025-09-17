@@ -77,18 +77,3 @@ export const MONTH_OPTIONS = [
   { label: "November", value: 11 },
   { label: "Desember", value: 12 },
 ];
-
-/**
- * Year options generator
- */
-export const generateYearOptions = (startYear: number = 2020, endYear?: number) => {
-  const currentYear = new Date().getFullYear();
-  const finalEndYear = endYear || currentYear + 5;
-  const years = [];
-
-  for (let year = finalEndYear; year >= startYear; year--) {
-    years.push({ label: year.toString(), value: year });
-  }
-
-  return years;
-};

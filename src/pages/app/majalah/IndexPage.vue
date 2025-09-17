@@ -15,7 +15,8 @@ import { useDialog } from "@/composables/useDialog";
 import { useResourceList } from "@/composables/useResourceList";
 import { deleteMajalah, getMajalahs } from "@/lib/api/services/majalah";
 import type { Majalah } from "@/lib/api/types/majalah.types";
-import { generateYearOptions, MONTH_OPTIONS } from "@/lib/api/types/majalah.types";
+import { MONTH_OPTIONS } from "@/lib/api/types/majalah.types";
+import { generateYearOptions } from "@/lib/utils/helper";
 
 // Composables initialization
 const {

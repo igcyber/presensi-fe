@@ -8,7 +8,8 @@ import BaseSelect from "@/components/forms/BaseSelect.vue";
 
 import { createMajalah, updateMajalah } from "@/lib/api/services/majalah";
 import type { Majalah } from "@/lib/api/types/majalah.types";
-import { generateYearOptions, MONTH_OPTIONS } from "@/lib/api/types/majalah.types";
+import { MONTH_OPTIONS } from "@/lib/api/types/majalah.types";
+import { generateYearOptions } from "@/lib/utils/helper";
 import { createMajalahSchema, updateMajalahSchema } from "@/schemas/majalahSchema";
 
 // Interface definitions

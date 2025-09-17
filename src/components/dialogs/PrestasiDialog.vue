@@ -9,7 +9,8 @@ import BaseTextEditorEcho from "@/components/forms/BaseTextEditorEcho.vue";
 
 import { createPrestasi, updatePrestasi } from "@/lib/api/services/prestasi";
 import type { Prestasi } from "@/lib/api/types/prestasi.types";
-import { generateYearOptions, TINGKAT_OPTIONS } from "@/lib/api/types/prestasi.types";
+import { TINGKAT_OPTIONS } from "@/lib/api/types/prestasi.types";
+import { generateYearOptions } from "@/lib/utils/helper";
 import { createPrestasiSchema, updatePrestasiSchema } from "@/schemas/prestasiSchema";
 
 // Interface definitions
