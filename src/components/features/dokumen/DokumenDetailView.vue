@@ -10,26 +10,28 @@ import { Separator } from "@/components/ui/separator";
 
 import { useFilePreview } from "@/composables/useFilePreview";
 import { useFormatters } from "@/composables/useFormatters";
-import type { Majalah } from "@/lib/api/types/majalah.types";
-import { MONTH_OPTIONS } from "@/lib/api/types/majalah.types";
+import type { Dokumen } from "@/lib/api/types/dokumen.types";
 
+// Interface definitions
 interface Props {
-  majalah: Majalah;
+  dokumen: Dokumen;
   showBackButton?: boolean;
   loading?: boolean;
 }
 
 interface Emits {
   (e: "back"): void;
-  (e: "edit", majalah: Majalah): void;
-  (e: "delete", majalah: Majalah): void;
+  (e: "edit", dokumen: Dokumen): void;
+  (e: "delete", dokumen: Dokumen): void;
 }
 
+// Props
 const props = withDefaults(defineProps<Props>(), {
   showBackButton: false,
   loading: false,
 });
 
+// Emits
 const emit = defineEmits<Emits>();
 
 // Composables
@@ -37,13 +39,8 @@ const { date } = useFormatters();
 const filePreview = useFilePreview();
 
 // Computed properties
-const monthName = computed(() => {
-  const month = MONTH_OPTIONS.find((m) => m.value === props.majalah.bulan);
-  return month?.label || "Unknown";
-});
-
 const creatorInitials = computed(() => {
-  const name = props.majalah.creator?.fullName || "Unknown";
+  const name = props.dokumen.createdByUser?.fullName || "Unknown";
   return name
     .split(" ")
     .map((word) => word[0])
@@ -52,36 +49,24 @@ const creatorInitials = computed(() => {
     .slice(0, 2);
 });
 
-const majalahTitle = computed(() => {
-  return `Majalah Kukar Edisi ${String(props.majalah.bulan).padStart(2, "0")} - ${props.majalah.tahun}`;
-});
-
 // Methods
 const handleBack = () => {
   emit("back");
 };
 
 const handleEdit = () => {
-  emit("edit", props.majalah);
+  emit("edit", props.dokumen);
 };
 
 const handleDelete = () => {
-  emit("delete", props.majalah);
-};
-
-const handleDownload = () => {
-  if (props.majalah.linkUrl) {
-    window.open(props.majalah.linkUrl, "_blank");
-  }
+  emit("delete", props.dokumen);
 };
 
 const handlePreviewFullscreen = () => {
-  if (props.majalah.linkUrl) {
-    filePreview.previewPDF(props.majalah.linkUrl, majalahTitle.value, {
-      title: `Preview: ${majalahTitle.value}`,
-      showFileInfo: true,
-    });
-  }
+  filePreview.previewPDF(props.dokumen.fileUrl, props.dokumen.nama, {
+    title: `Preview: ${props.dokumen.nama}`,
+    showFileInfo: true,
+  });
 };
 </script>
 
@@ -100,7 +85,7 @@ const handlePreviewFullscreen = () => {
       <CardHeader class="space-y-4">
         <!-- Title -->
         <CardTitle class="text-2xl leading-tight font-bold lg:text-3xl">
-          {{ majalahTitle }}
+          {{ dokumen.nama }}
         </CardTitle>
 
         <!-- Meta Information -->
@@ -114,26 +99,20 @@ const handlePreviewFullscreen = () => {
             </Avatar>
             <div class="flex items-center gap-1">
               <User class="h-4 w-4" />
-              <span>{{ majalah.creator?.fullName || "Unknown" }}</span>
+              <span>{{ dokumen.createdByUser?.fullName || "Unknown" }}</span>
             </div>
-          </div>
-
-          <!-- Month & Year -->
-          <div class="flex items-center gap-1">
-            <Calendar class="h-4 w-4" />
-            <span>{{ monthName }} {{ majalah.tahun }}</span>
           </div>
 
           <!-- Created Date -->
           <div class="flex items-center gap-1">
             <Calendar class="h-4 w-4" />
-            <span>{{ date(majalah.createdAt) }}</span>
+            <span>{{ date(dokumen.createdAt) }}</span>
           </div>
         </div>
 
         <!-- Action Buttons Slot -->
         <div class="flex flex-wrap gap-2">
-          <slot name="actions" :majalah="majalah" :on-edit="handleEdit" :on-delete="handleDelete">
+          <slot name="actions" :dokumen="dokumen" :on-edit="handleEdit" :on-delete="handleDelete">
             <!-- Default actions (can be overridden by parent) -->
             <Button variant="outline" size="sm" @click="handleEdit"> Edit </Button>
             <Button variant="destructive" size="sm" @click="handleDelete"> Hapus </Button>
@@ -142,12 +121,23 @@ const handlePreviewFullscreen = () => {
       </CardHeader>
     </Card>
 
+    <!-- Content Card -->
+    <Card>
+      <CardHeader>
+        <CardTitle class="text-xl">Deskripsi Dokumen</CardTitle>
+      </CardHeader>
+      <Separator />
+      <CardContent>
+        <div class="text-foreground leading-relaxed">{{ dokumen.isi }}</div>
+      </CardContent>
+    </Card>
+
     <!-- PDF Preview/Download Card -->
-    <Card v-if="majalah.link">
+    <Card v-if="dokumen.file">
       <CardHeader>
         <CardTitle class="flex items-center gap-2">
           <FileText class="h-5 w-5" />
-          File Majalah
+          File Dokumen
         </CardTitle>
       </CardHeader>
       <Separator />
@@ -160,12 +150,16 @@ const handlePreviewFullscreen = () => {
                 <FileText class="h-6 w-6 text-red-600 dark:text-red-400" />
               </div>
               <div>
-                <p class="font-medium">{{ majalahTitle }}.pdf</p>
-                <p class="text-muted-foreground text-sm">{{ majalah.link }}</p>
+                <p class="font-medium">{{ dokumen.file.split("/").pop() }}</p>
+                <p class="text-muted-foreground text-sm">{{ dokumen.file }}</p>
               </div>
             </div>
             <div class="flex gap-2">
-              <Button @click="handleDownload" size="sm" class="gap-2">
+              <Button
+                @click="filePreview.handleDownload({ url: dokumen.fileUrl, name: dokumen.nama })"
+                size="sm"
+                class="gap-2"
+              >
                 <Download class="h-4 w-4" />
                 Download
               </Button>
@@ -177,9 +171,9 @@ const handlePreviewFullscreen = () => {
           </div>
         </div>
 
-        <!-- PDF Embed (if linkUrl available) -->
-        <div v-if="majalah.linkUrl" class="relative overflow-hidden rounded-lg border">
-          <iframe :src="majalah.linkUrl" class="h-96 w-full border-0" title="Majalah PDF Preview" loading="lazy" />
+        <!-- PDF Embed (if fileUrl available) -->
+        <div v-if="dokumen.fileUrl" class="relative overflow-hidden rounded-lg border">
+          <iframe :src="dokumen.fileUrl" class="h-96 w-full border-0" title="Dokumen PDF Preview" loading="lazy" />
         </div>
       </CardContent>
     </Card>
@@ -204,26 +198,26 @@ const handlePreviewFullscreen = () => {
             <div class="text-muted-foreground space-y-1">
               <p>
                 <span class="font-medium">Dibuat oleh:</span>
-                {{ majalah.creator?.fullName || "Unknown" }}
+                {{ dokumen.createdByUser?.fullName || "Unknown" }}
               </p>
               <p>
                 <span class="font-medium">Tanggal:</span>
-                {{ date(majalah.createdAt) }}
+                {{ date(dokumen.createdAt) }}
               </p>
             </div>
           </div>
 
           <!-- Updated Info (if different from created) -->
-          <div v-if="majalah.updatedAt && majalah.updatedAt !== majalah.createdAt" class="space-y-1">
+          <div v-if="dokumen.updatedAt && dokumen.updatedAt !== dokumen.createdAt" class="space-y-1">
             <p class="text-foreground font-medium">Informasi Update</p>
             <div class="text-muted-foreground space-y-1">
               <p>
                 <span class="font-medium">Diperbarui oleh:</span>
-                {{ majalah.updater?.fullName || "Unknown" }}
+                {{ dokumen.updatedByUser?.fullName || "Unknown" }}
               </p>
               <p>
                 <span class="font-medium">Tanggal:</span>
-                {{ date(majalah.updatedAt) }}
+                {{ date(dokumen.updatedAt) }}
               </p>
             </div>
           </div>

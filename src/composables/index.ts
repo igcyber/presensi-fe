@@ -3,6 +3,7 @@ export * from "./useAppData";
 export * from "./useBreadcrumb";
 export * from "./useDialog";
 export * from "./useFetch";
+export * from "./useFilePreview";
 export * from "./useFormatters";
 export * from "./usePagination";
 export * from "./usePaginationApp";

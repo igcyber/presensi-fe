@@ -21,6 +21,7 @@ composables/
 ├── useBreadcrumb.ts      # Manajemen breadcrumb
 ├── useDialog.ts          # State management untuk dialog
 ├── useFetch.ts           # Generic data fetching
+├── useFilePreview.ts     # File preview dialog management
 ├── useFormatters.ts      # Utility formatters
 ├── usePagination.ts      # Pagination sederhana
 ├── usePaginationApp.ts   # Pagination dengan search & filter
@@ -40,6 +41,7 @@ export * from "./useAppData";
 export * from "./useBreadcrumb";
 export * from "./useDialog";
 export * from "./useFetch";
+export * from "./useFilePreview";
 export * from "./useFormatters";
 export * from "./usePagination";
 export * from "./usePaginationApp";
@@ -51,10 +53,11 @@ export * from "./useResourceList";
 
 ```typescript
 // Import multiple composables
-import { useFetch, useDialog, useFormatters } from '@/composables'
+import { useFetch, useDialog, useFormatters, useFilePreview } from '@/composables'
 
 // Atau import individual
 import { useFetch } from '@/composables/useFetch'
+import { useFilePreview } from '@/composables/useFilePreview'
 ```
 
 **🛠 Best Practices**:
@@ -311,6 +314,176 @@ const { data, isLoading, isError, error, hasData, fetchData, refresh } = useFetc
 - Gunakan `onSuccess` dan `onError` callbacks untuk side effects
 - Set `immediate: false` jika ingin manual trigger
 - Handle loading, error, dan empty states di template
+
+---
+
+## 📄 `useFilePreview.ts` - File Preview Dialog Management
+
+**📖 Description**: Composable untuk mengelola file preview dialog dengan state management dan helper functions. Menyediakan interface yang konsisten untuk preview berbagai jenis file (gambar, video, audio, PDF) dengan fitur lengkap seperti zoom, download, dan fullscreen.
+
+**⚡ Usage Example**:
+
+```vue
+<template>
+  <div>
+    <!-- Trigger Buttons -->
+    <button @click="previewImage" class="btn-primary">Preview Image</button>
+    <button @click="previewDocument" class="btn-secondary">Preview PDF</button>
+    <button @click="previewVideo" class="btn-outline">Preview Video</button>
+
+    <!-- File Preview Dialog -->
+    <FilePreviewDialog
+      v-model:open="filePreview.isOpen.value"
+      :file="filePreview.currentFile.value"
+      :title="filePreview.options.value.title"
+      :show-download="filePreview.options.value.showDownload ?? true"
+      :show-external-link="filePreview.options.value.showExternalLink ?? true"
+      :show-file-info="filePreview.options.value.showFileInfo ?? true"
+      :max-width="filePreview.options.value.maxWidth"
+      :max-height="filePreview.options.value.maxHeight"
+      @download="filePreview.handleDownload"
+      @external-link="filePreview.handleExternalLink"
+    />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { FilePreviewDialog } from "@/components/dialogs";
+
+import { useFilePreview } from "@/composables";
+
+const filePreview = useFilePreview();
+
+// Preview gambar dengan shortcut method
+const previewImage = () => {
+  filePreview.previewImage("https://example.com/image.jpg", "Sample Image", {
+    title: "Preview Gambar",
+    showFileInfo: false,
+  });
+};
+
+// Preview PDF dengan shortcut method
+const previewDocument = () => {
+  filePreview.previewPDF("https://example.com/document.pdf", "Document.pdf", {
+    title: "Preview Dokumen",
+    maxWidth: "95vw",
+    maxHeight: "95vh",
+  });
+};
+
+// Preview video dengan shortcut method
+const previewVideo = () => {
+  filePreview.previewVideo("https://example.com/video.mp4", "Sample Video");
+};
+
+// Preview file generic dengan full control
+const previewCustomFile = () => {
+  filePreview.previewFile(
+    {
+      url: "https://example.com/file.pdf",
+      name: "Custom File",
+      size: 1024000,
+      type: "application/pdf",
+      lastModified: new Date(),
+      description: "Custom file description",
+    },
+    {
+      title: "Custom Preview",
+      showDownload: true,
+      showExternalLink: true,
+      showFileInfo: true,
+    },
+  );
+};
+</script>
+```
+
+**🔧 Available Methods**:
+
+```typescript
+const filePreview = useFilePreview();
+
+// State Management
+filePreview.isOpen.value; // Boolean - Dialog open state
+filePreview.currentFile.value; // FilePreviewData | null - Current file
+filePreview.options.value; // FilePreviewOptions - Current options
+
+// Preview Methods
+filePreview.previewFile(file, options); // General preview method
+filePreview.previewImage(url, name, options); // Optimized for images
+filePreview.previewPDF(url, name, options); // Optimized for PDFs
+filePreview.previewVideo(url, name, options); // Optimized for videos
+filePreview.closePreview(); // Close dialog
+
+// Action Handlers
+filePreview.handleDownload(file); // Download file handler
+filePreview.handleExternalLink(file); // Open in new tab handler
+
+// Utilities
+filePreview.detectFileType(file); // Detect file type category
+filePreview.canPreview(file); // Check if file can be previewed
+```
+
+**📊 Supported File Types**:
+
+| Category      | Formats                                    | Features                     |
+| ------------- | ------------------------------------------ | ---------------------------- |
+| **Images**    | JPG, JPEG, PNG, GIF, WebP, BMP, SVG        | Zoom controls, click to zoom |
+| **Videos**    | MP4, WebM, OGG, AVI, MOV, WMV, FLV         | Native video controls        |
+| **Audio**     | MP3, WAV, OGG, AAC, FLAC, M4A              | Audio player with controls   |
+| **Documents** | PDF                                        | Full iframe preview          |
+| **Text**      | TXT, MD, JSON, XML, HTML, CSS, JS, TS, Vue | External link only           |
+| **Office**    | DOC, DOCX, XLS, XLSX, PPT, PPTX            | External link only           |
+
+**🎯 Integration Examples**:
+
+```vue
+<!-- DataTable Integration -->
+<template>
+  <DataTable :data="documents" :columns="columns">
+    <template #file="{ item }">
+      <button @click="filePreview.previewPDF(item.fileUrl, item.name)" class="text-blue-600 hover:underline">
+        {{ item.name }}
+      </button>
+    </template>
+  </DataTable>
+</template>
+
+<!-- Form Integration -->
+<template>
+  <BaseInputFileWithPreview
+    name="document"
+    label="Upload Document"
+    accept="application/pdf"
+    :enable-file-preview="true"
+    description="Click on uploaded files to preview"
+  />
+</template>
+
+<!-- Gallery Integration -->
+<template>
+  <div class="grid grid-cols-3 gap-4">
+    <div v-for="image in images" :key="image.id" class="cursor-pointer">
+      <img
+        :src="image.thumbnail"
+        :alt="image.name"
+        @click="filePreview.previewImage(image.fullUrl, image.name)"
+        class="h-32 w-full rounded object-cover"
+      />
+    </div>
+  </div>
+</template>
+```
+
+**🛠 Best Practices**:
+
+- Gunakan shortcut methods (`previewImage`, `previewPDF`, `previewVideo`) untuk kasus umum
+- Gunakan `previewFile` untuk kontrol penuh atas options
+- Set `showFileInfo: false` untuk preview sederhana tanpa detail file
+- Gunakan `maxWidth` dan `maxHeight` untuk mengatur ukuran dialog
+- Implementasi error handling untuk file yang gagal dimuat
+- Gunakan `detectFileType` untuk kondisional rendering berdasarkan jenis file
+- Cleanup object URLs secara otomatis sudah dihandle oleh composable
 
 ---
 
@@ -919,10 +1092,26 @@ const { openCreate, openEdit } = useDialog<User>();
 
 ```typescript
 // components/UserForm.vue
-import { useFetch, useFormatters } from "@/composables";
+import { useFetch, useFilePreview, useFormatters } from "@/composables";
 
 const { data, isLoading } = useFetch(() => userService.get(id));
 const { date, currency } = useFormatters();
+const filePreview = useFilePreview();
+```
+
+### Dialog Components
+
+```typescript
+// components/dialogs/DocumentDialog.vue
+import { useDialog, useFilePreview } from "@/composables";
+
+const { state, openEdit } = useDialog<Document>();
+const filePreview = useFilePreview();
+
+// Preview document before editing
+const previewDocument = (doc) => {
+  filePreview.previewPDF(doc.fileUrl, doc.name);
+};
 ```
 
 ---

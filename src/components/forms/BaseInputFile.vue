@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { FileIcon, Upload, X } from "lucide-vue-next";
+import { Eye, FileIcon, Upload, X } from "lucide-vue-next";
 import { computed, onUnmounted, ref, watch } from "vue";
 import { toast } from "vue-sonner";
 
+import FilePreviewDialog from "@/components/dialogs/FilePreviewDialog.vue";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
+import { useFilePreview } from "@/composables/useFilePreview";
 import { useFormatters } from "@/composables/useFormatters";
 
 // Interface Props
@@ -21,6 +23,7 @@ interface Props {
   previewType?: "image" | "file" | "both";
   description?: string;
   existingFiles?: string | string[]; // URL atau array URL untuk file yang sudah ada
+  enableFilePreview?: boolean; // New prop for preview dialog
 }
 
 // Props dengan default values
@@ -32,6 +35,7 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   showPreview: true,
   previewType: "image",
+  enableFilePreview: true, // Enable preview dialog by default
 });
 
 // Reactive references
@@ -44,6 +48,7 @@ const showExisting = ref(true);
 
 // composables
 const { fileSize } = useFormatters();
+const filePreview = useFilePreview();
 
 // Computed properties
 const acceptedTypes = computed(() => {
@@ -184,6 +189,46 @@ const openFileDialog = () => {
   }
 };
 
+// Preview functions
+const previewExistingFile = (url: string, index: number) => {
+  if (!props.enableFilePreview) return;
+
+  const fileName = typeof props.existingFiles === "string" ? "File saat ini" : `File ${index + 1}`;
+
+  // Detect file type from URL
+  if (url.toLowerCase().includes(".pdf")) {
+    filePreview.previewPDF(url, fileName);
+  } else if (/\.(jpg|jpeg|png|gif|webp|bmp|svg)$/i.test(url.toLowerCase())) {
+    filePreview.previewImage(url, fileName);
+  } else if (/\.(mp4|webm|ogg|avi|mov)$/i.test(url.toLowerCase())) {
+    filePreview.previewVideo(url, fileName);
+  } else {
+    filePreview.previewFile({
+      url,
+      name: fileName,
+    });
+  }
+};
+
+const previewNewFile = (file: File, _index: number) => {
+  if (!props.enableFilePreview) return;
+
+  const fileUrl = URL.createObjectURL(file);
+
+  filePreview.previewFile(
+    {
+      url: fileUrl,
+      name: file.name,
+      size: file.size,
+      type: file.type,
+      lastModified: new Date(file.lastModified),
+    },
+    {
+      title: `Preview: ${file.name}`,
+    },
+  );
+};
+
 // Watchers
 watch(
   () => props.name,
@@ -280,10 +325,10 @@ onUnmounted(revokePreviews);
               <div
                 v-for="(preview, i) in existingPreviews"
                 :key="`existing-${i}`"
-                class="bg-muted/20 flex items-center gap-3 rounded-lg border border-dashed p-3"
+                class="bg-muted/20 flex flex-col gap-3 rounded-lg border border-dashed p-3 sm:flex-row sm:items-center"
               >
                 <!-- Preview -->
-                <div class="flex-shrink-0">
+                <div class="flex-shrink-0 self-center sm:self-auto">
                   <img
                     v-if="
                       preview &&
@@ -291,32 +336,52 @@ onUnmounted(revokePreviews);
                     "
                     :src="preview"
                     :alt="`Existing file ${i + 1}`"
-                    class="h-12 w-12 rounded border object-cover"
+                    class="h-16 w-16 cursor-pointer rounded border object-cover hover:opacity-80 sm:h-12 sm:w-12"
                     @error="() => {}"
+                    @click="previewExistingFile(preview, i)"
                   />
-                  <div v-else class="bg-muted flex h-12 w-12 items-center justify-center rounded border">
-                    <FileIcon class="text-muted-foreground h-6 w-6" />
+                  <div
+                    v-else
+                    class="bg-muted hover:bg-muted/80 flex h-16 w-16 cursor-pointer items-center justify-center rounded border sm:h-12 sm:w-12"
+                    @click="previewExistingFile(preview, i)"
+                  >
+                    <FileIcon class="text-muted-foreground h-8 w-8 sm:h-6 sm:w-6" />
                   </div>
                 </div>
 
                 <!-- File Info -->
-                <div class="min-w-0 flex-1">
+                <div class="min-w-0 flex-1 text-center sm:text-left">
                   <p class="text-muted-foreground truncate text-sm font-medium">
                     {{ typeof props.existingFiles === "string" ? "File saat ini" : `File ${i + 1}` }}
                   </p>
                   <p class="text-muted-foreground text-xs">File yang sudah ada</p>
                 </div>
 
-                <!-- Remove Button -->
-                <button
-                  type="button"
-                  class="hover:bg-destructive/10 text-destructive hover:text-destructive/80 flex-shrink-0 rounded-full p-1 transition-colors"
-                  @click="removeExistingFile(i)"
-                  :aria-label="`Hapus file existing ${i + 1}`"
-                  :disabled="props.disabled"
-                >
-                  <X class="h-4 w-4" />
-                </button>
+                <!-- Actions -->
+                <div class="flex items-center justify-center gap-2 sm:gap-1">
+                  <!-- Preview Button -->
+                  <button
+                    v-if="enableFilePreview"
+                    type="button"
+                    class="hover:bg-primary/10 text-primary hover:text-primary/80 flex-shrink-0 rounded-full p-2 transition-colors sm:p-1"
+                    @click="previewExistingFile(preview, i)"
+                    :aria-label="`Preview file ${i + 1}`"
+                    :disabled="props.disabled"
+                  >
+                    <Eye class="h-5 w-5 sm:h-4 sm:w-4" />
+                  </button>
+
+                  <!-- Remove Button -->
+                  <button
+                    type="button"
+                    class="hover:bg-destructive/10 text-destructive hover:text-destructive/80 flex-shrink-0 rounded-full p-2 transition-colors sm:p-1"
+                    @click="removeExistingFile(i)"
+                    :aria-label="`Hapus file existing ${i + 1}`"
+                    :disabled="props.disabled"
+                  >
+                    <X class="h-5 w-5 sm:h-4 sm:w-4" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -328,37 +393,57 @@ onUnmounted(revokePreviews);
               <div
                 v-for="(file, i) in files"
                 :key="`${file.name}-${i}`"
-                class="bg-muted/30 flex items-center gap-3 rounded-lg border p-3"
+                class="bg-muted/30 flex flex-col gap-3 rounded-lg border p-3 sm:flex-row sm:items-center"
               >
                 <!-- Preview -->
-                <div class="flex-shrink-0">
+                <div class="flex-shrink-0 self-center sm:self-auto">
                   <img
                     v-if="previews[i] && (props.previewType === 'image' || props.previewType === 'both')"
                     :src="previews[i]"
                     :alt="file.name"
-                    class="h-12 w-12 rounded border object-cover"
+                    class="h-16 w-16 cursor-pointer rounded border object-cover hover:opacity-80 sm:h-12 sm:w-12"
+                    @click="previewNewFile(file, i)"
                   />
-                  <div v-else class="bg-muted flex h-12 w-12 items-center justify-center rounded border">
-                    <FileIcon class="text-muted-foreground h-6 w-6" />
+                  <div
+                    v-else
+                    class="bg-muted hover:bg-muted/80 flex h-16 w-16 cursor-pointer items-center justify-center rounded border sm:h-12 sm:w-12"
+                    @click="previewNewFile(file, i)"
+                  >
+                    <FileIcon class="text-muted-foreground h-8 w-8 sm:h-6 sm:w-6" />
                   </div>
                 </div>
 
                 <!-- File Info -->
-                <div class="min-w-0 flex-1">
+                <div class="min-w-0 flex-1 text-center sm:text-left">
                   <p class="truncate text-sm font-medium" :title="file.name">{{ file.name }}</p>
                   <p class="text-muted-foreground text-xs">{{ fileSize(file.size) }}</p>
                 </div>
 
-                <!-- Remove Button -->
-                <button
-                  type="button"
-                  class="hover:bg-destructive/10 text-destructive hover:text-destructive/80 flex-shrink-0 rounded-full p-1 transition-colors"
-                  @click="removeFile(i, componentField.onChange)"
-                  :aria-label="`Hapus file ${file.name}`"
-                  :disabled="props.disabled"
-                >
-                  <X class="h-4 w-4" />
-                </button>
+                <!-- Actions -->
+                <div class="flex items-center justify-center gap-2 sm:gap-1">
+                  <!-- Preview Button -->
+                  <button
+                    v-if="enableFilePreview && filePreview.canPreview({ url: '', type: file.type })"
+                    type="button"
+                    class="hover:bg-primary/10 text-primary hover:text-primary/80 flex-shrink-0 rounded-full p-2 transition-colors sm:p-1"
+                    @click="previewNewFile(file, i)"
+                    :aria-label="`Preview file ${file.name}`"
+                    :disabled="props.disabled"
+                  >
+                    <Eye class="h-5 w-5 sm:h-4 sm:w-4" />
+                  </button>
+
+                  <!-- Remove Button -->
+                  <button
+                    type="button"
+                    class="hover:bg-destructive/10 text-destructive hover:text-destructive/80 flex-shrink-0 rounded-full p-2 transition-colors sm:p-1"
+                    @click="removeFile(i, componentField.onChange)"
+                    :aria-label="`Hapus file ${file.name}`"
+                    :disabled="props.disabled"
+                  >
+                    <X class="h-5 w-5 sm:h-4 sm:w-4" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -368,4 +453,18 @@ onUnmounted(revokePreviews);
       <FormMessage />
     </FormItem>
   </FormField>
+
+  <!-- File Preview Dialog -->
+  <FilePreviewDialog
+    v-model:open="filePreview.isOpen.value"
+    :file="filePreview.currentFile.value"
+    :title="filePreview.options.value.title"
+    :show-download="filePreview.options.value.showDownload ?? true"
+    :show-external-link="filePreview.options.value.showExternalLink ?? true"
+    :show-file-info="filePreview.options.value.showFileInfo ?? true"
+    :max-width="filePreview.options.value.maxWidth"
+    :max-height="filePreview.options.value.maxHeight"
+    @download="filePreview.handleDownload"
+    @external-link="filePreview.handleExternalLink"
+  />
 </template>

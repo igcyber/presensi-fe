@@ -2,6 +2,7 @@ import AuthLayout from "@/layouts/AuthLayout.vue";
 import beritaRoute from "@/pages/app/berita/route";
 import dashboardDataRoute from "@/pages/app/dashboard-data/route";
 import dashboardRoute from "@/pages/app/dashboard/route";
+import dokumenRoute from "@/pages/app/dokumen/route";
 import majalahRoute from "@/pages/app/majalah/route";
 import profileRoute from "@/pages/app/profile/route";
 
@@ -23,5 +24,6 @@ export default {
     ...beritaRoute,
     ...videoRoute,
     ...majalahRoute,
+    ...dokumenRoute,
   ],
 };

@@ -3,6 +3,7 @@ import {
   BookOpen,
   Calendar,
   ChartBar,
+  FileText,
   Globe,
   HomeIcon,
   NewspaperIcon,
@@ -108,6 +109,13 @@ const data = computed(() => ({
       name: "app.berita",
       icon: NewspaperIcon,
       isActive: routNameActive.value === "app.berita" || routNameActive.value === "app.berita.detail",
+    },
+    {
+      title: "Dokumen",
+      url: "/app/dokumen",
+      name: "app.dokumen",
+      icon: FileText,
+      isActive: routNameActive.value === "app.dokumen" || routNameActive.value === "app.dokumen.detail",
     },
     {
       title: "Majalah",
