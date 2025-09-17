@@ -102,6 +102,7 @@ async function onSubmit(values: any) {
         accept="image/*"
         :required="mode === 'create'"
         description="Format: JPG, PNG, WebP. Maksimal 5MB"
+        :existing-files="props.berita?.fotoUrl"
       />
 
       <BaseTextarea name="keterangan" label="Keterangan" placeholder="Masukkan keterangan (opsional)" :rows="3" />

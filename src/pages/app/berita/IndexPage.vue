@@ -23,7 +23,7 @@ import { getOpds } from "@/lib/api/services/opd";
 import type { Berita } from "@/lib/api/types/berita.types";
 import type { Opd } from "@/lib/api/types/opd.types";
 
-// Composables
+// Composables initialization
 const {
   items,
   isLoading,
@@ -39,14 +39,13 @@ const {
 
 const dialog = useDialog<Berita>();
 const confirmDialog = useDialog<Berita>();
-
 const { date } = useFormatters();
-
-// Router
 const router = useRouter();
 
 // Reactive state
 const opdOptions = ref<{ label: string; value: number }[]>([]);
+const customFilters = ref<Array<Record<string, any>>>([]);
+const selectedDate = ref<any>();
 
 // Column definitions
 const columns: Column<Berita>[] = [
@@ -90,6 +89,7 @@ const columns: Column<Berita>[] = [
   },
 ];
 
+// API functions
 const loadOpdOptions = async (): Promise<void> => {
   try {
     const opds = await getOpds();
@@ -106,7 +106,6 @@ const openCreateDialog = (): void => {
 };
 
 const handleRowClick = (item: Berita): void => {
-  // Navigasi ke detail
   router.push({ name: "app.berita.detail", params: { id: item.id.toString() } });
 };
 
@@ -145,9 +144,6 @@ const handleBeritaDialogSuccess = (): void => {
   dialog.closeDialog();
   fetchData();
 };
-
-const customFilters = ref<Array<Record<string, any>>>([]);
-const selectedDate = ref<any>();
 
 const applyCustomFilter = (onFilterChange: (filters: Array<Record<string, any>>) => void) => {
   customFilters.value = [{ date: selectedDate.value ? format(selectedDate.value, "yyyy-MM-dd") : null }];

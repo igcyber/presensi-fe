@@ -5,6 +5,8 @@ import { toast } from "vue-sonner";
 
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
+import { useFormatters } from "@/composables/useFormatters";
+
 // Interface Props
 interface Props {
   name: string;
@@ -18,6 +20,7 @@ interface Props {
   showPreview?: boolean;
   previewType?: "image" | "file" | "both";
   description?: string;
+  existingFiles?: string | string[]; // URL atau array URL untuk file yang sudah ada
 }
 
 // Props dengan default values
@@ -36,6 +39,11 @@ const fileInputRef = ref<HTMLInputElement>();
 const dragOver = ref(false);
 const files = ref<File[]>([]);
 const previews = ref<string[]>([]);
+const existingPreviews = ref<string[]>([]);
+const showExisting = ref(true);
+
+// composables
+const { fileSize } = useFormatters();
 
 // Computed properties
 const acceptedTypes = computed(() => {
@@ -44,14 +52,13 @@ const acceptedTypes = computed(() => {
   return "Semua file";
 });
 
-// Utility functions
-const formatFileSize = (bytes: number): string => {
-  if (bytes === 0) return "0 Bytes";
-  const k = 1024;
-  const sizes = ["Bytes", "KB", "MB", "GB"];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
-};
+const hasExistingFiles = computed(() => {
+  return (
+    props.existingFiles &&
+    ((typeof props.existingFiles === "string" && props.existingFiles.length > 0) ||
+      (Array.isArray(props.existingFiles) && props.existingFiles.length > 0))
+  );
+});
 
 const revokePreviews = () => {
   previews.value.forEach((src) => URL.revokeObjectURL(src));
@@ -108,6 +115,11 @@ const handleFiles = (newFiles: File[], onChange: (val: File[] | File | null) => 
   revokePreviews();
   files.value = props.multiple ? [...files.value, ...newFiles] : newFiles;
 
+  // Hide existing files when new files are selected
+  if (newFiles.length > 0) {
+    showExisting.value = false;
+  }
+
   if (props.showPreview) {
     previews.value = files.value.map((f) => {
       if (f.type.startsWith("image/")) {
@@ -146,8 +158,24 @@ const removeFile = (index: number, onChange: (val: any) => void) => {
   files.value.splice(index, 1);
   previews.value.splice(index, 1);
 
+  // Show existing files again if no new files
+  if (files.value.length === 0 && hasExistingFiles.value) {
+    showExisting.value = true;
+  }
+
   const result = props.multiple ? (files.value.length ? files.value : null) : files.value[0] || null;
   onChange(result);
+};
+
+const removeExistingFile = (index: number) => {
+  if (Array.isArray(props.existingFiles)) {
+    // Remove from existing files array (this should be handled by parent component)
+    // For now, just hide the preview
+    existingPreviews.value.splice(index, 1);
+  } else {
+    // Single file, hide it
+    showExisting.value = false;
+  }
 };
 
 const openFileDialog = () => {
@@ -163,7 +191,25 @@ watch(
     // Reset files when form resets
     files.value = [];
     revokePreviews();
+    showExisting.value = true;
   },
+);
+
+// Initialize existing files preview
+watch(
+  () => props.existingFiles,
+  (newFiles) => {
+    if (newFiles) {
+      if (typeof newFiles === "string") {
+        existingPreviews.value = [newFiles];
+      } else if (Array.isArray(newFiles)) {
+        existingPreviews.value = newFiles;
+      }
+    } else {
+      existingPreviews.value = [];
+    }
+  },
+  { immediate: true },
 );
 
 // Lifecycle hooks
@@ -227,9 +273,57 @@ onUnmounted(revokePreviews);
             {{ props.description }}
           </p>
 
-          <!-- File List -->
+          <!-- Existing Files Preview -->
+          <div v-if="hasExistingFiles && showExisting" class="space-y-2">
+            <h4 class="text-sm font-medium">File saat ini:</h4>
+            <div class="max-h-48 space-y-2 overflow-y-auto">
+              <div
+                v-for="(preview, i) in existingPreviews"
+                :key="`existing-${i}`"
+                class="bg-muted/20 flex items-center gap-3 rounded-lg border border-dashed p-3"
+              >
+                <!-- Preview -->
+                <div class="flex-shrink-0">
+                  <img
+                    v-if="
+                      preview &&
+                      (props.accept.includes('image') || props.previewType === 'image' || props.previewType === 'both')
+                    "
+                    :src="preview"
+                    :alt="`Existing file ${i + 1}`"
+                    class="h-12 w-12 rounded border object-cover"
+                    @error="() => {}"
+                  />
+                  <div v-else class="bg-muted flex h-12 w-12 items-center justify-center rounded border">
+                    <FileIcon class="text-muted-foreground h-6 w-6" />
+                  </div>
+                </div>
+
+                <!-- File Info -->
+                <div class="min-w-0 flex-1">
+                  <p class="text-muted-foreground truncate text-sm font-medium">
+                    {{ typeof props.existingFiles === "string" ? "File saat ini" : `File ${i + 1}` }}
+                  </p>
+                  <p class="text-muted-foreground text-xs">File yang sudah ada</p>
+                </div>
+
+                <!-- Remove Button -->
+                <button
+                  type="button"
+                  class="hover:bg-destructive/10 text-destructive hover:text-destructive/80 flex-shrink-0 rounded-full p-1 transition-colors"
+                  @click="removeExistingFile(i)"
+                  :aria-label="`Hapus file existing ${i + 1}`"
+                  :disabled="props.disabled"
+                >
+                  <X class="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- New Files List -->
           <div v-if="files.length" class="space-y-2">
-            <h4 class="text-sm font-medium">File yang dipilih:</h4>
+            <h4 class="text-sm font-medium">File baru yang dipilih:</h4>
             <div class="max-h-48 space-y-2 overflow-y-auto">
               <div
                 v-for="(file, i) in files"
@@ -252,7 +346,7 @@ onUnmounted(revokePreviews);
                 <!-- File Info -->
                 <div class="min-w-0 flex-1">
                   <p class="truncate text-sm font-medium" :title="file.name">{{ file.name }}</p>
-                  <p class="text-muted-foreground text-xs">{{ formatFileSize(file.size) }}</p>
+                  <p class="text-muted-foreground text-xs">{{ fileSize(file.size) }}</p>
                 </div>
 
                 <!-- Remove Button -->
