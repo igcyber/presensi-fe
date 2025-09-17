@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Edit, Trash2 } from "lucide-vue-next";
-import { computed, onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 
@@ -14,20 +14,25 @@ import { useDialog } from "@/composables/useDialog";
 import { useFetch } from "@/composables/useFetch";
 import type { ApiResponse } from "@/lib/api/core";
 import { deleteBerita, getBeritaById } from "@/lib/api/services/berita";
+import { getOpds } from "@/lib/api/services/opd";
 import type { BeritaDetailResponse } from "@/lib/api/types/berita.types";
+import type { Opd } from "@/lib/api/types/opd.types";
 
-// Router and router
+// Router dan route
 const route = useRoute();
 const router = useRouter();
 
-// Get berita ID from route params
+// Computed properties
 const beritaId = computed(() => {
   const id = route.params.id;
   return typeof id === "string" ? parseInt(id, 10) : 0;
 });
 
+// Reactive state
+const opdOptions = ref<{ label: string; value: number }[]>([]);
+
 // Composables
-const editDialog = useDialog<BeritaDetailResponse>();
+const dialog = useDialog<BeritaDetailResponse>();
 const confirmDialog = useDialog<BeritaDetailResponse>();
 
 const { data, isLoading, isError, error, fetchData } = useFetch<
@@ -43,13 +48,24 @@ const { data, isLoading, isError, error, fetchData } = useFetch<
   },
 });
 
-// Methods
+// API functions
+const loadOpdOptions = async (): Promise<void> => {
+  try {
+    const opds = await getOpds();
+    opdOptions.value = opds.data.data.map((opd: Opd) => ({ label: opd.nama, value: opd.id }));
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "Gagal memuat data OPD";
+    toast.error("Gagal", { description: errorMessage });
+  }
+};
+
+// Event handlers
 const handleBack = () => {
   router.push({ name: "app.berita" });
 };
 
 const handleEdit = (berita: BeritaDetailResponse) => {
-  editDialog.openEdit(berita);
+  dialog.openEdit(berita);
 };
 
 const handleDelete = (berita: BeritaDetailResponse) => {
@@ -78,7 +94,7 @@ const confirmDelete = async () => {
   }
 };
 
-// Lifecycle
+// Lifecycle hooks
 onMounted(() => {
   if (beritaId.value > 0) {
     fetchData();
@@ -86,6 +102,8 @@ onMounted(() => {
     toast.error("ID berita tidak valid");
     handleBack();
   }
+
+  loadOpdOptions();
 });
 </script>
 
@@ -127,9 +145,10 @@ onMounted(() => {
 
     <!-- Edit Dialog -->
     <BeritaDialog
-      v-model:open="editDialog.state.value.open"
-      :mode="editDialog.state.value.mode"
-      :berita="editDialog.state.value.data"
+      v-model:open="dialog.state.value.open"
+      :mode="dialog.state.value.mode"
+      :berita="dialog.state.value.data"
+      :opd-options="opdOptions"
       widthClass="sm:max-w-[1000px]"
       @success="fetchData"
     />
