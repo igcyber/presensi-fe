@@ -3,9 +3,9 @@ import {
   Award,
   BookOpen,
   Building,
-  Calendar,
   ChartBar,
   Crown,
+  FileEdit,
   FileText,
   Globe,
   HomeIcon,
@@ -81,28 +81,17 @@ const data = computed(() => ({
       isActive: routNameActive.value === "app.user" || routNameActive.value === "app.user.detail",
     },
     {
-      title: "Kegiatan",
-      url: "/app/kegiatan",
-      name: "app.kegiatan",
-      icon: Calendar,
-      isActive: routNameActive.value === "app.kegiatan" || routNameActive.value === "app.kegiatan.detail",
-    },
-    {
       title: "Roles",
       url: "#",
       icon: UserRound,
       isActive: routNameActive.value === "roles.index",
       items: [
         {
-          title: "Genesis",
+          title: "Superadmin",
           url: "#",
         },
         {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
+          title: "Admin",
           url: "#",
         },
       ],
@@ -162,6 +151,20 @@ const data = computed(() => ({
       name: "app.bupati",
       icon: Crown,
       isActive: routNameActive.value === "app.bupati" || routNameActive.value === "app.bupati.detail",
+    },
+    {
+      title: "OPD",
+      url: "/app/opd",
+      name: "app.opd",
+      icon: Building,
+      isActive: routNameActive.value === "app.opd" || routNameActive.value === "app.opd.detail",
+    },
+    {
+      title: "Konten",
+      url: "/app/konten",
+      name: "app.konten",
+      icon: FileEdit,
+      isActive: routNameActive.value === "app.konten" || routNameActive.value === "app.konten.detail",
     },
   ],
 }));

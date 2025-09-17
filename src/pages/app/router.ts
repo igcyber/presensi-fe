@@ -4,8 +4,10 @@ import bupatiRoute from "@/pages/app/bupati/route";
 import dashboardDataRoute from "@/pages/app/dashboard-data/route";
 import dashboardRoute from "@/pages/app/dashboard/route";
 import dokumenRoute from "@/pages/app/dokumen/route";
+import kontenRoute from "@/pages/app/konten/route";
 import layananRoute from "@/pages/app/layanan/route";
 import majalahRoute from "@/pages/app/majalah/route";
+import opdRoute from "@/pages/app/opd/route";
 import perusdaRoute from "@/pages/app/perusda/route";
 import prestasiRoute from "@/pages/app/prestasi/route";
 import profileRoute from "@/pages/app/profile/route";
@@ -33,5 +35,7 @@ export default {
     ...perusdaRoute,
     ...layananRoute,
     ...bupatiRoute,
+    ...opdRoute,
+    ...kontenRoute,
   ],
 };

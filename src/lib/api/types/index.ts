@@ -9,6 +9,7 @@ export type * from "./bupati.types";
 export type * from "./majalah.types";
 export type * from "./media.types";
 export type * from "./opd.types";
+export type * from "./konten.types";
 export type * from "./pemerintahan.types";
 export type * from "./portalMenu.types";
 export type * from "./unitKerja.types";

@@ -4,6 +4,8 @@ export * from "./prestasi";
 export * from "./perusda";
 export * from "./layanan";
 export * from "./bupati";
+export * from "./opd";
+export * from "./konten";
 export * from "./selayang-pandang";
 export * from "./majalah";
 export * from "./media";
