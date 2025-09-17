@@ -1,9 +1,13 @@
 import AuthLayout from "@/layouts/AuthLayout.vue";
 import beritaRoute from "@/pages/app/berita/route";
+import bupatiRoute from "@/pages/app/bupati/route";
 import dashboardDataRoute from "@/pages/app/dashboard-data/route";
 import dashboardRoute from "@/pages/app/dashboard/route";
 import dokumenRoute from "@/pages/app/dokumen/route";
+import layananRoute from "@/pages/app/layanan/route";
 import majalahRoute from "@/pages/app/majalah/route";
+import perusdaRoute from "@/pages/app/perusda/route";
+import prestasiRoute from "@/pages/app/prestasi/route";
 import profileRoute from "@/pages/app/profile/route";
 
 import userRoute from "./user/route";
@@ -25,5 +29,9 @@ export default {
     ...videoRoute,
     ...majalahRoute,
     ...dokumenRoute,
+    ...prestasiRoute,
+    ...perusdaRoute,
+    ...layananRoute,
+    ...bupatiRoute,
   ],
 };

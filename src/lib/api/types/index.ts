@@ -2,6 +2,10 @@
 export type * from "./auth.types";
 export type * from "./berita.types";
 export type * from "./dokumen.types";
+export type * from "./prestasi.types";
+export type * from "./perusda.types";
+export type * from "./layanan.types";
+export type * from "./bupati.types";
 export type * from "./majalah.types";
 export type * from "./media.types";
 export type * from "./opd.types";

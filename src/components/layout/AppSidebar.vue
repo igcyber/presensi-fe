@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import {
+  Award,
   BookOpen,
+  Building,
   Calendar,
   ChartBar,
+  Crown,
   FileText,
   Globe,
   HomeIcon,
@@ -10,6 +13,7 @@ import {
   UserIcon,
   UserRound,
   VideoIcon,
+  Zap,
 } from "lucide-vue-next";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
@@ -130,6 +134,34 @@ const data = computed(() => ({
       name: "app.video",
       icon: VideoIcon,
       isActive: routNameActive.value === "app.video" || routNameActive.value === "app.video.detail",
+    },
+    {
+      title: "Prestasi",
+      url: "/app/prestasi",
+      name: "app.prestasi",
+      icon: Award,
+      isActive: routNameActive.value === "app.prestasi" || routNameActive.value === "app.prestasi.detail",
+    },
+    {
+      title: "Perusda",
+      url: "/app/perusda",
+      name: "app.perusda",
+      icon: Building,
+      isActive: routNameActive.value === "app.perusda" || routNameActive.value === "app.perusda.detail",
+    },
+    {
+      title: "Layanan",
+      url: "/app/layanan",
+      name: "app.layanan",
+      icon: Zap,
+      isActive: routNameActive.value === "app.layanan" || routNameActive.value === "app.layanan.detail",
+    },
+    {
+      title: "Bupati",
+      url: "/app/bupati",
+      name: "app.bupati",
+      icon: Crown,
+      isActive: routNameActive.value === "app.bupati" || routNameActive.value === "app.bupati.detail",
     },
   ],
 }));
