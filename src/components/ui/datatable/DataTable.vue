@@ -401,8 +401,8 @@ const formatCellValue = (item: T, column: Column<T>) => {
   </div>
 
   <!-- Pagination -->
-  <div class="flex flex-col items-center justify-between gap-3 sm:flex-row sm:gap-4">
-    <div class="text-muted-foreground order-2 text-center text-xs sm:order-1 sm:text-left sm:text-sm">
+  <div class="mt-4 flex flex-col items-center justify-between gap-3 sm:flex-row sm:gap-4">
+    <div class="text-muted-foreground order-2 w-full text-center text-xs sm:order-1 sm:text-left sm:text-sm">
       Menampilkan {{ startIndex }} - {{ endIndex }} dari {{ totalData }} data
     </div>
 
@@ -414,7 +414,7 @@ const formatCellValue = (item: T, column: Column<T>) => {
       :show-edges="true"
       :sibling-count="0"
       @update:page="goToPage"
-      class="order-1 flex w-full items-center justify-center sm:order-2 sm:w-auto sm:justify-end"
+      class="order-1 flex w-full items-center justify-center sm:order-2 sm:justify-end"
     >
       <PaginationContent v-slot="{ items }" class="gap-1">
         <PaginationPrevious class="h-8 px-2 text-xs sm:h-10 sm:px-4 sm:text-sm" />
