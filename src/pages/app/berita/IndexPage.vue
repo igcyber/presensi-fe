@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { format } from "date-fns";
-import { PlusIcon, RotateCcw } from "lucide-vue-next";
-import { Filter } from "lucide-vue-next";
+import { Calendar as CalendarIcon, Filter, PlusIcon, RotateCcw } from "lucide-vue-next";
 import { onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
@@ -13,6 +12,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { type Column, DataTable } from "@/components/ui/datatable";
 import ErrorState from "@/components/ui/error-state/ErrorState.vue";
+import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 import { useDialog } from "@/composables/useDialog";
@@ -215,39 +215,54 @@ watch(
           >
             <!-- Custom Filter -->
             <template #filters="{ onFilterChange }">
-              <div class="flex w-full flex-col gap-2 sm:flex-row sm:items-end sm:justify-end">
-                <!-- Popover buat calendar -->
-                <Popover>
-                  <PopoverTrigger as-child>
-                    <Button
-                      variant="ghost"
-                      class="border-ring/50 dark:bg-input/30 justify-start border bg-transparent text-left font-normal hover:bg-transparent sm:w-[200px]"
-                    >
-                      <span v-if="selectedDate">
-                        {{ date(new Date(selectedDate)) }}
-                      </span>
-                      <span v-else class="text-muted-foreground text-base">Pilih tanggal</span>
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent class="w-auto p-0">
-                    <Calendar v-model="selectedDate" mode="single" :week-start="1" />
-                  </PopoverContent>
-                </Popover>
+              <div class="space-y-4">
+                <!-- Filter Controls -->
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                  <!-- Filter Tanggal -->
+                  <div class="flex flex-col gap-1.5">
+                    <Label for="filter-tanggal" class="text-sm font-medium">Tanggal</Label>
+                    <Popover>
+                      <PopoverTrigger as-child>
+                        <Button
+                          variant="outline"
+                          id="filter-tanggal"
+                          class="w-full justify-start text-left font-normal"
+                          :class="!selectedDate && 'text-muted-foreground'"
+                        >
+                          <CalendarIcon class="mr-2 h-4 w-4" />
+                          <span v-if="selectedDate">
+                            {{ date(new Date(selectedDate)) }}
+                          </span>
+                          <span v-else>Pilih tanggal</span>
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent class="w-auto p-0">
+                        <Calendar v-model="selectedDate" mode="single" :week-start="1" />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
 
-                <!-- Tombol action -->
-                <div class="flex gap-2">
-                  <Button variant="secondary" class="flex-1 sm:flex-none" @click="applyCustomFilter(onFilterChange)">
-                    <Filter class="h-4 w-4" />
-                    Terapkan Filter
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    class="flex-1 bg-yellow-500 text-black sm:flex-none"
-                    @click="resetCustomFilter(onFilterChange)"
-                  >
-                    <RotateCcw class="h-4 w-4" />
-                    Reset
-                  </Button>
+                  <!-- Spacer untuk alignment -->
+
+                  <!-- Tombol Action -->
+                  <div class="flex flex-col gap-1.5 sm:col-span-2 lg:col-span-1">
+                    <Label for="filter-action" class="text-sm font-medium opacity-0">Action</Label>
+                    <div class="flex gap-2">
+                      <Button
+                        variant="default"
+                        class="flex-1 sm:flex-none"
+                        id="filter-action"
+                        @click="applyCustomFilter(onFilterChange)"
+                      >
+                        <Filter class="mr-2 h-4 w-4" />
+                        Terapkan Filter
+                      </Button>
+                      <Button variant="outline" class="flex-1 sm:flex-none" @click="resetCustomFilter(onFilterChange)">
+                        <RotateCcw class="mr-2 h-4 w-4" />
+                        Reset
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </template>

@@ -1,6 +1,7 @@
 // Service exports
 export * from "./auth";
 export * from "./berita";
+export * from "./majalah";
 export * from "./media";
 export * from "./opd";
 export * from "./pemerintahan";

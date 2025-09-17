@@ -4,10 +4,6 @@ import type { Opd } from "./opd.types";
 import type { User } from "./user.types";
 
 /**
- * User entity interface untuk creator/updater
- */
-
-/**
  * Berita entity interface
  * Represents a news article in the system
  */
