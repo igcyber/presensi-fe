@@ -1,8 +1,10 @@
 <script setup lang="ts" generic="T">
-import { EditIcon, TrashIcon } from "lucide-vue-next";
+import { format } from "date-fns";
+import { Calendar as CalendarIcon, EditIcon, Filter, RotateCcw, TrashIcon } from "lucide-vue-next";
 import { computed, ref } from "vue";
 
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import TableSkeleton from "@/components/ui/loading/TableSkeleton.vue";
@@ -14,6 +16,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 import { useFormatters } from "@/composables/useFormatters";
@@ -28,6 +32,19 @@ export interface Column<T = any> {
   render?: (item: T) => string | number;
 }
 
+export interface FilterOption {
+  label: string;
+  value: string | number;
+}
+
+export interface FilterConfig {
+  key: string;
+  label: string;
+  type: "select" | "date";
+  options?: FilterOption[];
+  placeholder?: string;
+}
+
 export interface Props<T = unknown> {
   data: T[];
   columns: Column<T>[];
@@ -37,6 +54,7 @@ export interface Props<T = unknown> {
   totalData: number;
   totalPages: number;
   loading?: boolean;
+  filters?: FilterConfig[];
 }
 
 // Props
@@ -45,6 +63,7 @@ const props = withDefaults(defineProps<Props<T>>(), {
   pagination: true,
   pageSize: 10,
   loading: false,
+  filters: () => [],
 });
 
 // Emits
@@ -65,6 +84,7 @@ const searchQuery = ref("");
 const currentPage = ref<number>(1);
 const sortColumn = ref<string>("");
 const sortDirection = ref<"asc" | "desc">("asc");
+const filterValues = ref<Record<string, any>>({});
 
 // Computed
 const startIndex = computed(() => {
@@ -116,6 +136,30 @@ const handleSearch = () => {
 const handleCustomFilter = (filters: Array<Record<string, any>>) => {
   currentPage.value = 1;
   emit("customFilter", filters);
+};
+
+const applyFilters = () => {
+  const filters: Record<string, any> = {};
+
+  console.log(filterValues.value);
+
+  Object.entries(filterValues.value).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") {
+      if (key === "date" && value) {
+        filters[key] = format(value, "yyyy-MM-dd");
+      } else {
+        filters[key] = typeof value === "string" && !isNaN(Number(value)) ? Number(value) : value;
+      }
+    }
+  });
+
+  const filterArray = Object.keys(filters).length > 0 ? [filters] : [];
+  handleCustomFilter(filterArray);
+};
+
+const resetFilters = () => {
+  filterValues.value = {};
+  handleCustomFilter([]);
 };
 
 const getCellValue = (item: T, column: Column<T>) => {
@@ -171,8 +215,82 @@ const formatCellValue = (item: T, column: Column<T>) => {
       />
     </div>
 
-    <!-- Custom Filters Slot -->
-    <div class="mb-4 w-full">
+    <!-- Built-in Filters -->
+    <div v-if="filters && filters.length > 0" class="mb-4 w-full">
+      <div class="space-y-4">
+        <!-- Filter Controls -->
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <!-- Dynamic Filters -->
+          <template v-for="filter in filters" :key="filter.key">
+            <!-- Select Filter -->
+            <div v-if="filter.type === 'select'" class="flex flex-col gap-1.5">
+              <Label :for="`filter-${filter.key}`" class="text-sm font-medium">{{ filter.label }}</Label>
+              <Select v-model="filterValues[filter.key]">
+                <SelectTrigger :id="`filter-${filter.key}`" class="w-full">
+                  <SelectValue :placeholder="filter.placeholder || `Pilih ${filter.label.toLowerCase()}`" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem v-for="option in filter.options" :key="option.value" :value="String(option.value)">
+                    {{ option.label }}
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <!-- Date Filter -->
+            <div v-else-if="filter.type === 'date'" class="flex flex-col gap-1.5">
+              <Label :for="`filter-${filter.key}`" class="text-sm font-medium">{{ filter.label }}</Label>
+              <Popover>
+                <PopoverTrigger as-child>
+                  <Button
+                    variant="outline"
+                    :id="`filter-${filter.key}`"
+                    class="w-full justify-start text-left font-normal"
+                    :class="!filterValues[filter.key] && 'text-muted-foreground'"
+                  >
+                    <CalendarIcon class="mr-2 h-4 w-4" />
+                    <span v-if="filterValues[filter.key]">
+                      {{ formatters.date(new Date(filterValues[filter.key])) }}
+                    </span>
+                    <span v-else>{{ filter.placeholder || "Pilih tanggal" }}</span>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent class="w-auto p-0">
+                  <Calendar v-model="filterValues[filter.key]" mode="single" :week-start="1" />
+                </PopoverContent>
+              </Popover>
+            </div>
+          </template>
+
+          <!-- Action Buttons -->
+          <div
+            class="flex flex-col gap-1.5"
+            :class="
+              filters.length === 1
+                ? 'sm:col-span-2 lg:col-span-3'
+                : filters.length === 2
+                  ? 'sm:col-span-2 lg:col-span-2'
+                  : 'sm:col-span-2 lg:col-span-1'
+            "
+          >
+            <Label for="action" class="text-sm font-medium opacity-0">Action</Label>
+            <div class="flex gap-2">
+              <Button variant="default" class="flex-1 sm:flex-none" @click="applyFilters" id="action">
+                <Filter class="mr-2 h-4 w-4" />
+                Terapkan Filter
+              </Button>
+              <Button variant="outline" class="flex-1 sm:flex-none" @click="resetFilters">
+                <RotateCcw class="mr-2 h-4 w-4" />
+                Reset
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Custom Filters Slot (fallback) -->
+    <div v-else class="mb-4 w-full">
       <slot name="filters" :search="searchQuery" :on-filter-change="handleCustomFilter">
         <!-- Default: no filters -->
       </slot>

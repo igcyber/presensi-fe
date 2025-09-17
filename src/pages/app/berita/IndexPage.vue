@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { format } from "date-fns";
-import { Calendar as CalendarIcon, Filter, PlusIcon, RotateCcw } from "lucide-vue-next";
+import { PlusIcon } from "lucide-vue-next";
 import { onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
@@ -8,15 +7,11 @@ import { toast } from "vue-sonner";
 import BaseConfirmDialog from "@/components/dialogs/BaseConfirmDialog.vue";
 import BeritaDialog from "@/components/dialogs/BeritaDialog.vue";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { type Column, DataTable } from "@/components/ui/datatable";
+import { type Column, DataTable, type FilterConfig } from "@/components/ui/datatable";
 import ErrorState from "@/components/ui/error-state/ErrorState.vue";
-import { Label } from "@/components/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 import { useDialog } from "@/composables/useDialog";
-import { useFormatters } from "@/composables/useFormatters";
 import { useResourceList } from "@/composables/useResourceList";
 import { deleteBerita, getBeritas } from "@/lib/api/services/berita";
 import { getOpds } from "@/lib/api/services/opd";
@@ -39,13 +34,20 @@ const {
 
 const dialog = useDialog<Berita>();
 const confirmDialog = useDialog<Berita>();
-const { date } = useFormatters();
 const router = useRouter();
 
 // Reactive state
 const opdOptions = ref<{ label: string; value: number }[]>([]);
-const customFilters = ref<Array<Record<string, any>>>([]);
-const selectedDate = ref<any>();
+
+// Filter configuration
+const filterConfig: FilterConfig[] = [
+  {
+    key: "date",
+    label: "Tanggal",
+    type: "date",
+    placeholder: "Pilih tanggal",
+  },
+];
 
 // Column definitions
 const columns: Column<Berita>[] = [
@@ -145,17 +147,6 @@ const handleBeritaDialogSuccess = (): void => {
   fetchData();
 };
 
-const applyCustomFilter = (onFilterChange: (filters: Array<Record<string, any>>) => void) => {
-  customFilters.value = [{ date: selectedDate.value ? format(selectedDate.value, "yyyy-MM-dd") : null }];
-  onFilterChange(customFilters.value);
-};
-
-const resetCustomFilter = (onFilterChange: (filters: Array<Record<string, any>>) => void) => {
-  selectedDate.value = undefined;
-  customFilters.value = [];
-  onFilterChange([]);
-};
-
 // Lifecycle hooks
 onMounted(() => {
   loadOpdOptions();
@@ -206,67 +197,14 @@ watch(
             :total-data="pagination.total"
             :total-pages="pagination.last_page"
             :loading="isLoading"
+            :filters="filterConfig"
             @page-change="handlePageChange"
             @search="handleSearch"
             @custom-filter="handleCustomFilter"
             @row-click="handleRowClick"
             @edit="handleEdit"
             @delete="handleDelete"
-          >
-            <!-- Custom Filter -->
-            <template #filters="{ onFilterChange }">
-              <div class="space-y-4">
-                <!-- Filter Controls -->
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                  <!-- Filter Tanggal -->
-                  <div class="flex flex-col gap-1.5">
-                    <Label for="filter-tanggal" class="text-sm font-medium">Tanggal</Label>
-                    <Popover>
-                      <PopoverTrigger as-child>
-                        <Button
-                          variant="outline"
-                          id="filter-tanggal"
-                          class="w-full justify-start text-left font-normal"
-                          :class="!selectedDate && 'text-muted-foreground'"
-                        >
-                          <CalendarIcon class="mr-2 h-4 w-4" />
-                          <span v-if="selectedDate">
-                            {{ date(new Date(selectedDate)) }}
-                          </span>
-                          <span v-else>Pilih tanggal</span>
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent class="w-auto p-0">
-                        <Calendar v-model="selectedDate" mode="single" :week-start="1" />
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-
-                  <!-- Spacer untuk alignment -->
-
-                  <!-- Tombol Action -->
-                  <div class="flex flex-col gap-1.5 sm:col-span-2 lg:col-span-1">
-                    <Label for="filter-action" class="text-sm font-medium opacity-0">Action</Label>
-                    <div class="flex gap-2">
-                      <Button
-                        variant="default"
-                        class="flex-1 sm:flex-none"
-                        id="filter-action"
-                        @click="applyCustomFilter(onFilterChange)"
-                      >
-                        <Filter class="mr-2 h-4 w-4" />
-                        Terapkan Filter
-                      </Button>
-                      <Button variant="outline" class="flex-1 sm:flex-none" @click="resetCustomFilter(onFilterChange)">
-                        <RotateCcw class="mr-2 h-4 w-4" />
-                        Reset
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </template>
-          </DataTable>
+          />
         </CardContent>
       </Card>
 
