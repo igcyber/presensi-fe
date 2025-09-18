@@ -9,6 +9,7 @@ export { default as LayananDialog } from "./LayananDialog.vue";
 export { default as BupatiDialog } from "./BupatiDialog.vue";
 export { default as OpdDialog } from "./OpdDialog.vue";
 export { default as KontenDialog } from "./KontenDialog.vue";
+export { default as StatikDialog } from "./StatikDialog.vue";
 export { default as MajalahDialog } from "./MajalahDialog.vue";
 export { default as UserDialog } from "./UserDialog.vue";
 export { default as VideoDialog } from "./VideoDialog.vue";

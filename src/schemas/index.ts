@@ -8,6 +8,7 @@ export * from "./layananSchema";
 export * from "./bupatiSchema";
 export * from "./majalahSchema";
 export * from "./kontenSchema";
+export * from "./statikSchema";
 export * from "./userSchema";
 export * from "./roleSchema";
 export * from "./videoSchema";

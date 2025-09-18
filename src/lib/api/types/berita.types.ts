@@ -16,7 +16,7 @@ export interface Berita extends BaseEntity {
   tag: string;
   createdBy: number;
   updatedBy: number;
-  opd: Opd;
+  opd: Omit<Opd, "createdByUser,updatedByUser">;
   creator: Omit<User, "id,nip,roles">;
   updater: Omit<User, "id,nip,roles">;
   fotoUrl: string;

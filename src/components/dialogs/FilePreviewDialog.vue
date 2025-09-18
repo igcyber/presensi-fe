@@ -67,32 +67,21 @@ const fileType = computed(() => {
   const url = props.file.url.toLowerCase();
   const type = props.file.type?.toLowerCase() || "";
 
-  // Image types
   if (type.startsWith("image/") || /\.(jpg|jpeg|png|gif|webp|bmp|svg)$/i.test(url)) {
     return "image";
   }
-
-  // Video types
   if (type.startsWith("video/") || /\.(mp4|webm|ogg|avi|mov|wmv|flv)$/i.test(url)) {
     return "video";
   }
-
-  // Audio types
   if (type.startsWith("audio/") || /\.(mp3|wav|ogg|aac|flac|m4a)$/i.test(url)) {
     return "audio";
   }
-
-  // PDF
   if (type === "application/pdf" || url.endsWith(".pdf")) {
     return "pdf";
   }
-
-  // Text files
   if (type.startsWith("text/") || /\.(txt|md|json|xml|html|css|js|ts|vue)$/i.test(url)) {
     return "text";
   }
-
-  // Office documents
   if (/\.(doc|docx|xls|xlsx|ppt|pptx)$/i.test(url)) {
     return "office";
   }
@@ -144,7 +133,6 @@ const handleImageError = () => {
   imageError.value = true;
 };
 
-// Reset state when dialog closes or file changes
 watch([open, () => props.file], ([newOpen, newFile], [_oldOpen, oldFile]) => {
   if (!newOpen || newFile !== oldFile) {
     isFullscreen.value = false;
@@ -159,7 +147,9 @@ watch([open, () => props.file], ([newOpen, newFile], [_oldOpen, oldFile]) => {
     <DialogContent
       :class="[
         'gap-0 p-0',
-        isFullscreen ? 'h-[100vh] max-h-[100vh] w-[100vw] max-w-[100vw]' : `max-w-[${maxWidth}] max-h-[${maxHeight}]`,
+        isFullscreen
+          ? 'h-auto max-h-[90vh] min-h-[70vh] w-[95vw] max-w-[95vw] sm:max-w-[600px]'
+          : `max-w-[${maxWidth}] max-h-[${maxHeight}]`,
       ]"
     >
       <!-- Header -->
@@ -170,9 +160,7 @@ watch([open, () => props.file], ([newOpen, newFile], [_oldOpen, oldFile]) => {
 
         <!-- Actions -->
         <div class="flex flex-wrap items-center gap-1 sm:gap-2">
-          <!-- Zoom controls for images -->
           <template v-if="fileType === 'image' && !imageError">
-            <!-- Mobile: Compact zoom controls -->
             <div class="flex items-center gap-1 sm:hidden">
               <Button variant="ghost" size="sm" @click="zoomOut" :disabled="zoomLevel <= 0.5">
                 <ZoomOut class="h-3 w-3" />
@@ -183,7 +171,6 @@ watch([open, () => props.file], ([newOpen, newFile], [_oldOpen, oldFile]) => {
               </Button>
             </div>
 
-            <!-- Desktop: Full zoom controls -->
             <div class="hidden sm:flex sm:items-center sm:gap-1">
               <Button variant="ghost" size="sm" @click="zoomOut" :disabled="zoomLevel <= 0.5">
                 <ZoomOut class="h-4 w-4" />
@@ -197,20 +184,17 @@ watch([open, () => props.file], ([newOpen, newFile], [_oldOpen, oldFile]) => {
             </div>
           </template>
 
-          <!-- Fullscreen toggle -->
           <Button variant="ghost" size="sm" @click="toggleFullscreen" class="shrink-0">
             <Maximize2 v-if="!isFullscreen" class="h-4 w-4" />
             <Minimize2 v-else class="h-4 w-4" />
             <span class="ml-1 hidden sm:inline">{{ isFullscreen ? "Exit" : "Fullscreen" }}</span>
           </Button>
 
-          <!-- Download -->
           <Button v-if="showDownload" variant="ghost" size="sm" @click="handleDownload" class="shrink-0">
             <Download class="h-4 w-4" />
             <span class="ml-1 hidden sm:inline">Download</span>
           </Button>
 
-          <!-- External link -->
           <Button v-if="showExternalLink" variant="ghost" size="sm" @click="handleExternalLink" class="shrink-0">
             <ExternalLink class="h-4 w-4" />
             <span class="ml-1 hidden sm:inline">Open</span>
@@ -219,34 +203,33 @@ watch([open, () => props.file], ([newOpen, newFile], [_oldOpen, oldFile]) => {
       </DialogHeader>
 
       <!-- Content -->
-      <div class="flex min-h-0 flex-1 flex-col">
-        <!-- Preview Area -->
+      <div class="flex flex-1 flex-col overflow-y-auto rounded-b-lg">
         <div
-          class="bg-muted/20 flex min-h-0 flex-1 items-center justify-center overflow-auto p-2 sm:p-4"
+          class="bg-muted/20 flex flex-1 items-center justify-center overflow-auto p-2 sm:p-4"
           :class="
-            isFullscreen ? 'h-[calc(100vh-120px)]' : 'max-h-[50vh] min-h-[300px] sm:max-h-[60vh] sm:min-h-[400px]'
+            isFullscreen
+              ? 'h-auto max-h-[85vh] min-h-[70vh]'
+              : 'max-h-[50vh] min-h-[300px] sm:max-h-[60vh] sm:min-h-[400px]'
           "
         >
-          <!-- Image Preview -->
+          <!-- Image -->
           <div v-if="fileType === 'image' && !imageError" class="flex h-full w-full items-center justify-center">
             <img
               :src="file?.url"
               :alt="fileName"
-              class="max-h-full max-w-full cursor-zoom-in object-contain transition-transform duration-200"
+              :class="['cursor-zoom-in object-contain transition-transform duration-200', 'max-h-full max-w-full']"
               :style="{ transform: `scale(${zoomLevel})` }"
               @error="handleImageError"
               @click="zoomLevel < 3 ? zoomIn() : resetZoom()"
             />
           </div>
 
-          <!-- Video Preview -->
+          <!-- Video -->
           <div v-else-if="fileType === 'video'" class="flex h-full w-full items-center justify-center">
-            <video :src="file?.url" controls class="max-h-full max-w-full" preload="metadata">
-              Browser Anda tidak mendukung tag video.
-            </video>
+            <video :src="file?.url" controls class="h-full w-full rounded" preload="metadata" />
           </div>
 
-          <!-- Audio Preview -->
+          <!-- Audio -->
           <div v-else-if="fileType === 'audio'" class="flex w-full items-center justify-center px-2 sm:px-4">
             <div class="w-full max-w-sm sm:max-w-md">
               <div class="mb-3 flex items-center gap-3 sm:mb-4 sm:gap-4">
@@ -258,18 +241,16 @@ watch([open, () => props.file], ([newOpen, newFile], [_oldOpen, oldFile]) => {
                   <p class="text-muted-foreground text-xs sm:text-sm">Audio File</p>
                 </div>
               </div>
-              <audio :src="file?.url" controls class="w-full" preload="metadata">
-                Browser Anda tidak mendukung tag audio.
-              </audio>
+              <audio :src="file?.url" controls class="w-full" preload="metadata" />
             </div>
           </div>
 
-          <!-- PDF Preview -->
+          <!-- PDF -->
           <div v-else-if="fileType === 'pdf'" class="h-full w-full">
             <iframe :src="file?.url" class="h-full w-full rounded border-0" title="PDF Preview"></iframe>
           </div>
 
-          <!-- Unsupported/Error State -->
+          <!-- Unsupported -->
           <div v-else class="flex flex-col items-center justify-center p-4 text-center sm:p-8">
             <div class="bg-muted mb-4 rounded-lg p-4 sm:p-6">
               <FileIcon class="text-muted-foreground mx-auto h-12 w-12 sm:h-16 sm:w-16" />
@@ -286,9 +267,7 @@ watch([open, () => props.file], ([newOpen, newFile], [_oldOpen, oldFile]) => {
             </p>
             <div class="flex flex-col gap-2 sm:flex-row">
               <Button v-if="showDownload" variant="outline" size="sm" @click="handleDownload" class="w-full sm:w-auto">
-                <Download class="mr-2 h-4 w-4" />
-                <span class="hidden sm:inline">Download File</span>
-                <span class="sm:hidden">Download</span>
+                <Download class="mr-2 h-4 w-4" /> Download
               </Button>
               <Button
                 v-if="showExternalLink"
@@ -297,9 +276,7 @@ watch([open, () => props.file], ([newOpen, newFile], [_oldOpen, oldFile]) => {
                 @click="handleExternalLink"
                 class="w-full sm:w-auto"
               >
-                <ExternalLink class="mr-2 h-4 w-4" />
-                <span class="hidden sm:inline">Buka di Tab Baru</span>
-                <span class="sm:hidden">Buka</span>
+                <ExternalLink class="mr-2 h-4 w-4" /> Buka di Tab Baru
               </Button>
             </div>
           </div>

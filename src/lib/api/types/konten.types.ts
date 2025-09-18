@@ -11,11 +11,11 @@ export interface Konten extends BaseEntity {
   isi: string;
   slug: string;
   foto: string;
-  fotoUrl: string;
   createdBy: number;
   updatedBy: number;
   creator: Omit<User, "id,nip,roles">;
   updater: Omit<User, "id,nip,roles">;
+  fotoUrl: string;
 }
 
 /**

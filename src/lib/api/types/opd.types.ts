@@ -12,9 +12,11 @@ export interface Opd extends BaseEntity {
   keterangan?: string | null;
   foto: string;
   website: string;
-  fotoUrl: string;
+  createdBy: number;
+  updatedBy: number;
   createdByUser: Omit<User, "id,nip,roles">;
   updatedByUser: Omit<User, "id,nip,roles">;
+  fotoUrl: string;
 }
 
 /**

@@ -10,6 +10,7 @@ export * from "./majalah";
 export * from "./media";
 export * from "./opd";
 export * from "./konten";
+export * from "./statik";
 export * from "./pemerintahan";
 export * from "./portalMenu";
 export * from "./selayangPandang";

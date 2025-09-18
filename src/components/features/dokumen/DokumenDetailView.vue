@@ -89,7 +89,7 @@ const handlePreviewFullscreen = () => {
         </CardTitle>
 
         <!-- Meta Information -->
-        <div class="text-muted-foreground flex flex-col gap-4 text-sm sm:flex-row sm:items-center sm:gap-6">
+        <div class="text-muted-foreground flex flex-col gap-3 text-sm sm:flex-row sm:items-center sm:gap-6">
           <!-- Creator -->
           <div class="flex items-center gap-2">
             <Avatar class="h-6 w-6">
@@ -99,14 +99,14 @@ const handlePreviewFullscreen = () => {
             </Avatar>
             <div class="flex items-center gap-1">
               <User class="h-4 w-4" />
-              <span>{{ dokumen.createdByUser?.fullName || "Unknown" }}</span>
+              <span class="truncate">{{ dokumen.createdByUser?.fullName || "Unknown" }}</span>
             </div>
           </div>
 
           <!-- Created Date -->
           <div class="flex items-center gap-1">
             <Calendar class="h-4 w-4" />
-            <span>{{ date(dokumen.createdAt) }}</span>
+            <span class="truncate">{{ date(dokumen.createdAt) }}</span>
           </div>
         </div>
 
@@ -144,28 +144,30 @@ const handlePreviewFullscreen = () => {
       <CardContent class="space-y-4">
         <!-- PDF Info -->
         <div class="bg-muted/50 rounded-lg p-4">
-          <div class="flex items-center justify-between">
+          <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="flex items-center gap-3">
               <div class="rounded-lg bg-red-100 p-2 dark:bg-red-900/20">
                 <FileText class="h-6 w-6 text-red-600 dark:text-red-400" />
               </div>
-              <div>
-                <p class="font-medium">{{ dokumen.file.split("/").pop() }}</p>
-                <p class="text-muted-foreground text-sm">{{ dokumen.file }}</p>
+              <div class="min-w-0 flex-1">
+                <p class="truncate font-medium">{{ dokumen.file.split("/").pop() }}</p>
+                <p class="text-muted-foreground truncate text-sm">{{ dokumen.file }}</p>
               </div>
             </div>
-            <div class="flex gap-2">
+            <div class="flex flex-row gap-2">
               <Button
                 @click="filePreview.handleDownload({ url: dokumen.fileUrl, name: dokumen.nama })"
                 size="sm"
-                class="gap-2"
+                class="gap-2 sm:w-auto"
               >
                 <Download class="h-4 w-4" />
-                Download
+                <span class="hidden sm:inline">Download</span>
+                <span class="sm:hidden">Download File</span>
               </Button>
-              <Button variant="outline" size="sm" @click="handlePreviewFullscreen" class="gap-2">
+              <Button variant="outline" size="sm" @click="handlePreviewFullscreen" class="gap-2 sm:w-auto">
                 <Maximize2 class="h-4 w-4" />
-                Fullscreen
+                <span class="hidden sm:inline">Fullscreen</span>
+                <span class="sm:hidden">Preview</span>
               </Button>
             </div>
           </div>
@@ -173,7 +175,12 @@ const handlePreviewFullscreen = () => {
 
         <!-- PDF Embed (if fileUrl available) -->
         <div v-if="dokumen.fileUrl" class="relative overflow-hidden rounded-lg border">
-          <iframe :src="dokumen.fileUrl" class="h-96 w-full border-0" title="Dokumen PDF Preview" loading="lazy" />
+          <iframe
+            :src="dokumen.fileUrl"
+            class="h-64 w-full border-0 sm:h-96"
+            title="Dokumen PDF Preview"
+            loading="lazy"
+          />
         </div>
       </CardContent>
     </Card>
@@ -196,11 +203,11 @@ const handlePreviewFullscreen = () => {
           <div class="space-y-1">
             <p class="text-foreground font-medium">Informasi Pembuatan</p>
             <div class="text-muted-foreground space-y-1">
-              <p>
+              <p class="truncate">
                 <span class="font-medium">Dibuat oleh:</span>
                 {{ dokumen.createdByUser?.fullName || "Unknown" }}
               </p>
-              <p>
+              <p class="truncate">
                 <span class="font-medium">Tanggal:</span>
                 {{ date(dokumen.createdAt) }}
               </p>
@@ -211,11 +218,11 @@ const handlePreviewFullscreen = () => {
           <div v-if="dokumen.updatedAt && dokumen.updatedAt !== dokumen.createdAt" class="space-y-1">
             <p class="text-foreground font-medium">Informasi Update</p>
             <div class="text-muted-foreground space-y-1">
-              <p>
+              <p class="truncate">
                 <span class="font-medium">Diperbarui oleh:</span>
                 {{ dokumen.updatedByUser?.fullName || "Unknown" }}
               </p>
-              <p>
+              <p class="truncate">
                 <span class="font-medium">Tanggal:</span>
                 {{ date(dokumen.updatedAt) }}
               </p>

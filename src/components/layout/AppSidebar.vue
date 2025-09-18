@@ -10,6 +10,7 @@ import {
   Globe,
   HomeIcon,
   NewspaperIcon,
+  Settings,
   UserIcon,
   UserRound,
   VideoIcon,
@@ -165,6 +166,13 @@ const data = computed(() => ({
       name: "app.konten",
       icon: FileEdit,
       isActive: routNameActive.value === "app.konten" || routNameActive.value === "app.konten.detail",
+    },
+    {
+      title: "Statik",
+      url: "/app/statik",
+      name: "app.statik",
+      icon: Settings,
+      isActive: routNameActive.value === "app.statik" || routNameActive.value === "app.statik.detail",
     },
   ],
 }));
