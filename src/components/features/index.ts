@@ -8,6 +8,7 @@ export * from "./opd";
 export * from "./konten";
 export * from "./statik";
 export * from "./radio";
+export * from "./portal";
 export * from "./selayang-pandang";
 export * from "./majalah";
 export * from "./media";

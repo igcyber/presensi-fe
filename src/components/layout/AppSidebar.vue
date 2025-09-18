@@ -182,6 +182,13 @@ const data = computed(() => ({
       icon: Radio,
       isActive: routNameActive.value === "app.radio" || routNameActive.value === "app.radio.detail",
     },
+    {
+      title: "Portal",
+      url: "/app/portal",
+      name: "app.portal",
+      icon: Globe,
+      isActive: routNameActive.value === "app.portal" || routNameActive.value === "app.portal.detail",
+    },
   ],
 }));
 </script>
