@@ -73,12 +73,6 @@ const columns: Column<Majalah>[] = [
     width: "100px",
   },
   {
-    key: "link",
-    label: "File",
-    width: "200px",
-    render: (item: Majalah): string => item.link.split("/").pop() || item.link,
-  },
-  {
     key: "creator",
     label: "Pembuat",
     sortable: true,

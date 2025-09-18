@@ -47,16 +47,6 @@ const columns: Column<Radio>[] = [
     width: "300px",
   },
   {
-    key: "link",
-    label: "Link",
-    sortable: false,
-    width: "250px",
-    render: (item: Radio): string => {
-      const url = item.link || "";
-      return truncate(url, 40);
-    },
-  },
-  {
     key: "isi",
     label: "Deskripsi",
     sortable: false,

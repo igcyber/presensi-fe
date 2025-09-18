@@ -47,12 +47,6 @@ const columns: Column<Dokumen>[] = [
     width: "300px",
   },
   {
-    key: "file",
-    label: "File",
-    width: "200px",
-    render: (item: Dokumen): string => item.file.split("/").pop() || item.file,
-  },
-  {
     key: "isi",
     label: "Deskripsi",
     width: "250px",
