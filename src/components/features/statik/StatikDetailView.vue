@@ -226,8 +226,8 @@ const handlePreviewFullscreen = () => {
                   <component :is="jenisConfig.icon" class="h-6 w-6" />
                 </div>
                 <div class="min-w-0 flex-1">
-                  <p class="truncate font-medium">{{ statik.nama }}</p>
-                  <p class="text-muted-foreground truncate text-sm">{{ statik.isi }}</p>
+                  <p class="font-medium text-wrap">{{ statik.nama }}</p>
+                  <p class="text-muted-foreground text-sm text-wrap">{{ statik.isi }}</p>
                 </div>
               </div>
               <div class="flex flex-row gap-2">

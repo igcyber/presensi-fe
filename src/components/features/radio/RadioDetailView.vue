@@ -1,28 +1,25 @@
 <script setup lang="ts">
-import { ArrowLeft, Calendar, Download, FileText, Maximize2, User } from "lucide-vue-next";
+import { ArrowLeft, Calendar, ExternalLink, Radio, User } from "lucide-vue-next";
 import { computed } from "vue";
 
-import FilePreviewDialog from "@/components/dialogs/FilePreviewDialog.vue";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
-import { useFilePreview } from "@/composables/useFilePreview";
 import { useFormatters } from "@/composables/useFormatters";
-import type { Majalah } from "@/lib/api/types/majalah.types";
-import { MONTH_OPTIONS } from "@/lib/api/types/majalah.types";
+import type { Radio as RadioType } from "@/lib/api/types/radio.types";
 
 interface Props {
-  majalah: Majalah;
+  radio: RadioType;
   showBackButton?: boolean;
   loading?: boolean;
 }
 
 interface Emits {
   (e: "back"): void;
-  (e: "edit", majalah: Majalah): void;
-  (e: "delete", majalah: Majalah): void;
+  (e: "edit", radio: RadioType): void;
+  (e: "delete", radio: RadioType): void;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -34,16 +31,10 @@ const emit = defineEmits<Emits>();
 
 // Composables
 const { date } = useFormatters();
-const filePreview = useFilePreview();
 
 // Computed properties
-const monthName = computed(() => {
-  const month = MONTH_OPTIONS.find((m) => m.value === props.majalah.bulan);
-  return month?.label || "Unknown";
-});
-
 const creatorInitials = computed(() => {
-  const name = props.majalah.creator?.fullName || "Unknown";
+  const name = props.radio.createdByUser?.fullName || "Unknown";
   return name
     .split(" ")
     .map((word) => word[0])
@@ -52,35 +43,22 @@ const creatorInitials = computed(() => {
     .slice(0, 2);
 });
 
-const majalahTitle = computed(() => {
-  return `Majalah Kukar Edisi ${String(props.majalah.bulan).padStart(2, "0")} - ${props.majalah.tahun}`;
-});
-
 // Methods
 const handleBack = () => {
   emit("back");
 };
 
 const handleEdit = () => {
-  emit("edit", props.majalah);
+  emit("edit", props.radio);
 };
 
 const handleDelete = () => {
-  emit("delete", props.majalah);
+  emit("delete", props.radio);
 };
 
-const handleDownload = () => {
-  if (props.majalah.linkUrl) {
-    window.open(props.majalah.linkUrl, "_blank");
-  }
-};
-
-const handlePreviewFullscreen = () => {
-  if (props.majalah.linkUrl) {
-    filePreview.previewPDF(props.majalah.linkUrl, majalahTitle.value, {
-      title: `Preview: ${majalahTitle.value}`,
-      showFileInfo: true,
-    });
+const handleOpenRadio = () => {
+  if (props.radio.link) {
+    window.open(props.radio.link, "_blank");
   }
 };
 </script>
@@ -100,7 +78,7 @@ const handlePreviewFullscreen = () => {
       <CardHeader class="space-y-4">
         <!-- Title -->
         <CardTitle class="text-2xl leading-tight font-bold lg:text-3xl">
-          {{ majalahTitle }}
+          {{ radio.judul }}
         </CardTitle>
 
         <!-- Meta Information -->
@@ -114,26 +92,20 @@ const handlePreviewFullscreen = () => {
             </Avatar>
             <div class="flex items-center gap-1">
               <User class="h-4 w-4" />
-              <span class="truncate">{{ majalah.creator?.fullName || "Unknown" }}</span>
+              <span class="truncate">{{ radio.createdByUser?.fullName || "Unknown" }}</span>
             </div>
-          </div>
-
-          <!-- Month & Year -->
-          <div class="flex items-center gap-1">
-            <Calendar class="h-4 w-4" />
-            <span class="truncate">{{ monthName }} {{ majalah.tahun }}</span>
           </div>
 
           <!-- Created Date -->
           <div class="flex items-center gap-1">
             <Calendar class="h-4 w-4" />
-            <span class="truncate">{{ date(majalah.createdAt) }}</span>
+            <span class="truncate">{{ date(radio.createdAt) }}</span>
           </div>
         </div>
 
         <!-- Action Buttons Slot -->
         <div class="flex flex-wrap gap-2">
-          <slot name="actions" :majalah="majalah" :on-edit="handleEdit" :on-delete="handleDelete">
+          <slot name="actions" :radio="radio" :on-edit="handleEdit" :on-delete="handleDelete">
             <!-- Default actions (can be overridden by parent) -->
             <Button variant="outline" size="sm" @click="handleEdit"> Edit </Button>
             <Button variant="destructive" size="sm" @click="handleDelete"> Hapus </Button>
@@ -142,62 +114,58 @@ const handlePreviewFullscreen = () => {
       </CardHeader>
     </Card>
 
-    <!-- PDF Preview/Download Card -->
-    <Card v-if="majalah.link">
+    <!-- Radio Link Card -->
+    <Card>
       <CardHeader>
         <CardTitle class="flex items-center gap-2">
-          <FileText class="h-5 w-5" />
-          File Majalah
+          <Radio class="h-5 w-5" />
+          Radio Streaming
         </CardTitle>
       </CardHeader>
       <Separator />
       <CardContent class="space-y-4">
-        <!-- PDF Info -->
+        <!-- Radio Link Info -->
         <div class="bg-muted/50 rounded-lg p-4">
           <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="flex items-center gap-3">
               <div class="rounded-lg bg-red-100 p-2 dark:bg-red-900/20">
-                <FileText class="h-6 w-6 text-red-600 dark:text-red-400" />
+                <Radio class="h-6 w-6 text-red-600 dark:text-red-400" />
               </div>
               <div class="min-w-0 flex-1">
-                <p class="font-medium text-wrap">{{ majalahTitle }}.pdf</p>
-                <p class="text-muted-foreground text-sm text-wrap">{{ majalah.link }}</p>
+                <p class="font-medium text-wrap">{{ radio.judul }}</p>
               </div>
             </div>
             <div class="flex flex-row gap-2">
-              <Button @click="handleDownload" size="sm" class="gap-2 sm:w-auto">
-                <Download class="h-4 w-4" />
-                <span class="hidden sm:inline">Download</span>
-                <span class="sm:hidden">Download File</span>
-              </Button>
-              <Button variant="outline" size="sm" @click="handlePreviewFullscreen" class="gap-2 sm:w-auto">
-                <Maximize2 class="h-4 w-4" />
-                <span class="hidden sm:inline">Fullscreen</span>
-                <span class="sm:hidden">Preview</span>
+              <Button @click="handleOpenRadio" class="gap-2 sm:w-auto">
+                <ExternalLink class="h-4 w-4" />
+                <span class="hidden sm:inline">Buka Radio</span>
+                <span class="sm:hidden">Buka</span>
               </Button>
             </div>
           </div>
         </div>
 
-        <!-- PDF Embed (if linkUrl available) -->
-        <div v-if="majalah.linkUrl" class="relative overflow-hidden rounded-lg border">
+        <!-- Radio Embed (if link available) -->
+        <div v-if="radio.link" class="relative overflow-hidden rounded-lg border">
           <iframe
-            :src="majalah.linkUrl"
+            :src="radio.link"
             class="h-64 w-full border-0 sm:h-96"
-            title="Majalah PDF Preview"
+            title="Radio Streaming"
             loading="lazy"
+            allow="autoplay"
           />
         </div>
       </CardContent>
     </Card>
 
-    <!-- No File Fallback -->
-    <Card v-else>
-      <CardContent class="p-8 text-center">
-        <div class="text-muted-foreground">
-          <FileText class="mx-auto mb-2 h-12 w-12 opacity-50" />
-          <p class="text-sm">Tidak ada file</p>
-        </div>
+    <!-- Description Card -->
+    <Card v-if="radio.isi">
+      <CardHeader>
+        <CardTitle class="text-xl">Deskripsi</CardTitle>
+      </CardHeader>
+      <Separator />
+      <CardContent>
+        <div class="text-foreground leading-relaxed">{{ radio.isi }}</div>
       </CardContent>
     </Card>
 
@@ -211,45 +179,31 @@ const handlePreviewFullscreen = () => {
             <div class="text-muted-foreground space-y-1">
               <p class="truncate">
                 <span class="font-medium">Dibuat oleh:</span>
-                {{ majalah.creator?.fullName || "Unknown" }}
+                {{ radio.createdByUser?.fullName || "Unknown" }}
               </p>
               <p class="truncate">
                 <span class="font-medium">Tanggal:</span>
-                {{ date(majalah.createdAt) }}
+                {{ date(radio.createdAt) }}
               </p>
             </div>
           </div>
 
           <!-- Updated Info (if different from created) -->
-          <div v-if="majalah.updatedAt && majalah.updatedAt !== majalah.createdAt" class="space-y-1">
+          <div v-if="radio.updatedAt && radio.updatedAt !== radio.createdAt" class="space-y-1">
             <p class="text-foreground font-medium">Informasi Update</p>
             <div class="text-muted-foreground space-y-1">
               <p class="truncate">
                 <span class="font-medium">Diperbarui oleh:</span>
-                {{ majalah.updater?.fullName || "Unknown" }}
+                {{ radio.updatedByUser?.fullName || "Unknown" }}
               </p>
               <p class="truncate">
                 <span class="font-medium">Tanggal:</span>
-                {{ date(majalah.updatedAt) }}
+                {{ date(radio.updatedAt) }}
               </p>
             </div>
           </div>
         </div>
       </CardContent>
     </Card>
-
-    <!-- File Preview Dialog -->
-    <FilePreviewDialog
-      v-model:open="filePreview.isOpen.value"
-      :file="filePreview.currentFile.value"
-      :title="filePreview.options.value.title"
-      :show-download="filePreview.options.value.showDownload"
-      :show-external-link="filePreview.options.value.showExternalLink"
-      :show-file-info="filePreview.options.value.showFileInfo"
-      :max-width="filePreview.options.value.maxWidth"
-      :max-height="filePreview.options.value.maxHeight"
-      @download="filePreview.handleDownload"
-      @external-link="filePreview.handleExternalLink"
-    />
   </div>
 </template>

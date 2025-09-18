@@ -150,8 +150,8 @@ const handlePreviewFullscreen = () => {
                 <FileText class="h-6 w-6 text-red-600 dark:text-red-400" />
               </div>
               <div class="min-w-0 flex-1">
-                <p class="truncate font-medium">{{ dokumen.file.split("/").pop() }}</p>
-                <p class="text-muted-foreground truncate text-sm">{{ dokumen.file }}</p>
+                <p class="font-medium text-wrap">{{ dokumen.file.split("/").pop() }}</p>
+                <p class="text-muted-foreground text-sm text-wrap">{{ dokumen.file }}</p>
               </div>
             </div>
             <div class="flex flex-row gap-2">

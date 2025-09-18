@@ -12,6 +12,7 @@ import { type Column, DataTable } from "@/components/ui/datatable";
 import ErrorState from "@/components/ui/error-state/ErrorState.vue";
 
 import { useDialog } from "@/composables/useDialog";
+import { useFormatters } from "@/composables/useFormatters";
 import { useResourceList } from "@/composables/useResourceList";
 import { deleteStatik, getStatiks } from "@/lib/api/services/statik";
 import type { Statik } from "@/lib/api/types/statik.types";
@@ -33,6 +34,8 @@ const {
 const dialog = useDialog<Statik>();
 const confirmDialog = useDialog<Statik>();
 const router = useRouter();
+
+const { truncate } = useFormatters();
 
 // Column definitions
 const columns: Column<Statik>[] = [
@@ -68,7 +71,7 @@ const columns: Column<Statik>[] = [
     width: "200px",
     render: (item: Statik): string => {
       const isi = item.isi || "";
-      return isi.length > 30 ? `${isi.substring(0, 30)}...` : isi;
+      return truncate(isi, 30);
     },
   },
   {

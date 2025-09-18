@@ -12,6 +12,7 @@ import { type Column, DataTable } from "@/components/ui/datatable";
 import ErrorState from "@/components/ui/error-state/ErrorState.vue";
 
 import { useDialog } from "@/composables/useDialog";
+import { useFormatters } from "@/composables/useFormatters";
 import { useResourceList } from "@/composables/useResourceList";
 import { deleteOpd, getOpds } from "@/lib/api/services/opd";
 import type { Opd } from "@/lib/api/types/opd.types";
@@ -34,6 +35,8 @@ const dialog = useDialog<Opd>();
 const confirmDialog = useDialog<Opd>();
 const router = useRouter();
 
+const { truncate } = useFormatters();
+
 // Column definitions
 const columns: Column<Opd>[] = [
   {
@@ -49,8 +52,8 @@ const columns: Column<Opd>[] = [
     sortable: true,
     width: "250px",
     render: (item: Opd): string => {
-      const alamat = item.alamat || "";
-      return alamat.length > 50 ? `${alamat.substring(0, 50)}...` : alamat;
+      const alamat = item.alamat || "-";
+      return truncate(alamat, 50);
     },
   },
   {
@@ -59,9 +62,9 @@ const columns: Column<Opd>[] = [
     sortable: false,
     width: "200px",
     render: (item: Opd): string => {
-      if (!item.website) return "-";
+      if (!item.website) return "";
       const url = item.website.replace(/^https?:\/\//, "");
-      return url.length > 30 ? `${url.substring(0, 30)}...` : url;
+      return truncate(url, 30);
     },
   },
   {

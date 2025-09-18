@@ -11,6 +11,7 @@ import opdRoute from "@/pages/app/opd/route";
 import perusdaRoute from "@/pages/app/perusda/route";
 import prestasiRoute from "@/pages/app/prestasi/route";
 import profileRoute from "@/pages/app/profile/route";
+import radioRoute from "@/pages/app/radio/route";
 import statikRoute from "@/pages/app/statik/route";
 
 import userRoute from "./user/route";
@@ -39,5 +40,6 @@ export default {
     ...opdRoute,
     ...kontenRoute,
     ...statikRoute,
+    ...radioRoute,
   ],
 };

@@ -10,6 +10,7 @@ import {
   Globe,
   HomeIcon,
   NewspaperIcon,
+  Radio,
   Settings,
   UserIcon,
   UserRound,
@@ -173,6 +174,13 @@ const data = computed(() => ({
       name: "app.statik",
       icon: Settings,
       isActive: routNameActive.value === "app.statik" || routNameActive.value === "app.statik.detail",
+    },
+    {
+      title: "Radio",
+      url: "/app/radio",
+      name: "app.radio",
+      icon: Radio,
+      isActive: routNameActive.value === "app.radio" || routNameActive.value === "app.radio.detail",
     },
   ],
 }));

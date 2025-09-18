@@ -12,6 +12,7 @@ import { type Column, DataTable } from "@/components/ui/datatable";
 import ErrorState from "@/components/ui/error-state/ErrorState.vue";
 
 import { useDialog } from "@/composables/useDialog";
+import { useFormatters } from "@/composables/useFormatters";
 import { useResourceList } from "@/composables/useResourceList";
 import { deleteDokumen, getDokumens } from "@/lib/api/services/dokumen";
 import type { Dokumen } from "@/lib/api/types/dokumen.types";
@@ -34,6 +35,8 @@ const dialog = useDialog<Dokumen>();
 const confirmDialog = useDialog<Dokumen>();
 const router = useRouter();
 
+const { truncate } = useFormatters();
+
 // Column definitions
 const columns: Column<Dokumen>[] = [
   {
@@ -53,7 +56,7 @@ const columns: Column<Dokumen>[] = [
     key: "isi",
     label: "Deskripsi",
     width: "250px",
-    render: (item: Dokumen): string => (item.isi.length > 100 ? item.isi.substring(0, 100) + "..." : item.isi),
+    render: (item: Dokumen): string => truncate(item.isi, 100),
   },
   {
     key: "createdByUser",
