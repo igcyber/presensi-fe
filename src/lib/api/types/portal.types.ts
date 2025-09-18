@@ -30,6 +30,7 @@ export interface PortalMenuKat extends BaseEntity {
   updatedBy: number;
   createdByUser: User;
   updatedByUser: User;
+  portalMenuSubs?: PortalMenuSub[];
 }
 
 /**
