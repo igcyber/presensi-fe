@@ -41,7 +41,7 @@ const { truncate } = useFormatters();
 const columns: Column<PortalMenu>[] = [
   {
     key: "judul",
-    label: "Judul Portal",
+    label: "Judul",
     sortable: true,
     searchable: true,
     width: "200px",

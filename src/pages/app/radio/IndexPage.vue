@@ -41,7 +41,7 @@ const { truncate } = useFormatters();
 const columns: Column<Radio>[] = [
   {
     key: "judul",
-    label: "Judul Radio",
+    label: "Judul",
     sortable: true,
     searchable: true,
     width: "300px",

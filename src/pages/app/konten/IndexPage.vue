@@ -48,7 +48,7 @@ const filterConfig: FilterConfig[] = [
 const columns: Column<Konten>[] = [
   {
     key: "nama",
-    label: "Nama Konten",
+    label: "Nama",
     sortable: true,
     searchable: true,
     width: "300px",

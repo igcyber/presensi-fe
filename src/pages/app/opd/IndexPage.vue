@@ -41,7 +41,7 @@ const { truncate } = useFormatters();
 const columns: Column<Opd>[] = [
   {
     key: "nama",
-    label: "Nama OPD",
+    label: "Nama",
     sortable: true,
     searchable: true,
     width: "300px",

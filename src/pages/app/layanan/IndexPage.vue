@@ -38,7 +38,7 @@ const router = useRouter();
 const columns: Column<Layanan>[] = [
   {
     key: "nama",
-    label: "Nama Layanan",
+    label: "Nama",
     sortable: true,
     searchable: true,
     width: "250px",

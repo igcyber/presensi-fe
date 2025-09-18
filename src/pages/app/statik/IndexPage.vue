@@ -41,7 +41,7 @@ const { truncate } = useFormatters();
 const columns: Column<Statik>[] = [
   {
     key: "nama",
-    label: "Nama Statik",
+    label: "Nama",
     sortable: true,
     searchable: true,
     width: "250px",
