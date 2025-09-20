@@ -12,6 +12,8 @@ export { default as KontenDialog } from "./KontenDialog.vue";
 export { default as StatikDialog } from "./StatikDialog.vue";
 export { default as RadioDialog } from "./RadioDialog.vue";
 export { default as PortalDialog } from "./PortalDialog.vue";
+export { default as PortalKatDialog } from "./PortalKatDialog.vue";
+export { default as PortalSubDialog } from "./PortalSubDialog.vue";
 export { default as MajalahDialog } from "./MajalahDialog.vue";
 export { default as UserDialog } from "./UserDialog.vue";
 export { default as VideoDialog } from "./VideoDialog.vue";

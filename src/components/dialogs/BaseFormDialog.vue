@@ -31,7 +31,7 @@ interface Props<TSchema extends ZodTypeAny = ZodTypeAny> {
   initialValues?: Partial<z.infer<TSchema>> | Record<string, any>;
 
   /** Submit handler: return Promise to show loading */
-  onSubmit?: (values: any, ctx: { mode: DialogMode }) => Promise<void> | void;
+  onSubmit?: (values: any) => Promise<void> | void;
 
   /** Buttons */
   submitText?: string; // defaults by mode
@@ -104,7 +104,7 @@ async function handleSubmit(values: any) {
     isSubmitting.value = true;
     serverErrors.value = {};
 
-    await props.onSubmit(values, { mode: props.mode! });
+    await props.onSubmit(values);
     emit("success", values);
 
     if (props.closeOnSuccess) emit("update:open", false);
