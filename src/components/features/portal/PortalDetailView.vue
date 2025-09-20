@@ -333,7 +333,7 @@ const handleDeleteSub = (sub: PortalMenuSub) => {
                 <template v-if="isKatExpanded(kat.id) && kat.portalMenuSubs && kat.portalMenuSubs.length > 0">
                   <template v-for="sub in kat.portalMenuSubs" :key="sub.id">
                     <TableRow
-                      class="hover:bg-muted/30 border-l-4 border-l-green-200 transition-colors dark:border-l-green-800"
+                      class="hover:bg-muted/30 !border-l-4 border-l-green-200 transition-colors dark:border-l-green-800"
                     >
                       <TableCell class="p-2"></TableCell>
                       <TableCell class="p-3">
