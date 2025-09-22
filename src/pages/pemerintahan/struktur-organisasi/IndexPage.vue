@@ -6,7 +6,8 @@ import AppBreadcrumb from "@/components/layout/partials/AppBreadcrumb.vue";
 
 import { useFetch } from "@/composables/useFetch";
 import { type ApiResponse, type PayloadData } from "@/lib/api/core";
-import { getStrukturOrganisasi, type StrukturOrganisasiData } from "@/lib/api/services/pemerintahan";
+import { getStrukturOrganisasi } from "@/lib/api/services/pemerintahan";
+import type { StrukturOrganisasiData } from "@/lib/api/types/pemerintahan.types";
 
 const { data, isLoading, fetchData, isError, error } = useFetch<
   ApiResponse<PayloadData<StrukturOrganisasiData>>,
@@ -58,11 +59,7 @@ onMounted(async () => {
 
         <!-- Content -->
         <div v-else-if="data">
-          <SelayangPandang
-            :title="data.slug"
-            :content="data.isi"
-            :image="`https://kukarkab.go.id/uploads/${data.foto}`"
-          />
+          <SelayangPandang :title="data.slug" :content="data.isi" :image="data.fotoUrl" />
         </div>
 
         <!-- Empty State -->

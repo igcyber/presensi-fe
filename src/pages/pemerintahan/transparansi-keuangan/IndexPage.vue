@@ -8,8 +8,9 @@ import AppBreadcrumb from "@/components/layout/partials/AppBreadcrumb.vue";
 import { useFetch } from "@/composables/useFetch";
 import { useFormatters } from "@/composables/useFormatters";
 import { usePagination } from "@/composables/usePagination";
-import { type ApiResponse } from "@/lib/api/core";
-import { getTransparansiKeuangan, type TransparansiKeuanganListPayload } from "@/lib/api/services/pemerintahan";
+import { type ApiResponse, type PaginatedPayload } from "@/lib/api/core";
+import { getTransparansiKeuangan } from "@/lib/api/services/pemerintahan";
+import type { TransparansiKeuangan } from "@/lib/api/types/pemerintahan.types";
 
 // Constants
 const STICKY_HEADER_OFFSET = 200;
@@ -20,8 +21,8 @@ const { date } = useFormatters();
 const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
 
 const { data, isLoading, fetchData, isError, error } = useFetch<
-  ApiResponse<TransparansiKeuanganListPayload>,
-  TransparansiKeuanganListPayload
+  ApiResponse<PaginatedPayload<TransparansiKeuangan>>,
+  PaginatedPayload<TransparansiKeuangan>
 >(() => getTransparansiKeuangan(currentPage.value), {
   immediate: false,
   extractData: (response) => response.data,
@@ -156,7 +157,7 @@ onMounted(async () => {
                   </thead>
                   <tbody class="divide-y divide-gray-200 bg-white">
                     <tr
-                      v-for="(item, index) in data?.dokumenkeuangans"
+                      v-for="(item, index) in data?.data"
                       :key="item.id"
                       class="transition-colors duration-150 hover:bg-gray-50"
                     >
@@ -178,12 +179,12 @@ onMounted(async () => {
                         >
                       </td>
                       <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                        {{ date(item.tanggalPublikasi) }}
+                        {{ date(item.createdAt) }}
                       </td>
                     </tr>
 
                     <!-- Empty State Row -->
-                    <tr v-if="data?.dokumenkeuangans?.length === 0">
+                    <tr v-if="data?.data?.length === 0">
                       <td colspan="4" class="px-6 py-12 text-center">
                         <div class="text-gray-400">
                           <i class="bx bx-trophy mb-3 text-4xl"></i>
@@ -198,7 +199,7 @@ onMounted(async () => {
               <!-- Mobile Cards -->
               <div class="space-y-4 p-4 md:hidden">
                 <div
-                  v-for="(item, index) in data?.dokumenkeuangans"
+                  v-for="(item, index) in data?.data"
                   :key="item.id"
                   class="rounded border border-gray-200 bg-white p-4 shadow-sm"
                 >
@@ -209,7 +210,7 @@ onMounted(async () => {
                     <span
                       class="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800"
                     >
-                      {{ date(item.tanggalPublikasi) }}
+                      {{ date(item.createdAt) }}
                     </span>
                   </div>
 
@@ -224,7 +225,7 @@ onMounted(async () => {
                 </div>
 
                 <!-- Mobile Empty State -->
-                <div v-if="data?.dokumenkeuangans?.length === 0" class="py-8 text-center">
+                <div v-if="data?.data?.length === 0" class="py-8 text-center">
                   <i class="bx bx-trophy mb-3 text-4xl text-gray-400"></i>
                   <p class="text-sm text-gray-500">Belum ada data transparansi keuangan</p>
                 </div>

@@ -6,7 +6,8 @@ import AppBreadcrumb from "@/components/layout/partials/AppBreadcrumb.vue";
 
 import { useFetch } from "@/composables/useFetch";
 import { type ApiResponse } from "@/lib/api/core";
-import { getVisiMisi, type VisiMisiData } from "@/lib/api/services/pemerintahan";
+import { getVisiMisi } from "@/lib/api/services/pemerintahan";
+import type { VisiMisiData } from "@/lib/api/types/pemerintahan.types";
 
 const { data, isLoading, fetchData, isError, error } = useFetch<ApiResponse<VisiMisiData>, VisiMisiData>(getVisiMisi, {
   immediate: false,
@@ -62,22 +63,14 @@ onMounted(async () => {
 
         <!-- Content -->
         <div v-else-if="visi && misi">
-          <SelayangPandang
-            :title="visi.nama"
-            :content="visi.isi"
-            :image="`https://kukarkab.go.id/uploads/${visi.foto}`"
-          >
+          <SelayangPandang :title="visi.nama" :content="visi.isi" :image="visi.fotoUrl">
             <template #other>
               <!-- Hero Image -->
               <div
                 v-if="misi.foto.split('/')[misi.foto.split('/').length - 1] != 'nopict.jpg'"
                 class="mb-8 h-80 w-full overflow-hidden rounded shadow-lg"
               >
-                <img
-                  :src="`https://kukarkab.go.id/uploads/${misi.foto}`"
-                  :alt="misi.nama"
-                  class="h-full w-full object-cover"
-                />
+                <img :src="misi.fotoUrl" :alt="misi.nama" class="h-full w-full object-cover" />
               </div>
 
               <!-- Content Header -->

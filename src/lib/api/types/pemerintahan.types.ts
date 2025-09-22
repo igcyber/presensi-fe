@@ -1,4 +1,5 @@
-import type { BaseEntity, ContentData, PaginationMeta } from "@/lib/api/core/apiResponse";
+import type { BaseEntity, ContentData } from "@/lib/api/core/apiResponse";
+import type { Bupati } from "@/lib/api/types/bupati.types";
 
 /**
  * Content data type aliases for better semantic naming
@@ -18,29 +19,13 @@ export interface VisiMisiData {
 }
 
 /**
- * Regent (Bupati) data interface
- */
-export interface Bupati extends BaseEntity {
-  namaBupati: string;
-  namaWakil: string;
-  foto: string;
-  tahunAwal: number;
-  tahunAkhir: number;
-  periode?: string;
-  biografi?: string;
-}
-
-/**
  * Financial transparency document interface
  */
 export interface TransparansiKeuangan extends BaseEntity {
   nama: string;
   file: string;
-  link?: string | null;
-  keterangan: string;
-  tanggalPublikasi: string;
-  category?: string;
-  fileSize?: number;
+  isi: string;
+  fileUrl: string;
 }
 
 /**
@@ -48,62 +33,5 @@ export interface TransparansiKeuangan extends BaseEntity {
  */
 export interface BupatiPayload {
   data: ContentData;
-  bupati: Bupati[];
-}
-
-/**
- * Vision and Mission payload interface
- */
-export interface VisiMisiPayload {
-  visiMisi: VisiMisiData;
-}
-
-/**
- * Financial transparency list payload interface
- */
-export interface TransparansiKeuanganListPayload {
-  dokumenkeuangans: TransparansiKeuangan[];
-  meta?: PaginationMeta;
-}
-
-/**
- * Content data payload interface
- */
-export interface ContentDataPayload {
-  content: ContentData;
-}
-
-/**
- * Search parameters for financial transparency
- */
-export interface TransparansiSearchParams {
-  page?: number;
-  keyword?: string;
-  category?: string;
-  year?: number;
-  sort?: "latest" | "name" | "date";
-}
-
-/**
- * Create financial transparency request
- */
-export interface CreateTransparansiRequest {
-  nama: string;
-  file: string;
-  link?: string;
-  keterangan: string;
-  tanggalPublikasi: string;
-  category?: string;
-}
-
-/**
- * Update financial transparency request
- */
-export interface UpdateTransparansiRequest {
-  nama?: string;
-  file?: string;
-  link?: string;
-  keterangan?: string;
-  tanggalPublikasi?: string;
-  category?: string;
+  bupati: Omit<Bupati, "createdByUser,updatedByUser">[];
 }

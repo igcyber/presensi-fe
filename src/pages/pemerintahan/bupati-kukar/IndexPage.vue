@@ -6,7 +6,8 @@ import AppBreadcrumb from "@/components/layout/partials/AppBreadcrumb.vue";
 
 import { useFetch } from "@/composables/useFetch";
 import { type ApiResponse } from "@/lib/api/core";
-import { type BupatiPayload, getBupati } from "@/lib/api/services/pemerintahan";
+import { getBupati } from "@/lib/api/services/pemerintahan";
+import type { BupatiPayload } from "@/lib/api/types/pemerintahan.types";
 
 const { data, isLoading, fetchData, isError, error } = useFetch<ApiResponse<BupatiPayload>, BupatiPayload>(getBupati, {
   immediate: false,
@@ -63,11 +64,7 @@ onMounted(async () => {
 
         <!-- Content -->
         <div v-else-if="contentData">
-          <SelayangPandang
-            :title="contentData.slug"
-            :content="contentData.isi"
-            :image="`https://kukarkab.go.id/uploads/${contentData.foto}`"
-          >
+          <SelayangPandang :title="contentData.slug" :content="contentData.isi" :image="contentData.fotoUrl">
             <template #other>
               <!-- Grid Responsive untuk Card Bupati -->
               <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -80,7 +77,7 @@ onMounted(async () => {
                   <div class="relative overflow-hidden">
                     <div class="aspect-w-16 aspect-h-12 bg-gradient-to-br from-gray-200 to-gray-300">
                       <img
-                        :src="`https://kukarkab.go.id/uploads/${item.foto}`"
+                        :src="item.fotoUrl"
                         :alt="`${item.namaBupati} - ${item.namaWakil}`"
                         class="h-48 w-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
                         loading="lazy"

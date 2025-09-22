@@ -1,6 +1,5 @@
 import type { BaseEntity, PaginatedPayload } from "@/lib/api/core/apiResponse";
-
-import type { User } from "./user.types";
+import type { User } from "@/lib/api/types/user.types";
 
 /**
  * Bupati entity interface

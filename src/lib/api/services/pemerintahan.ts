@@ -1,32 +1,6 @@
-import type { ApiResponse, ContentData, PayloadData } from "@/lib/api/core/apiResponse";
+import type { ApiResponse, ContentData, PaginatedPayload, PayloadData } from "@/lib/api/core/apiResponse";
 import httpInstance from "@/lib/api/core/httpInstance";
-import type {
-  BupatiPayload,
-  CreateTransparansiRequest,
-  TransparansiKeuangan,
-  TransparansiKeuanganListPayload,
-  UpdateTransparansiRequest,
-  VisiMisiData,
-} from "@/lib/api/types/pemerintahan.types";
-
-// Re-export types for convenience
-export type {
-  Bupati,
-  BupatiPayload,
-  ContentDataPayload,
-  CreateTransparansiRequest,
-  TransparansiKeuangan,
-  TransparansiKeuanganListPayload,
-  TransparansiSearchParams,
-  UpdateTransparansiRequest,
-  VisiMisiData,
-  VisiMisiPayload,
-  TugasFungsiData,
-  StrukturOrganisasiData,
-  StrategiDaerahData,
-  ProgramStrategisData,
-  BupatiContentData,
-} from "@/lib/api/types/pemerintahan.types";
+import type { BupatiPayload, TransparansiKeuangan, VisiMisiData } from "@/lib/api/types/pemerintahan.types";
 
 // ==================== BUPATI SERVICES ====================
 
@@ -42,21 +16,6 @@ export type {
  */
 export const getBupati = async (): Promise<ApiResponse<BupatiPayload>> => {
   const response = await httpInstance.get<ApiResponse<BupatiPayload>>("/pemerintahan/bupati");
-  return response.data;
-};
-
-/**
- * Get regent content (biography, etc.)
- * @returns Promise resolving to regent content data
- * @endpoint GET /pemerintahan/bupati/content
- * @example
- * ```typescript
- * const response = await getBupatiContent();
- * console.log(response.data.isi);
- * ```
- */
-export const getBupatiContent = async (): Promise<ApiResponse<PayloadData<ContentData>>> => {
-  const response = await httpInstance.get<ApiResponse<PayloadData<ContentData>>>("/pemerintahan/bupati/content");
   return response.data;
 };
 
@@ -155,7 +114,7 @@ export const getProgramStrategis = async (): Promise<ApiResponse<PayloadData<Con
  */
 export const getTransparansiKeuangan = async (
   page: number = 1,
-): Promise<ApiResponse<TransparansiKeuanganListPayload>> => {
+): Promise<ApiResponse<PaginatedPayload<TransparansiKeuangan>>> => {
   const searchParams = new URLSearchParams();
 
   if (page) searchParams.append("page", page.toString());
@@ -165,7 +124,7 @@ export const getTransparansiKeuangan = async (
     ? `/pemerintahan/transparansi-keuangan?${queryString}`
     : "/pemerintahan/transparansi-keuangan";
 
-  const response = await httpInstance.get<ApiResponse<TransparansiKeuanganListPayload>>(url);
+  const response = await httpInstance.get<ApiResponse<PaginatedPayload<TransparansiKeuangan>>>(url);
   return response.data;
 };
 
@@ -181,96 +140,6 @@ export const getTransparansiKeuangan = async (
  * ```
  */
 export const getTransparansiKeuanganById = async (
-  id: number,
-): Promise<ApiResponse<PayloadData<TransparansiKeuangan>>> => {
-  const response = await httpInstance.get<ApiResponse<PayloadData<TransparansiKeuangan>>>(
-    `/pemerintahan/transparansi-keuangan/${id}`,
-  );
-  return response.data;
-};
-
-/**
- * Create new financial transparency document
- * @param transparansiData - Financial transparency creation data
- * @returns Promise resolving to created document data
- * @endpoint POST /pemerintahan/transparansi-keuangan
- * @example
- * ```typescript
- * const response = await createTransparansiKeuangan({
- *   nama: 'Laporan APBD 2024',
- *   file: 'apbd-2024.pdf',
- *   keterangan: 'Laporan Anggaran Pendapatan dan Belanja Daerah 2024',
- *   tanggalPublikasi: '2024-01-01'
- * });
- * console.log(response.data.id);
- * ```
- */
-export const createTransparansiKeuangan = async (
-  transparansiData: CreateTransparansiRequest,
-): Promise<ApiResponse<PayloadData<TransparansiKeuangan>>> => {
-  const response = await httpInstance.post<ApiResponse<PayloadData<TransparansiKeuangan>>>(
-    "/pemerintahan/transparansi-keuangan",
-    transparansiData,
-  );
-  return response.data;
-};
-
-/**
- * Update financial transparency document
- * @param id - Document ID to update
- * @param transparansiData - Updated document data
- * @returns Promise resolving to updated document data
- * @endpoint PUT /pemerintahan/transparansi-keuangan/{id}
- * @example
- * ```typescript
- * const response = await updateTransparansiKeuangan(123, {
- *   nama: 'Laporan APBD 2024 - Updated',
- *   keterangan: 'Updated description'
- * });
- * console.log(response.data.nama);
- * ```
- */
-export const updateTransparansiKeuangan = async (
-  id: number,
-  transparansiData: UpdateTransparansiRequest,
-): Promise<ApiResponse<PayloadData<TransparansiKeuangan>>> => {
-  const response = await httpInstance.put<ApiResponse<PayloadData<TransparansiKeuangan>>>(
-    `/pemerintahan/transparansi-keuangan/${id}`,
-    transparansiData,
-  );
-  return response.data;
-};
-
-/**
- * Delete financial transparency document
- * @param id - Document ID to delete
- * @returns Promise resolving to success response
- * @endpoint DELETE /pemerintahan/transparansi-keuangan/{id}
- * @example
- * ```typescript
- * await deleteTransparansiKeuangan(123);
- * // Document deleted successfully
- * ```
- */
-export const deleteTransparansiKeuangan = async (id: number): Promise<ApiResponse<{ message: string }>> => {
-  const response = await httpInstance.delete<ApiResponse<{ message: string }>>(
-    `/pemerintahan/transparansi-keuangan/${id}`,
-  );
-  return response.data;
-};
-
-/**
- * Get transparansi keuangan detail by ID
- * @param id - Document ID
- * @returns Promise resolving to transparansi keuangan detail
- * @endpoint GET /pemerintahan/transparansi-keuangan/{id}
- * @example
- * ```typescript
- * const response = await getTransparansiKeuanganDetail(123);
- * console.log(response.data.nama);
- * ```
- */
-export const getTransparansiKeuanganDetail = async (
   id: number,
 ): Promise<ApiResponse<PayloadData<TransparansiKeuangan>>> => {
   const response = await httpInstance.get<ApiResponse<PayloadData<TransparansiKeuangan>>>(

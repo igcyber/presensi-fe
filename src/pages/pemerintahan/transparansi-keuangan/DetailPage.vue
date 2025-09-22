@@ -7,8 +7,9 @@ import AppBreadcrumb from "@/components/layout/partials/AppBreadcrumb.vue";
 import { useBreadcrumb } from "@/composables/useBreadcrumb";
 import { useFetch } from "@/composables/useFetch";
 import { useFormatters } from "@/composables/useFormatters";
-import { type ApiResponse } from "@/lib/api/core";
-import { getTransparansiKeuanganDetail, type TransparansiKeuangan } from "@/lib/api/services/pemerintahan";
+import { type ApiResponse, type PayloadData } from "@/lib/api/core";
+import { getTransparansiKeuanganById } from "@/lib/api/services/pemerintahan";
+import type { TransparansiKeuangan } from "@/lib/api/types/pemerintahan.types";
 
 const route = useRoute();
 const id = Number(route.params.id);
@@ -18,9 +19,9 @@ const { setContext, clearContext } = useBreadcrumb();
 const { date } = useFormatters();
 
 const { data, isLoading, fetchData, isError, error } = useFetch<
-  ApiResponse<TransparansiKeuangan>,
+  ApiResponse<PayloadData<TransparansiKeuangan>>,
   TransparansiKeuangan
->(() => getTransparansiKeuanganDetail(id), {
+>(() => getTransparansiKeuanganById(id), {
   immediate: false,
   extractData: (response) => response.data.data,
 });
@@ -104,7 +105,7 @@ onBeforeUnmount(() => {
                   <dt class="mb-2 text-sm font-medium text-gray-600">Deskripsi</dt>
                   <dd
                     class="max-w-none text-sm text-gray-700 [&_li]:my-1 [&_li]:marker:text-gray-600 [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-decimal [&_ul]:pl-5"
-                    v-html="data.keterangan"
+                    v-html="data.isi"
                   ></dd>
                 </div>
 
@@ -113,8 +114,8 @@ onBeforeUnmount(() => {
                   <dt class="mb-2 text-sm font-medium text-gray-600">Tanggal Publikasi</dt>
                   <dd class="flex items-center text-gray-900">
                     <i class="bx bx-calendar text-portal-green mr-2"></i>
-                    <time v-if="data.tanggalPublikasi" :datetime="data.tanggalPublikasi">
-                      {{ date(data.tanggalPublikasi) }}
+                    <time v-if="data.createdAt" :datetime="data.createdAt">
+                      {{ date(data.createdAt) }}
                     </time>
                     <span v-else class="text-gray-500">Tanggal tidak tersedia</span>
                   </dd>
@@ -127,7 +128,7 @@ onBeforeUnmount(() => {
                     <!-- File Download -->
                     <div v-if="data.file">
                       <a
-                        :href="`https://kukarkab.go.id/pemerintahan/transparansi-keuangan/download/${data.id}`"
+                        :href="data.fileUrl"
                         target="_blank"
                         rel="noopener noreferrer"
                         class="bg-portal-green hover:bg-portal-green/90 inline-flex items-center rounded-md px-4 py-2 text-sm font-medium text-white transition-colors duration-200"
@@ -137,21 +138,8 @@ onBeforeUnmount(() => {
                       </a>
                     </div>
 
-                    <!-- External Link -->
-                    <div v-if="data.link">
-                      <a
-                        :href="data.link"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="border-portal-green text-portal-green hover:bg-portal-green inline-flex items-center rounded-md border px-4 py-2 text-sm font-medium transition-colors duration-200 hover:text-white"
-                      >
-                        <i class="bx bx-link-external mr-2"></i>
-                        Kunjungi Tautan
-                      </a>
-                    </div>
-
                     <!-- No files message -->
-                    <div v-if="!data.file && !data.link" class="rounded-md bg-yellow-50 p-3">
+                    <div v-if="!data.file && !data.isi" class="rounded-md bg-yellow-50 p-3">
                       <div class="flex items-center">
                         <i class="bx bx-info-circle mr-2 text-yellow-600"></i>
                         <span class="text-sm text-yellow-700">Tidak ada file atau tautan yang tersedia</span>
