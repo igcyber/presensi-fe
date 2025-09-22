@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted } from "vue";
 import { watch } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 import BasePagination from "@/components/base/BasePagination.vue";
 import AppBreadcrumb from "@/components/layout/partials/AppBreadcrumb.vue";
@@ -14,6 +14,7 @@ import { getBeritaPublic } from "@/lib/api/services/berita";
 import type { BeritaListPublicResponse } from "@/lib/api/types/berita.types";
 
 const route = useRoute();
+const router = useRouter();
 
 // Computed
 const keyword = computed(() => (route.query.keyword as string) ?? "");
@@ -88,15 +89,22 @@ onMounted(async () => {
     <main class="py-12">
       <div v-if="keyword" class="mx-auto mb-8 max-w-2xl">
         <div class="border-portal-green bg-portal-green/10 rounded border p-8 text-center">
-          <i class="bx bx-search text-portal-green text-4xl"></i>
+          <i class="bx bx-search text-portal-green mb-4 text-4xl"></i>
           <h4 class="text-portal-green mb-2 text-xl font-semibold">Pencarian</h4>
-          <p class="text-portal-green">
+          <p class="text-portal-green mb-6">
             {{
               keyword
                 ? `Menampilkan hasil pencarian untuk "${keyword}" dengan total ${data?.data.length} berita.`
                 : "Maaf, belum ada berita yang tersedia saat ini."
             }}
           </p>
+          <button
+            @click="router.push({ name: 'berita.index' })"
+            class="bg-portal-green hover:bg-portal-green/90 inline-flex items-center rounded-lg px-4 py-2 text-sm font-medium text-white transition-colors duration-200"
+          >
+            <i class="bx bx-x mr-2"></i>
+            Reset Pencarian
+          </button>
         </div>
       </div>
 
