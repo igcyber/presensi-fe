@@ -4,6 +4,7 @@ import { createCrudService } from "@/lib/api/factories/crudServiceFactory";
 import type {
   CreatePerusdaRequest,
   Perusda,
+  PerusdaDetailPublicResponse,
   PerusdaDetailResponse,
   PerusdaListPublicResponse,
   PerusdaListResponse,
@@ -125,5 +126,21 @@ export const getPerusdaPublic = async (
   params?: PerusdaQueryParams,
 ): Promise<ApiResponse<PerusdaListPublicResponse>> => {
   const { data } = await httpInstance.get<ApiResponse<PerusdaListPublicResponse>>("/perusda", { params });
+  return data;
+};
+
+/**
+ * Mendapatkan detail perusda berdasarkan ID untuk public display
+ * @param id - ID perusda
+ * @returns Promise yang mengembalikan detail perusda
+ * @endpoint GET /perusda/{id}
+ * @example
+ * ```typescript
+ * const response = await getPerusdaByIdPublic(123);
+ * console.log(response.data.nama);
+ * ```
+ */
+export const getPerusdaByIdPublic = async (id: number): Promise<ApiResponse<PerusdaDetailPublicResponse>> => {
+  const { data } = await httpInstance.get<ApiResponse<PerusdaDetailPublicResponse>>(`/perusda/${id}`);
   return data;
 };

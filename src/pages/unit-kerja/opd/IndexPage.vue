@@ -105,80 +105,96 @@ onMounted(async () => {
           <SelayangPandang :title="contentData.nama" :content="contentData.isi" :image="contentData.fotoUrl">
             <template #other>
               <!-- OPD Grid -->
-              <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+              <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <div
                   v-for="(opd, index) in opds"
                   :key="index"
-                  class="group overflow-hidden rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                  class="group hover:ring-portal-green/20 relative overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-gray-200/50 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
                 >
-                  <div class="flex h-full">
-                    <!-- OPD Logo -->
-                    <div class="flex w-32 flex-shrink-0 items-center justify-center bg-gray-50 p-4">
-                      <img
-                        :src="opd.fotoUrl"
-                        :alt="`Logo ${opd.nama}`"
-                        class="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
-                        loading="lazy"
-                      />
-                    </div>
+                  <!-- Card Header with Logo -->
+                  <div class="relative h-48 overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
+                    <img
+                      :src="opd.fotoUrl"
+                      :alt="`Logo ${opd.nama}`"
+                      class="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
+                      loading="lazy"
+                    />
+                    <!-- Overlay gradient -->
+                    <div
+                      class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                    ></div>
+                  </div>
 
-                    <!-- OPD Content -->
-                    <div class="flex flex-1 flex-col p-4">
-                      <!-- OPD Name -->
-                      <RouterLink
-                        :to="{
-                          name: 'unit-kerja.opd.detail',
-                          params: { id: opd.id, slug: formatters.slugify(opd.nama) },
-                        }"
-                        class="hover:text-portal-green mb-3 block text-lg font-semibold text-gray-900 transition-colors duration-200"
-                        style="
-                          display: -webkit-box;
-                          -webkit-line-clamp: 2;
-                          line-clamp: 2;
-                          -webkit-box-orient: vertical;
-                          overflow: hidden;
-                        "
-                      >
-                        {{ opd.nama }}
-                      </RouterLink>
+                  <!-- Card Content -->
+                  <div class="p-6">
+                    <!-- OPD Name -->
+                    <RouterLink
+                      :to="{
+                        name: 'unit-kerja.opd.detail',
+                        params: { id: opd.id, slug: formatters.slugify(opd.nama) },
+                      }"
+                      class="hover:text-portal-green mb-4 block text-lg font-bold text-gray-900 transition-colors duration-200"
+                      style="
+                        display: -webkit-box;
+                        -webkit-line-clamp: 2;
+                        line-clamp: 2;
+                        -webkit-box-orient: vertical;
+                        overflow: hidden;
+                      "
+                    >
+                      {{ opd.nama }}
+                    </RouterLink>
 
-                      <!-- OPD Info -->
-                      <div class="space-y-2 text-sm text-gray-600">
-                        <!-- Website -->
-                        <div class="flex items-start">
-                          <i class="bx bx-globe text-portal-green mt-0.5 mr-2 flex-shrink-0"></i>
+                    <!-- OPD Info -->
+                    <div class="space-y-3 text-sm">
+                      <!-- Website -->
+                      <div class="flex items-start space-x-3">
+                        <div
+                          class="bg-portal-green/10 text-portal-green flex h-8 w-8 items-center justify-center rounded-full"
+                        >
+                          <i class="bx bx-globe text-sm"></i>
+                        </div>
+                        <div class="min-w-0 flex-1">
                           <a
                             v-if="opd.website"
                             :href="opd.website"
                             target="_blank"
                             rel="noopener noreferrer"
-                            class="text-portal-green hover:text-portal-green/80 break-all transition-colors duration-200"
+                            class="text-portal-green hover:text-portal-green/80 block truncate transition-colors duration-200"
                           >
                             {{ opd.website }}
                           </a>
                           <span v-else class="text-gray-400">Website tidak tersedia</span>
                         </div>
+                      </div>
 
-                        <!-- Address -->
-                        <div class="flex items-start">
-                          <i class="bx bx-map text-portal-green mt-0.5 mr-2 flex-shrink-0"></i>
-                          <span class="break-words">{{ opd.alamat || "Alamat tidak tersedia" }}</span>
+                      <!-- Address -->
+                      <div class="flex items-start space-x-3">
+                        <div
+                          class="bg-portal-green/10 text-portal-green flex h-8 w-8 items-center justify-center rounded-full"
+                        >
+                          <i class="bx bx-map text-sm"></i>
+                        </div>
+                        <div class="min-w-0 flex-1">
+                          <span class="line-clamp-2 text-gray-600">{{ opd.alamat || "Alamat tidak tersedia" }}</span>
                         </div>
                       </div>
+                    </div>
 
-                      <!-- Action Button -->
-                      <div class="mt-auto pt-4">
-                        <RouterLink
-                          :to="{
-                            name: 'unit-kerja.opd.detail',
-                            params: { id: opd.id, slug: formatters.slugify(opd.nama) },
-                          }"
-                          class="bg-portal-green hover:bg-portal-green/90 inline-flex items-center rounded-md px-3 py-2 text-sm font-medium text-white transition-colors duration-200"
-                        >
-                          <i class="bx bx-info-circle mr-2"></i>
-                          Lihat Detail
-                        </RouterLink>
-                      </div>
+                    <!-- Action Button -->
+                    <div class="mt-6">
+                      <RouterLink
+                        :to="{
+                          name: 'unit-kerja.opd.detail',
+                          params: { id: opd.id, slug: formatters.slugify(opd.nama) },
+                        }"
+                        class="bg-portal-green hover:bg-portal-green/90 group/btn inline-flex w-full items-center justify-center rounded-xl px-4 py-3 text-sm font-semibold text-white transition-all duration-200 hover:shadow-lg"
+                      >
+                        <i
+                          class="bx bx-info-circle mr-2 transition-transform duration-200 group-hover/btn:scale-110"
+                        ></i>
+                        Lihat Detail
+                      </RouterLink>
                     </div>
                   </div>
                 </div>

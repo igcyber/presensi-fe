@@ -1,6 +1,7 @@
 import AppLayout from "@/layouts/AppLayout.vue";
 import OpdDetailPage from "@/pages/unit-kerja/opd/DetailPage.vue";
 import OpdPage from "@/pages/unit-kerja/opd/IndexPage.vue";
+import PerusahaanDaerahDetailPage from "@/pages/unit-kerja/perusahaan-daerah/DetailPage.vue";
 import PerusahaanDaerahPage from "@/pages/unit-kerja/perusahaan-daerah/IndexPage.vue";
 
 export default {
@@ -34,6 +35,14 @@ export default {
       component: PerusahaanDaerahPage,
       meta: {
         title: "Perusahaan Daerah",
+      },
+    },
+    {
+      path: "perusahaan-daerah/:id/:slug?",
+      name: "unit-kerja.perusahaan-daerah.detail",
+      component: PerusahaanDaerahDetailPage,
+      meta: {
+        title: "Detail Perusahaan Daerah",
       },
     },
   ],

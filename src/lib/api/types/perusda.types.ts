@@ -30,7 +30,10 @@ export type PerusdaListResponse = PaginatedPayload<Perusda>;
  * Perusda list public response interface
  * Represents paginated perusda data from API
  */
-export type PerusdaListPublicResponse = PaginatedPayloadPublic<Perusda, { perusdas: Perusda[] }>;
+export type PerusdaListPublicResponse = PaginatedPayloadPublic<
+  Omit<Perusda, "createdByUser,updatedByUser">,
+  { perusdas: Perusda[] }
+>;
 
 /**
  * Perusda create request payload
@@ -72,3 +75,8 @@ export interface PerusdaQueryParams {
  * Perusda detail response interface
  */
 export type PerusdaDetailResponse = Perusda;
+
+/**
+ * Perusda detail public response interface
+ */
+export type PerusdaDetailPublicResponse = Omit<Perusda, "createdByUser,updatedByUser">;
