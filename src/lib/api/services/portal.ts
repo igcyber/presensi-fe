@@ -10,6 +10,7 @@ import type {
   PortalMenuKatDetailResponse,
   PortalMenuKatListResponse,
   PortalMenuKatQueryParams,
+  PortalMenuListPublicResponse,
   PortalMenuListResponse,
   PortalMenuQueryParams,
   PortalMenuSub,
@@ -20,6 +21,8 @@ import type {
   UpdatePortalMenuRequest,
   UpdatePortalMenuSubRequest,
 } from "@/lib/api/types/portal.types";
+
+import { httpInstance } from "../core";
 
 const base = "/api/portal";
 const baseKat = "/api/portal-kat";
@@ -296,3 +299,20 @@ export const updatePortalMenuSub = (
  * ```
  */
 export const deletePortalMenuSub = (id: number): Promise<ApiResponse<null>> => portalMenuSubService.remove(id);
+
+// ===== PORTAL MENU PUBLIC SERVICES =====
+
+/**
+ * Mendapatkan daftar portal menu public
+ * @returns Promise yang mengembalikan daftar portal menu public
+ * @endpoint GET /
+ * @example
+ * ```typescript
+ * const response = await getPortalMenuPublic();
+ * console.log(response.data.data); // Array of portal menu public
+ * ```
+ */
+export const getPortalMenuPublic = async (): Promise<ApiResponse<PortalMenuListPublicResponse>> => {
+  const { data } = await httpInstance.get<ApiResponse<PortalMenuListPublicResponse>>("/");
+  return data;
+};

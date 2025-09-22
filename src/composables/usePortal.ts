@@ -1,16 +1,18 @@
 import { computed, ref, watch } from "vue";
 
-import { getPortalMenu, type PortalMenu } from "@/lib/api/services/portalMenu";
+import { getPortalMenuPublic } from "@/lib/api/services/portal";
+import type { PortalMenuPublic } from "@/lib/api/types/portal.types";
 
 export function usePortal() {
   // Data menu utama
-  const menus = ref<PortalMenu[]>([]);
+  const data = ref<PortalMenuPublic[]>([]);
 
-  // Data container menu untuk submenu
-  const containerMenus = ref<PortalMenu[]>([]);
+  // Loading state
+  const isLoading = ref<boolean>(false);
+  const error = ref<string | null>(null);
 
   // State untuk menu yang aktif
-  const menuActive = ref<PortalMenu | null>(null); // Menu yang aktif
+  const menuActive = ref<PortalMenuPublic | null>(null); // Menu yang aktif
 
   // State untuk mengontrol submenu yang terbuka (untuk menu utama)
   const openSubMenu = ref<boolean>(false); // Status submenu yang terbuka
@@ -39,27 +41,37 @@ export function usePortal() {
   };
 
   const fetchData = async () => {
-    const response = await getPortalMenu();
-    menus.value = response.data.menu;
-    containerMenus.value = response.data.containermenu;
+    try {
+      isLoading.value = true;
+      error.value = null;
+
+      const response = await getPortalMenuPublic();
+      data.value = response.data.data as PortalMenuPublic[];
+    } catch (err) {
+      console.error("Error fetching portal data:", err);
+      error.value = "Gagal memuat data portal. Silakan coba lagi.";
+    } finally {
+      isLoading.value = false;
+    }
   };
 
   watch(openSubMenuId, (newVal) => {
     if (newVal) {
-      menuActive.value = menus.value.find((menu) => menu.id === newVal) || null;
+      menuActive.value = data.value.find((dt) => dt.id === newVal) || null;
     } else {
       menuActive.value = null;
     }
   });
 
   return {
-    menus,
-    containerMenus,
+    data,
     menuActive,
     hasOpenSubMenu,
     openSubMenu,
     toggleSubMenu,
     closeSubMenu,
     fetchData,
+    isLoading,
+    error,
   };
 }

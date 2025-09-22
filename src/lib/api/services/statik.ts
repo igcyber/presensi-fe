@@ -54,7 +54,7 @@ export const getStatikById = (id: number): Promise<ApiResponse<StatikDetailRespo
  * const response = await createStatik({
  *   nama: 'Banner Portal',
  *   jenis: 'video',
- *   isi_file: file
+ *   isiFile: file
  * });
  * console.log(response.data.id);
  * ```
@@ -72,7 +72,7 @@ export const createStatik = (payload: CreateStatikRequest) => statikService.crea
  * const response = await updateStatik(123, {
  *   nama: 'Banner Portal Updated',
  *   jenis: 'file',
- *   isi_text: 'Updated content'
+ *   isiText: 'Updated content'
  * });
  * console.log(response.data.nama);
  * ```

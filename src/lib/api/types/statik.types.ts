@@ -32,8 +32,8 @@ export interface CreateStatikRequest {
   nama: string;
   jenis: "video" | "file" | "emergency" | "operasional" | "alamat" | "email" | "telepon";
   icon?: string;
-  isi_text?: string;
-  isi_file?: File | string;
+  isiText?: string;
+  isiFile?: File | string;
 }
 
 /**
@@ -43,8 +43,8 @@ export interface UpdateStatikRequest {
   nama?: string;
   jenis?: "video" | "file" | "emergency" | "operasional" | "alamat" | "email" | "telepon";
   icon?: string;
-  isi_text?: string;
-  isi_file?: File | string;
+  isiText?: string;
+  isiFile?: File | string;
 }
 
 /**

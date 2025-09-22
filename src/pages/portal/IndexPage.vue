@@ -5,7 +5,8 @@ import { RouterLink } from "vue-router";
 import { usePortal } from "@/composables/usePortal";
 
 // Menggunakan composable
-const { menus, menuActive, openSubMenu, hasOpenSubMenu, toggleSubMenu, closeSubMenu, fetchData } = usePortal();
+const { data, menuActive, openSubMenu, hasOpenSubMenu, toggleSubMenu, closeSubMenu, fetchData, isLoading, error } =
+  usePortal();
 
 onMounted(async () => {
   await fetchData();
@@ -40,9 +41,26 @@ onMounted(async () => {
 
     <!-- Main Content -->
     <main class="my-auto mb-20">
-      <div class="flex flex-wrap justify-center gap-5">
+      <!-- Loading State -->
+      <div v-if="isLoading" class="flex flex-col items-center justify-center gap-4">
+        <div class="h-12 w-12 animate-spin rounded-full border-4 border-white border-t-transparent"></div>
+        <p class="text-white">Memuat menu portal...</p>
+      </div>
+
+      <!-- Error State -->
+      <div v-else-if="error" class="flex flex-col items-center justify-center gap-4">
+        <div class="rounded-lg bg-red-500/20 p-4 text-center">
+          <p class="text-red-200">{{ error }}</p>
+          <button @click="fetchData" class="mt-2 rounded bg-red-600 px-4 py-2 text-white hover:bg-red-700">
+            Coba Lagi
+          </button>
+        </div>
+      </div>
+
+      <!-- Menu Content -->
+      <div v-else class="flex flex-wrap justify-center gap-5">
         <a
-          v-for="menulist in menus"
+          v-for="menulist in data"
           :key="menulist.id"
           class="xs:w-full bg-portal-green hover:bg-portal-green-dark flex min-h-[90px] w-[100px] flex-col justify-between rounded-[10px] pt-2 pb-3 text-white transition-all duration-500 hover:shadow-[0_4px_8px_0_rgba(171,190,209,0.4)]"
           :href="menulist.link"
@@ -50,8 +68,8 @@ onMounted(async () => {
           :target="menulist.link === '#' ? '_self' : '_blank'"
         >
           <img
-            class="mx-auto my-auto max-h-[100px] w-fit max-w-[40px] text-white"
-            :src="`https://kukarkab.go.id/assets/icons/portal-menu/${menulist.icon}`"
+            class="mx-auto my-auto max-h-[100px] w-fit max-w-[40px] text-white invert"
+            :src="menulist.iconUrl"
             :alt="menulist.judul"
           />
           <p class="mx-auto my-[10px_auto_5px_auto] px-[5px] text-center text-[13px]">{{ menulist.judul }}</p>
@@ -101,8 +119,8 @@ onMounted(async () => {
                 >
                   <img
                     v-if="submenu.icon"
-                    class="h-10 w-max hover:h-[45px]"
-                    :src="`https://kukarkab.go.id/uploads/${submenu.icon}`"
+                    class="h-10 w-max invert hover:h-[45px]"
+                    :src="submenu.icon"
                     :alt="submenu.judul"
                   />
                   <br v-if="submenu.icon" />
@@ -124,8 +142,8 @@ onMounted(async () => {
                 >
                   <img
                     v-if="submenu.icon"
-                    class="h-10 w-max hover:h-[45px]"
-                    :src="`https://kukarkab.go.id/uploads/${submenu.icon}`"
+                    class="h-10 w-max invert hover:h-[45px]"
+                    :src="submenu.iconUrl || ''"
                     :alt="submenu.judul"
                   />
                   <span v-else>{{ submenu.judul }}</span>

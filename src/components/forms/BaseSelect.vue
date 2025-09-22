@@ -49,12 +49,23 @@ const props = withDefaults(defineProps<Props>(), {
   minSearchLength: 1,
 });
 
-// Search state
+// Reactive state
 const searchQuery = ref("");
 const isLoading = ref(false);
 const remoteOptions = ref<SelectOption[]>([]);
 const searchInputRef = ref<HTMLInputElement>();
 const isSelectOpen = ref(false);
+
+// Utility functions
+const toStringValue = (val: string | number): string => String(val);
+
+const normalizedValue = (modelValue: AcceptableValue) => {
+  if (props.multiple) {
+    if (!Array.isArray(modelValue)) return [];
+    return modelValue.map(toStringValue);
+  }
+  return modelValue != null ? String(modelValue) : modelValue;
+};
 
 // Computed properties
 const currentOptions = computed(() => {
@@ -98,17 +109,6 @@ const showEmptyState = computed(() => {
 const showLoadingState = computed(() => {
   return isLoading.value && props.remote;
 });
-
-// Utility functions
-const toStringValue = (val: string | number): string => String(val);
-
-const normalizedValue = (modelValue: AcceptableValue) => {
-  if (props.multiple) {
-    if (!Array.isArray(modelValue)) return [];
-    return modelValue.map(toStringValue);
-  }
-  return modelValue != null ? String(modelValue) : modelValue;
-};
 
 // Debounced search function
 const debouncedSearch = useDebounceFn(async (query: string) => {
@@ -186,7 +186,7 @@ const handleOpenChange = (open: boolean) => {
   }
 };
 
-// Watch for remote prop changes
+// Watchers
 watch(
   () => props.remote,
   (isRemote) => {

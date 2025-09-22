@@ -1,4 +1,4 @@
-import type { BaseEntity, PaginatedPayload } from "@/lib/api/core/apiResponse";
+import type { BaseEntity, PaginatedPayload, PaginatedPayloadPublic } from "@/lib/api/core/apiResponse";
 
 import type { User } from "./user.types";
 
@@ -15,6 +15,21 @@ export interface PortalMenu extends BaseEntity {
   updatedBy: number;
   createdByUser: User;
   updatedByUser: User;
+  portalMenuKats: PortalMenuKat[];
+  portalMenuSubs: PortalMenuSub[];
+}
+
+/**
+ * Portal Menu public entity interface
+ * Represents portal menu in the system
+ */
+export interface PortalMenuPublic extends BaseEntity {
+  judul: string;
+  link: string;
+  icon: string;
+  iconUrl: string;
+  createdBy: number;
+  updatedBy: number;
   portalMenuKats: PortalMenuKat[];
   portalMenuSubs: PortalMenuSub[];
 }
@@ -54,6 +69,30 @@ export interface PortalMenuSub extends BaseEntity {
  * Represents paginated portal menu data from API
  */
 export type PortalMenuListResponse = PaginatedPayload<PortalMenu>;
+
+/**
+ * Video object interface for portal menu public response
+ */
+export interface PortalVideo {
+  id: number;
+  nama: string;
+  slug: string;
+  isi: string;
+  jenis: string;
+  icon: string | null;
+  createdBy: number;
+  updatedBy: number;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  fileUrl: string;
+}
+
+/**
+ * Portal Menu public list response interface
+ * Represents paginated portal menu data from API with video object
+ */
+export type PortalMenuListPublicResponse = PaginatedPayloadPublic<PortalMenuPublic, { video: PortalVideo }>;
 
 /**
  * Portal Menu Kat list response interface

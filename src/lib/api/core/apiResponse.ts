@@ -53,9 +53,9 @@ export interface PaginatedPayload<T> {
  * Generic payload wrapper for paginated list responses for public
  * @template T - The item type in the list
  */
-export interface PaginatedPayloadPublic<T> {
-  data: ContentData;
-  [key: string]: T[] | unknown;
+export interface PaginatedPayloadPublic<TData, TResponse> {
+  data: ContentData | TData[];
+  [key: string]: TResponse[] | unknown;
   meta?: PaginationMeta;
   links?: PaginationLinks;
 }

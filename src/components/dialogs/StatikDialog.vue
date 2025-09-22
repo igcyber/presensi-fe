@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 import { toast } from "vue-sonner";
 
 import BaseFormDialog from "@/components/dialogs/BaseFormDialog.vue";
@@ -13,6 +13,7 @@ import type { Statik } from "@/lib/api/types/statik.types";
 import { JENIS_OPTIONS } from "@/lib/api/types/statik.types";
 import { createStatikSchema, updateStatikSchema } from "@/schemas/statikSchema";
 
+// Interface definitions
 interface Props {
   open: boolean;
   mode: "create" | "edit" | "view";
@@ -26,17 +27,22 @@ interface Emits {
   (e: "cancel"): void;
 }
 
+// Props and emits
 const props = withDefaults(defineProps<Props>(), { statik: null });
 const emit = defineEmits<Emits>();
 
+// Reactive variables
+const selectedJenis = ref("");
+
+// Computed properties
 const initialValues = computed(() =>
   props.mode === "create"
-    ? { nama: "", jenis: "", icon: "", isi_text: "", isi_file: "" }
+    ? { nama: "", jenis: "", icon: "", isiText: "", isiFile: "" }
     : {
         nama: props.statik?.nama ?? "",
         jenis: props.statik?.jenis ?? "",
         icon: props.statik?.icon ?? "",
-        isi_text: props.statik?.isi ?? "",
+        isiText: props.statik?.isi ?? "",
       },
 );
 
@@ -49,12 +55,6 @@ const open = computed({
   },
 });
 
-// Watch jenis changes to show/hide appropriate fields
-const selectedJenis = computed(() => {
-  // This will be updated by the form
-  return "";
-});
-
 const showFileInput = computed(() => {
   return ["video", "file"].includes(selectedJenis.value);
 });
@@ -63,6 +63,7 @@ const showTextInput = computed(() => {
   return ["emergency", "operasional", "alamat", "email", "telepon"].includes(selectedJenis.value);
 });
 
+// Methods
 async function onSubmit(values: any) {
   if (props.mode === "create") {
     await createStatik(values);
@@ -72,6 +73,18 @@ async function onSubmit(values: any) {
     toast.success("Berhasil", { description: "Statik berhasil diperbarui" });
   }
 }
+
+// Watchers
+watch(
+  () => props.open,
+  (isOpen) => {
+    if (!isOpen) {
+      selectedJenis.value = "";
+    } else {
+      selectedJenis.value = props.statik?.jenis ?? "";
+    }
+  },
+);
 </script>
 
 <template>
@@ -108,7 +121,7 @@ async function onSubmit(values: any) {
       <!-- Text Input for non-file types -->
       <BaseTextarea
         v-if="showTextInput"
-        name="isi_text"
+        name="isiText"
         label="Isi"
         placeholder="Masukkan isi statik"
         :rows="3"
@@ -118,12 +131,12 @@ async function onSubmit(values: any) {
       <!-- File Input for file/video types -->
       <BaseInputFile
         v-if="showFileInput"
-        name="isi_file"
+        name="isiFile"
         label="File"
-        :accept="selectedJenis === 'video' ? 'video/*' : '*'"
         :required="true"
-        description="Format: JPG, PNG, WebP, PDF, DOC, DOCX, MP4, MOV. Maksimal 5MB"
+        description="Format: JPG, PNG, WebP, PDF, DOC, DOCX, MP4, MOV. Maksimal 50MB"
         :existing-files="props.statik?.fileUrl ?? []"
+        :max-size="50"
       />
     </div>
   </BaseFormDialog>

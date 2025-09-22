@@ -10,8 +10,8 @@ export const createStatikSchema = z.object({
     errorMap: () => ({ message: "Jenis harus dipilih" }),
   }),
   icon: z.string().optional(),
-  isi_text: z.string().optional(),
-  isi_file: z
+  isiText: z.string().optional(),
+  isiFile: z
     .any()
     .optional()
     .refine((file) => {
@@ -29,6 +29,7 @@ export const createStatikSchema = z.object({
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // Word docs
           "video/mp4",
           "video/quicktime", // Videos
+          "video/webm", // WebM videos
         ];
         return allowedTypes.includes(file.type);
       }
@@ -45,8 +46,8 @@ export const updateStatikSchema = z.object({
     })
     .optional(),
   icon: z.string().optional(),
-  isi_text: z.string().optional(),
-  isi_file: z
+  isiText: z.string().optional(),
+  isiFile: z
     .any()
     .optional()
     .refine((file) => {
@@ -64,6 +65,7 @@ export const updateStatikSchema = z.object({
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // Word docs
           "video/mp4",
           "video/quicktime", // Videos
+          "video/webm", // WebM videos
         ];
         return allowedTypes.includes(file.type);
       }
