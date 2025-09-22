@@ -28,6 +28,7 @@ const {
   handleSearch,
   handlePageChange,
   handleCustomFilter,
+  reset,
 } = useResourceList<Konten>((params) => getKontens(params), { perPage: 10, searchDebounce: 500 });
 
 const dialog = useDialog<Konten>();
@@ -172,6 +173,7 @@ watch(
             @row-click="handleRowClick"
             @edit="handleEdit"
             @delete="handleDelete"
+            @reset-filter="reset"
           />
         </CardContent>
       </Card>

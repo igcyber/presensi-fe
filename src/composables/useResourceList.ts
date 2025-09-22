@@ -12,7 +12,7 @@ export function useResourceList<TItem>(
   listFn: (params?: SearchParams) => Promise<ApiResponse<PaginatedPayload<TItem>>>,
   options?: { perPage?: number; searchDebounce?: number },
 ) {
-  const { pagination, query, setPagination, setPage, setSearch, setCustomFilter } = usePaginationApp(
+  const { pagination, query, setPagination, setPage, setSearch, setCustomFilter, reset } = usePaginationApp(
     options?.perPage ?? 10,
   );
 
@@ -57,5 +57,6 @@ export function useResourceList<TItem>(
     handleSearch,
     handlePageChange,
     handleCustomFilter,
+    reset,
   };
 }

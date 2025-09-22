@@ -30,6 +30,7 @@ const {
   handleSearch,
   handlePageChange,
   handleCustomFilter,
+  reset,
 } = useResourceList<Berita>((params) => getBeritas(params), { perPage: 10, searchDebounce: 500 });
 
 const dialog = useDialog<Berita>();
@@ -204,6 +205,7 @@ watch(
             @row-click="handleRowClick"
             @edit="handleEdit"
             @delete="handleDelete"
+            @reset-filter="reset"
           />
         </CardContent>
       </Card>

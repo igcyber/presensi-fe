@@ -74,6 +74,7 @@ const emit = defineEmits<{
   pageChange: [page: number];
   search: [search: string];
   customFilter: [filters: Array<Record<string, any>>];
+  resetFilter: [];
 }>();
 
 // Composables
@@ -141,8 +142,6 @@ const handleCustomFilter = (filters: Array<Record<string, any>>) => {
 const applyFilters = () => {
   const filters: Record<string, any> = {};
 
-  console.log(filterValues.value);
-
   Object.entries(filterValues.value).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== "") {
       if (key === "date" && value) {
@@ -158,8 +157,10 @@ const applyFilters = () => {
 };
 
 const resetFilters = () => {
+  searchQuery.value = "";
   filterValues.value = {};
-  handleCustomFilter([]);
+
+  emit("resetFilter");
 };
 
 const getCellValue = (item: T, column: Column<T>) => {
