@@ -120,4 +120,5 @@ export interface ContentData extends BaseEntity {
   isi: string;
   slug: string;
   foto: string;
+  fotoUrl: string;
 }

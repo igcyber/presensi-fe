@@ -7,8 +7,9 @@ import AppBreadcrumb from "@/components/layout/partials/AppBreadcrumb.vue";
 
 import { useFetch } from "@/composables/useFetch";
 import { usePagination } from "@/composables/usePagination";
-import { type ApiResponse } from "@/lib/api/core";
-import { getPrestasiPenghargaan, type PrestasiPenghargaanDataPayload } from "@/lib/api/services/selayangPandang";
+import { type ApiResponse } from "@/lib/api/core/apiResponse";
+import { getPrestasiPenghargaan } from "@/lib/api/services/selayangPandang";
+import type { PrestasiPenghargaanDataPayload } from "@/lib/api/types/selayangPandang.types";
 
 // Constants
 const STICKY_HEADER_OFFSET = window.visualViewport?.width && window.visualViewport.width < 1023 ? 190 : 265;
@@ -26,8 +27,6 @@ const { data, isLoading, fetchData, isError, error } = useFetch<
 
 // Refs
 const tableTarget = ref<HTMLElement | null>(null);
-
-// Computed properties can be added here if needed
 
 // Methods
 const scrollToTable = () => {
@@ -109,11 +108,7 @@ onMounted(async () => {
 
         <!-- Content -->
         <div v-else-if="data && data.data">
-          <SelayangPandang
-            :title="data.data.slug"
-            :content="data.data.isi"
-            :image="`https://kukarkab.go.id/uploads/${data.data.foto}`"
-          >
+          <SelayangPandang :title="data.data.slug" :content="data.data.isi" :image="data.data.fotoUrl">
             <template #content>
               <!-- Table Section -->
               <div>

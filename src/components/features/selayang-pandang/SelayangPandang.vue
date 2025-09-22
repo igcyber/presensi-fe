@@ -1,15 +1,15 @@
 <script setup lang="ts">
-// import BeritaSide from "@/components/features/berita/BeritaSide.vue";
-// import NavigationContent from "@/components/navigation/NavigationContent.vue";
+import BeritaSide from "@/components/features/berita/BeritaSide.vue";
+import NavigationContent from "@/components/navigation/NavigationContent.vue";
 
 withDefaults(
   defineProps<{
     title: string;
-    image: string;
+    image: string | null;
     content: string;
   }>(),
   {
-    image: "/assets/images/placeholders/dummy.jpg",
+    image: "/dummy.jpg",
     title: "Lorem Ipsum Dolor Sit Amet",
     content: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.",
   },
@@ -22,7 +22,7 @@ withDefaults(
     <div class="lg:col-span-2">
       <!-- Hero Image -->
       <div
-        v-if="image.split('/')[image.split('/').length - 1] != 'nopict.jpg'"
+        v-if="image && image.split('/')[image.split('/').length - 1] != 'nopict.jpg'"
         class="mb-8 h-80 w-full overflow-hidden rounded shadow-lg"
       >
         <img :src="image" :alt="title" class="h-full w-full object-cover" />
@@ -46,6 +46,23 @@ withDefaults(
         <template v-if="$slots.content">
           <slot name="content" />
         </template>
+      </div>
+
+      <!-- Other Content Slot -->
+      <div v-if="$slots.other" class="mt-8">
+        <slot name="other" />
+      </div>
+
+      <!-- Navigation Content -->
+      <div>
+        <NavigationContent />
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="lg:col-span-1">
+      <div class="sticky top-45">
+        <BeritaSide />
       </div>
     </div>
   </div>

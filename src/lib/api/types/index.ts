@@ -19,3 +19,4 @@ export type * from "./portalMenu.types";
 export type * from "./unitKerja.types";
 export type * from "./beranda.types";
 export type * from "./user.types";
+export type * from "./selayangPandang.types";

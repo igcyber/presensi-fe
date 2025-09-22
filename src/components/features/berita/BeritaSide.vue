@@ -100,11 +100,7 @@ onMounted(async () => {
           >
             <!-- News Image -->
             <div class="h-16 w-20 flex-shrink-0 overflow-hidden rounded bg-gray-200">
-              <img
-                :src="`https://kukarkab.go.id/uploads/beritas/${post.foto}`"
-                :alt="post.judul"
-                class="h-full w-full object-cover"
-              />
+              <img :src="post.fotoUrl" :alt="post.judul" class="h-full w-full object-cover" />
             </div>
 
             <!-- News Content -->

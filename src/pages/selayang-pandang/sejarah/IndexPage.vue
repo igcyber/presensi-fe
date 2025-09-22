@@ -5,8 +5,9 @@ import SelayangPandang from "@/components/features/selayang-pandang/SelayangPand
 import AppBreadcrumb from "@/components/layout/partials/AppBreadcrumb.vue";
 
 import { useFetch } from "@/composables/useFetch";
-import { type ApiResponse, type PayloadData } from "@/lib/api/core";
-import { getSejarah, type SejarahData } from "@/lib/api/services/selayangPandang";
+import { type ApiResponse, type PayloadData } from "@/lib/api/core/apiResponse";
+import { getSejarah } from "@/lib/api/services/selayangPandang";
+import type { SejarahData } from "@/lib/api/types/selayangPandang.types";
 
 const { data, isLoading, fetchData, isError, error } = useFetch<ApiResponse<PayloadData<SejarahData>>, SejarahData>(
   getSejarah,
@@ -58,11 +59,7 @@ onMounted(async () => {
 
         <!-- Content -->
         <div v-else-if="data">
-          <SelayangPandang
-            :title="data.slug"
-            :content="data.isi"
-            :image="`https://kukarkab.go.id/uploads/${data.foto}`"
-          />
+          <SelayangPandang :title="data.slug" :content="data.isi" :image="data.fotoUrl" />
         </div>
 
         <!-- Empty State -->
