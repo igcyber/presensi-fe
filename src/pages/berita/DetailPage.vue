@@ -103,12 +103,7 @@ onBeforeUnmount(() => {
             <article class="lg:col-span-2">
               <!-- Featured Image -->
               <div class="mb-6 overflow-hidden rounded">
-                <img
-                  :src="`https://kukarkab.go.id/uploads/beritas/${data?.foto}`"
-                  :alt="data?.judul"
-                  class="h-auto w-full object-cover"
-                  loading="lazy"
-                />
+                <img :src="data?.fotoUrl" :alt="data?.judul" class="h-auto w-full object-cover" loading="lazy" />
               </div>
 
               <!-- Article Content -->

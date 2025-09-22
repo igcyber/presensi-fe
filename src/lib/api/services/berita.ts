@@ -118,7 +118,7 @@ export const deleteBerita = (id: number): Promise<ApiResponse<null>> => beritaSe
 /**
  * Mendapatkan daftar berita untuk public display
  * @returns Promise yang mengembalikan daftar berita public
- * @endpoint GET /beritas
+ * @endpoint GET /berita
  * @example
  * ```typescript
  * const response = await getBeritaPublic();
@@ -126,7 +126,7 @@ export const deleteBerita = (id: number): Promise<ApiResponse<null>> => beritaSe
  * ```
  */
 export const getBeritaPublic = async (params?: BeritaQueryParams): Promise<ApiResponse<BeritaListPublicResponse>> => {
-  const { data } = await httpInstance.get<ApiResponse<BeritaListPublicResponse>>("/beritas/public", { params });
+  const { data } = await httpInstance.get<ApiResponse<BeritaListPublicResponse>>("/berita", { params });
   return data;
 };
 
@@ -134,7 +134,7 @@ export const getBeritaPublic = async (params?: BeritaQueryParams): Promise<ApiRe
  * Mendapatkan berita berdasarkan ID untuk public display
  * @param id - ID berita
  * @returns Promise yang mengembalikan data berita public
- * @endpoint GET /beritas/{id}
+ * @endpoint GET /berita/{id}
  * @example
  * ```typescript
  * const response = await getBeritaByIdPublic(123);
@@ -142,14 +142,14 @@ export const getBeritaPublic = async (params?: BeritaQueryParams): Promise<ApiRe
  * ```
  */
 export const getBeritaByIdPublic = async (id: number): Promise<ApiResponse<BeritaDetailPublicResponse>> => {
-  const { data } = await httpInstance.get<ApiResponse<BeritaDetailPublicResponse>>(`/beritas/${id}`);
+  const { data } = await httpInstance.get<ApiResponse<BeritaDetailPublicResponse>>(`/berita/${id}`);
   return data;
 };
 
 /**
  * Mendapatkan daftar berita untuk sidebar
  * @returns Promise yang mengembalikan daftar berita sidebar
- * @endpoint GET /beritas/sidebar
+ * @endpoint GET /berita/sidebar
  * @example
  * ```typescript
  * const response = await getBeritaSidebar();
@@ -157,6 +157,6 @@ export const getBeritaByIdPublic = async (id: number): Promise<ApiResponse<Berit
  * ```
  */
 export const getBeritaSidebar = async (): Promise<ApiResponse<BeritaSidebar[]>> => {
-  const { data } = await httpInstance.get<ApiResponse<BeritaSidebar[]>>("/beritas/sidebar");
+  const { data } = await httpInstance.get<ApiResponse<BeritaSidebar[]>>("/berita/sidebar");
   return data;
 };
