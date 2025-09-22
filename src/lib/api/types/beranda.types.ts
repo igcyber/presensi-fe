@@ -16,6 +16,7 @@ export interface NewsItem extends BaseEntity {
   judul: string;
   foto: string;
   isi: string;
+  fotoUrl: string;
 }
 
 /**
@@ -24,6 +25,7 @@ export interface NewsItem extends BaseEntity {
 export interface BannerItem extends BaseEntity {
   foto: string;
   nama: string;
+  fileUrl: string;
 }
 
 /**
@@ -42,6 +44,7 @@ export interface LayananItem extends BaseEntity {
   logo: string;
   alamat: string;
   nama: string;
+  logoUrl: string;
 }
 
 /**
@@ -51,6 +54,7 @@ export interface SistemItem extends BaseEntity {
   logo: string;
   alamat: string;
   nama: string;
+  logoUrl: string;
 }
 
 /**
@@ -61,6 +65,7 @@ export interface OpdItem extends BaseEntity {
   foto: string;
   website: string;
   alamat: string;
+  fotoUrl: string;
 }
 
 /**

@@ -13,6 +13,7 @@ export * from "./konten";
 export * from "./statik";
 export * from "./radio";
 export * from "./portal";
+export * from "./banner";
 export * from "./pemerintahan";
 export * from "./portalMenu";
 export * from "./selayangPandang";

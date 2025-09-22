@@ -9,6 +9,7 @@ import {
   FileText,
   Globe,
   HomeIcon,
+  Image,
   NewspaperIcon,
   Radio,
   Settings,
@@ -188,6 +189,13 @@ const data = computed(() => ({
       name: "app.portal",
       icon: Globe,
       isActive: routNameActive.value === "app.portal" || routNameActive.value === "app.portal.detail",
+    },
+    {
+      title: "Banner",
+      url: "/app/banner",
+      name: "app.banner",
+      icon: Image,
+      isActive: routNameActive.value === "app.banner" || routNameActive.value === "app.banner.detail",
     },
   ],
 }));

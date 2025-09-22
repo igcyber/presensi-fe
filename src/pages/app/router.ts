@@ -1,4 +1,5 @@
 import AuthLayout from "@/layouts/AuthLayout.vue";
+import bannerRoute from "@/pages/app/banner/route";
 import beritaRoute from "@/pages/app/berita/route";
 import bupatiRoute from "@/pages/app/bupati/route";
 import dashboardDataRoute from "@/pages/app/dashboard-data/route";
@@ -43,5 +44,6 @@ export default {
     ...statikRoute,
     ...radioRoute,
     ...portalRoute,
+    ...bannerRoute,
   ],
 };

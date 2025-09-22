@@ -13,6 +13,7 @@ export type * from "./konten.types";
 export type * from "./statik.types";
 export type * from "./radio.types";
 export type * from "./portal.types";
+export type * from "./banner.types";
 export type * from "./pemerintahan.types";
 export type * from "./portalMenu.types";
 export type * from "./unitKerja.types";

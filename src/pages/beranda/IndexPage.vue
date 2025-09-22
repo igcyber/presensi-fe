@@ -274,7 +274,7 @@ onMounted(async () => {
                     <!-- News Image -->
                     <div class="relative aspect-[16/10] overflow-hidden">
                       <img
-                        :src="`https://kukarkab.go.id/uploads/beritas/${berita.foto}`"
+                        :src="berita.fotoUrl"
                         :alt="berita.judul"
                         class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                         loading="lazy"
@@ -396,7 +396,7 @@ onMounted(async () => {
                     <!-- Image -->
                     <div class="relative aspect-[3/4] overflow-hidden">
                       <img
-                        :src="`https://kukarkab.go.id/uploads/banners/${bannerItem.foto}`"
+                        :src="bannerItem.fileUrl"
                         :alt="bannerItem.nama"
                         class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                         loading="lazy"
@@ -410,7 +410,7 @@ onMounted(async () => {
                         class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                       >
                         <a
-                          :href="`https://kukarkab.go.id/uploads/banners/${bannerItem.foto}`"
+                          :href="bannerItem.fileUrl"
                           data-lightbox="banner"
                           :data-title="bannerItem.nama"
                           class="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 text-gray-900"
@@ -423,7 +423,7 @@ onMounted(async () => {
                     <!-- Content -->
                     <div class="p-4">
                       <a
-                        :href="`https://kukarkab.go.id/uploads/banners/${bannerItem.foto}`"
+                        :href="bannerItem.fileUrl"
                         data-lightbox="banner-title"
                         :data-title="bannerItem.nama"
                         class="hover:text-portal-green mb-2 block font-semibold text-gray-900 transition-colors duration-200"
@@ -567,9 +567,9 @@ onMounted(async () => {
                     class="flex h-20 w-20 items-center justify-center rounded-lg bg-white/10 p-3 backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:bg-white/20"
                   >
                     <img
-                      :src="`https://kukarkab.go.id/uploads/${layanan.logo}`"
+                      :src="layanan.logoUrl"
                       :alt="layanan.nama || 'Layanan'"
-                      class="h-full w-full object-contain"
+                      class="h-full w-full object-contain invert"
                       loading="lazy"
                     />
                   </a>
@@ -603,9 +603,9 @@ onMounted(async () => {
                     class="flex h-20 w-20 items-center justify-center rounded-lg bg-white/10 p-3 backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:bg-white/20"
                   >
                     <img
-                      :src="`https://kukarkab.go.id/uploads/${sistem.logo}`"
+                      :src="sistem.logoUrl"
                       :alt="sistem.nama || 'Sistem'"
-                      class="h-full w-full object-contain"
+                      class="h-full w-full object-contain invert"
                       loading="lazy"
                     />
                   </a>
@@ -665,7 +665,7 @@ onMounted(async () => {
                   <div class="flex justify-center p-6 pb-4">
                     <div class="flex h-40 w-full items-center justify-center overflow-hidden rounded">
                       <img
-                        :src="`https://kukarkab.go.id/uploads/${opd.foto}`"
+                        :src="opd.fotoUrl"
                         :alt="`Logo ${opd.nama}`"
                         class="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
                         loading="lazy"

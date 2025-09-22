@@ -4,7 +4,7 @@ import { z } from "zod";
 export const createOpdSchema = z.object({
   nama: z.string().min(1, "Nama wajib diisi").min(3, "Nama minimal 3 karakter").max(200, "Nama maksimal 200 karakter"),
   alamat: z.string().min(1, "Alamat wajib diisi").min(10, "Alamat minimal 10 karakter"),
-  maps: z.string().url("Maps harus berupa URL yang valid").optional(),
+  maps: z.string().optional().or(z.literal("")),
   keterangan: z.string().max(500, "Keterangan maksimal 500 karakter").optional(),
   foto: z
     .any()
@@ -26,7 +26,7 @@ export const createOpdSchema = z.object({
 export const updateOpdSchema = z.object({
   nama: z.string().min(3, "Nama minimal 3 karakter").max(200, "Nama maksimal 200 karakter").optional(),
   alamat: z.string().min(10, "Alamat minimal 10 karakter").optional(),
-  maps: z.string().url("Maps harus berupa URL yang valid").optional(),
+  maps: z.string().optional().or(z.literal("")),
   keterangan: z.string().max(500, "Keterangan maksimal 500 karakter").optional(),
   foto: z
     .any()

@@ -11,6 +11,7 @@ export * from "./kontenSchema";
 export * from "./statikSchema";
 export * from "./radioSchema";
 export * from "./portalSchema";
+export * from "./bannerSchema";
 export * from "./userSchema";
 export * from "./roleSchema";
 export * from "./videoSchema";
