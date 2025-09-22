@@ -1,9 +1,11 @@
 import type { ApiResponse } from "@/lib/api/core/apiResponse";
+import httpInstance from "@/lib/api/core/httpInstance";
 import { createCrudService } from "@/lib/api/factories/crudServiceFactory";
 import type {
   CreateDokumenRequest,
   Dokumen,
   DokumenDetailResponse,
+  DokumenListPublicResponse,
   DokumenListResponse,
   DokumenQueryParams,
   UpdateDokumenRequest,
@@ -106,3 +108,21 @@ export const updateDokumen = (id: number, payload: UpdateDokumenRequest): Promis
  * ```
  */
 export const deleteDokumen = (id: number): Promise<ApiResponse<null>> => dokumenService.remove(id);
+
+// ==================== Public Api ====================
+/**
+ * Mendapatkan daftar dokumen untuk public display
+ * @returns Promise yang mengembalikan daftar dokumen public
+ * @endpoint GET /media/dokumen
+ * @example
+ * ```typescript
+ * const response = await getDokumenPublic();
+ * console.log(response.data); // Array of Dokumen
+ * ```
+ */
+export const getDokumenPublic = async (
+  params?: DokumenQueryParams,
+): Promise<ApiResponse<DokumenListPublicResponse>> => {
+  const { data } = await httpInstance.get<ApiResponse<DokumenListPublicResponse>>("/media/dokumen", { params });
+  return data;
+};

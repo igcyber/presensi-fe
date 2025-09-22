@@ -9,19 +9,20 @@ import { useFetch } from "@/composables/useFetch";
 import { useFormatters } from "@/composables/useFormatters";
 import { usePagination } from "@/composables/usePagination";
 import { type ApiResponse } from "@/lib/api/core";
-import { getVideos, type VideoListPayload } from "@/lib/api/services/media";
+import { getVideoPublic } from "@/lib/api/services/video";
+import type { VideoListPublicResponse } from "@/lib/api/types/video.types";
 
 const { date, youtubeInfo } = useFormatters();
 const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
 
 // Fetch videos data
-const { data, isLoading, error, isError, fetchData } = useFetch<ApiResponse<VideoListPayload>, VideoListPayload>(
-  () => getVideos(currentPage.value),
-  {
-    immediate: false,
-    extractData: (response) => response.data,
-  },
-);
+const { data, isLoading, error, isError, fetchData } = useFetch<
+  ApiResponse<VideoListPublicResponse>,
+  VideoListPublicResponse
+>(() => getVideoPublic({ page: currentPage.value }), {
+  immediate: false,
+  extractData: (response) => response.data,
+});
 
 const prevPage = () => {
   if (currentPage.value > 1) {
@@ -102,11 +103,11 @@ onMounted(async () => {
 
         <!-- Content -->
         <div v-else-if="data">
-          <template v-if="data.videos.length > 0">
+          <template v-if="data.data.length > 0">
             <!-- Video Grid -->
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               <div
-                v-for="video in data.videos"
+                v-for="video in data.data"
                 :key="video.id"
                 class="overflow-hidden rounded bg-white shadow-md transition-shadow duration-300 hover:shadow-lg"
               >
@@ -141,7 +142,7 @@ onMounted(async () => {
 
                   <!-- Source -->
                   <div class="mb-4 text-sm text-gray-600">
-                    <span class="font-medium">Sumber:</span> {{ video.isi ?? "Diskominfo" }}
+                    <span class="font-medium">Sumber:</span> {{ video.isi ?? "Video" }}
                   </div>
 
                   <!-- Watch Button -->
@@ -182,4 +183,6 @@ onMounted(async () => {
       </div>
     </main>
   </div>
+
+  <VideoModal ref="videoModalRef" />
 </template>

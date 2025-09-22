@@ -27,6 +27,12 @@ export interface Banner extends BaseEntity {
 export type BannerListResponse = PaginatedPayload<Banner>;
 
 /**
+ * Banner list public response interface
+ * Represents paginated banner data from API
+ */
+export type BannerListPublicResponse = PaginatedPayload<Omit<Banner, "createdByUser,updatedByUser">>;
+
+/**
  * Banner create request payload
  */
 export interface CreateBannerRequest {

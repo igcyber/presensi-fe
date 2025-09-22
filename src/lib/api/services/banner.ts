@@ -3,11 +3,14 @@ import { createCrudService } from "@/lib/api/factories/crudServiceFactory";
 import type {
   Banner,
   BannerDetailResponse,
+  BannerListPublicResponse,
   BannerListResponse,
   BannerQueryParams,
   CreateBannerRequest,
   UpdateBannerRequest,
 } from "@/lib/api/types/banner.types";
+
+import httpInstance from "../core/httpInstance";
 
 const base = "/api/banners";
 
@@ -93,3 +96,19 @@ export const updateBanner = (id: number, payload: UpdateBannerRequest): Promise<
  * ```
  */
 export const deleteBanner = (id: number): Promise<ApiResponse<null>> => bannerService.remove(id);
+
+// ==================== Public Api ====================
+/**
+ * Mendapatkan daftar banner untuk public display
+ * @returns Promise yang mengembalikan daftar banner public
+ * @endpoint GET /media/infografis
+ * @example
+ * ```typescript
+ * const response = await getBannerPublic();
+ * console.log(response.data); // Array of BannerPublic
+ * ```
+ */
+export const getBannerPublic = async (params?: BannerQueryParams): Promise<ApiResponse<BannerListPublicResponse>> => {
+  const { data } = await httpInstance.get<ApiResponse<BannerListPublicResponse>>("/media/infografis", { params });
+  return data;
+};

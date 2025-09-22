@@ -24,6 +24,12 @@ export interface Majalah extends BaseEntity {
 export type MajalahListResponse = PaginatedPayload<Majalah>;
 
 /**
+ * Majalah list public response interface
+ * Represents paginated majalah data from API
+ */
+export type MajalahListPublicResponse = PaginatedPayload<Omit<Majalah, "createdByUser,updatedByUser">>;
+
+/**
  * Majalah create request payload
  */
 export interface CreateMajalahRequest {

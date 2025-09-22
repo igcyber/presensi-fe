@@ -1,10 +1,12 @@
 import type { ApiResponse } from "@/lib/api/core/apiResponse";
+import httpInstance from "@/lib/api/core/httpInstance";
 import { createCrudService } from "@/lib/api/factories/crudServiceFactory";
 import type {
   CreateVideoRequest,
   UpdateVideoRequest,
   Video,
   VideoDetailResponse,
+  VideoListPublicResponse,
   VideoListResponse,
   VideoQueryParams,
 } from "@/lib/api/types/video.types";
@@ -88,3 +90,19 @@ export const updateVideo = (id: number, payload: UpdateVideoRequest): Promise<Ap
  * ```
  */
 export const deleteVideo = (id: number): Promise<ApiResponse<null>> => videoService.remove(id);
+
+// ==================== Public Api ====================
+/**
+ * Mendapatkan daftar video untuk public display
+ * @returns Promise yang mengembalikan daftar video public
+ * @endpoint GET /videos
+ * @example
+ * ```typescript
+ * const response = await getVideoPublic();
+ * console.log(response.data); // Array of VideoPublic
+ * ```
+ */
+export const getVideoPublic = async (params?: VideoQueryParams): Promise<ApiResponse<VideoListPublicResponse>> => {
+  const { data } = await httpInstance.get<ApiResponse<VideoListPublicResponse>>("/media/video", { params });
+  return data;
+};

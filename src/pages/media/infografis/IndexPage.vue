@@ -8,16 +8,17 @@ import { useFetch } from "@/composables/useFetch";
 import { useFormatters } from "@/composables/useFormatters";
 import { usePagination } from "@/composables/usePagination";
 import { type ApiResponse } from "@/lib/api/core";
-import { getInfografis, type InfografisListPayload } from "@/lib/api/services/media";
+import { getBannerPublic } from "@/lib/api/services/banner";
+import type { BannerListPublicResponse } from "@/lib/api/types/banner.types";
 
 const { date } = useFormatters();
 const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
 
 // Fetch infografis data
 const { data, isLoading, error, isError, fetchData } = useFetch<
-  ApiResponse<InfografisListPayload>,
-  InfografisListPayload
->(() => getInfografis(currentPage.value), {
+  ApiResponse<BannerListPublicResponse>,
+  BannerListPublicResponse
+>(() => getBannerPublic({ page: currentPage.value }), {
   immediate: false,
   extractData: (response) => response.data,
 });
@@ -94,18 +95,18 @@ onMounted(async () => {
 
         <!-- Content -->
         <div v-else-if="data">
-          <template v-if="data.infografis.length > 0">
+          <template v-if="data.data.length > 0">
             <!-- Infografis Gallery Grid -->
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               <div
-                v-for="infografis in data.infografis"
+                v-for="infografis in data.data"
                 :key="infografis.id"
                 class="group overflow-hidden rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
               >
                 <!-- Infografis Container -->
                 <div class="relative aspect-[3/4] overflow-hidden">
                   <img
-                    :src="`https://kukarkab.go.id/uploads/banners/${infografis.foto}`"
+                    :src="infografis.fileUrl"
                     :alt="infografis.nama"
                     class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     loading="lazy"
@@ -116,7 +117,7 @@ onMounted(async () => {
                     class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                   >
                     <a
-                      :href="`https://kukarkab.go.id/uploads/banners/${infografis.foto}`"
+                      :href="infografis.fileUrl"
                       data-lightbox="infografis-gallery"
                       :data-title="infografis.nama"
                       class="flex h-15 w-15 cursor-pointer items-center justify-center rounded-full bg-white/90 p-1 text-gray-900 transition-all duration-200 hover:scale-110 hover:bg-white"
@@ -130,7 +131,7 @@ onMounted(async () => {
                 <div class="p-4">
                   <!-- Title -->
                   <a
-                    :href="`https://kukarkab.go.id/uploads/banners/${infografis.foto}`"
+                    :href="infografis.fileUrl"
                     data-lightbox="infografis-gallery-title"
                     :data-title="infografis.nama"
                     class="hover:text-portal-green mb-3 block text-lg font-semibold text-gray-900 transition-colors duration-200"

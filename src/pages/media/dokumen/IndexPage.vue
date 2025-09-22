@@ -8,19 +8,20 @@ import { useFetch } from "@/composables/useFetch";
 import { useFormatters } from "@/composables/useFormatters";
 import { usePagination } from "@/composables/usePagination";
 import { type ApiResponse } from "@/lib/api/core";
-import { type DokumenListPayload, getDokumens } from "@/lib/api/services/media";
+import { getDokumenPublic } from "@/lib/api/services/dokumen";
+import type { DokumenListPublicResponse } from "@/lib/api/types/dokumen.types";
 
 const { date } = useFormatters();
 const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
 
 // Fetch dokumen data
-const { data, isLoading, error, isError, fetchData } = useFetch<ApiResponse<DokumenListPayload>, DokumenListPayload>(
-  () => getDokumens(currentPage.value),
-  {
-    immediate: false,
-    extractData: (response) => response.data,
-  },
-);
+const { data, isLoading, error, isError, fetchData } = useFetch<
+  ApiResponse<DokumenListPublicResponse>,
+  DokumenListPublicResponse
+>(() => getDokumenPublic({ page: currentPage.value }), {
+  immediate: false,
+  extractData: (response) => response.data,
+});
 
 const prevPage = () => {
   if (currentPage.value > 1) {
@@ -94,11 +95,11 @@ onMounted(async () => {
 
         <!-- Content -->
         <div v-else-if="data">
-          <template v-if="data.dokumens.length > 0">
+          <template v-if="data.data.length > 0">
             <!-- Document Grid -->
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               <div
-                v-for="dokumen in data.dokumens"
+                v-for="dokumen in data.data"
                 :key="dokumen.id"
                 class="group overflow-hidden rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
               >

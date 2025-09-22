@@ -24,6 +24,12 @@ export interface Dokumen extends BaseEntity {
 export type DokumenListResponse = PaginatedPayload<Dokumen>;
 
 /**
+ * Dokumen list public response interface
+ * Represents paginated dokumen data from API
+ */
+export type DokumenListPublicResponse = PaginatedPayload<Omit<Dokumen, "createdByUser,updatedByUser">>;
+
+/**
  * Dokumen detail response interface
  */
 export type DokumenDetailResponse = Dokumen;

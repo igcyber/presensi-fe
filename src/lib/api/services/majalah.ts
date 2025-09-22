@@ -5,6 +5,7 @@ import type {
   CreateMajalahRequest,
   Majalah,
   MajalahDetailResponse,
+  MajalahListPublicResponse,
   MajalahListResponse,
   MajalahQueryParams,
   UpdateMajalahRequest,
@@ -113,30 +114,16 @@ export const deleteMajalah = (id: number): Promise<ApiResponse<null>> => majalah
 /**
  * Mendapatkan daftar majalah untuk public display
  * @returns Promise yang mengembalikan daftar majalah public
- * @endpoint GET /majalahs/public
+ * @endpoint GET /media/majalah
  * @example
  * ```typescript
  * const response = await getMajalahPublic();
  * console.log(response.data); // Array of Majalah
  * ```
  */
-export const getMajalahPublic = async (params?: MajalahQueryParams): Promise<ApiResponse<MajalahListResponse>> => {
-  const { data } = await httpInstance.get<ApiResponse<MajalahListResponse>>("/majalahs/public", { params });
-  return data;
-};
-
-/**
- * Mendapatkan majalah berdasarkan ID untuk public display
- * @param id - ID majalah
- * @returns Promise yang mengembalikan data majalah public
- * @endpoint GET /majalahs/{id}
- * @example
- * ```typescript
- * const response = await getMajalahByIdPublic(123);
- * console.log(response.data); // Detail Majalah
- * ```
- */
-export const getMajalahByIdPublic = async (id: number): Promise<ApiResponse<MajalahDetailResponse>> => {
-  const { data } = await httpInstance.get<ApiResponse<MajalahDetailResponse>>(`/majalahs/${id}`);
+export const getMajalahPublic = async (
+  params?: MajalahQueryParams,
+): Promise<ApiResponse<MajalahListPublicResponse>> => {
+  const { data } = await httpInstance.get<ApiResponse<MajalahListPublicResponse>>("/media/majalah", { params });
   return data;
 };

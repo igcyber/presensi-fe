@@ -9,19 +9,20 @@ import { useFetch } from "@/composables/useFetch";
 import { useFormatters } from "@/composables/useFormatters";
 import { usePagination } from "@/composables/usePagination";
 import { type ApiResponse } from "@/lib/api/core";
-import { getRadios, type RadioListPayload } from "@/lib/api/services/media";
+import { getRadioPublic } from "@/lib/api/services/radio";
+import type { RadioListPublicResponse } from "@/lib/api/types/radio.types";
 
 const { date, toEmbedUrl } = useFormatters();
 const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
 
 // Fetch videos data
-const { data, isLoading, error, isError, fetchData } = useFetch<ApiResponse<RadioListPayload>, RadioListPayload>(
-  () => getRadios(currentPage.value),
-  {
-    immediate: false,
-    extractData: (response) => response.data,
-  },
-);
+const { data, isLoading, error, isError, fetchData } = useFetch<
+  ApiResponse<RadioListPublicResponse>,
+  RadioListPublicResponse
+>(() => getRadioPublic({ page: currentPage.value }), {
+  immediate: false,
+  extractData: (response) => response.data,
+});
 
 const prevPage = () => {
   if (currentPage.value > 1) {
@@ -102,11 +103,11 @@ onMounted(async () => {
 
         <!-- Content -->
         <div v-else-if="data">
-          <template v-if="data.radios.length > 0">
+          <template v-if="data.data.length > 0">
             <!-- Radio Grid -->
             <div class="mb-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               <div
-                v-for="radio in data.radios"
+                v-for="radio in data.data"
                 :key="radio.id"
                 class="overflow-hidden rounded bg-white shadow-md transition-shadow duration-300 hover:shadow-lg"
               >
@@ -187,5 +188,7 @@ onMounted(async () => {
         </div>
       </div>
     </main>
+
+    <VideoModal ref="videoModalRef" />
   </div>
 </template>

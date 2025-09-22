@@ -1,9 +1,11 @@
 import type { ApiResponse } from "@/lib/api/core/apiResponse";
+import httpInstance from "@/lib/api/core/httpInstance";
 import { createCrudService } from "@/lib/api/factories/crudServiceFactory";
 import type {
   CreateRadioRequest,
   Radio,
   RadioDetailResponse,
+  RadioListPublicResponse,
   RadioListResponse,
   RadioQueryParams,
   UpdateRadioRequest,
@@ -90,3 +92,19 @@ export const updateRadio = (id: number, payload: UpdateRadioRequest): Promise<Ap
  * ```
  */
 export const deleteRadio = (id: number): Promise<ApiResponse<null>> => radioService.remove(id);
+
+// ==================== Public Api ====================
+/**
+ * Mendapatkan daftar radio untuk public display
+ * @returns Promise yang mengembalikan daftar radio public
+ * @endpoint GET /media/radio
+ * @example
+ * ```typescript
+ * const response = await getRadioPublic({ page: 1 });
+ * console.log(response.data); // Array of RadioPublic
+ * ```
+ */
+export const getRadioPublic = async (params?: RadioQueryParams): Promise<ApiResponse<RadioListPublicResponse>> => {
+  const { data } = await httpInstance.get<ApiResponse<RadioListPublicResponse>>("/media/radio", { params });
+  return data;
+};

@@ -8,19 +8,20 @@ import { useFetch } from "@/composables/useFetch";
 import { useFormatters } from "@/composables/useFormatters";
 import { usePagination } from "@/composables/usePagination";
 import { type ApiResponse } from "@/lib/api/core";
-import { getMajalahs, type MajalahListPayload } from "@/lib/api/services/media";
+import { getMajalahPublic } from "@/lib/api/services/majalah";
+import type { MajalahListPublicResponse } from "@/lib/api/types/majalah.types";
 
 const { date, monthName } = useFormatters();
 const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
 
 // Fetch videos data
-const { data, isLoading, error, isError, fetchData } = useFetch<ApiResponse<MajalahListPayload>, MajalahListPayload>(
-  () => getMajalahs(currentPage.value),
-  {
-    immediate: false,
-    extractData: (response) => response.data,
-  },
-);
+const { data, isLoading, error, isError, fetchData } = useFetch<
+  ApiResponse<MajalahListPublicResponse>,
+  MajalahListPublicResponse
+>(() => getMajalahPublic({ page: currentPage.value }), {
+  immediate: false,
+  extractData: (response) => response.data,
+});
 
 const prevPage = () => {
   if (currentPage.value > 1) {
@@ -94,11 +95,11 @@ onMounted(async () => {
 
         <!-- Content -->
         <div v-else-if="data">
-          <template v-if="data.majalahs.length > 0">
+          <template v-if="data.data.length > 0">
             <!-- Magazine List -->
             <div class="mb-12 space-y-8">
               <div
-                v-for="majalah in data.majalahs"
+                v-for="majalah in data.data"
                 :key="majalah.id"
                 class="overflow-hidden rounded bg-white shadow-md transition-shadow duration-300 hover:shadow-lg"
               >

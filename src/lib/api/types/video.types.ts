@@ -19,6 +19,12 @@ export interface Video extends BaseEntity {
 export type VideoListResponse = PaginatedPayload<Video>;
 
 /**
+ * Video list public response interface
+ * Represents paginated video data from API
+ */
+export type VideoListPublicResponse = PaginatedPayload<Video>;
+
+/**
  * Video create request payload
  */
 export interface CreateVideoRequest {
