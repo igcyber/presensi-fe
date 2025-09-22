@@ -16,6 +16,5 @@ export * from "./portal";
 export * from "./banner";
 export * from "./pemerintahan";
 export * from "./selayangPandang";
-export * from "./unitKerja";
 export * from "./beranda";
 export * from "./user";

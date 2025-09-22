@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, watch } from "vue";
+import { computed, onMounted, watch } from "vue";
 
 import BasePagination from "@/components/base/BasePagination.vue";
 import SelayangPandang from "@/components/features/selayang-pandang/SelayangPandang.vue";
@@ -7,18 +7,23 @@ import AppBreadcrumb from "@/components/layout/partials/AppBreadcrumb.vue";
 
 import { useFetch } from "@/composables/useFetch";
 import { usePagination } from "@/composables/usePagination";
-import { type ApiResponse } from "@/lib/api/core";
-import { getPerusahaanDaerah, type LayananListPayload } from "@/lib/api/services/unitKerja";
+import { type ApiResponse, type ContentData } from "@/lib/api/core";
+import { getPerusdaPublic } from "@/lib/api/services/perusda";
+import type { Perusda, PerusdaListPublicResponse } from "@/lib/api/types/perusda.types";
 
 const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
 
-const { data, isLoading, error, isError, fetchData } = useFetch<ApiResponse<LayananListPayload>, LayananListPayload>(
-  () => getPerusahaanDaerah({ page: currentPage.value }),
-  {
-    immediate: false,
-    extractData: (response) => response.data,
-  },
-);
+const { data, isLoading, error, isError, fetchData } = useFetch<
+  ApiResponse<PerusdaListPublicResponse>,
+  PerusdaListPublicResponse
+>(() => getPerusdaPublic({ page: currentPage.value }), {
+  immediate: false,
+  extractData: (response) => response.data,
+});
+
+// Computed properties
+const contentData = computed(() => data.value?.data as ContentData);
+const perusdas = computed(() => (data.value?.perusdas as Perusda[]) ?? []);
 
 const prevPage = () => {
   if (currentPage.value > 1) {
@@ -91,18 +96,14 @@ onMounted(async () => {
         </div>
 
         <!-- Content -->
-        <div v-else-if="data && data.data">
-          <SelayangPandang
-            :title="data.data.slug"
-            :content="data.data.isi"
-            :image="`https://kukarkab.go.id/uploads/${data.data.foto}`"
-          >
+        <div v-else-if="contentData">
+          <SelayangPandang :title="contentData.nama" :content="contentData.isi" :image="contentData.fotoUrl">
             <template #other>
-              <template v-if="data.perusdas.length > 0">
+              <template v-if="perusdas.length > 0">
                 <!-- Perusahaan Daerah Grid -->
                 <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
                   <div
-                    v-for="perusda in data.perusdas"
+                    v-for="perusda in perusdas"
                     :key="perusda.id"
                     class="group overflow-hidden rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
                   >
@@ -110,7 +111,7 @@ onMounted(async () => {
                       <!-- Company Logo -->
                       <div class="flex w-32 flex-shrink-0 items-center justify-center bg-gray-50 p-4">
                         <img
-                          :src="`https://kukarkab.go.id/uploads/${perusda.foto}`"
+                          :src="perusda.fotoUrl"
                           :alt="`Logo ${perusda.nama}`"
                           class="h-20 w-20 object-contain transition-transform duration-300 group-hover:scale-105"
                           loading="lazy"

@@ -8,7 +8,7 @@ import AppBreadcrumb from "@/components/layout/partials/AppBreadcrumb.vue";
 import { useFetch } from "@/composables/useFetch";
 import { useFormatters } from "@/composables/useFormatters";
 import { usePagination } from "@/composables/usePagination";
-import { type ApiResponse } from "@/lib/api/core";
+import { type ApiResponse, type ContentData } from "@/lib/api/core";
 import { getOpdPublic } from "@/lib/api/services/opd";
 import type { Opd, OpdListPublicResponse } from "@/lib/api/types/opd.types";
 
@@ -26,6 +26,7 @@ const { data, isLoading, error, isError, fetchData } = useFetch<
 });
 
 // Computed properties
+const contentData = computed(() => data.value?.data as ContentData);
 const opds = computed(() => (data.value?.opds as Opd[]) ?? []);
 
 // Methods
@@ -100,12 +101,8 @@ onMounted(async () => {
         </div>
 
         <!-- Content -->
-        <div v-else-if="data && data.data">
-          <SelayangPandang
-            :title="data.data.slug"
-            :content="data.data.isi"
-            :image="`https://kukarkab.go.id/uploads/${data.data.foto}`"
-          >
+        <div v-else-if="contentData">
+          <SelayangPandang :title="contentData.nama" :content="contentData.isi" :image="contentData.fotoUrl">
             <template #other>
               <!-- OPD Grid -->
               <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -118,7 +115,7 @@ onMounted(async () => {
                     <!-- OPD Logo -->
                     <div class="flex w-32 flex-shrink-0 items-center justify-center bg-gray-50 p-4">
                       <img
-                        :src="`https://kukarkab.go.id/uploads/${opd.foto}`"
+                        :src="opd.fotoUrl"
                         :alt="`Logo ${opd.nama}`"
                         class="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
                         loading="lazy"

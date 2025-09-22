@@ -58,7 +58,7 @@ onMounted(async () => {
 
         <!-- Content -->
         <div v-else-if="data">
-          <SelayangPandang :title="data.slug" :content="data.isi" :image="data.fotoUrl" />
+          <SelayangPandang :title="data.nama" :content="data.isi" :image="data.fotoUrl" />
         </div>
 
         <!-- Empty State -->

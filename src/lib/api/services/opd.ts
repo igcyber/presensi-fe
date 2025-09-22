@@ -100,7 +100,7 @@ export const deleteOpd = (id: number): Promise<ApiResponse<null>> => opdService.
 /**
  * Mendapatkan daftar OPD untuk public display
  * @returns Promise yang mengembalikan daftar OPD public
- * @endpoint GET /opds
+ * @endpoint GET /opd
  * @example
  * ```typescript
  * const response = await getOpdPublic();
@@ -108,7 +108,7 @@ export const deleteOpd = (id: number): Promise<ApiResponse<null>> => opdService.
  * ```
  */
 export const getOpdPublic = async (params?: OpdQueryParams): Promise<ApiResponse<OpdListPublicResponse>> => {
-  const { data } = await httpInstance.get<ApiResponse<OpdListPublicResponse>>("/opds", { params });
+  const { data } = await httpInstance.get<ApiResponse<OpdListPublicResponse>>("/opd", { params });
   return data;
 };
 
@@ -116,7 +116,7 @@ export const getOpdPublic = async (params?: OpdQueryParams): Promise<ApiResponse
  * Mendapatkan detail OPD berdasarkan ID untuk tampilan publik
  * @param id - ID OPD yang akan diambil
  * @returns Promise yang mengembalikan detail data OPD
- * @endpoint GET /opds/{id}
+ * @endpoint GET /opd/{id}
  * @example
  * ```typescript
  * const response = await getOpdByIdPublic(123);
@@ -124,6 +124,6 @@ export const getOpdPublic = async (params?: OpdQueryParams): Promise<ApiResponse
  * ```
  */
 export const getOpdByIdPublic = async (id: number): Promise<ApiResponse<OpdDetailPublicResponse>> => {
-  const { data } = await httpInstance.get<ApiResponse<OpdDetailPublicResponse>>(`/opds/${id}`);
+  const { data } = await httpInstance.get<ApiResponse<OpdDetailPublicResponse>>(`/opd/${id}`);
   return data;
 };

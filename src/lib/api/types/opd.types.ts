@@ -29,7 +29,7 @@ export type OpdListResponse = PaginatedPayload<Opd>;
  * OPD list public response interface
  * Represents paginated OPD data from API
  */
-export type OpdListPublicResponse = PaginatedPayloadPublic<Omit<Opd, "createdByUser,updatedByUser">>;
+export type OpdListPublicResponse = PaginatedPayloadPublic<Omit<Opd, "createdByUser,updatedByUser">, { opds: Opd[] }>;
 
 /**
  * OPD create request payload

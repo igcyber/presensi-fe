@@ -64,7 +64,7 @@ onMounted(async () => {
 
         <!-- Content -->
         <div v-else-if="contentData">
-          <SelayangPandang :title="contentData.slug" :content="contentData.isi" :image="contentData.fotoUrl">
+          <SelayangPandang :title="contentData.nama" :content="contentData.isi" :image="contentData.fotoUrl">
             <template #other>
               <!-- Grid Responsive untuk Card Bupati -->
               <div class="grid grid-cols-1 gap-6 md:grid-cols-2">

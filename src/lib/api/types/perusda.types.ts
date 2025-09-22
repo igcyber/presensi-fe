@@ -1,4 +1,4 @@
-import type { BaseEntity, PaginatedPayload } from "@/lib/api/core/apiResponse";
+import type { BaseEntity, PaginatedPayload, PaginatedPayloadPublic } from "@/lib/api/core/apiResponse";
 
 import type { User } from "./user.types";
 
@@ -25,6 +25,12 @@ export interface Perusda extends BaseEntity {
  * Represents paginated perusda data from API
  */
 export type PerusdaListResponse = PaginatedPayload<Perusda>;
+
+/**
+ * Perusda list public response interface
+ * Represents paginated perusda data from API
+ */
+export type PerusdaListPublicResponse = PaginatedPayloadPublic<Perusda, { perusdas: Perusda[] }>;
 
 /**
  * Perusda create request payload

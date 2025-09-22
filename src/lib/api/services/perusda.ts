@@ -1,9 +1,11 @@
 import type { ApiResponse } from "@/lib/api/core/apiResponse";
+import httpInstance from "@/lib/api/core/httpInstance";
 import { createCrudService } from "@/lib/api/factories/crudServiceFactory";
 import type {
   CreatePerusdaRequest,
   Perusda,
   PerusdaDetailResponse,
+  PerusdaListPublicResponse,
   PerusdaListResponse,
   PerusdaQueryParams,
   UpdatePerusdaRequest,
@@ -108,3 +110,20 @@ export const updatePerusda = (id: number, payload: UpdatePerusdaRequest): Promis
  * ```
  */
 export const deletePerusda = (id: number): Promise<ApiResponse<null>> => perusdaService.remove(id);
+
+/**
+ * Mendapatkan daftar perusda untuk public display
+ * @returns Promise yang mengembalikan daftar perusda public
+ * @endpoint GET /perusda
+ * @example
+ * ```typescript
+ * const response = await getPerusdaPublic();
+ * console.log(response.data); // Array of Perusda
+ * ```
+ */
+export const getPerusdaPublic = async (
+  params?: PerusdaQueryParams,
+): Promise<ApiResponse<PerusdaListPublicResponse>> => {
+  const { data } = await httpInstance.get<ApiResponse<PerusdaListPublicResponse>>("/perusda", { params });
+  return data;
+};

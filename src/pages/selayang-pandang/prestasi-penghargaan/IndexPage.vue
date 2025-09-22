@@ -108,7 +108,7 @@ onMounted(async () => {
 
         <!-- Content -->
         <div v-else-if="data && data.data">
-          <SelayangPandang :title="data.data.slug" :content="data.data.isi" :image="data.data.fotoUrl">
+          <SelayangPandang :title="data.data.nama" :content="data.data.isi" :image="data.data.fotoUrl">
             <template #content>
               <!-- Table Section -->
               <div>
