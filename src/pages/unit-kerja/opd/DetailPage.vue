@@ -115,7 +115,7 @@ onBeforeUnmount(() => {
                       Lokasi
                     </h3>
                   </div>
-                  <div class="aspect-[4/3]">
+                  <div class="aspect-[4/3]" v-if="data.maps">
                     <iframe
                       :src="data.maps || ''"
                       class="h-full w-full"
@@ -123,6 +123,12 @@ onBeforeUnmount(() => {
                       allowfullscreen
                       loading="lazy"
                     ></iframe>
+                  </div>
+                  <div class="aspect-[4/3]" v-else>
+                    <div class="flex h-full items-center justify-center">
+                      <i class="bx bx-map-alt text-2xl text-gray-500"></i>
+                      <p class="text-sm text-gray-500">Tidak ada peta yang tersedia</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -179,7 +185,7 @@ onBeforeUnmount(() => {
                             </span>
                             <a :href="layanan.alamat" target="_blank" rel="noopener noreferrer" class="flex-shrink-0">
                               <img
-                                :src="`https://kukarkab.go.id/uploads/${layanan.logo}`"
+                                :src="layanan.logoUrl"
                                 :alt="`Logo ${layanan.nama}`"
                                 class="h-12 w-12 rounded object-contain"
                                 loading="lazy"
