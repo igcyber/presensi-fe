@@ -7,6 +7,7 @@ export interface EmergencyItem {
   icon: string;
   nama: string;
   isi: string;
+  fileUrl: string;
 }
 
 /**
