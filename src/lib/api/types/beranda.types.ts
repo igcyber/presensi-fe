@@ -70,6 +70,16 @@ export interface OpdItem extends BaseEntity {
 }
 
 /**
+ * Aplikasi Terkait item interface
+ */
+export interface AplikasiTerkaitItem extends BaseEntity {
+  cover: string | null;
+  text: string;
+  link: string;
+  coverUrl: string | null;
+}
+
+/**
  * Homepage data interface
  */
 export interface BerandaData {
@@ -80,4 +90,5 @@ export interface BerandaData {
   layanans: LayananItem[];
   sistems: SistemItem[];
   opds: OpdItem[];
+  aplikasiTerkait: AplikasiTerkaitItem[];
 }

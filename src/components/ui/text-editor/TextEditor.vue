@@ -325,6 +325,7 @@ defineExpose({
 /* Tambahan padding di dalam editor */
 .echo-editor .tiptap {
   padding-top: 55px !important;
+  width: 650px !important;
 }
 </style>
 

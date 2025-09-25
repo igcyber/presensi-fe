@@ -1,0 +1,10 @@
+export { default as EmergencySection } from "./EmergencySection.vue";
+export { default as HeroSection } from "./HeroSection.vue";
+export { default as FeaturesSection } from "./FeaturesSection.vue";
+export { default as NewsSection } from "./NewsSection.vue";
+export { default as ElectionInfoSection } from "./ElectionInfoSection.vue";
+export { default as InfografisSection } from "./InfografisSection.vue";
+export { default as VideoSection } from "./VideoSection.vue";
+export { default as ServicesSection } from "./ServicesSection.vue";
+export { default as AplikasiTerkaitSection } from "./AplikasiTerkaitSection.vue";
+export { default as OpdSection } from "./OpdSection.vue";
