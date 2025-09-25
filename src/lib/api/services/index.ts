@@ -14,6 +14,7 @@ export * from "./statik";
 export * from "./radio";
 export * from "./portal";
 export * from "./banner";
+export * from "./aplikasiTerkait";
 export * from "./pemerintahan";
 export * from "./selayangPandang";
 export * from "./beranda";

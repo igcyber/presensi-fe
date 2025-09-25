@@ -1,4 +1,5 @@
 import AuthLayout from "@/layouts/AuthLayout.vue";
+import aplikasiTerkaitRoute from "@/pages/app/aplikasi-terkait/route";
 import bannerRoute from "@/pages/app/banner/route";
 import beritaRoute from "@/pages/app/berita/route";
 import bupatiRoute from "@/pages/app/bupati/route";
@@ -45,5 +46,6 @@ export default {
     ...radioRoute,
     ...portalRoute,
     ...bannerRoute,
+    ...aplikasiTerkaitRoute,
   ],
 };

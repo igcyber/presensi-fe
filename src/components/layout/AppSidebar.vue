@@ -13,6 +13,7 @@ import {
   NewspaperIcon,
   Radio,
   Settings,
+  Smartphone,
   UserIcon,
   UserRound,
   VideoIcon,
@@ -196,6 +197,14 @@ const data = computed(() => ({
       name: "app.banner",
       icon: Image,
       isActive: routNameActive.value === "app.banner" || routNameActive.value === "app.banner.detail",
+    },
+    {
+      title: "Aplikasi Terkait",
+      url: "/app/aplikasi-terkait",
+      name: "app.aplikasi-terkait",
+      icon: Smartphone,
+      isActive:
+        routNameActive.value === "app.aplikasi-terkait" || routNameActive.value === "app.aplikasi-terkait.detail",
     },
   ],
 }));

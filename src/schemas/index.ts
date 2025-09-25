@@ -12,6 +12,7 @@ export * from "./statikSchema";
 export * from "./radioSchema";
 export * from "./portalSchema";
 export * from "./bannerSchema";
+export * from "./aplikasiTerkaitSchema";
 export * from "./userSchema";
 export * from "./roleSchema";
 export * from "./videoSchema";
