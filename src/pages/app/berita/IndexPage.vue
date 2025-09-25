@@ -78,6 +78,13 @@ const columns: Column<Berita>[] = [
         .join(", "),
   },
   {
+    key: "views",
+    label: "Dilihat",
+    sortable: true,
+    width: "150px",
+    render: (item: Berita): string => item.views.toString(),
+  },
+  {
     key: "creator",
     label: "Pembuat",
     sortable: true,

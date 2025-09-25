@@ -118,6 +118,10 @@ onBeforeUnmount(() => {
                     <i class="bx bx-buildings mr-2"></i>
                     <span>{{ data?.opd?.nama || "Kukarkab" }}</span>
                   </div>
+                  <div class="flex items-center">
+                    <i class="bx bx-show mr-2"></i>
+                    <span>{{ data?.views || 0 }} kali dilihat</span>
+                  </div>
                 </div>
 
                 <!-- Title -->
