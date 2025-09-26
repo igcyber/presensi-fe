@@ -1,5 +1,12 @@
 <script setup lang="ts">
+import { useColorMode } from "@vueuse/core";
+import { onMounted } from "vue";
+
 import LoginForm from "@/components/features/login/LoginForm.vue";
+
+onMounted(() => {
+  useColorMode();
+});
 </script>
 
 <template>

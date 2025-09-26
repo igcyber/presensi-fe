@@ -30,10 +30,10 @@ const authStore = useAuthStore();
 
 const router = useRouter();
 
-const handleLogout = () => {
+const handleLogout = async () => {
   authStore.logout();
 
-  router.push({ name: "login.index" });
+  await router.push({ name: "login.index" });
 
   toast.success("Logout berhasil!");
 };

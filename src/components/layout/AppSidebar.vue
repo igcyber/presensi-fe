@@ -48,7 +48,7 @@ const userData = computed(() => {
   return {
     fullname: authStore.user?.fullName || "",
     username: authStore.user?.email || "",
-    avatar: (authStore.user as unknown as { avatar: string }).avatar || "",
+    avatar: (authStore.user as unknown as { avatar: string })?.avatar || "",
   };
 });
 
