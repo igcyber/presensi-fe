@@ -4,6 +4,7 @@ import {
   BookOpen,
   Building,
   ChartBar,
+  ClipboardCheck,
   Crown,
   FileEdit,
   FileText,
@@ -205,6 +206,13 @@ const data = computed(() => ({
       icon: Smartphone,
       isActive:
         routNameActive.value === "app.aplikasi-terkait" || routNameActive.value === "app.aplikasi-terkait.detail",
+    },
+    {
+      title: "Survei Kepuasan",
+      url: "/app/survei-kepuasan",
+      name: "app.survei-kepuasan",
+      icon: ClipboardCheck,
+      isActive: routNameActive.value === "app.survei-kepuasan" || routNameActive.value === "app.survei-kepuasan.detail",
     },
   ],
 }));

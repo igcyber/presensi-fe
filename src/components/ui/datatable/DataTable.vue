@@ -55,6 +55,7 @@ export interface Props<T = unknown> {
   totalPages: number;
   loading?: boolean;
   filters?: FilterConfig[];
+  actions?: boolean;
 }
 
 // Props
@@ -64,6 +65,7 @@ const props = withDefaults(defineProps<Props<T>>(), {
   pageSize: 10,
   loading: false,
   filters: () => [],
+  actions: true,
 });
 
 // Emits
@@ -336,7 +338,7 @@ const formatCellValue = (item: T, column: Column<T>) => {
                 </div>
               </div>
             </TableHead>
-            <TableHead class="w-[100px] text-center">Aksi</TableHead>
+            <TableHead v-if="actions" class="w-[100px] text-center">Aksi</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -383,7 +385,7 @@ const formatCellValue = (item: T, column: Column<T>) => {
                 {{ formatCellValue(item, column) }}
               </template>
             </TableCell>
-            <TableCell class="py-2 text-center">
+            <TableCell v-if="actions" class="py-2 text-center">
               <div class="flex items-center justify-center gap-1 sm:gap-2">
                 <Button variant="secondary" size="sm" @click.stop="handleEdit(item)" class="px-2 sm:px-3">
                   <EditIcon class="h-4 w-4" />
