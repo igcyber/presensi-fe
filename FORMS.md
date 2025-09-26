@@ -969,6 +969,7 @@ import {
   BaseForm,
   BaseInput,
   BaseInputFile,
+  BaseRadio,
   BaseSelect,
   BaseTextarea,
   BaseTextEditor,
@@ -985,6 +986,7 @@ const formSchema = z.object({
   name: z.string().min(1, "Nama wajib diisi"),
   email: z.string().email("Format email tidak valid"),
   role: z.string().min(1, "Role wajib dipilih"),
+  gender: z.string().min(1, "Jenis kelamin wajib dipilih"),
   isActive: z.boolean(),
   description: z.string().optional(),
   content: z.string().optional(),
@@ -1000,6 +1002,7 @@ const formSchema = z.object({
     <BaseInput name="name" label="Nama" required />
     <BaseInput name="email" label="Email" type="email" required />
     <BaseSelect name="role" label="Role" :options="roleOptions" required />
+    <BaseRadio name="gender" label="Jenis Kelamin" :options="genderOptions" required />
     <BaseInputFile name="avatar" label="Foto Profil" accept="image/*" />
     <BaseCheckbox name="isActive" label="Aktif" />
     <BaseTextarea name="description" label="Deskripsi" />
@@ -1680,6 +1683,620 @@ const props = defineProps<Props>();
     </FormItem>
   </FormField>
 </template>
+```
+
+## BaseRadio.vue
+
+### 📖 Description
+
+Component radio button yang terintegrasi dengan Shadcn FormField system. Mendukung single selection dengan berbagai orientasi (horizontal/vertical), ukuran yang dapat disesuaikan, dan styling yang konsisten dengan design system Shadcn. Ideal untuk form yang memerlukan pilihan tunggal dari beberapa opsi.
+
+### ⚡ Usage Example
+
+```vue
+<script setup lang="ts">
+import { z } from "zod";
+
+import { BaseForm, BaseRadio } from "@/components/forms";
+
+const surveySchema = z.object({
+  gender: z.string().min(1, "Jenis kelamin wajib dipilih"),
+  ageGroup: z.string().min(1, "Kelompok umur wajib dipilih"),
+  experience: z.string().min(1, "Pengalaman wajib dipilih"),
+  satisfaction: z.string().min(1, "Tingkat kepuasan wajib dipilih"),
+});
+
+const initialValues = {
+  gender: "",
+  ageGroup: "",
+  experience: "",
+  satisfaction: "",
+};
+
+const genderOptions = [
+  { label: "Laki-laki", value: "male" },
+  { label: "Perempuan", value: "female" },
+  { label: "Lainnya", value: "other" },
+];
+
+const ageGroupOptions = [
+  { label: "18-25 tahun", value: "18-25" },
+  { label: "26-35 tahun", value: "26-35" },
+  { label: "36-45 tahun", value: "36-45" },
+  { label: "46-55 tahun", value: "46-55" },
+  { label: "55+ tahun", value: "55+" },
+];
+
+const experienceOptions = [
+  { label: "Pemula (0-1 tahun)", value: "beginner" },
+  { label: "Menengah (2-5 tahun)", value: "intermediate" },
+  { label: "Lanjutan (6-10 tahun)", value: "advanced" },
+  { label: "Expert (10+ tahun)", value: "expert" },
+];
+
+const satisfactionOptions = [
+  { label: "Sangat Tidak Puas", value: "very_dissatisfied" },
+  { label: "Tidak Puas", value: "dissatisfied" },
+  { label: "Netral", value: "neutral" },
+  { label: "Puas", value: "satisfied" },
+  { label: "Sangat Puas", value: "very_satisfied" },
+];
+
+async function handleSubmit(values: z.infer<typeof surveySchema>) {
+  console.log("Survey data:", values);
+  // Kirim ke API
+}
+</script>
+
+<template>
+  <BaseForm :schema="surveySchema" :initial-values="initialValues" @submit="handleSubmit">
+    <!-- Radio vertical (default) -->
+    <BaseRadio
+      name="gender"
+      label="Jenis Kelamin"
+      :options="genderOptions"
+      required
+      description="Pilih jenis kelamin Anda"
+    />
+
+    <!-- Radio horizontal -->
+    <BaseRadio name="ageGroup" label="Kelompok Umur" :options="ageGroupOptions" orientation="horizontal" required />
+
+    <!-- Radio dengan ukuran kecil -->
+    <BaseRadio name="experience" label="Tingkat Pengalaman" :options="experienceOptions" size="sm" required />
+
+    <!-- Radio dengan ukuran besar -->
+    <BaseRadio
+      name="satisfaction"
+      label="Tingkat Kepuasan"
+      :options="satisfactionOptions"
+      size="lg"
+      orientation="horizontal"
+      required
+    />
+
+    <Button type="submit" class="w-full">Kirim Survey</Button>
+  </BaseForm>
+</template>
+```
+
+### 🛠 Best Practices
+
+#### **Basic Usage**
+
+- **Single Selection**: Radio buttons ideal untuk pilihan tunggal dari beberapa opsi
+- **Clear Labels**: Berikan label yang jelas dan mudah dipahami
+- **Logical Grouping**: Kelompokkan opsi yang terkait dalam satu radio group
+- **Required Fields**: Gunakan prop `required` untuk field yang wajib diisi
+- **Accessibility**: Radio buttons otomatis terhubung dengan label melalui Shadcn FormLabel
+
+#### **Orientation & Layout**
+
+- **Vertical Layout**: Default untuk opsi yang banyak atau label panjang
+- **Horizontal Layout**: Ideal untuk opsi yang sedikit dan label pendek
+- **Responsive Design**: Horizontal layout otomatis wrap pada mobile
+- **Spacing**: Konsisten spacing antara opsi menggunakan Shadcn spacing scale
+
+#### **Size & Styling**
+
+- **Small Size**: Gunakan untuk form yang compact atau mobile
+- **Default Size**: Ukuran standar untuk sebagian besar use case
+- **Large Size**: Untuk form yang perlu emphasis atau accessibility tinggi
+- **Consistent Styling**: Menggunakan Shadcn design system untuk konsistensi
+
+#### **Accessibility & UX**
+
+- **Keyboard Navigation**: Full keyboard support dengan arrow keys
+- **Screen Reader**: Proper ARIA attributes untuk screen readers
+- **Focus Management**: Clear focus indicators dari Shadcn
+- **Disabled States**: Proper handling untuk disabled options
+- **Error States**: Clear error indication dengan FormMessage
+
+### 🔗 Integration Notes
+
+#### **Shadcn FormField Integration**
+
+- **FormField**: Terintegrasi dengan FormField, FormItem, FormLabel, FormMessage
+- **Validation**: Error messages ditampilkan melalui FormMessage
+- **Form Context**: Menggunakan VeeValidate form context untuk validation
+- **Styling**: Consistent styling dengan Shadcn design system
+
+#### **RadioGroup Implementation**
+
+- **Shadcn RadioGroup**: Menggunakan RadioGroup dan RadioGroupItem dari Shadcn
+- **Single Selection**: Built-in single selection behavior
+- **Value Binding**: Proper value binding dengan form context
+- **Event Handling**: Change events terintegrasi dengan VeeValidate
+
+#### **Accessibility Features**
+
+- **ARIA Support**: Proper ARIA attributes dari Shadcn primitives
+- **Keyboard Navigation**: Arrow keys untuk navigasi antar opsi
+- **Focus Management**: Clear focus indicators dan focus trapping
+- **Screen Reader**: Compatible dengan screen readers
+- **Label Association**: Proper label association untuk accessibility
+
+### 📋 Props
+
+#### **Basic Props**
+
+| Prop          | Type                         | Default      | Description                       |
+| ------------- | ---------------------------- | ------------ | --------------------------------- |
+| `name`        | `string`                     | -            | Field name untuk form binding     |
+| `label`       | `string`                     | -            | Label yang ditampilkan            |
+| `options`     | `RadioOption[]`              | -            | Array options untuk radio buttons |
+| `disabled`    | `boolean`                    | `false`      | Disable radio group               |
+| `required`    | `boolean`                    | `false`      | Required field dengan asterisk    |
+| `description` | `string`                     | -            | Help text di bawah radio group    |
+| `orientation` | `"horizontal" \| "vertical"` | `"vertical"` | Orientasi layout radio buttons    |
+| `size`        | `"sm" \| "default" \| "lg"`  | `"default"`  | Ukuran radio buttons              |
+
+#### **RadioOption Interface**
+
+```typescript
+interface RadioOption {
+  label: string; // Text yang ditampilkan
+  value: string | number; // Value untuk form
+  disabled?: boolean; // Disable option tertentu
+}
+```
+
+### 🚀 Advanced Usage
+
+#### **Dynamic Options dengan Reactive Data**
+
+```vue
+<script setup lang="ts">
+import { computed, ref, watch } from "vue";
+
+const selectedCategory = ref("");
+const subcategories = ref([]);
+
+const subcategoryOptions = computed(() =>
+  subcategories.value.map((sub) => ({
+    label: sub.name,
+    value: sub.id,
+    disabled: !sub.is_active,
+  })),
+);
+
+// Load subcategories based on selected category
+watch(selectedCategory, async (categoryId) => {
+  if (categoryId) {
+    subcategories.value = await fetchSubcategories(categoryId);
+  } else {
+    subcategories.value = [];
+  }
+});
+</script>
+
+<template>
+  <BaseRadio name="category" label="Kategori" :options="categoryOptions" v-model="selectedCategory" required />
+
+  <BaseRadio
+    name="subcategory"
+    label="Subkategori"
+    :options="subcategoryOptions"
+    :disabled="!selectedCategory"
+    required
+  />
+</template>
+```
+
+#### **Conditional Options dengan Computed Properties**
+
+```vue
+<script setup lang="ts">
+import { computed } from "vue";
+
+const userRole = ref("admin");
+const isPremium = ref(true);
+
+const permissionOptions = computed(() => {
+  const baseOptions = [
+    { label: "Read Only", value: "read" },
+    { label: "Read & Write", value: "write" },
+  ];
+
+  if (userRole.value === "admin" || isPremium.value) {
+    baseOptions.push({ label: "Full Access", value: "full" }, { label: "Admin Access", value: "admin" });
+  }
+
+  return baseOptions;
+});
+
+const themeOptions = computed(() => {
+  const options = [
+    { label: "Light Theme", value: "light" },
+    { label: "Dark Theme", value: "dark" },
+  ];
+
+  if (isPremium.value) {
+    options.push({ label: "Auto Theme", value: "auto" }, { label: "Custom Theme", value: "custom" });
+  }
+
+  return options;
+});
+</script>
+
+<template>
+  <BaseRadio name="permissions" label="Permission Level" :options="permissionOptions" required />
+
+  <BaseRadio name="theme" label="Theme Preference" :options="themeOptions" orientation="horizontal" />
+</template>
+```
+
+#### **Form dengan Multiple Radio Groups**
+
+```vue
+<script setup lang="ts">
+import { z } from "zod";
+
+const preferencesSchema = z.object({
+  // Personal preferences
+  gender: z.string().min(1, "Gender required"),
+  ageGroup: z.string().min(1, "Age group required"),
+
+  // Technical preferences
+  experience: z.string().min(1, "Experience level required"),
+  skillLevel: z.string().min(1, "Skill level required"),
+
+  // UI preferences
+  theme: z.string().min(1, "Theme required"),
+  layout: z.string().min(1, "Layout required"),
+});
+
+const initialValues = {
+  gender: "",
+  ageGroup: "",
+  experience: "",
+  skillLevel: "",
+  theme: "",
+  layout: "",
+};
+</script>
+
+<template>
+  <BaseForm :schema="preferencesSchema" :initial-values="initialValues" @submit="handleSubmit">
+    <div class="space-y-8">
+      <!-- Personal Information -->
+      <div class="space-y-4">
+        <h3 class="text-lg font-semibold">Informasi Personal</h3>
+
+        <BaseRadio name="gender" label="Jenis Kelamin" :options="genderOptions" required />
+
+        <BaseRadio name="ageGroup" label="Kelompok Umur" :options="ageGroupOptions" orientation="horizontal" required />
+      </div>
+
+      <!-- Technical Skills -->
+      <div class="space-y-4">
+        <h3 class="text-lg font-semibold">Keahlian Teknis</h3>
+
+        <BaseRadio name="experience" label="Tingkat Pengalaman" :options="experienceOptions" required />
+
+        <BaseRadio name="skillLevel" label="Level Keahlian" :options="skillLevelOptions" size="sm" required />
+      </div>
+
+      <!-- UI Preferences -->
+      <div class="space-y-4">
+        <h3 class="text-lg font-semibold">Preferensi UI</h3>
+
+        <BaseRadio name="theme" label="Tema Aplikasi" :options="themeOptions" orientation="horizontal" required />
+
+        <BaseRadio name="layout" label="Layout Interface" :options="layoutOptions" size="lg" required />
+      </div>
+    </div>
+
+    <Button type="submit" class="w-full">Simpan Preferensi</Button>
+  </BaseForm>
+</template>
+```
+
+#### **Survey Form dengan Conditional Logic**
+
+```vue
+<script setup lang="ts">
+import { computed, ref } from "vue";
+
+const surveyData = ref({
+  hasExperience: "",
+  experienceLevel: "",
+  preferredTools: "",
+  satisfaction: "",
+});
+
+const experienceOptions = [
+  { label: "Ya, saya berpengalaman", value: "yes" },
+  { label: "Tidak, saya pemula", value: "no" },
+];
+
+const experienceLevelOptions = computed(() => {
+  if (surveyData.value.hasExperience === "yes") {
+    return [
+      { label: "1-2 tahun", value: "1-2" },
+      { label: "3-5 tahun", value: "3-5" },
+      { label: "6-10 tahun", value: "6-10" },
+      { label: "10+ tahun", value: "10+" },
+    ];
+  } else {
+    return [
+      { label: "Sangat pemula", value: "beginner" },
+      { label: "Sedikit pengalaman", value: "some" },
+    ];
+  }
+});
+
+const toolOptions = computed(() => {
+  if (surveyData.value.hasExperience === "yes") {
+    return [
+      { label: "Visual Studio Code", value: "vscode" },
+      { label: "IntelliJ IDEA", value: "intellij" },
+      { label: "Sublime Text", value: "sublime" },
+      { label: "Vim/Neovim", value: "vim" },
+    ];
+  } else {
+    return [
+      { label: "Tidak tahu", value: "unknown" },
+      { label: "Mau belajar", value: "learning" },
+    ];
+  }
+});
+</script>
+
+<template>
+  <BaseForm :schema="surveySchema" :initial-values="initialValues" @submit="handleSubmit">
+    <!-- Conditional radio groups -->
+    <BaseRadio
+      name="hasExperience"
+      label="Apakah Anda berpengalaman dengan programming?"
+      :options="experienceOptions"
+      v-model="surveyData.hasExperience"
+      required
+    />
+
+    <BaseRadio
+      v-if="surveyData.hasExperience"
+      name="experienceLevel"
+      label="Berapa lama pengalaman Anda?"
+      :options="experienceLevelOptions"
+      required
+    />
+
+    <BaseRadio
+      name="preferredTools"
+      label="Tool apa yang Anda gunakan?"
+      :options="toolOptions"
+      :disabled="!surveyData.hasExperience"
+      required
+    />
+
+    <BaseRadio
+      name="satisfaction"
+      label="Seberapa puas Anda dengan tool tersebut?"
+      :options="satisfactionOptions"
+      orientation="horizontal"
+      size="lg"
+      required
+    />
+  </BaseForm>
+</template>
+```
+
+#### **Accessibility Enhanced Radio Groups**
+
+```vue
+<template>
+  <!-- Radio dengan enhanced accessibility -->
+  <BaseRadio
+    name="accessibility"
+    label="Preferensi Aksesibilitas"
+    :options="accessibilityOptions"
+    description="Pilih preferensi aksesibilitas yang sesuai dengan kebutuhan Anda"
+    required
+  />
+
+  <!-- Radio dengan custom ARIA labels -->
+  <BaseRadio
+    name="notification"
+    label="Preferensi Notifikasi"
+    :options="notificationOptions"
+    orientation="horizontal"
+    size="lg"
+    required
+  />
+</template>
+
+<script setup lang="ts">
+const accessibilityOptions = [
+  {
+    label: "High Contrast Mode",
+    value: "high_contrast",
+    disabled: false,
+  },
+  {
+    label: "Large Text",
+    value: "large_text",
+    disabled: false,
+  },
+  {
+    label: "Screen Reader Support",
+    value: "screen_reader",
+    disabled: false,
+  },
+  {
+    label: "Keyboard Navigation",
+    value: "keyboard_nav",
+    disabled: false,
+  },
+];
+
+const notificationOptions = [
+  { label: "Semua Notifikasi", value: "all" },
+  { label: "Hanya Penting", value: "important" },
+  { label: "Tidak Ada", value: "none" },
+];
+</script>
+```
+
+### 🎨 Styling & Theming
+
+#### **Custom Radio Styling**
+
+```vue
+<template>
+  <BaseRadio name="custom" label="Custom Styled Radio" :options="customOptions" class="custom-radio-group" />
+</template>
+
+<style>
+.custom-radio-group .radio-group {
+  @apply space-y-4;
+}
+
+.custom-radio-group .radio-group-item {
+  @apply border-2 border-blue-200 transition-all duration-200;
+}
+
+.custom-radio-group .radio-group-item:checked {
+  @apply border-blue-500 bg-blue-50;
+}
+
+.custom-radio-group .radio-group-item:focus {
+  @apply ring-2 ring-blue-300 ring-offset-2;
+}
+
+.custom-radio-group label {
+  @apply font-medium text-gray-700;
+}
+
+.custom-radio-group label:hover {
+  @apply text-blue-600;
+}
+</style>
+```
+
+#### **Dark Mode Radio Groups**
+
+```vue
+<template>
+  <BaseRadio name="darkMode" label="Dark Mode Preferences" :options="darkModeOptions" class="dark-radio-group" />
+</template>
+
+<style>
+.dark-radio-group .radio-group-item {
+  @apply dark:border-gray-600 dark:bg-gray-800;
+}
+
+.dark-radio-group .radio-group-item:checked {
+  @apply dark:border-blue-400 dark:bg-blue-900;
+}
+
+.dark-radio-group label {
+  @apply dark:text-gray-200;
+}
+
+.dark-radio-group label:hover {
+  @apply dark:text-blue-300;
+}
+</style>
+```
+
+### 🧪 Testing
+
+#### **Unit Testing**
+
+```typescript
+import { mount } from "@vue/test-utils";
+
+import { BaseRadio } from "@/components/forms";
+
+test("renders radio group with options", () => {
+  const options = [
+    { label: "Option 1", value: "1" },
+    { label: "Option 2", value: "2" },
+  ];
+
+  const wrapper = mount(BaseRadio, {
+    props: {
+      name: "test",
+      label: "Test Radio",
+      options,
+    },
+  });
+
+  expect(wrapper.find("label").text()).toBe("Test Radio");
+  expect(wrapper.findAll("input[type='radio']")).toHaveLength(2);
+});
+
+test("handles orientation correctly", () => {
+  const wrapper = mount(BaseRadio, {
+    props: {
+      name: "test",
+      label: "Test Radio",
+      options: [{ label: "Option 1", value: "1" }],
+      orientation: "horizontal",
+    },
+  });
+
+  expect(wrapper.find(".flex-row").exists()).toBe(true);
+});
+
+test("handles disabled state", () => {
+  const wrapper = mount(BaseRadio, {
+    props: {
+      name: "test",
+      label: "Test Radio",
+      options: [{ label: "Option 1", value: "1", disabled: true }],
+    },
+  });
+
+  expect(wrapper.find("input[disabled]").exists()).toBe(true);
+});
+```
+
+#### **Integration Testing**
+
+```typescript
+test("form validation works with radio group", async () => {
+  const wrapper = mount(BaseForm, {
+    props: {
+      schema: z.object({
+        choice: z.string().min(1, "Choice required"),
+      }),
+      initialValues: { choice: "" },
+      onSubmit: vi.fn(),
+    },
+    slots: {
+      default: `
+        <BaseRadio name="choice" label="Test Choice" :options="[{label: 'Option 1', value: '1'}]" required />
+        <button type="submit">Submit</button>
+      `,
+    },
+  });
+
+  await wrapper.find("form").trigger("submit");
+
+  expect(wrapper.find(".error-message").text()).toContain("Choice required");
+});
 ```
 
 ## 🤝 Contributing

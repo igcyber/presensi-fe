@@ -32,11 +32,33 @@ export interface ApiError {
 }
 
 /**
+ * Content data structure for pages and articles
+ */
+export interface ContentData extends BaseEntity {
+  nama: string;
+  isi: string;
+  slug: string;
+  foto: string;
+  fotoUrl: string;
+}
+
+/**
  * Generic payload wrapper for single data responses
  * @template T - The data type
  */
 export interface PayloadData<T> {
   data: T;
+}
+
+/**
+ * Payload data interface for external api
+ * @template T - The data type
+ */
+export interface PayloadDataExternal<T> {
+  success: boolean;
+  data: T[];
+  message: string;
+  code: number;
 }
 
 /**
@@ -110,15 +132,4 @@ export interface Filter {
   field: string;
   value: unknown;
   operator?: "eq" | "ne" | "gt" | "gte" | "lt" | "lte" | "like" | "in" | "nin";
-}
-
-/**
- * Content data structure for pages and articles
- */
-export interface ContentData extends BaseEntity {
-  nama: string;
-  isi: string;
-  slug: string;
-  foto: string;
-  fotoUrl: string;
 }

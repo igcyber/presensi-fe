@@ -52,7 +52,8 @@ const handleInvalidSubmit = (ctx: any) => {
     :disabled="props.disabled"
     @submit="handleSubmit"
     @invalid-submit="handleInvalidSubmit"
+    v-slot="{ errors, meta }"
   >
-    <slot />
+    <slot :errors="errors" :meta="meta" />
   </Form>
 </template>

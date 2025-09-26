@@ -94,6 +94,10 @@ const navigation = ref<NavigationItem[]>([
     path: "/berita",
   },
   {
+    title: "SURVEI KEPUASAN",
+    path: "/survei",
+  },
+  {
     title: "PPID",
     path: "https://ppid.kukarkab.go.id/",
     external: true,
