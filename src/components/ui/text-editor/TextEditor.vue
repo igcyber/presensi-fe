@@ -96,16 +96,12 @@ async function uploadImageToServer(file: File, url: string): Promise<string> {
 
     // Handle response dari temporary API
     if (response.data && response.data.fileUrl) {
-      console.log("response.data.fileUrl", response.data.fileUrl);
       return response.data.fileUrl;
     } else if (response.data && response.data.url) {
-      console.log("response.data.url", response.data.url);
       return response.data.url;
     } else if (response.fileUrl) {
-      console.log("response.fileUrl", response.fileUrl);
       return response.fileUrl;
     } else if (response.url) {
-      console.log("response.url", response.url);
       return response.url;
     }
 
