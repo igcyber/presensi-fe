@@ -1,6 +1,7 @@
 // components/dialogs/BaseFormDialog.vue
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
+import { toast } from "vue-sonner";
 import type { z, ZodTypeAny } from "zod";
 
 import BaseForm from "@/components/forms/BaseForm.vue";
@@ -109,9 +110,13 @@ async function handleSubmit(values: any) {
 
     if (props.closeOnSuccess) emit("update:open", false);
   } catch (e: any) {
-    // Normalize 422 errors if shape is { errors: { field: [msg] }}
-    const errs = e?.response?.data?.errors || e?.errors;
-    if (errs && typeof errs === "object") serverErrors.value = errs;
+    if (e.status === 422) {
+      // Normalize 422 errors if shape is { errors: { field: [msg] }}
+      const errs = e?.errors;
+      if (errs && typeof errs === "object") serverErrors.value = errs;
+    } else {
+      toast.error(e.message);
+    }
     // optionally you can toast outside
   } finally {
     isSubmitting.value = false;

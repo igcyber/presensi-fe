@@ -48,24 +48,28 @@ export const resetPasswordSchema = z
     path: ["confirmPassword"],
   });
 
+// Schema untuk update profile
+export const updateProfileSchema = z.object({
+  fullName: z.string().trim().optional(),
+  username: z.string().trim().optional(),
+  nip: z.string().trim().optional(),
+  email: z.string().trim().email("Format email tidak valid").optional(),
+});
+
 // Schema untuk change password
 export const changePasswordSchema = z
   .object({
-    currentPassword: z.string().min(1, "Password saat ini wajib diisi"),
-    newPassword: z
-      .string()
-      .min(1, "Password baru wajib diisi")
-      .min(6, "Password baru minimal 6 karakter")
-      .max(50, "Password baru maksimal 50 karakter"),
-    confirmNewPassword: z.string().min(1, "Konfirmasi password baru wajib diisi"),
+    oldPassword: z.string().min(8, "Password lama minimal 8 karakter"),
+    password: z.string().min(8, "Password baru minimal 8 karakter"),
+    password_confirmation: z.string().min(1, "Konfirmasi password wajib diisi"),
   })
-  .refine((data) => data.newPassword === data.confirmNewPassword, {
-    message: "Konfirmasi password baru tidak cocok",
-    path: ["confirmNewPassword"],
+  .refine((data) => data.password === data.password_confirmation, {
+    message: "Konfirmasi password tidak cocok",
+    path: ["password_confirmation"],
   })
-  .refine((data) => data.currentPassword !== data.newPassword, {
-    message: "Password baru harus berbeda dengan password saat ini",
-    path: ["newPassword"],
+  .refine((data) => data.oldPassword !== data.password, {
+    message: "Password baru harus berbeda dengan password lama",
+    path: ["password"],
   });
 
 // Types dari schema
@@ -73,4 +77,5 @@ export type LoginFormData = z.infer<typeof loginSchema>;
 export type RegisterFormData = z.infer<typeof registerSchema>;
 export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
+export type UpdateProfileFormData = z.infer<typeof updateProfileSchema>;
 export type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;

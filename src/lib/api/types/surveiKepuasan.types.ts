@@ -71,14 +71,6 @@ export interface SurveiKepuasanQueryParams {
 }
 
 /**
- * Jenis Kelamin options
- */
-export const JENIS_KELAMIN_SKM_OPTIONS = [
-  { label: "Laki-laki", value: "LAKI_LAKI" },
-  { label: "Perempuan", value: "PEREMPUAN" },
-];
-
-/**
  * Survey Status API Response interfaces
  */
 export interface SurveyStatusResponse {
@@ -122,16 +114,3 @@ export interface MappedSurveyAnswer {
   pertanyaan_id: number;
   jawaban_id: number;
 }
-
-/**
- * Pendidikan options
- */
-export const PENDIDIKAN_SKM_OPTIONS = [
-  { label: "SD", value: "SD" },
-  { label: "SMP", value: "SMP" },
-  { label: "SMA/SMK", value: "SMA" },
-  { label: "DIPLOMA", value: "DIPLOMA" },
-  { label: "SARJANA", value: "SARJANA" },
-  { label: "MAGISTER", value: "MAGISTER" },
-  { label: "DOKTOR", value: "DOKTOR" },
-];

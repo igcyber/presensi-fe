@@ -99,14 +99,14 @@ export const updateProfile = async (profileData: UpdateProfileRequest): Promise<
 
 /**
  * Change user password
- * @param passwordData - Password change data containing current and new passwords
+ * @param passwordData - Password change data containing old and new passwords
  * @returns Promise resolving to success response
- * @endpoint PUT /api/auth/change-password
+ * @endpoint PUT /api/auth/password
  * @example
  * ```typescript
  * await changePassword({
- *   currentPassword: 'oldpass',
- *   newPassword: 'newpass',
+ *   oldPassword: 'oldpass',
+ *   password: 'newpass',
  *   confirmPassword: 'newpass'
  * });
  * ```
@@ -114,7 +114,7 @@ export const updateProfile = async (profileData: UpdateProfileRequest): Promise<
 export const changePassword = async (
   passwordData: ChangePasswordRequest,
 ): Promise<ApiResponse<{ message: string }>> => {
-  const response = await httpInstance.put<ApiResponse<{ message: string }>>("/api/auth/change-password", passwordData);
+  const response = await httpInstance.put<ApiResponse<{ message: string }>>("/api/auth/password", passwordData);
   return response.data;
 };
 

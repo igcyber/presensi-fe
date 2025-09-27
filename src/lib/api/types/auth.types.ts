@@ -57,8 +57,8 @@ export interface LoginResponse {
  * Password change request
  */
 export interface ChangePasswordRequest {
-  currentPassword: string;
-  newPassword: string;
+  oldPassword: string;
+  password: string;
   confirmPassword: string;
 }
 
@@ -66,7 +66,8 @@ export interface ChangePasswordRequest {
  * Profile update request
  */
 export interface UpdateProfileRequest {
-  name?: string;
-  email?: string;
+  fullName?: string;
   username?: string;
+  nip?: string;
+  email?: string;
 }

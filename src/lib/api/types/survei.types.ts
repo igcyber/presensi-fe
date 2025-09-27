@@ -4,7 +4,6 @@ import type { BaseEntity, PayloadDataExternal } from "@/lib/api/core/apiResponse
  * Layanan Survei entity interface
  */
 export interface LayananSurvei extends BaseEntity {
-  id: number;
   perangkat_daerah: string;
   perangkat_daerah_id: number;
   perangkat_daerah_unit: string;

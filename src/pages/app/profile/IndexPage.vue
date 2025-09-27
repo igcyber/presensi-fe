@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import { CameraIcon, KeyIcon, MailIcon, SettingsIcon, ShieldIcon, UserIcon } from "lucide-vue-next";
+import { CameraIcon, IdCardIcon, KeyIcon, MailIcon, SettingsIcon, ShieldIcon, UserIcon } from "lucide-vue-next";
 import { onMounted } from "vue";
+import { toast } from "vue-sonner";
 
+import ChangePasswordDialog from "@/components/dialogs/ChangePasswordDialog.vue";
+import UpdateProfileForm from "@/components/features/profile/UpdateProfileForm.vue";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
 import { useFormatters } from "@/composables";
+import { useDialog } from "@/composables/useDialog";
 import { useFetch } from "@/composables/useFetch";
 import { type ApiResponse } from "@/lib/api/core";
 import { getCurrentUser } from "@/lib/api/services/auth";
@@ -21,21 +23,22 @@ const { data, isLoading, fetchData, isError, error } = useFetch<ApiResponse<User
 
 const { date } = useFormatters();
 
+// State untuk modal/form
+
+const dialog = useDialog<UserAuth>();
+
 onMounted(() => {
   fetchData();
 });
 
-// Data profil pengguna
-const userProfile = {
-  name: "Ahmad Rizki Pratama",
-  email: "ahmad.rizki@example.com",
-  phone: "+62 812-3456-7890",
-  location: "Jakarta, Indonesia",
-  bio: "Seorang pengembang web yang berpengalaman dengan fokus pada teknologi modern dan solusi inovatif.",
-  avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-  joinDate: "Bergabung sejak Januari 2023",
-  role: "Administrator",
-  status: "Aktif",
+const handleProfileUpdateSuccess = () => {
+  fetchData();
+
+  toast.success("Profil berhasil diperbarui");
+};
+
+const handlePasswordChangeSuccess = () => {
+  dialog.closeDialog();
 };
 
 // Statistik aktivitas pengguna
@@ -163,7 +166,7 @@ const activityStats = [
           <div class="flex flex-col items-center gap-4 sm:flex-row sm:items-start">
             <div class="relative -mt-16 sm:-mt-20">
               <img
-                :src="userProfile.avatar"
+                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
                 :alt="data?.fullName"
                 class="h-24 w-24 rounded-full border-4 border-white object-cover shadow-lg sm:h-32 sm:w-32 dark:border-gray-800"
               />
@@ -183,11 +186,14 @@ const activityStats = [
                   {{ data?.email }}
                 </div>
                 <div class="flex items-center gap-1">
-                  <UserIcon class="h-4 w-4" />
+                  <IdCardIcon class="h-4 w-4" />
                   {{ data?.nip }}
                 </div>
               </div>
-              <p class="text-muted-foreground text-sm">{{ date(data?.createdAt) }}</p>
+              <div class="flex items-center gap-1">
+                <UserIcon class="h-4 w-4" />
+                <p class="text-muted-foreground text-sm">Bergabung sejak {{ date(data?.createdAt) }}</p>
+              </div>
             </div>
           </div>
         </CardContent>
@@ -241,27 +247,8 @@ const activityStats = [
               <CardTitle>Informasi Pribadi</CardTitle>
               <CardDescription>Perbarui informasi profil dan kontak Anda</CardDescription>
             </CardHeader>
-            <CardContent class="space-y-6">
-              <div class="grid gap-4 sm:grid-cols-2">
-                <div class="space-y-2">
-                  <Label htmlFor="name">Nama Lengkap</Label>
-                  <Input id="name" :value="userProfile.name" placeholder="Masukkan nama lengkap" />
-                </div>
-                <div class="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" :value="userProfile.email" placeholder="Masukkan email" />
-                </div>
-              </div>
-              <div class="grid gap-4 sm:grid-cols-2">
-                <div class="space-y-2">
-                  <Label htmlFor="phone">Nomor Telepon</Label>
-                  <Input id="phone" :value="userProfile.phone" placeholder="Masukkan nomor telepon" />
-                </div>
-                <div class="space-y-2">
-                  <Label htmlFor="location">Lokasi</Label>
-                  <Input id="location" :value="userProfile.location" placeholder="Masukkan lokasi" />
-                </div>
-              </div>
+            <CardContent>
+              <UpdateProfileForm :user-data="data ?? undefined" :on-success="handleProfileUpdateSuccess" />
             </CardContent>
           </Card>
         </div>
@@ -275,18 +262,23 @@ const activityStats = [
               <CardDescription>Pengaturan dan fitur yang sering digunakan</CardDescription>
             </CardHeader>
             <CardContent class="space-y-3">
-              <Button class="w-full justify-start" variant="outline">
+              <Button class="w-full justify-start" variant="outline" @click="dialog.openCreate()">
                 <KeyIcon class="mr-2 h-4 w-4" />
                 Ubah Password
               </Button>
+              <!--
               <Button class="w-full justify-start" variant="outline">
                 <ShieldIcon class="mr-2 h-4 w-4" />
                 Keamanan Akun
               </Button>
+              -->
             </CardContent>
           </Card>
         </div>
       </div>
     </div>
+
+    <!-- Change Password Modal -->
+    <ChangePasswordDialog v-model:open="dialog.state.value.open" @success="handlePasswordChangeSuccess" />
   </div>
 </template>
