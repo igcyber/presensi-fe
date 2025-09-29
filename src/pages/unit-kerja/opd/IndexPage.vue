@@ -68,7 +68,7 @@ onMounted(async () => {
 <template>
   <div class="min-h-screen bg-gray-50">
     <!-- Navigation Spacer -->
-    <div class="h-26.5 lg:h-40.5"></div>
+    <div class="h-26.5 lg:h-47.5 2xl:h-40.5"></div>
 
     <!-- Breadcrumb -->
     <AppBreadcrumb />

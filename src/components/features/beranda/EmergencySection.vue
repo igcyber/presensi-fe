@@ -10,20 +10,19 @@ defineProps<Props>();
 
 <template>
   <!-- Emergency Hotline Section -->
-  <section class="bg-portal-blue-dark hidden py-8 text-white lg:block">
+  <section class="bg-portal-blue-dark hidden py-6 text-white lg:block lg:py-8">
     <div class="container">
-      <div class="grid grid-cols-1 items-center justify-center gap-8 lg:grid-cols-4">
+      <div class="flex flex-col items-center gap-6 lg:grid lg:grid-cols-4 lg:items-center lg:gap-8">
         <!-- Hotline Header -->
-        <div class="lg:col-span-1">
-          <div class="flex items-center">
+        <div class="text-center lg:col-span-1 lg:text-left">
+          <div class="flex items-center justify-center lg:justify-start">
             <div
-              class="mr-3 flex h-12 w-12 items-center justify-center rounded-full bg-white/20 sm:mr-4 sm:h-16 sm:w-16"
+              class="mr-3 flex h-12 w-12 items-center justify-center rounded-full bg-white/20 sm:h-14 sm:w-14 lg:h-12 lg:w-12"
             >
-              <i class="bx bx-phone-call text-lg sm:text-xl"></i>
+              <i class="bx bx-phone-call text-lg sm:text-xl lg:text-lg"></i>
             </div>
             <div>
-              <h2 class="text-sm font-medium sm:text-base md:hidden">Kontak Emergency<br />Masyarakat KUKAR</h2>
-              <h2 class="hidden text-sm font-medium md:block lg:text-base xl:text-base">
+              <h2 class="text-sm leading-tight font-medium sm:text-base lg:text-sm xl:text-base">
                 Kontak Emergency<br />Masyarakat KUKAR
               </h2>
             </div>
@@ -32,24 +31,30 @@ defineProps<Props>();
 
         <template v-if="emergencies.length">
           <!-- Emergency Contacts -->
-          <div class="lg:col-span-3">
-            <div class="grid grid-cols-1 justify-evenly gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <div v-for="(emergency, idx) in emergencies" :key="idx" class="flex items-center">
-                <div class="mr-3 flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
-                  <i :class="`bx bx-${emergency.icon}`" class="text-lg"></i>
+          <div class="w-full lg:col-span-3">
+            <div
+              class="grid grid-cols-1 justify-center gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4"
+            >
+              <div
+                v-for="(emergency, idx) in emergencies"
+                :key="idx"
+                class="flex items-center justify-center sm:justify-start"
+              >
+                <div class="mr-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/20 sm:h-12 sm:w-12">
+                  <i :class="`bx bx-${emergency.icon}`" class="text-base sm:text-lg"></i>
                 </div>
-                <div>
-                  <p class="font-semibold">{{ emergency.nama }}</p>
-                  <p class="text-sm text-red-100">{{ emergency.isi }}</p>
+                <div class="text-center sm:text-left">
+                  <p class="text-sm font-semibold sm:text-base lg:text-sm xl:text-base">{{ emergency.nama }}</p>
+                  <p class="text-xs text-red-100 sm:text-sm lg:text-xs xl:text-sm">{{ emergency.isi }}</p>
                 </div>
               </div>
             </div>
           </div>
         </template>
         <template v-else>
-          <div class="lg:col-span-3">
-            <div class="rounded text-center">
-              <p class="text-white">Belum ada kontak emergency tersedia</p>
+          <div class="w-full lg:col-span-3">
+            <div class="rounded-lg bg-white/10 p-4 text-center">
+              <p class="text-sm text-white/80 sm:text-base">Belum ada kontak emergency tersedia</p>
             </div>
           </div>
         </template>

@@ -25,10 +25,13 @@ onMounted(async () => {
 
       <div class="mt-2.5 flex w-fit flex-col text-center">
         <div class="flex flex-col text-[30px] font-bold text-white">
-          <p class="leading-5">Portal Resmi</p>
-          <p>Kabupaten Kutai Kartanegara</p>
+          <p>Portal Resmi</p>
+          <p>
+            Sekretariat Daerah <br />
+            Kabupaten Kutai Kartanegara
+          </p>
         </div>
-        <p class="mt-2 text-white">"Kukar Idaman Mitra Pembangunan IKN"</p>
+        <p class="mt-2 text-white">"Bagian Protokol dan Komunikasi Pimpinan"</p>
       </div>
 
       <RouterLink
@@ -158,13 +161,13 @@ onMounted(async () => {
     <!-- Footer -->
     <footer class="h-fit w-full">
       <p class="p-5 text-center text-white">
-        © 2024 Kabupaten Kutai Kartanegara All Rights Reserved - Developed by Diskominfo Kukar
+        © 2025 Kabupaten Kutai Kartanegara All Rights Reserved - Developed by Diskominfo Kukar
       </p>
     </footer>
   </div>
 
   <!-- Background Video -->
   <video autoplay muted loop class="fixed inset-0 h-full w-full object-cover">
-    <source src="/assets/videos/portal-video.webm" type="video/webm" />
+    <source src="/assets/videos/portal-video-prokom.webm" type="video/webm" />
   </video>
 </template>

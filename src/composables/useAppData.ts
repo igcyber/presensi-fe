@@ -29,17 +29,23 @@ export interface NavigationItem {
 
 // Reactive state
 const contactInfo = ref<ContactInfo>({
-  alamat: "Jalan Pahlawan No. 1 Timbau Tenggarong",
-  telepon: "Telp. (0541) 661350 Fax. (0541) 664507",
-  email: "diskominfo@kukarkab.go.id",
+  alamat: "Jl. Wolter Monginsidi No.1 Tenggarong 75511 - Kutai Kartanegara - Kaltim",
+  telepon: "Telp. (0541) 662088 Fax. (0541) 661690",
+  email: "humaskukar@kukarkab.go.id",
 });
 
 const footerInfo = ref<FooterInfo>({
-  email: "diskominfo@kukarkab.go.id",
-  alamat: "Jalan Pahlawan No.1 Timbau Tenggarong",
-  telepon: "(+62) 541 661350",
-  fax: "(+62) 541 664507",
+  email: "humaskukar@kukarkab.go.id",
+  alamat: "Jl. Wolter Monginsidi No.1 Tenggarong 75511 - Kutai Kartanegara - Kaltim",
+  telepon: "(0541) 662088",
+  fax: "(0541) 661690",
 });
+
+const profileLinks = ref([
+  { id: 1, nama: "Tentang Kami", website: "https://bapenda.kukarkab.go.id/" },
+  { id: 2, nama: "Visi dan Misi", website: "https://disdikbud.kukarkab.go.id/" },
+  { id: 3, nama: "Buku Tamu", website: "https://prokom.kukarkab.go.id/" },
+]);
 
 const relatedLinks = ref<RelatedLink[]>([
   { id: 1, nama: "Bapenda", website: "https://bapenda.kukarkab.go.id/" },
@@ -231,6 +237,7 @@ export function useAppData() {
     // State
     contactInfo,
     footerInfo,
+    profileLinks,
     relatedLinks,
     navigation,
     selayangPandangNavigation,

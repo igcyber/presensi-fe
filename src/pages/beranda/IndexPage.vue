@@ -75,7 +75,7 @@ onMounted(async () => {
 <template>
   <div class="min-h-screen">
     <!-- Navigation Spacer -->
-    <div class="h-26.5 lg:h-40.5"></div>
+    <div class="h-26.5 lg:h-47.5 2xl:h-40.5"></div>
 
     <!-- Loading State -->
     <div v-if="isLoading" class="flex min-h-[50vh] flex-col items-center justify-center">
