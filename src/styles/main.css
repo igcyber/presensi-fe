@@ -10,6 +10,8 @@
   --color-portal-blue: #0d3455;
   --color-portal-blue-dark: #062035;
   --color-portal-black: #0e142759;
+  --color-portal-red: #dc2626;
+  --color-portal-red-dark: #b91c1c;
 
   /* Animation */
   --animate-slide-up: slide-up 0.5s ease-in-out;
