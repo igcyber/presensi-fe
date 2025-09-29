@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 
 import BeritaSide from "@/components/features/berita/BeritaSide.vue";
@@ -14,7 +14,10 @@ import { getBeritaByIdPublic } from "@/lib/api/services/berita";
 import type { BeritaDetailPublicResponse } from "@/lib/api/types/berita.types";
 
 const route = useRoute();
-const id = Number(route.params.id);
+
+const id = computed(() => {
+  return Number(route.params.id);
+});
 
 const { setContext, clearContext } = useBreadcrumb();
 
@@ -23,7 +26,7 @@ const { date, getSlugUrl } = useFormatters();
 const { data, isLoading, fetchData, isError, error } = useFetch<
   ApiResponse<BeritaDetailPublicResponse>,
   BeritaDetailPublicResponse
->(() => getBeritaByIdPublic(id), {
+>(() => getBeritaByIdPublic(id.value), {
   immediate: false,
   extractData: (response) => response.data,
 });
@@ -42,6 +45,15 @@ watch(
 onMounted(async () => {
   await fetchData();
 });
+
+watch(
+  () => id.value,
+  (id) => {
+    if (id) {
+      fetchData();
+    }
+  },
+);
 
 onBeforeUnmount(() => {
   // Opsional: bersihkan agar tidak "nyangkut" ke halaman lain

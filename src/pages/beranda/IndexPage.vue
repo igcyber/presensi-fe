@@ -3,7 +3,7 @@ import { onMounted, ref } from "vue";
 
 import {
   AplikasiTerkaitSection,
-  ElectionInfoSection,
+  // ElectionInfoSection,
   EmergencySection,
   FeaturesSection,
   HeroSection,
@@ -101,7 +101,7 @@ onMounted(async () => {
             <NewsSection :news="news" />
 
             <!-- Election Info Section -->
-            <ElectionInfoSection />
+            <!-- <ElectionInfoSection /> -->
           </div>
         </div>
       </section>

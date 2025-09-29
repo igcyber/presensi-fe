@@ -12,20 +12,18 @@ interface Props {
 
 defineProps<Props>();
 
-const { date } = useFormatters();
+const { date, slugify } = useFormatters();
 </script>
 
 <template>
   <!-- News Section -->
-  <div class="lg:col-span-2">
+  <div class="lg:col-span-3">
     <div class="mb-8 flex flex-col items-center justify-between gap-4 sm:flex-row">
       <div class="flex items-center">
         <div class="bg-portal-green mr-3 flex h-10 w-10 items-center justify-center rounded-full text-white">
           <i class="bx bx-news text-lg"></i>
         </div>
-        <h2 class="text-2xl font-bold text-gray-900">
-          <span class="font-normal">Berita</span> Kabupaten ({{ news.length }})
-        </h2>
+        <h2 class="text-2xl font-bold text-gray-900"><span class="font-normal">Berita</span> ({{ news.length }})</h2>
       </div>
       <RouterLink
         :to="{ name: 'berita.index' }"
@@ -39,12 +37,13 @@ const { date } = useFormatters();
     <template v-if="news.length">
       <VueCarousel
         :items="news"
-        :items-per-view="2"
+        :items-per-view="3"
         :autoplay="false"
         :autoplay-delay="5000"
         :responsive="{
           0: { itemsPerView: 1 },
           768: { itemsPerView: 2 },
+          1024: { itemsPerView: 3 },
         }"
       >
         <template #default="{ item: berita }">
@@ -62,7 +61,7 @@ const { date } = useFormatters();
             </div>
 
             <!-- News Content -->
-            <div class="p-4">
+            <div class="flex h-full min-h-[200px] flex-col p-4">
               <!-- Date -->
               <div class="mb-2 flex items-center text-sm text-gray-500">
                 <i class="bx bx-calendar mr-2"></i>
@@ -72,31 +71,36 @@ const { date } = useFormatters();
               </div>
 
               <!-- Title -->
-              <a
-                :href="`/berita/${berita.id}/${berita.judul.replace(/[\\s/]+/g, '-')}`"
-                class="hover:text-portal-green mb-2 block text-lg font-semibold text-gray-900 transition-colors duration-200"
+              <RouterLink
+                :to="{
+                  name: 'berita.detail',
+                  params: { id: berita.id, slug: slugify(berita.judul) },
+                }"
+                class="hover:text-portal-green mb-2 block flex-shrink-0 text-lg font-semibold text-gray-900 transition-colors duration-200"
                 style="
                   display: -webkit-box;
                   -webkit-line-clamp: 2;
                   line-clamp: 2;
                   -webkit-box-orient: vertical;
                   overflow: hidden;
+                  min-height: 3.5rem;
                 "
               >
                 {{ berita.judul }}
-              </a>
+              </RouterLink>
 
               <!-- Excerpt -->
               <div
-                class="text-sm text-gray-600"
+                class="flex-1 text-sm text-gray-600"
                 style="
                   display: -webkit-box;
                   -webkit-line-clamp: 3;
                   line-clamp: 3;
                   -webkit-box-orient: vertical;
                   overflow: hidden;
+                  min-height: 4.5rem;
                 "
-                v-html="berita.isi.split(' ').slice(0, 17).join(' ') + '...'"
+                v-html="berita.isi.split(' ').slice(0, 14).join(' ') + '...'"
               ></div>
             </div>
           </article>

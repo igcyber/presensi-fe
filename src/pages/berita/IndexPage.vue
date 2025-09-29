@@ -159,7 +159,7 @@ onMounted(async () => {
                 </div>
 
                 <!-- News Content -->
-                <div class="p-4">
+                <div class="flex flex-col p-4">
                   <!-- Date -->
                   <div class="mb-3 flex items-center text-sm text-gray-500">
                     <i class="bx bx-calendar mr-2"></i>

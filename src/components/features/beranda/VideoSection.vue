@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
-
 import VueCarousel from "@/components/features/media/VueCarousel.vue";
-import VideoModal from "@/components/modals/VideoModal.vue";
 
 import { useFormatters } from "@/composables/useFormatters";
 import type { VideoItem } from "@/lib/api/types/beranda.types";
@@ -19,25 +16,27 @@ defineProps<Props>();
 defineEmits<Emits>();
 
 const { youtubeInfo } = useFormatters();
-
-// Video Modal (Bootstrap 4)
-const videoModalRef = ref<InstanceType<typeof VideoModal> | null>(null);
-
-const openVideoModal = (embedUrl: string) => {
-  videoModalRef.value?.open(embedUrl);
-};
 </script>
 
 <template>
   <!-- Video Section -->
   <div>
-    <div class="mb-8 flex items-center">
-      <div class="mr-3 flex h-10 w-10 items-center justify-center rounded-full bg-red-600 text-white">
-        <i class="bx bx-video text-lg"></i>
+    <div class="mb-8 flex flex-col items-center justify-between gap-4 sm:flex-row">
+      <div class="flex items-center">
+        <div class="mr-3 flex h-10 w-10 items-center justify-center rounded-full bg-red-600 text-white">
+          <i class="bx bx-video text-lg"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-gray-900">
+          <span class="font-bold">Video</span>
+        </h2>
       </div>
-      <h2 class="text-2xl font-bold text-gray-900">
-        <span class="font-bold">Video</span>
-      </h2>
+      <RouterLink
+        :to="{ name: 'media.video' }"
+        class="bg-portal-green hover:bg-portal-green/90 inline-flex items-center rounded-md px-4 py-2 text-sm font-medium text-white transition-colors duration-200"
+      >
+        Lihat lebih banyak
+        <i class="bx bx-chevron-right ml-2"></i>
+      </RouterLink>
     </div>
 
     <template v-if="videos.length">
@@ -90,7 +89,7 @@ const openVideoModal = (embedUrl: string) => {
             </div>
 
             <!-- Video Info -->
-            <div class="p-4">
+            <div class="flex h-full min-h-[50px] flex-col p-4">
               <h3
                 class="font-semibold text-gray-900"
                 style="
@@ -99,9 +98,10 @@ const openVideoModal = (embedUrl: string) => {
                   line-clamp: 2;
                   -webkit-box-orient: vertical;
                   overflow: hidden;
+                  min-height: 3.5rem;
                 "
               >
-                {{ video.nama || "Video" }}
+                {{ video.judul || "Video" }}
               </h3>
             </div>
           </div>
@@ -114,8 +114,5 @@ const openVideoModal = (embedUrl: string) => {
         <p class="text-gray-600">Belum ada video tersedia</p>
       </div>
     </template>
-
-    <!-- Video Modal -->
-    <VideoModal ref="videoModalRef" />
   </div>
 </template>
