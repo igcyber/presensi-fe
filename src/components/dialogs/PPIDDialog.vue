@@ -36,8 +36,9 @@ const emit = defineEmits<Emits>();
 const subKategoriOptions = ref<string[]>([]);
 const isDisabledSubKategori = ref<boolean>(true);
 const isLoadingSubKategori = ref<boolean>(false);
+const selectedJenisFile = ref<string>("dokumen");
 
-// Opsi untuk select
+// Static options
 const kategoriOptions = [
   "Informasi Berkala",
   "Informasi Setiap Saat",
@@ -45,11 +46,10 @@ const kategoriOptions = [
   "Informasi Dikecualikan",
 ];
 
-// Options untuk jenis file - dengan option null untuk edit mode
+// Computed properties
 const jenisfileOptions = computed(() => {
   const baseOptions = ["dokumen", "gambar"];
 
-  // Jika mode edit, tambahkan option null di awal
   if (props.mode === "edit") {
     return [
       { value: "none", label: "Pilih Jenis File" },
@@ -61,7 +61,6 @@ const jenisfileOptions = computed(() => {
   return baseOptions;
 });
 
-// Computed properties
 const initialValues = computed(() =>
   props.mode === "create"
     ? { judul: "", keterangan: "", kategori: "", subKategori: "", date: "", jenisfile: "dokumen", file: "" }
@@ -71,7 +70,7 @@ const initialValues = computed(() =>
         kategori: props.ppid?.kategori ?? "",
         subKategori: props.ppid?.subKategori ?? "",
         date: props.ppid?.tahun ?? "",
-        jenisfile: "none", // "none" untuk edit mode
+        jenisfile: "none",
       },
 );
 
@@ -94,13 +93,20 @@ const existingFiles = computed(() => {
   }
 });
 
+const acceptAttribute = computed(() => {
+  const documentTypes =
+    "application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+  const imageTypes = "image/jpeg,image/jpg,image/png,image/gif";
+
+  return selectedJenisFile.value === "gambar" ? imageTypes : documentTypes;
+});
+
 // Methods
 const loadSubKategoriOptions = async (value: string): Promise<void> => {
   try {
     isLoadingSubKategori.value = true;
     const subKategori = await getExternalPPIDKategori(value);
 
-    // Konversi response ke array string
     if (Array.isArray(subKategori.data) && subKategori.data.length > 0) {
       subKategoriOptions.value = subKategori.data.map((item: any) =>
         typeof item === "string" ? item : item.name || item.label || String(item),
@@ -126,26 +132,13 @@ const handleKategoriUpdate = (value: string) => {
   loadSubKategoriOptions(value);
 };
 
-// Watcher untuk memuat sub kategori saat edit
-watch(
-  () => props.open,
-  async (isOpen) => {
-    if (isOpen && props.mode === "edit" && props.ppid?.kategori) {
-      // Reset sub kategori options
-      subKategoriOptions.value = [];
-      isDisabledSubKategori.value = true;
-
-      // Load sub kategori berdasarkan kategori yang ada
-      const kategoriType = props.ppid.kategori.toLowerCase().split(" ").join("");
-      await loadSubKategoriOptions(kategoriType);
-    } else if (!isOpen) {
-      // Reset saat dialog ditutup
-      subKategoriOptions.value = [];
-      isDisabledSubKategori.value = true;
-    }
-  },
-  { immediate: true },
-);
+const handleJenisFileUpdate = (value: string) => {
+  if (value && value !== "none") {
+    selectedJenisFile.value = value;
+  } else {
+    selectedJenisFile.value = "dokumen";
+  }
+};
 
 async function onSubmit(values: any) {
   const payload = {
@@ -153,7 +146,7 @@ async function onSubmit(values: any) {
     keterangan: values.keterangan,
     kategori: values.subKategori,
     date: values.date,
-    jenisfile: values.jenisfile === "none" ? null : values.jenisfile, // Convert "none" to null
+    jenisfile: values.jenisfile === "none" ? null : values.jenisfile,
   };
   if (values.file) {
     (payload as any).file = values.file;
@@ -167,6 +160,38 @@ async function onSubmit(values: any) {
     toast.success("Berhasil", { description: "PPID berhasil diperbarui" });
   }
 }
+
+// Watchers
+watch(
+  () => props.open,
+  async (isOpen) => {
+    if (isOpen && props.mode === "edit" && props.ppid?.kategori) {
+      subKategoriOptions.value = [];
+      isDisabledSubKategori.value = true;
+      selectedJenisFile.value = "dokumen";
+
+      const kategoriType = props.ppid.kategori.toLowerCase().split(" ").join("");
+      await loadSubKategoriOptions(kategoriType);
+    } else if (!isOpen) {
+      subKategoriOptions.value = [];
+      isDisabledSubKategori.value = true;
+      selectedJenisFile.value = "dokumen";
+    }
+  },
+  { immediate: true },
+);
+
+watch(
+  () => initialValues.value.jenisfile,
+  (newValue) => {
+    if (newValue && newValue !== "none") {
+      selectedJenisFile.value = newValue;
+    } else {
+      selectedJenisFile.value = "dokumen";
+    }
+  },
+  { immediate: true },
+);
 </script>
 
 <template>
@@ -219,18 +244,15 @@ async function onSubmit(values: any) {
         :options="jenisfileOptions"
         placeholder="Pilih jenis file"
         :required="props.mode === 'create'"
+        @update:model-value="(value: string) => handleJenisFileUpdate(value)"
       />
 
       <BaseInputFile
         name="file"
         label="File"
-        :accept="
-          jenisfileOptions.some((opt) => (typeof opt === 'string' ? opt : opt.value) === 'dokumen')
-            ? 'application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-            : 'image/jpeg,image/png,image/gif'
-        "
+        :accept="acceptAttribute"
         :required="mode === 'create'"
-        description="Format: PDF/DOC untuk dokumen, JPG/PNG untuk gambar. Maksimal 10MB"
+        :description="`Format: ${selectedJenisFile === 'gambar' ? 'JPG/PNG/GIF untuk gambar' : 'PDF/DOC/DOCX untuk dokumen'}. Maksimal 10MB`"
         :existing-files="existingFiles"
       />
     </div>
