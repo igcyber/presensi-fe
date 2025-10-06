@@ -76,6 +76,7 @@ export interface PPIDQueryParams {
   page?: number;
   per_page?: number;
   search?: string;
+  keyword?: string;
   sort_by?: "judul" | "kategori" | "tahun" | "createdAt" | "updatedAt";
   sort_order?: "asc" | "desc";
   customFilters?: Array<Record<string, any>>;

@@ -151,3 +151,25 @@ export const getExternalPPIDKategori = async (ppidType: PPIDType): Promise<ApiRe
   const { data } = await httpInstance.get<ApiResponse<[]>>(`/ppid/external/${ppidType}/kategori`);
   return data;
 };
+
+/**
+ * Mendapatkan daftar PPID berdasarkan kategori untuk public display
+ * @param ppidType - Type of PPID (informasiberkala, informasisetiapsaat, informasisertamerta, informasidikecualikan)
+ * @param params - Parameter query untuk filtering dan pagination
+ * @returns Promise yang mengembalikan daftar PPID public
+ * @endpoint GET /ppid/kategori/{ppidType}
+ * @example
+ * ```typescript
+ * const response = await getPPIDKategoriPublic('informasisertamerta', { page: 1, per_page: 10 });
+ * console.log(response.data); // Array of PPID
+ * ```
+ */
+export const getPPIDKategoriPublic = async (
+  ppidType: PPIDType,
+  params?: PPIDQueryParams,
+): Promise<ApiResponse<PPID[]>> => {
+  const { data } = await httpInstance.get<ApiResponse<PPID[]>>(`/ppid/kategori/${ppidType}`, {
+    params,
+  });
+  return data;
+};

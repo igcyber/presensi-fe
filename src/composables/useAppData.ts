@@ -105,8 +105,13 @@ const navigation = ref<NavigationItem[]>([
   },
   {
     title: "PPID",
-    path: "https://ppid.kukarkab.go.id/",
-    external: true,
+    path: "",
+    children: [
+      { title: "Informasi Serta Merta", path: "/ppid/informasi-serta-merta" },
+      { title: "Informasi Berkala", path: "/ppid/informasi-berkala" },
+      { title: "Informasi Setiap Saat", path: "/ppid/informasi-setiap-saat" },
+      { title: "Informasi Di Kecualikan", path: "/ppid/informasi-di-kecualikan" },
+    ],
   },
 ]);
 
