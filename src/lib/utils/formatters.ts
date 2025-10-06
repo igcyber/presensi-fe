@@ -72,6 +72,54 @@ export function formatNumber(number: number | string | null | undefined, locale:
 }
 
 /**
+ * Format persentase
+ * @param value - Nilai yang akan diformat
+ * @param total - Total untuk kalkulasi persentase
+ * @param decimals - Jumlah desimal
+ * @returns String persentase
+ *
+ * @example
+ * formatPercentage(25, 100) // "25%"
+ * formatPercentage(1, 3, 2) // "33.33%"
+ */
+export function formatPercentage(value: number | null | undefined, total?: number, decimals: number = 0): string {
+  if (value === null || value === undefined) {
+    return "0%";
+  }
+
+  let percentage = value;
+
+  if (total && total > 0) {
+    percentage = (value / total) * 100;
+  }
+
+  return `${percentage.toFixed(decimals)}%`;
+}
+
+/**
+ * Format file size
+ * @param bytes - Ukuran dalam bytes
+ * @param decimals - Jumlah desimal
+ * @returns String ukuran file
+ *
+ * @example
+ * formatFileSize(1024) // "1 KB"
+ * formatFileSize(1048576) // "1 MB"
+ * formatFileSize(1073741824, 2) // "1.00 GB"
+ */
+export function formatFileSize(bytes: number | null | undefined, decimals: number = 1): string {
+  if (!bytes || bytes === 0) {
+    return "0 Bytes";
+  }
+
+  const k = 1024;
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(decimals))} ${sizes[i]}`;
+}
+
+/**
  * 📅 DATE FORMATTERS
  * Helper functions untuk format tanggal
  */
@@ -241,6 +289,116 @@ export function formatMonthName(monthNumber: number | null | undefined, locale: 
 }
 
 /**
+ * 📝 TEXT FORMATTERS
+ * Helper functions untuk format teks
+ */
+
+/**
+ * Truncate text dengan ellipsis
+ * @param text - Teks yang akan dipotong
+ * @param maxLength - Panjang maksimal
+ * @param suffix - Suffix yang ditambahkan
+ * @returns Teks yang dipotong
+ *
+ * @example
+ * truncateText('Lorem ipsum dolor sit amet', 10) // "Lorem ipsu..."
+ * truncateText('Short text', 20) // "Short text"
+ */
+export function truncateText(text: string | null | undefined, maxLength: number = 50, suffix: string = "..."): string {
+  if (!text) {
+    return "";
+  }
+
+  if (text.length <= maxLength) {
+    return text;
+  }
+
+  return text.substring(0, maxLength - suffix.length) + suffix;
+}
+
+/**
+ * Capitalize first letter of each word
+ * @param text - Teks yang akan diformat
+ * @returns Teks dengan huruf kapital di awal kata
+ *
+ * @example
+ * capitalizeWords('hello world') // "Hello World"
+ * capitalizeWords('HELLO WORLD') // "Hello World"
+ */
+export function capitalizeWords(text: string | null | undefined): string {
+  if (!text) {
+    return "";
+  }
+
+  return text
+    .toLowerCase()
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+/**
+ * Format nama rincian dari underscore/snake_case ke proper case
+ * @param text - Teks dengan format underscore yang akan diformat
+ * @returns Teks dengan format Nama Rincian
+ *
+ * @example
+ * formatDetailName('nama_rincian') // "Nama Rincian"
+ * formatDetailName('detail_produk_utama') // "Detail Produk Utama"
+ */
+export function formatDetailName(text: string | null | undefined): string {
+  if (!text) {
+    return "";
+  }
+
+  return text
+    .split("_")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+}
+
+/**
+ * Format nama dengan proper case
+ * @param name - Nama yang akan diformat
+ * @returns Nama dengan format yang benar
+ *
+ * @example
+ * formatName('john doe') // "John Doe"
+ * formatName('JANE SMITH') // "Jane Smith"
+ */
+export function formatName(name: string | null | undefined): string {
+  if (!name) {
+    return "";
+  }
+
+  return capitalizeWords(name.trim());
+}
+
+/**
+ * Slugify title
+ * @param title - Title to slugify
+ * @returns Slugified title
+ *
+ * @example
+ * slugify('Hello World') // "hello-world"
+ */
+export function slugify(title: string): string {
+  return title.replace(/[ /%]/g, "-").toLowerCase();
+}
+
+/**
+ * Convert slug to title
+ * @param slug - Slug to convert
+ * @returns Title from slug
+ *
+ * @example
+ * slugToTitle('hello-world') // "Hello World"
+ */
+export function slugToTitle(slug: string): string {
+  return slug.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+/**
  * 📊 STATUS FORMATTERS
  * Helper functions untuk format status
  */
@@ -338,92 +496,6 @@ export function formatActiveStatus(
 }
 
 /**
- * 📝 TEXT FORMATTERS
- * Helper functions untuk format teks
- */
-
-/**
- * Truncate text dengan ellipsis
- * @param text - Teks yang akan dipotong
- * @param maxLength - Panjang maksimal
- * @param suffix - Suffix yang ditambahkan
- * @returns Teks yang dipotong
- *
- * @example
- * truncateText('Lorem ipsum dolor sit amet', 10) // "Lorem ipsu..."
- * truncateText('Short text', 20) // "Short text"
- */
-export function truncateText(text: string | null | undefined, maxLength: number = 50, suffix: string = "..."): string {
-  if (!text) {
-    return "";
-  }
-
-  if (text.length <= maxLength) {
-    return text;
-  }
-
-  return text.substring(0, maxLength - suffix.length) + suffix;
-}
-
-/**
- * Capitalize first letter of each word
- * @param text - Teks yang akan diformat
- * @returns Teks dengan huruf kapital di awal kata
- *
- * @example
- * capitalizeWords('hello world') // "Hello World"
- * capitalizeWords('HELLO WORLD') // "Hello World"
- */
-export function capitalizeWords(text: string | null | undefined): string {
-  if (!text) {
-    return "";
-  }
-
-  return text
-    .toLowerCase()
-    .split(" ")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-}
-
-/**
- * Format nama rincian dari underscore/snake_case ke proper case
- * @param text - Teks dengan format underscore yang akan diformat
- * @returns Teks dengan format Nama Rincian
- *
- * @example
- * formatDetailName('nama_rincian') // "Nama Rincian"
- * formatDetailName('detail_produk_utama') // "Detail Produk Utama"
- */
-export function formatDetailName(text: string | null | undefined): string {
-  if (!text) {
-    return "";
-  }
-
-  return text
-    .split("_")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(" ");
-}
-
-/**
- * Format nama dengan proper case
- * @param name - Nama yang akan diformat
- * @returns Nama dengan format yang benar
- *
- * @example
- * formatName('john doe') // "John Doe"
- * formatName('JANE SMITH') // "Jane Smith"
- */
-export function formatName(name: string | null | undefined): string {
-  if (!name) {
-    return "";
-  }
-
-  return capitalizeWords(name.trim());
-}
-
-/**
  * 📱 CONTACT FORMATTERS
  * Helper functions untuk format kontak
  */
@@ -500,138 +572,9 @@ export function maskEmail(email: string | null | undefined): string {
 }
 
 /**
- * 🔢 PERCENTAGE & CALCULATION FORMATTERS
- * Helper functions untuk format persentase dan kalkulasi
+ * 🎬 MEDIA FORMATTERS
+ * Helper functions untuk format media dan URL
  */
-
-/**
- * Format persentase
- * @param value - Nilai yang akan diformat
- * @param total - Total untuk kalkulasi persentase
- * @param decimals - Jumlah desimal
- * @returns String persentase
- *
- * @example
- * formatPercentage(25, 100) // "25%"
- * formatPercentage(1, 3, 2) // "33.33%"
- */
-export function formatPercentage(value: number | null | undefined, total?: number, decimals: number = 0): string {
-  if (value === null || value === undefined) {
-    return "0%";
-  }
-
-  let percentage = value;
-
-  if (total && total > 0) {
-    percentage = (value / total) * 100;
-  }
-
-  return `${percentage.toFixed(decimals)}%`;
-}
-
-/**
- * Format file size
- * @param bytes - Ukuran dalam bytes
- * @param decimals - Jumlah desimal
- * @returns String ukuran file
- *
- * @example
- * formatFileSize(1024) // "1 KB"
- * formatFileSize(1048576) // "1 MB"
- * formatFileSize(1073741824, 2) // "1.00 GB"
- */
-export function formatFileSize(bytes: number | null | undefined, decimals: number = 1): string {
-  if (!bytes || bytes === 0) {
-    return "0 Bytes";
-  }
-
-  const k = 1024;
-  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(decimals))} ${sizes[i]}`;
-}
-
-/**
- * 🎯 UTILITY FUNCTIONS
- * Helper functions umum
- */
-
-/**
- * Safe get nested object value
- * @param obj - Object
- * @param path - Path to value
- * @param defaultValue - Default value if not found
- * @returns Value atau default
- *
- * @example
- * safeGet({ user: { name: 'John' } }, 'user.name') // "John"
- * safeGet({ user: {} }, 'user.age', 0) // 0
- */
-export function safeGet(obj: any, path: string, defaultValue: any = null): any {
-  const keys = path.split(".");
-  let result = obj;
-
-  for (const key of keys) {
-    if (result === null || result === undefined || !(key in result)) {
-      return defaultValue;
-    }
-    result = result[key];
-  }
-
-  return result;
-}
-
-/**
- * Check if value is empty
- * @param value - Value to check
- * @returns Boolean
- *
- * @example
- * isEmpty('') // true
- * isEmpty(null) // true
- * isEmpty([]) // true
- * isEmpty({}) // true
- * isEmpty('hello') // false
- */
-export function isEmpty(value: any): boolean {
-  if (value === null || value === undefined) {
-    return true;
-  }
-
-  if (typeof value === "string") {
-    return value.trim().length === 0;
-  }
-
-  if (Array.isArray(value)) {
-    return value.length === 0;
-  }
-
-  if (typeof value === "object") {
-    return Object.keys(value).length === 0;
-  }
-
-  return false;
-}
-
-/**
- * Check if current path is active (starts with given path)
- * @param currentPath - Current route path
- * @param targetPath - Target path to check against
- * @returns Boolean indicating if path is active
- *
- * @example
- * isActive('/users/profile', '/users') // true
- * isActive('/admin/dashboard', '/users') // false
- * isActive('/home', '/home') // true
- */
-export function isActivePath(currentPath: string, targetPath: string): boolean {
-  if (!currentPath || !targetPath) {
-    return false;
-  }
-
-  return currentPath.startsWith(targetPath);
-}
 
 /**
  * Format youtube link to embed url and thumbnail
@@ -752,16 +695,9 @@ export function toEmbedUrl(url: string | null | undefined) {
 }
 
 /**
- * Slugify title
- * @param title - Title to slugify
- * @returns Slugified title
- *
- * @example
- * slugify('Hello World') // "hello-world"
+ * 🔗 URL FORMATTERS
+ * Helper functions untuk format URL dan slug
  */
-export function slugify(title: string): string {
-  return title.replace(/[ /%]/g, "-").toLowerCase();
-}
 
 /**
  * Get news detail url
@@ -773,4 +709,85 @@ export function slugify(title: string): string {
 export function getSlugUrl(type: "berita" | "opd" | "perusahaan-daerah", id: number, title: string): string {
   const slug = slugify(title);
   return `https://kukarkab.go.id/${type}/${id}/${slug}`;
+}
+
+/**
+ * Check if current path is active (starts with given path)
+ * @param currentPath - Current route path
+ * @param targetPath - Target path to check against
+ * @returns Boolean indicating if path is active
+ *
+ * @example
+ * isActive('/users/profile', '/users') // true
+ * isActive('/admin/dashboard', '/users') // false
+ * isActive('/home', '/home') // true
+ */
+export function isActivePath(currentPath: string, targetPath: string): boolean {
+  if (!currentPath || !targetPath) {
+    return false;
+  }
+
+  return currentPath.startsWith(targetPath);
+}
+
+/**
+ * 🎯 UTILITY FUNCTIONS
+ * Helper functions umum
+ */
+
+/**
+ * Safe get nested object value
+ * @param obj - Object
+ * @param path - Path to value
+ * @param defaultValue - Default value if not found
+ * @returns Value atau default
+ *
+ * @example
+ * safeGet({ user: { name: 'John' } }, 'user.name') // "John"
+ * safeGet({ user: {} }, 'user.age', 0) // 0
+ */
+export function safeGet(obj: any, path: string, defaultValue: any = null): any {
+  const keys = path.split(".");
+  let result = obj;
+
+  for (const key of keys) {
+    if (result === null || result === undefined || !(key in result)) {
+      return defaultValue;
+    }
+    result = result[key];
+  }
+
+  return result;
+}
+
+/**
+ * Check if value is empty
+ * @param value - Value to check
+ * @returns Boolean
+ *
+ * @example
+ * isEmpty('') // true
+ * isEmpty(null) // true
+ * isEmpty([]) // true
+ * isEmpty({}) // true
+ * isEmpty('hello') // false
+ */
+export function isEmpty(value: any): boolean {
+  if (value === null || value === undefined) {
+    return true;
+  }
+
+  if (typeof value === "string") {
+    return value.trim().length === 0;
+  }
+
+  if (Array.isArray(value)) {
+    return value.length === 0;
+  }
+
+  if (typeof value === "object") {
+    return Object.keys(value).length === 0;
+  }
+
+  return false;
 }

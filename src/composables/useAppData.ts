@@ -105,7 +105,7 @@ const navigation = ref<NavigationItem[]>([
   },
   {
     title: "PPID",
-    path: "",
+    path: "/ppid",
     children: [
       { title: "Informasi Serta Merta", path: "/ppid/informasi-serta-merta" },
       { title: "Informasi Berkala", path: "/ppid/informasi-berkala" },

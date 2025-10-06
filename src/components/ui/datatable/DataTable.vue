@@ -228,7 +228,7 @@ const formatCellValue = (item: T, column: Column<T>) => {
   <div class="space-y-4 overflow-x-auto p-2">
     <!-- Search -->
     <div v-if="searchable" class="flex w-full flex-col gap-1.5">
-      <Label for="searchKeyword" class="text-sm font-medium">Cari data...</Label>
+      <Label for="searchKeyword" class="text-sm font-medium">Cari</Label>
       <Input
         v-model="searchQuery"
         placeholder="Cari data..."

@@ -20,6 +20,7 @@ import {
   maskEmail,
   safeGet,
   slugify,
+  slugToTitle,
   toEmbedUrl,
   truncateText,
   youtubeInfo,
@@ -34,43 +35,44 @@ export function useFormatters() {
     // Currency & Number formatters
     currency: formatCurrency,
     number: formatNumber,
+    percentage: formatPercentage,
 
-    // Date formatters
+    // Date & Time formatters
     date: formatDate,
     time: formatTime,
     relativeDate: formatRelativeDate,
     monthName: formatMonthName,
 
-    // Status formatters
-    status: formatStatus,
-    activeStatus: formatActiveStatus,
-
     // Text formatters
     truncate: truncateText,
     capitalize: capitalizeWords,
-    detailName: formatDetailName,
     name: formatName,
+    detailName: formatDetailName,
+
+    // Status formatters
+    status: formatStatus,
+    activeStatus: formatActiveStatus,
 
     // Contact formatters
     phone: formatPhoneNumber,
     maskEmail,
 
-    // Calculation formatters
-    percentage: formatPercentage,
+    // File & Size formatters
     fileSize: formatFileSize,
+
+    // Path & URL formatters
+    isActivePath,
+    getSlugUrl,
+    slugify,
+    slugToTitle,
+    toEmbedUrl,
+
+    // Social Media formatters
+    youtubeInfo,
+    facebookInfo,
 
     // Utilities
     safeGet,
     isEmpty,
-
-    // Path formatters
-    isActivePath,
-    getSlugUrl,
-    slugify,
-
-    // Youtube & Facebook formatters
-    youtubeInfo,
-    facebookInfo,
-    toEmbedUrl,
   };
 }

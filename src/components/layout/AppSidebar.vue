@@ -56,9 +56,9 @@ const userData = computed(() => {
 // Computed data untuk navigation dengan active state
 const data = computed(() => ({
   teams: {
-    name: "Portal",
+    name: "Prokom",
     logo: Globe,
-    plan: "Portal Beranda",
+    plan: "Prokom Beranda",
     url: "/",
   },
   navDashboard: [

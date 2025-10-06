@@ -17,10 +17,11 @@ const route = useRoute();
 const router = useRouter();
 
 // Computed
-const ppidType = computed(() => (route.params.type as string) ?? "informasisertamerta");
+const ppidType = computed(() => route.params.type as string);
 const keyword = computed(() => (route.query.keyword as string) ?? "");
 
-const { date } = useFormatters();
+// Composables
+const { date, slugToTitle } = useFormatters();
 const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
 
 // Fetch PPID data
@@ -123,9 +124,7 @@ onMounted(async () => {
       <div class="container">
         <!-- Header -->
         <div class="mb-8 text-center">
-          <h1 class="mb-4 text-3xl font-bold text-gray-900">
-            PPID - {{ ppidType.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase()) }}
-          </h1>
+          <h1 class="mb-4 text-3xl font-bold text-gray-900">PPID - {{ slugToTitle(ppidType) }}</h1>
           <p class="text-lg text-gray-600">Akses informasi publik berdasarkan kategori</p>
         </div>
 

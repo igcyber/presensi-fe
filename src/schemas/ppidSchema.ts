@@ -129,6 +129,14 @@ export const updatePPIDSchema = z
         });
       }
     }
+
+    if (data.jenisfile !== "none" && !data.file) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "File wajib diisi jika memilih jenis file",
+        path: ["file"],
+      });
+    }
   });
 
 // Schema untuk PPID query parameters

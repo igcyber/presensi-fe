@@ -48,7 +48,10 @@ const kategoriOptions = [
 
 // Computed properties
 const jenisfileOptions = computed(() => {
-  const baseOptions = ["dokumen", "gambar"];
+  const baseOptions = [
+    { value: "dokumen", label: "Dokumen" },
+    { value: "gambar", label: "Gambar" },
+  ];
 
   if (props.mode === "edit") {
     return [

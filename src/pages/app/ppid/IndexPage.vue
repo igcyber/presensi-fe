@@ -8,7 +8,7 @@ import BaseConfirmDialog from "@/components/dialogs/BaseConfirmDialog.vue";
 import PPIDDialog from "@/components/dialogs/PPIDDialog.vue";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { type Column, DataTable } from "@/components/ui/datatable";
+import { type Column, DataTable, type FilterConfig } from "@/components/ui/datatable";
 import ErrorState from "@/components/ui/error-state/ErrorState.vue";
 
 import { useDialog } from "@/composables/useDialog";
@@ -36,6 +36,21 @@ const confirmDialog = useDialog<PPID>();
 const router = useRouter();
 
 const { truncate } = useFormatters();
+
+const filterConfig: FilterConfig[] = [
+  {
+    key: "kategori",
+    label: "Kategori",
+    type: "select",
+    placeholder: "Pilih kategori",
+    options: [
+      { label: "Informasi Berkala", value: "informasi-berkala" },
+      { label: "Informasi Setiap Saat", value: "informasi-setiap-saat" },
+      { label: "Informasi Serta Merta", value: "informasi-serta-merta" },
+      { label: "Informasi Dikecualikan", value: "informasi-dikecualikan" },
+    ],
+  },
+];
 
 // Column definitions
 const columns: Column<PPID>[] = [
@@ -189,6 +204,7 @@ watch(
             :total-data="pagination.total"
             :total-pages="pagination.last_page"
             :loading="isLoading"
+            :filters="filterConfig"
             @page-change="handlePageChange"
             @search="handleSearch"
             @custom-filter="handleCustomFilter"

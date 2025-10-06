@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CameraIcon, IdCardIcon, KeyIcon, MailIcon, SettingsIcon, ShieldIcon, UserIcon } from "lucide-vue-next";
+import { CameraIcon, IdCardIcon, KeyIcon, MailIcon, ShieldIcon, UserIcon } from "lucide-vue-next";
 import { onMounted } from "vue";
 import { toast } from "vue-sonner";
 
@@ -42,36 +42,36 @@ const handlePasswordChangeSuccess = () => {
 };
 
 // Statistik aktivitas pengguna
-const activityStats = [
-  {
-    title: "Proyek Selesai",
-    value: "24",
-    change: "+3 bulan ini",
-    icon: UserIcon,
-    color: "blue",
-  },
-  {
-    title: "Tugas Aktif",
-    value: "8",
-    change: "Dalam progress",
-    icon: SettingsIcon,
-    color: "orange",
-  },
-  {
-    title: "Kolaborasi",
-    value: "156",
-    change: "+12 minggu ini",
-    icon: UserIcon,
-    color: "green",
-  },
-  {
-    title: "Pencapaian",
-    value: "92%",
-    change: "Tingkat penyelesaian",
-    icon: ShieldIcon,
-    color: "purple",
-  },
-];
+// const activityStats = [
+//   {
+//     title: "Proyek Selesai",
+//     value: "24",
+//     change: "+3 bulan ini",
+//     icon: UserIcon,
+//     color: "blue",
+//   },
+//   {
+//     title: "Tugas Aktif",
+//     value: "8",
+//     change: "Dalam progress",
+//     icon: SettingsIcon,
+//     color: "orange",
+//   },
+//   {
+//     title: "Kolaborasi",
+//     value: "156",
+//     change: "+12 minggu ini",
+//     icon: UserIcon,
+//     color: "green",
+//   },
+//   {
+//     title: "Pencapaian",
+//     value: "92%",
+//     change: "Tingkat penyelesaian",
+//     icon: ShieldIcon,
+//     color: "purple",
+//   },
+// ];
 </script>
 
 <template>
@@ -200,6 +200,7 @@ const activityStats = [
       </Card>
 
       <!-- Statistics Cards -->
+      <!--
       <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card
           v-for="stat in activityStats"
@@ -237,6 +238,7 @@ const activityStats = [
           </CardContent>
         </Card>
       </div>
+      -->
 
       <!-- Main Content Grid -->
       <div class="grid gap-6 lg:grid-cols-3">
