@@ -94,6 +94,8 @@ export function useBreadcrumb() {
     "app.aplikasi-terkait.detail": "Detail Aplikasi Terkait",
     "app.survei-kepuasan": "Survei Kepuasan",
     "app.survei-kepuasan.detail": "Detail Survei Kepuasan",
+    "app.ppid": "PPID",
+    "app.ppid.detail": "Detail PPID",
   };
 
   /**
@@ -172,6 +174,8 @@ export function useBreadcrumb() {
     "app.aplikasi-terkait.detail": ["app.dashboard", "app.aplikasi-terkait"],
     "app.survei-kepuasan": ["app.dashboard"],
     "app.survei-kepuasan.detail": ["app.dashboard", "app.survei-kepuasan"],
+    "app.ppid": ["app.dashboard"],
+    "app.ppid.detail": ["app.dashboard", "app.ppid"],
   };
 
   /**

@@ -9,7 +9,7 @@ import BaseSelect from "@/components/forms/BaseSelect.vue";
 import BaseTextEditorEcho from "@/components/forms/BaseTextEditorEcho.vue";
 
 import { createPPID, getExternalPPIDKategori, updatePPID } from "@/lib/api/services/ppid";
-import type { PPID } from "@/lib/api/types/ppid.types";
+import type { PPID, PPIDType } from "@/lib/api/types/ppid.types";
 import { createPPIDSchema, updatePPIDSchema } from "@/schemas/ppidSchema";
 
 // Interface definitions
@@ -105,7 +105,7 @@ const acceptAttribute = computed(() => {
 const loadSubKategoriOptions = async (value: string): Promise<void> => {
   try {
     isLoadingSubKategori.value = true;
-    const subKategori = await getExternalPPIDKategori(value);
+    const subKategori = await getExternalPPIDKategori(value as PPIDType);
 
     if (Array.isArray(subKategori.data) && subKategori.data.length > 0) {
       subKategoriOptions.value = subKategori.data.map((item: any) =>
@@ -153,10 +153,10 @@ async function onSubmit(values: any) {
   }
 
   if (props.mode === "create") {
-    await createPPID(payload as any, values.kategori.toLowerCase().split(" ").join(""));
+    await createPPID(payload as any, values.kategori.toLowerCase().split(" ").join("") as PPIDType);
     toast.success("Berhasil", { description: "PPID berhasil ditambahkan" });
   } else if (props.ppid) {
-    await updatePPID(props.ppid.id, payload, props.ppid.kategori.toLowerCase().split(" ").join(""));
+    await updatePPID(props.ppid.id, payload, props.ppid.kategori.toLowerCase().split(" ").join("") as PPIDType);
     toast.success("Berhasil", { description: "PPID berhasil diperbarui" });
   }
 }

@@ -15,7 +15,7 @@ import { useDialog } from "@/composables/useDialog";
 import { useFormatters } from "@/composables/useFormatters";
 import { useResourceList } from "@/composables/useResourceList";
 import { deletePPID, getPPIDs } from "@/lib/api/services/ppid";
-import type { PPID } from "@/lib/api/types/ppid.types";
+import type { PPID, PPIDType } from "@/lib/api/types/ppid.types";
 
 // Composables initialization
 const {
@@ -61,6 +61,12 @@ const columns: Column<PPID>[] = [
     width: "150px",
   },
   {
+    key: "subKategori",
+    label: "Sub Kategori",
+    sortable: true,
+    width: "150px",
+  },
+  {
     key: "tahun",
     label: "Tahun",
     sortable: true,
@@ -94,7 +100,10 @@ const openCreateDialog = (): void => {
 };
 
 const handleRowClick = (item: PPID): void => {
-  router.push({ name: "app.ppid.detail", params: { id: item.id.toString() } });
+  router.push({
+    name: "app.ppid.detail",
+    params: { id: item.id.toString(), type: item.kategori.toLowerCase().split(" ").join("") as PPIDType },
+  });
 };
 
 const handleEdit = (item: PPID): void => {
@@ -112,9 +121,9 @@ const confirmDelete = async (): Promise<void> => {
     confirmDialog.setLoading(true);
     const ppid = confirmDialog.state.value.data;
 
-    const ppidType = ppid.kategori.toLowerCase().split(" ").join("");
+    const ppidType = ppid.kategori.toLowerCase().split(" ").join("") as PPIDType;
 
-    await deletePPID(ppid.id, ppidType);
+    await deletePPID(ppid.id, ppidType as PPIDType);
     fetchData();
 
     toast.success("Berhasil menghapus PPID", {

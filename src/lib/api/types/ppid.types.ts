@@ -64,6 +64,12 @@ export interface UpdatePPIDRequest {
 }
 
 /**
+ * PPID type enumeration
+ * Represents the different types of PPID information
+ */
+export type PPIDType = "informasiberkala" | "informasisetiapsaat" | "informasisertamerta" | "informasidikecualikan";
+
+/**
  * PPID query parameters for listing
  */
 export interface PPIDQueryParams {
@@ -73,4 +79,5 @@ export interface PPIDQueryParams {
   sort_by?: "judul" | "kategori" | "tahun" | "createdAt" | "updatedAt";
   sort_order?: "asc" | "desc";
   customFilters?: Array<Record<string, any>>;
+  ppidType?: PPIDType;
 }

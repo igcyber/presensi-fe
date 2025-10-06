@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ArrowLeft, Calendar, Download, FileText, Maximize2, User } from "lucide-vue-next";
+import { ArrowLeft, Calendar, Download, FileText, Image, Maximize2, User } from "lucide-vue-next";
 import { computed } from "vue";
 
 import FilePreviewDialog from "@/components/dialogs/FilePreviewDialog.vue";
@@ -50,18 +50,18 @@ const creatorInitials = computed(() => {
 });
 
 const fileIcon = computed(() => {
-  switch (props.ppid.jenisfile) {
+  switch (props.ppid.jenisFile) {
     case "dokumen":
       return FileText;
     case "gambar":
-      return FileText; // Bisa diganti dengan icon gambar
+      return Image;
     default:
       return FileText;
   }
 });
 
 const fileTypeColor = computed(() => {
-  switch (props.ppid.jenisfile) {
+  switch (props.ppid.jenisFile) {
     case "dokumen":
       return "text-red-600 dark:text-red-400";
     case "gambar":
@@ -72,7 +72,7 @@ const fileTypeColor = computed(() => {
 });
 
 const fileTypeBgColor = computed(() => {
-  switch (props.ppid.jenisfile) {
+  switch (props.ppid.jenisFile) {
     case "dokumen":
       return "bg-red-100 dark:bg-red-900/20";
     case "gambar":
@@ -96,7 +96,7 @@ const handleDelete = () => {
 };
 
 const handlePreviewFullscreen = () => {
-  filePreview.previewPDF(props.ppid.fileUrl, props.ppid.judul, {
+  filePreview.previewPDF(props.ppid.fileUrl || "", props.ppid.judul, {
     title: `Preview: ${props.ppid.judul}`,
     showFileInfo: true,
   });
@@ -148,10 +148,16 @@ const handlePreviewFullscreen = () => {
             <span class="truncate">{{ ppid.kategori }}</span>
           </div>
 
+          <!-- Sub Category -->
+          <div class="flex items-center gap-1">
+            <span class="font-medium">Sub Kategori:</span>
+            <span class="truncate">{{ ppid.subKategori }}</span>
+          </div>
+
           <!-- Year -->
           <div class="flex items-center gap-1">
             <span class="font-medium">Tahun:</span>
-            <span class="truncate">{{ ppid.date }}</span>
+            <span class="truncate">{{ ppid.tahun }}</span>
           </div>
         </div>
 
@@ -173,7 +179,7 @@ const handlePreviewFullscreen = () => {
       </CardHeader>
       <Separator />
       <CardContent>
-        <div class="text-foreground leading-relaxed">{{ ppid.keterangan }}</div>
+        <div class="text-foreground leading-relaxed" v-html="ppid.keterangan"></div>
       </CardContent>
     </Card>
 
@@ -182,7 +188,7 @@ const handlePreviewFullscreen = () => {
       <CardHeader>
         <CardTitle class="flex items-center gap-2">
           <component :is="fileIcon" class="h-5 w-5" />
-          File {{ ppid.jenisfile.charAt(0).toUpperCase() + ppid.jenisfile.slice(1) }}
+          File {{ ppid.jenisFile.charAt(0).toUpperCase() + ppid.jenisFile.slice(1) }}
         </CardTitle>
       </CardHeader>
       <Separator />
@@ -195,16 +201,16 @@ const handlePreviewFullscreen = () => {
                 <component :is="fileIcon" :class="['h-6 w-6', fileTypeColor]" />
               </div>
               <div class="min-w-0 flex-1">
-                <p class="font-medium text-wrap">{{ ppid.file.split("/").pop() }}</p>
+                <p class="font-medium text-wrap">{{ ppid.file?.split("/").pop() }}</p>
                 <p class="text-muted-foreground text-sm text-wrap">{{ ppid.file }}</p>
                 <p class="text-muted-foreground text-xs">
-                  Jenis: {{ ppid.jenisfile.charAt(0).toUpperCase() + ppid.jenisfile.slice(1) }}
+                  Jenis: {{ ppid.jenisFile.charAt(0).toUpperCase() + ppid.jenisFile.slice(1) }}
                 </p>
               </div>
             </div>
             <div class="flex flex-row gap-2">
               <Button
-                @click="filePreview.handleDownload({ url: ppid.fileUrl, name: ppid.judul })"
+                @click="filePreview.handleDownload({ url: ppid.fileUrl as string, name: ppid.judul })"
                 size="sm"
                 class="gap-2 sm:w-auto"
               >
@@ -223,7 +229,17 @@ const handlePreviewFullscreen = () => {
 
         <!-- File Embed (if fileUrl available) -->
         <div v-if="ppid.fileUrl" class="relative overflow-hidden rounded-lg border">
+          <!-- Image Preview -->
+          <img
+            v-if="ppid.jenisFile === 'gambar'"
+            :src="ppid.fileUrl"
+            :alt="ppid.judul"
+            class="h-auto w-full object-contain"
+            loading="lazy"
+          />
+          <!-- Document/File Preview -->
           <iframe
+            v-else
             :src="ppid.fileUrl"
             class="h-64 w-full border-0 sm:h-96"
             :title="`Preview: ${ppid.judul}`"

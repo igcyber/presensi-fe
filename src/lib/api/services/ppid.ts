@@ -8,6 +8,7 @@ import type {
   PPIDListPublicResponse,
   PPIDListResponse,
   PPIDQueryParams,
+  PPIDType,
   UpdatePPIDRequest,
 } from "@/lib/api/types/ppid.types";
 
@@ -19,7 +20,7 @@ export const ppidService = createCrudService<PPID, PPID, CreatePPIDRequest, Upda
  * Mendapatkan daftar PPID dengan pagination dan custom filters
  * @param params - Parameter query untuk filtering dan pagination
  * @returns Promise yang mengembalikan daftar PPID dengan pagination
- * @endpoint GET /api/ppid
+ * @endpoint GET /ppid/list
  * @example
  * ```typescript
  * const response = await getPPIDs({ page: 1, per_page: 10, search: 'informasi' });
@@ -51,22 +52,24 @@ export const getPPIDs = (params?: PPIDQueryParams): Promise<ApiResponse<PPIDList
 /**
  * Mendapatkan PPID berdasarkan ID
  * @param id - ID PPID
+ * @param ppidType - Type of PPID
  * @returns Promise yang mengembalikan data PPID
- * @endpoint GET /api/ppid/{id}
+ * @endpoint GET /api/ppid/external/{ppidType}/{id}
  * @example
  * ```typescript
- * const response = await getPPIDById(123);
+ * const response = await getPPIDById(123, 'informasiberkala');
  * console.log(response.data.judul);
  * ```
  */
-export const getPPIDById = (id: number, ppidType: string): Promise<ApiResponse<PPIDDetailResponse>> =>
+export const getPPIDById = (id: number, ppidType: PPIDType): Promise<ApiResponse<PPIDDetailResponse>> =>
   ppidService.getById(id, `/api/ppid/external/${ppidType}`);
 
 /**
  * Membuat PPID baru
  * @param payload - Data untuk membuat PPID baru
+ * @param ppidType - Type of PPID
  * @returns Promise yang mengembalikan data PPID yang dibuat
- * @endpoint POST /api/ppid
+ * @endpoint POST /api/ppid/external/{ppidType}
  * @example
  * ```typescript
  * const response = await createPPID({
@@ -76,43 +79,45 @@ export const getPPIDById = (id: number, ppidType: string): Promise<ApiResponse<P
  *   date: '2024',
  *   jenisfile: 'dokumen',
  *   file: pdfFile
- * });
+ * }, 'informasiberkala');
  * console.log(response.data.id);
  * ```
  */
-export const createPPID = (payload: CreatePPIDRequest, ppidType: string) =>
+export const createPPID = (payload: CreatePPIDRequest, ppidType: PPIDType) =>
   ppidService.create(payload, `/api/ppid/external/${ppidType}`);
 
 /**
  * Memperbarui data PPID
  * @param id - ID PPID yang akan diperbarui
  * @param payload - Data yang akan diperbarui
+ * @param ppidType - Type of PPID
  * @returns Promise yang mengembalikan data PPID yang diperbarui
- * @endpoint PUT /api/ppid/{id}
+ * @endpoint PUT /api/ppid/external/{ppidType}/{id}
  * @example
  * ```typescript
  * const response = await updatePPID(123, {
  *   judul: 'Informasi Berkala 2024 (Updated)',
  *   keterangan: 'Laporan Hasil RUP Kecamatan Muara Jawa tahun 2024 - Updated'
- * });
+ * }, 'informasiberkala');
  * console.log(response.data.judul);
  * ```
  */
-export const updatePPID = (id: number, payload: UpdatePPIDRequest, ppidType: string): Promise<ApiResponse<PPID>> =>
+export const updatePPID = (id: number, payload: UpdatePPIDRequest, ppidType: PPIDType): Promise<ApiResponse<PPID>> =>
   ppidService.update(id, payload, `/api/ppid/external/${ppidType}`);
 
 /**
  * Menghapus PPID
  * @param id - ID PPID yang akan dihapus
+ * @param ppidType - Type of PPID
  * @returns Promise yang mengembalikan null jika berhasil
- * @endpoint DELETE /api/ppid/{id}
+ * @endpoint DELETE /api/ppid/external/{ppidType}/{id}
  * @example
  * ```typescript
- * await deletePPID(123);
+ * await deletePPID(123, 'informasiberkala');
  * console.log('PPID berhasil dihapus');
  * ```
  */
-export const deletePPID = (id: number, ppidType: string): Promise<ApiResponse<null>> =>
+export const deletePPID = (id: number, ppidType: PPIDType): Promise<ApiResponse<null>> =>
   ppidService.remove(id, `/api/ppid/external/${ppidType}`);
 
 // ==================== Public Api ====================
@@ -133,7 +138,7 @@ export const getPPIDPublic = async (params?: PPIDQueryParams): Promise<ApiRespon
 
 /**
  * Mendapatkan daftar kategori PPID untuk public display
- * @param ppidType - Type of PPID (informasiberkala, informasisetiapsaat, informasisertamerta, informasidikecualikan)
+ * @param ppidType - Type of PPID
  * @returns Promise yang mengembalikan daftar kategori PPID public
  * @endpoint GET /ppid/external/{ppidType}/kategori
  * @example
@@ -142,7 +147,7 @@ export const getPPIDPublic = async (params?: PPIDQueryParams): Promise<ApiRespon
  * console.log(response.data); // Array of PPIDKategori
  * ```
  */
-export const getExternalPPIDKategori = async (ppidType: string): Promise<ApiResponse<[]>> => {
+export const getExternalPPIDKategori = async (ppidType: PPIDType): Promise<ApiResponse<[]>> => {
   const { data } = await httpInstance.get<ApiResponse<[]>>(`/ppid/external/${ppidType}/kategori`);
   return data;
 };

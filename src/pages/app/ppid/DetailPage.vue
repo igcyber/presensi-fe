@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { Edit, Trash2 } from "lucide-vue-next";
+import { computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 
@@ -10,54 +11,54 @@ import { Button } from "@/components/ui/button";
 import ErrorState from "@/components/ui/error-state/ErrorState.vue";
 
 import { useDialog } from "@/composables/useDialog";
+import { useFetch } from "@/composables/useFetch";
+import type { ApiResponse } from "@/lib/api/core";
 import { deletePPID, getPPIDById } from "@/lib/api/services/ppid";
-import type { PPID } from "@/lib/api/types/ppid.types";
+import type { PPIDDetailResponse, PPIDType } from "@/lib/api/types/ppid.types";
 
-// Route dan Router
+// Router dan route
 const route = useRoute();
 const router = useRouter();
 
-// State
-const ppid = ref<PPID | null>(null);
-const isLoading = ref(true);
-const isError = ref(false);
-const error = ref<string | null>(null);
+// Computed properties
+const ppidId = computed(() => {
+  const id = route.params.id;
+  return typeof id === "string" ? parseInt(id, 10) : 0;
+});
 
-// Dialogs
-const dialog = useDialog<PPID>();
-const confirmDialog = useDialog<PPID>();
+const ppidType = computed(() => {
+  const type = route.params.type;
+  return typeof type === "string" ? type : "informasiberkala";
+});
 
-// Methods
-const fetchPPID = async () => {
-  try {
-    isLoading.value = true;
-    isError.value = false;
-    error.value = null;
+// Composables
+const dialog = useDialog<PPIDDetailResponse>();
+const confirmDialog = useDialog<PPIDDetailResponse>();
 
-    const id = parseInt(route.params.id as string);
-    const response = await getPPIDById(id);
-    ppid.value = response.data;
-  } catch (err: unknown) {
-    isError.value = true;
-    error.value = err instanceof Error ? err.message : "Gagal memuat data PPID";
-    toast.error("Gagal memuat data PPID", {
-      description: error.value,
-    });
-  } finally {
-    isLoading.value = false;
-  }
-};
+const { data, isLoading, isError, error, fetchData } = useFetch<ApiResponse<PPIDDetailResponse>, PPIDDetailResponse>(
+  () => getPPIDById(ppidId.value, ppidType.value as PPIDType),
+  {
+    immediate: false,
+    extractData: (response) => response.data,
+    onError: (error) => {
+      toast.error("Gagal memuat detail PPID", {
+        description: error.message,
+      });
+    },
+  },
+);
 
+// Event handlers
 const handleBack = () => {
-  router.push({ name: "app.ppid.index" });
+  router.push({ name: "app.ppid" });
 };
 
-const handleEdit = (ppidData: PPID) => {
-  dialog.openEdit(ppidData);
+const handleEdit = (ppid: PPIDDetailResponse) => {
+  dialog.openEdit(ppid);
 };
 
-const handleDelete = (ppidData: PPID) => {
-  confirmDialog.openView(ppidData);
+const handleDelete = (ppid: PPIDDetailResponse) => {
+  confirmDialog.openView(ppid);
 };
 
 const confirmDelete = async () => {
@@ -65,16 +66,15 @@ const confirmDelete = async () => {
 
   try {
     confirmDialog.setLoading(true);
-    const ppidData = confirmDialog.state.value.data;
-
-    await deletePPID(ppidData.id);
+    const ppid = confirmDialog.state.value.data;
+    await deletePPID(ppid.id, ppidType.value as PPIDType);
 
     toast.success("Berhasil menghapus PPID", {
-      description: `PPID "${ppidData.judul}" telah dihapus`,
+      description: `PPID "${ppid.judul}" telah dihapus`,
     });
 
     confirmDialog.closeDialog();
-    router.push({ name: "app.ppid.index" });
+    handleBack(); // kembali ke list setelah delete
   } catch (err: unknown) {
     const errorMessage = err instanceof Error ? err.message : "Gagal menghapus PPID";
     toast.error("Gagal menghapus PPID", { description: errorMessage });
@@ -83,14 +83,19 @@ const confirmDelete = async () => {
   }
 };
 
-const handlePPIDDialogSuccess = () => {
+const handlePPIDDialogSuccess = (): void => {
   dialog.closeDialog();
-  fetchPPID(); // Refresh data
+  fetchData();
 };
 
-// Lifecycle
+// Lifecycle hooks
 onMounted(() => {
-  fetchPPID();
+  if (ppidId.value > 0) {
+    fetchData();
+  } else {
+    toast.error("ID PPID tidak valid");
+    handleBack();
+  }
 });
 </script>
 
@@ -98,40 +103,40 @@ onMounted(() => {
   <div class="bg-background min-h-screen">
     <!-- Loading State -->
     <div v-if="isLoading" class="flex min-h-screen items-center justify-center">
-      <div class="text-center">
-        <div class="border-primary mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-b-2"></div>
-        <p class="text-muted-foreground">Memuat data PPID...</p>
+      <div class="flex items-center gap-2">
+        <div class="border-primary h-8 w-8 animate-spin rounded-full border-2 border-t-transparent"></div>
+        <span class="text-muted-foreground">Memuat detail PPID...</span>
       </div>
     </div>
 
     <!-- Error State -->
     <div v-else-if="isError" class="flex min-h-screen items-center justify-center">
-      <ErrorState :message="error || 'Gagal memuat data PPID'" @retry="fetchPPID" />
+      <ErrorState :message="error?.message || 'Gagal memuat detail PPID'" @retry="fetchData" />
     </div>
 
     <!-- Content -->
-    <div v-else-if="ppid">
+    <div v-else-if="data" class="py-6">
       <PPIDDetailView
-        :ppid="ppid"
+        :ppid="data"
         :show-back-button="true"
         @back="handleBack"
         @edit="handleEdit"
         @delete="handleDelete"
       >
-        <template #actions="{ ppid: ppidData, onEdit, onDelete }">
-          <Button variant="outline" size="sm" @click="onEdit"> Edit </Button>
-          <Button variant="destructive" size="sm" @click="onDelete"> Hapus </Button>
+        <!-- Custom action buttons via slot -->
+        <template #actions="{ onEdit, onDelete }">
+          <div class="flex flex-wrap gap-2">
+            <Button variant="outline" size="sm" @click="onEdit">
+              <Edit class="mr-2 h-4 w-4" />
+              Edit PPID
+            </Button>
+            <Button variant="destructive" size="sm" @click="onDelete">
+              <Trash2 class="mr-2 h-4 w-4" />
+              Hapus PPID
+            </Button>
+          </div>
         </template>
       </PPIDDetailView>
-    </div>
-
-    <!-- Not Found State -->
-    <div v-else class="flex min-h-screen items-center justify-center">
-      <div class="text-center">
-        <h1 class="mb-4 text-2xl font-bold">PPID Tidak Ditemukan</h1>
-        <p class="text-muted-foreground mb-6">PPID yang Anda cari tidak ditemukan atau telah dihapus.</p>
-        <Button @click="handleBack"> Kembali ke Daftar PPID </Button>
-      </div>
     </div>
 
     <!-- PPID Dialog -->
@@ -139,7 +144,7 @@ onMounted(() => {
       v-model:open="dialog.state.value.open"
       :mode="dialog.state.value.mode"
       :ppid="dialog.state.value.data"
-      widthClass="sm:max-w-[600px]"
+      widthClass="sm:max-w-[800px]"
       @success="handlePPIDDialogSuccess"
     />
 

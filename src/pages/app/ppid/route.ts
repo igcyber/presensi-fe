@@ -12,7 +12,7 @@ export default [
     },
   },
   {
-    path: "ppid/:id",
+    path: "ppid/:id/:type",
     name: "app.ppid.detail",
     component: PpidDetailPage,
     meta: {
