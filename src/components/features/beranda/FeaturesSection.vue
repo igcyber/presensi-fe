@@ -4,7 +4,7 @@
 
 <template>
   <!-- Features Section -->
-  <section class="py-16">
+  <section class="bg-[#fcfcfc] py-16">
     <div class="container">
       <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
         <!-- Feature 1: Publikasi Statistik -->

@@ -122,7 +122,7 @@ const handlePreviewFullscreen = () => {
         </CardTitle>
 
         <!-- Meta Information -->
-        <div class="text-muted-foreground flex flex-col gap-3 text-sm sm:flex-row sm:items-center sm:gap-6">
+        <div class="text-muted-foreground flex flex-col flex-wrap gap-3 text-sm sm:flex-row sm:items-center sm:gap-6">
           <!-- Creator -->
           <div class="flex items-center gap-2">
             <Avatar class="h-6 w-6">
