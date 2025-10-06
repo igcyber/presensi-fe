@@ -20,7 +20,7 @@ interface Props {
   name: string;
   label: string;
   placeholder?: string;
-  options: SelectOption[];
+  options: SelectOption[] | (string | number)[];
   disabled?: boolean;
   required?: boolean;
   valueAsNumber?: boolean;
@@ -68,11 +68,27 @@ const normalizedValue = (modelValue: AcceptableValue) => {
 };
 
 // Computed properties
+const normalizedOptions = computed(() => {
+  // Jika options adalah array string/number, convert ke SelectOption[]
+  if (Array.isArray(props.options) && props.options.length > 0) {
+    const firstItem = props.options[0];
+    if (typeof firstItem === "string" || typeof firstItem === "number") {
+      return (props.options as (string | number)[]).map((option) => ({
+        label: String(option),
+        value: option,
+        disabled: false,
+        group: undefined,
+      }));
+    }
+  }
+  return props.options as SelectOption[];
+});
+
 const currentOptions = computed(() => {
   if (props.remote) {
     return remoteOptions.value;
   }
-  return props.options;
+  return normalizedOptions.value;
 });
 
 const filteredOptions = computed(() => {

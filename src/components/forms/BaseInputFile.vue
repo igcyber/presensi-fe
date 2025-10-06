@@ -332,7 +332,10 @@ onUnmounted(revokePreviews);
                   <img
                     v-if="
                       preview &&
-                      (props.accept.includes('image') || props.previewType === 'image' || props.previewType === 'both')
+                      (preview.includes('.jpg') ||
+                        preview.includes('.jpeg') ||
+                        preview.includes('.png') ||
+                        preview.includes('.gif'))
                     "
                     :src="preview"
                     :alt="`Existing file ${i + 1}`"

@@ -30,6 +30,8 @@ export interface Column<T = any> {
   searchable?: boolean;
   width?: string;
   render?: (item: T) => string | number;
+  htmlContent?: boolean; // Untuk kolom yang berisi HTML
+  stripHtml?: boolean; // Untuk menghilangkan HTML tags
 }
 
 export interface FilterOption {
@@ -170,8 +172,26 @@ const getCellValue = (item: T, column: Column<T>) => {
   return column.render ? column.render(item) : value;
 };
 
+// Utility function to strip HTML tags
+const stripHtmlTags = (html: string): string => {
+  if (!html) return "";
+  const div = document.createElement("div");
+  div.innerHTML = html;
+  return div.textContent || div.innerText || "";
+};
+
 const formatCellValue = (item: T, column: Column<T>) => {
   const value = getCellValue(item, column);
+
+  // Handle HTML content
+  if (column.htmlContent && typeof value === "string") {
+    return value; // Return HTML as is
+  }
+
+  // Handle strip HTML option
+  if (column.stripHtml && typeof value === "string") {
+    return stripHtmlTags(value);
+  }
 
   // Handle different column types
   switch (column.key) {
@@ -378,6 +398,22 @@ const formatCellValue = (item: T, column: Column<T>) => {
               <!-- Date columns -->
               <template v-else-if="['createdAt', 'updatedAt', 'tanggal'].includes(column.key)">
                 {{ formatCellValue(item, column) }}
+              </template>
+
+              <!-- HTML content columns -->
+              <template v-else-if="column.htmlContent">
+                <div
+                  v-html="formatCellValue(item, column)"
+                  class="max-w-xs overflow-hidden"
+                  :title="stripHtmlTags(String(formatCellValue(item, column)))"
+                ></div>
+              </template>
+
+              <!-- Strip HTML columns -->
+              <template v-else-if="column.stripHtml">
+                <div class="max-w-xs truncate" :title="String(formatCellValue(item, column))">
+                  {{ formatCellValue(item, column) }}
+                </div>
               </template>
 
               <!-- Other columns -->

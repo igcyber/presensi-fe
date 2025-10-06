@@ -214,6 +214,13 @@ const data = computed(() => ({
       icon: ClipboardCheck,
       isActive: routNameActive.value === "app.survei-kepuasan" || routNameActive.value === "app.survei-kepuasan.detail",
     },
+    {
+      title: "PPID",
+      url: "/app/ppid",
+      name: "app.ppid",
+      icon: FileText,
+      isActive: routNameActive.value === "app.ppid" || routNameActive.value === "app.ppid.detail",
+    },
   ],
 }));
 </script>

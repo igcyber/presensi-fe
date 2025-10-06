@@ -18,6 +18,7 @@ export * from "./userSchema";
 export * from "./roleSchema";
 export * from "./videoSchema";
 export * from "./surveiSchema";
+export * from "./ppidSchema";
 
 // Export utility functions untuk schema
 export { z } from "zod";

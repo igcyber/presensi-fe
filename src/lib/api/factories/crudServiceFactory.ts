@@ -14,13 +14,13 @@ export type CrudService<TList, TDetail = TList, TCreate = unknown, TUpdate = Par
   /** Mendapatkan daftar data dengan pagination dan search */
   get: (params?: SearchParams) => Promise<ApiResponse<PaginatedPayload<TList>>>;
   /** Mendapatkan data berdasarkan ID */
-  getById: (id: Id) => Promise<ApiResponse<TDetail>>;
+  getById: (id: Id, customResourcePath?: string) => Promise<ApiResponse<TDetail>>;
   /** Membuat data baru */
-  create: (payload: TCreate) => Promise<ApiResponse<TDetail>>;
+  create: (payload: TCreate, customResourcePath?: string) => Promise<ApiResponse<TDetail>>;
   /** Memperbarui data berdasarkan ID */
-  update: (id: Id, payload: TUpdate) => Promise<ApiResponse<TDetail>>;
+  update: (id: Id, payload: TUpdate, customResourcePath?: string) => Promise<ApiResponse<TDetail>>;
   /** Menghapus data berdasarkan ID */
-  remove: (id: Id) => Promise<ApiResponse<null>>;
+  remove: (id: Id, customResourcePath?: string) => Promise<ApiResponse<null>>;
 };
 
 /**
@@ -101,9 +101,10 @@ export function createCrudService<TList, TDetail = TList, TCreate = unknown, TUp
     /**
      * Mendapatkan data berdasarkan ID
      * @param id - ID dari data yang ingin diambil
+     * @param customResourcePath - Path resource yang ingin diambil
      */
-    getById: async (id) => {
-      const { data } = await http.get<ApiResponse<TDetail>>(`${resourcePath}/${id}`);
+    getById: async (id, customResourcePath?: string) => {
+      const { data } = await http.get<ApiResponse<TDetail>>(`${customResourcePath || resourcePath}/${id}`);
       return data;
     },
 
@@ -111,13 +112,16 @@ export function createCrudService<TList, TDetail = TList, TCreate = unknown, TUp
      * Membuat data baru
      * Otomatis mendeteksi jika ada file upload dan menggunakan multipart/form-data
      * @param payload - Data untuk membuat resource baru
+     * @param customResourcePath - Path resource yang ingin dibuat
      */
-    create: async (payload: TCreate) => {
+    create: async (payload: TCreate, customResourcePath?: string) => {
       const needsMultipart = hasFileUpload(payload);
       const requestData = needsMultipart ? createFormData(payload) : payload;
       const headers = needsMultipart ? { "Content-Type": "multipart/form-data" } : {};
 
-      const { data } = await http.post<ApiResponse<TDetail>>(resourcePath, requestData, { headers });
+      const { data } = await http.post<ApiResponse<TDetail>>(customResourcePath || resourcePath, requestData, {
+        headers,
+      });
       return data;
     },
 
@@ -126,22 +130,28 @@ export function createCrudService<TList, TDetail = TList, TCreate = unknown, TUp
      * Otomatis mendeteksi jika ada file upload dan menggunakan multipart/form-data
      * @param id - ID dari data yang ingin diupdate
      * @param payload - Data yang akan diupdate
+     * @param customResourcePath - Path resource yang ingin diupdate
      */
-    update: async (id, payload: TUpdate) => {
+    update: async (id, payload: TUpdate, customResourcePath?: string) => {
       const needsMultipart = hasFileUpload(payload);
       const requestData = needsMultipart ? createFormData(payload) : payload;
       const headers = needsMultipart ? { "Content-Type": "multipart/form-data" } : {};
 
-      const { data } = await http.put<ApiResponse<TDetail>>(`${resourcePath}/${id}`, requestData, { headers });
+      const { data } = await http.put<ApiResponse<TDetail>>(
+        `${customResourcePath || resourcePath}/${id}`,
+        requestData,
+        { headers },
+      );
       return data;
     },
 
     /**
      * Menghapus data berdasarkan ID
      * @param id - ID dari data yang ingin dihapus
+     * @param customResourcePath - Path resource yang ingin dihapus
      */
-    remove: async (id) => {
-      const { data } = await http.delete<ApiResponse<null>>(`${resourcePath}/${id}`);
+    remove: async (id, customResourcePath?: string) => {
+      const { data } = await http.delete<ApiResponse<null>>(`${customResourcePath || resourcePath}/${id}`);
       return data;
     },
   };

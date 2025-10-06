@@ -12,6 +12,7 @@ import majalahRoute from "@/pages/app/majalah/route";
 import opdRoute from "@/pages/app/opd/route";
 import perusdaRoute from "@/pages/app/perusda/route";
 import portalRoute from "@/pages/app/portal/route";
+import ppidRoute from "@/pages/app/ppid/route";
 import prestasiRoute from "@/pages/app/prestasi/route";
 import profileRoute from "@/pages/app/profile/route";
 import radioRoute from "@/pages/app/radio/route";
@@ -49,5 +50,6 @@ export default {
     ...bannerRoute,
     ...aplikasiTerkaitRoute,
     ...surveiKepuasanRoute,
+    ...ppidRoute,
   ],
 };

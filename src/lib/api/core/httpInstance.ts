@@ -15,7 +15,7 @@ const httpInstance: AxiosInstance = axios.create({
     Accept: "application/json",
     "Content-Type": "application/json",
   },
-  timeout: 10000, // 10 seconds
+  timeout: 20000, // 20 seconds
 });
 
 // ✅ Request interceptor: ambil store DI DALAM fungsi
