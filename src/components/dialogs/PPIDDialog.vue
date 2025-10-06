@@ -88,7 +88,7 @@ const existingFiles = computed(() => {
   if (!props.ppid?.ppid_json) return props.ppid?.fileUrl || "";
   try {
     const parsed = JSON.parse(props.ppid.ppid_json);
-    return parsed.file || props.ppid?.fileUrl || "";
+    return parsed.fileUrl || props.ppid?.fileUrl || "";
   } catch {
     return props.ppid?.fileUrl || "";
   }
@@ -153,12 +153,14 @@ async function onSubmit(values: any) {
     keterangan: values.keterangan,
     kategori: values.subKategori,
     date: values.date,
-    jenisfile: values.jenisfile === "none" ? undefined : values.jenisfile, // Convert "none" to undefined
-    file: values.file,
+    jenisfile: values.jenisfile === "none" ? null : values.jenisfile, // Convert "none" to null
   };
+  if (values.file) {
+    (payload as any).file = values.file;
+  }
 
   if (props.mode === "create") {
-    await createPPID(payload, values.kategori.toLowerCase().split(" ").join(""));
+    await createPPID(payload as any, values.kategori.toLowerCase().split(" ").join(""));
     toast.success("Berhasil", { description: "PPID berhasil ditambahkan" });
   } else if (props.ppid) {
     await updatePPID(props.ppid.id, payload, props.ppid.kategori.toLowerCase().split(" ").join(""));
