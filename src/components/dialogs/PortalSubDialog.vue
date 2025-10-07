@@ -40,16 +40,16 @@ const initialValues = computed(() => {
       judul: "",
       link: "",
       icon: "",
-      portal_menu_id: defaultPortalMenuId,
-      portal_kat_id: defaultPortalKatId,
+      portalMenuId: defaultPortalMenuId,
+      portalKatId: defaultPortalKatId,
     };
   } else {
     return {
       judul: props.portalMenuSub?.judul ?? "",
       link: props.portalMenuSub?.link ?? "",
       icon: props.portalMenuSub?.iconUrl ?? "",
-      portal_menu_id: props.portalMenuSub?.portalMenuId || defaultPortalMenuId,
-      portal_kat_id: defaultPortalKatId,
+      portalMenuId: props.portalMenuSub?.portalMenuId || defaultPortalMenuId,
+      portalKatId: defaultPortalKatId,
     };
   }
 });
@@ -71,8 +71,8 @@ async function onSubmit(values: any) {
     judul: values.judul,
     link: values.link || undefined,
     icon: values.icon || undefined,
-    portal_menu_id: parseInt(values.portal_menu_id),
-    portal_kat_id: parseInt(values.portal_kat_id),
+    portalMenuId: parseInt(values.portalMenuId),
+    portalKatId: parseInt(values.portalKatId),
   };
 
   if (props.mode === "create") {
@@ -85,8 +85,8 @@ async function onSubmit(values: any) {
 }
 
 onMounted(() => {
-  setFieldValue("portal_menu_id", defaultPortalMenuId.value);
-  setFieldValue("portal_kat_id", defaultPortalKatId.value);
+  setFieldValue("portalMenuId", defaultPortalMenuId.value);
+  setFieldValue("portalKatId", defaultPortalKatId.value);
 });
 </script>
 

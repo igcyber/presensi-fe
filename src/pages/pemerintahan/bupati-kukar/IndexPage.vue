@@ -14,10 +14,6 @@ const { data, isLoading, fetchData, isError, error } = useFetch<ApiResponse<Bupa
   extractData: (response) => response.data,
 });
 
-const contentData = computed(() => {
-  return data.value?.data;
-});
-
 const bupatiData = computed(() => {
   return data.value?.bupati;
 });
@@ -63,8 +59,8 @@ onMounted(async () => {
         </div>
 
         <!-- Content -->
-        <div v-else-if="contentData">
-          <SelayangPandang :title="contentData.nama" :content="contentData.isi" :image="contentData.fotoUrl">
+        <div v-else-if="bupatiData && bupatiData.length > 0">
+          <SelayangPandang title="Bupati & Wakil Bupati Sepanjang Masa">
             <template #other>
               <!-- Grid Responsive untuk Card Bupati -->
               <div class="grid grid-cols-1 gap-6 md:grid-cols-2">

@@ -120,7 +120,7 @@ export interface CreatePortalMenuRequest {
  */
 export interface CreatePortalMenuKatRequest {
   judul: string;
-  portal_menu_id: number;
+  portalMenuId: number;
 }
 
 /**
@@ -130,8 +130,8 @@ export interface CreatePortalMenuSubRequest {
   judul: string;
   link?: string;
   icon?: File | string;
-  portal_menu_id: number;
-  portal_kat_id?: number;
+  portalMenuId: number;
+  portalKatId?: number;
 }
 /**
  * Portal Menu update request payload
@@ -147,7 +147,7 @@ export interface UpdatePortalMenuRequest {
  */
 export interface UpdatePortalMenuKatRequest {
   judul?: string;
-  portal_menu_id?: number;
+  portalMenuId?: number;
 }
 
 /**
@@ -157,8 +157,8 @@ export interface UpdatePortalMenuSubRequest {
   judul?: string;
   link?: string;
   icon?: File | string;
-  portal_menu_id?: number;
-  portal_kat_id?: number;
+  portalMenuId?: number;
+  portalKatId?: number;
 }
 /**
  * Portal Menu query parameters for listing
@@ -180,7 +180,7 @@ export interface PortalMenuKatQueryParams {
   search?: string;
   sort_by?: "judul" | "createdAt" | "updatedAt";
   sort_order?: "asc" | "desc";
-  portal_menu_id?: number;
+  portalMenuId?: number;
 }
 
 /**
@@ -192,8 +192,8 @@ export interface PortalMenuSubQueryParams {
   search?: string;
   sort_by?: "judul" | "createdAt" | "updatedAt";
   sort_order?: "asc" | "desc";
-  portal_menu_id?: number;
-  portal_kat_id?: number;
+  portalMenuId?: number;
+  portalKatId?: number;
 }
 
 /**

@@ -2,18 +2,11 @@
 import BeritaSide from "@/components/features/berita/BeritaSide.vue";
 import NavigationContent from "@/components/navigation/NavigationContent.vue";
 
-withDefaults(
-  defineProps<{
-    title: string;
-    image: string | null;
-    content: string;
-  }>(),
-  {
-    image: "/dummy.jpg",
-    title: "Lorem Ipsum Dolor Sit Amet",
-    content: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.",
-  },
-);
+defineProps<{
+  title?: string | null;
+  image?: string | null;
+  content?: string | null;
+}>();
 </script>
 
 <template>
@@ -25,7 +18,7 @@ withDefaults(
         v-if="image && image.split('/')[image.split('/').length - 1] != 'nopict.jpg'"
         class="mb-8 h-80 w-full overflow-hidden rounded shadow-lg"
       >
-        <img :src="image" :alt="title" class="h-full w-full object-cover" />
+        <img v-if="image" :src="image" :alt="title ?? ''" class="h-full w-full object-cover" />
       </div>
 
       <!-- Content Header -->
@@ -40,7 +33,7 @@ withDefaults(
 
       <!-- Article Content -->
       <div class="max-w-none">
-        <article v-html="content" class="text-justify leading-relaxed text-gray-700"></article>
+        <article v-if="content" v-html="content" class="text-justify leading-relaxed text-gray-700"></article>
 
         <!-- Additional Content Slot -->
         <template v-if="$slots.content">

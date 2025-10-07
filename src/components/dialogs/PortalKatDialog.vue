@@ -32,11 +32,11 @@ const emit = defineEmits<Emits>();
 const initialValues = computed(() => {
   const defaultPortalMenuId = props.defaultPortalMenuId || 0;
   if (props.mode === "create") {
-    return { judul: "", portal_menu_id: defaultPortalMenuId };
+    return { judul: "", portalMenuId: defaultPortalMenuId };
   } else {
     return {
       judul: props.portalMenuKat?.judul ?? "",
-      portal_menu_id: props.portalMenuKat?.portalMenuId || defaultPortalMenuId,
+      portalMenuId: props.portalMenuKat?.portalMenuId || defaultPortalMenuId,
     };
   }
 });
@@ -55,7 +55,7 @@ const open = computed({
 async function onSubmit(values: any) {
   const payload = {
     judul: values.judul,
-    portal_menu_id: values.portal_menu_id,
+    portalMenuId: values.portalMenuId,
   };
 
   if (props.mode === "create") {
@@ -68,7 +68,7 @@ async function onSubmit(values: any) {
 }
 
 onMounted(() => {
-  setFieldValue("portal_menu_id", defaultPortalMenuId.value);
+  setFieldValue("portalMenuId", defaultPortalMenuId.value);
 });
 </script>
 

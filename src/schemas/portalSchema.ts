@@ -64,7 +64,7 @@ export const createPortalMenuKatSchema = z.object({
     .min(1, "Judul wajib diisi")
     .min(3, "Judul minimal 3 karakter")
     .max(50, "Judul maksimal 50 karakter"),
-  portal_menu_id: z
+  portalMenuId: z
     .number()
     .int("Portal Menu ID harus berupa angka")
     .positive("Portal Menu ID harus berupa angka positif"),
@@ -73,7 +73,7 @@ export const createPortalMenuKatSchema = z.object({
 // Schema untuk update portal menu kategori
 export const updatePortalMenuKatSchema = z.object({
   judul: z.string().min(3, "Judul minimal 3 karakter").max(50, "Judul maksimal 50 karakter").optional(),
-  portal_menu_id: z
+  portalMenuId: z
     .number()
     .int("Portal Menu ID harus berupa angka")
     .positive("Portal Menu ID harus berupa angka positif")
@@ -93,7 +93,7 @@ export const portalMenuKatQuerySchema = z.object({
   search: z.string().max(100, "Search maksimal 100 karakter").optional(),
   sort_by: z.enum(["judul", "createdAt", "updatedAt"]).optional().default("createdAt"),
   sort_order: z.enum(["asc", "desc"]).optional().default("desc"),
-  portal_menu_id: z
+  portalMenuId: z
     .number()
     .int("Portal Menu ID harus berupa angka")
     .positive("Portal Menu ID harus berupa angka positif")
@@ -121,12 +121,12 @@ export const createPortalMenuSubSchema = z.object({
       }
       return false;
     }, "Format file harus berupa JPG, PNG, GIF, atau WebP"),
-  portal_menu_id: z
+  portalMenuId: z
     .number()
     .int("Portal Menu ID harus berupa angka")
     .positive("Portal Menu ID harus berupa angka positif")
     .optional(),
-  portal_kat_id: z
+  portalKatId: z
     .number()
     .int("Portal Kat ID harus berupa angka")
     .positive("Portal Kat ID harus berupa angka positif")
@@ -152,12 +152,12 @@ export const updatePortalMenuSubSchema = z.object({
       }
       return false;
     }, "Format file harus berupa JPG, PNG, GIF, atau WebP"),
-  portal_menu_id: z
+  portalMenuId: z
     .number()
     .int("Portal Menu ID harus berupa angka")
     .positive("Portal Menu ID harus berupa angka positif")
     .optional(),
-  portal_kat_id: z
+  portalKatId: z
     .number()
     .int("Portal Kat ID harus berupa angka")
     .positive("Portal Kat ID harus berupa angka positif")
@@ -179,12 +179,12 @@ export const portalMenuSubQuerySchema = z.object({
   search: z.string().max(100, "Search maksimal 100 karakter").optional(),
   sort_by: z.enum(["judul", "createdAt", "updatedAt"]).optional().default("createdAt"),
   sort_order: z.enum(["asc", "desc"]).optional().default("desc"),
-  portal_menu_id: z
+  portalMenuId: z
     .number()
     .int("Portal Menu ID harus berupa angka")
     .positive("Portal Menu ID harus berupa angka positif")
     .optional(),
-  portal_kat_id: z
+  portalKatId: z
     .number()
     .int("Portal Kat ID harus berupa angka")
     .positive("Portal Kat ID harus berupa angka positif")
