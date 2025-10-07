@@ -45,7 +45,7 @@ const { data, isLoading, isError, error, fetchData } = useFetch<
 
 // Event handlers
 const handleBack = () => {
-  router.push({ name: "app.banner" });
+  router.push({ name: "app.infografis" });
 };
 
 const handleEdit = (banner: BannerDetailResponse) => {
@@ -64,14 +64,14 @@ const confirmDelete = async () => {
     const banner = confirmDialog.state.value.data;
     await deleteBanner(banner.id);
 
-    toast.success("Berhasil menghapus banner", {
+    toast.success("Berhasil menghapus infografis", {
       description: `Banner "${banner.nama}" telah dihapus`,
     });
 
     confirmDialog.closeDialog();
     handleBack(); // kembali ke list setelah delete
   } catch (err: unknown) {
-    const errorMessage = err instanceof Error ? err.message : "Gagal menghapus banner";
+    const errorMessage = err instanceof Error ? err.message : "Gagal menghapus infografis";
     toast.error("Gagal menghapus banner", { description: errorMessage });
   } finally {
     confirmDialog.setLoading(false);
@@ -88,7 +88,7 @@ onMounted(() => {
   if (bannerId.value > 0) {
     fetchData();
   } else {
-    toast.error("ID banner tidak valid");
+    toast.error("ID infografis tidak valid");
     handleBack();
   }
 });
@@ -100,7 +100,7 @@ onMounted(() => {
     <div v-if="isLoading" class="flex min-h-screen items-center justify-center">
       <div class="flex items-center gap-2">
         <div class="border-primary h-8 w-8 animate-spin rounded-full border-2 border-t-transparent"></div>
-        <span class="text-muted-foreground">Memuat detail banner...</span>
+        <span class="text-muted-foreground">Memuat detail infografis...</span>
       </div>
     </div>
 

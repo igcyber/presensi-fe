@@ -30,17 +30,17 @@ const emit = defineEmits<Emits>();
 
 // Status options
 const statusOptions = [
-  { label: "Aktif", value: "active" },
-  { label: "Tidak Aktif", value: "inactive" },
+  { label: "Aktif", value: "1" },
+  { label: "Tidak Aktif", value: "0" },
 ];
 
 const initialValues = computed(() =>
   props.mode === "create"
-    ? { nama: "", url: "", status: "active", isi: "", foto: "" }
+    ? { nama: "", url: "", status: "1", isi: "", foto: "" }
     : {
         nama: props.banner?.nama ?? "",
         url: props.banner?.url ?? "",
-        status: props.banner?.status === "1" ? "active" : "inactive",
+        status: (props.banner as any)?.status === "1" ? "1" : "0",
         isi: props.banner?.isi ?? "",
       },
 );
@@ -57,10 +57,10 @@ const open = computed({
 async function onSubmit(values: any) {
   if (props.mode === "create") {
     await createBanner(values);
-    toast.success("Berhasil", { description: "Banner berhasil ditambahkan" });
+    toast.success("Berhasil", { description: "Infografis berhasil ditambahkan" });
   } else if (props.banner) {
     await updateBanner(props.banner.id, values);
-    toast.success("Berhasil", { description: "Banner berhasil diperbarui" });
+    toast.success("Berhasil", { description: "Infografis berhasil diperbarui" });
   }
 }
 </script>
@@ -69,7 +69,7 @@ async function onSubmit(values: any) {
   <BaseFormDialog
     v-model:open="open"
     :mode="mode"
-    resource-name="Banner"
+    resource-name="Infografis"
     :schema="schema"
     :initial-values="initialValues"
     :onSubmit="onSubmit"
@@ -78,27 +78,27 @@ async function onSubmit(values: any) {
     @cancel="() => $emit('cancel')"
   >
     <div class="grid grid-cols-1 gap-3">
-      <BaseInput name="nama" label="Nama Banner" placeholder="Masukkan nama banner" required />
+      <BaseInput name="nama" label="Nama Infografis" placeholder="Masukkan nama infografis" required />
 
       <BaseInput
         name="url"
-        label="URL Banner"
-        placeholder="Masukkan URL banner (opsional)"
-        description="Link yang akan dibuka ketika banner diklik"
+        label="URL Infografis"
+        placeholder="Masukkan URL infografis (opsional)"
+        description="Link yang akan dibuka ketika infografis diklik"
       />
 
       <BaseSelect name="status" label="Status" :options="statusOptions" placeholder="Pilih status" required />
 
       <BaseTextEditorEcho
         name="isi"
-        label="Isi Banner"
+        label="Isi Infografis"
         placeholder="Masukkan isi banner (opsional)"
-        description="Konten tambahan untuk banner"
+        description="Konten tambahan untuk infografis"
       />
 
       <BaseInputFile
         name="foto"
-        label="Foto Banner"
+        label="Foto Infografis"
         accept="image/*"
         :required="mode === 'create'"
         description="Format: JPG, PNG, GIF, WebP. Maksimal 5MB"

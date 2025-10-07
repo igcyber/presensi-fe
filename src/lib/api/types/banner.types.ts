@@ -10,7 +10,7 @@ export interface Banner extends BaseEntity {
   nama: string;
   foto: string;
   url?: string;
-  status: "active" | "inactive";
+  status: "1" | "0";
   isi?: string;
   createdBy: number;
   updatedBy: number;
@@ -38,7 +38,7 @@ export type BannerListPublicResponse = PaginatedPayload<Omit<Banner, "createdByU
 export interface CreateBannerRequest {
   nama: string;
   url?: string;
-  status: "active" | "inactive";
+  status: "1" | "0";
   isi?: string;
   foto: File | string;
 }
@@ -49,7 +49,7 @@ export interface CreateBannerRequest {
 export interface UpdateBannerRequest {
   nama?: string;
   url?: string;
-  status?: "active" | "inactive";
+  status?: "1" | "0";
   isi?: string;
   foto?: File | string;
 }

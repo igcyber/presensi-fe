@@ -4,7 +4,7 @@ import { z } from "zod";
 export const createBannerSchema = z.object({
   nama: z.string().min(1, "Nama wajib diisi").max(255, "Nama maksimal 255 karakter"),
   url: z.string().url("URL harus valid").optional().or(z.literal("")),
-  status: z.enum(["active", "inactive"], {
+  status: z.enum(["1", "0"], {
     required_error: "Status wajib dipilih",
     invalid_type_error: "Status harus berupa active atau inactive",
   }),
@@ -25,7 +25,7 @@ export const createBannerSchema = z.object({
 export const updateBannerSchema = z.object({
   nama: z.string().min(1, "Nama wajib diisi").max(255, "Nama maksimal 255 karakter").optional(),
   url: z.string().url("URL harus valid").optional().or(z.literal("")),
-  status: z.enum(["active", "inactive"]).optional(),
+  status: z.enum(["1", "0"]).optional(),
   isi: z.string().optional(),
   foto: z
     .any()

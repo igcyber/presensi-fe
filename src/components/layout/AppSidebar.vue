@@ -193,11 +193,11 @@ const data = computed(() => ({
       isActive: routNameActive.value === "app.portal" || routNameActive.value === "app.portal.detail",
     },
     {
-      title: "Banner",
-      url: "/app/banner",
-      name: "app.banner",
+      title: "Infografis",
+      url: "/app/infografis",
+      name: "app.infografis",
       icon: Image,
-      isActive: routNameActive.value === "app.banner" || routNameActive.value === "app.banner.detail",
+      isActive: routNameActive.value === "app.infografis" || routNameActive.value === "app.infografis.detail",
     },
     {
       title: "Aplikasi Terkait",

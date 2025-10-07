@@ -75,7 +75,7 @@ export const createBanner = (payload: CreateBannerRequest) => bannerService.crea
  * ```typescript
  * const response = await updateBanner(123, {
  *   nama: 'SP4N Lapor Updated',
- *   status: 'inactive',
+ *   status: '0',
  *   foto: file
  * });
  * console.log(response.data.nama);

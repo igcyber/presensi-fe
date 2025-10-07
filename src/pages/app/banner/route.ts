@@ -3,21 +3,21 @@ import BannerPage from "./IndexPage.vue";
 
 export default [
   {
-    path: "banner",
-    name: "app.banner",
+    path: "infografis",
+    name: "app.infografis",
     component: BannerPage,
     meta: {
       requiresAuth: true,
-      title: "Banner",
+      title: "Infografis",
     },
   },
   {
-    path: "banner/:id",
-    name: "app.banner.detail",
+    path: "infografis/:id",
+    name: "app.infografis.detail",
     component: BannerDetailPage,
     meta: {
       requiresAuth: true,
-      title: "Detail Banner",
+      title: "Detail Infografis",
     },
   },
 ];

@@ -41,7 +41,7 @@ const { truncate } = useFormatters();
 const columns: Column<Banner>[] = [
   {
     key: "nama",
-    label: "Nama Banner",
+    label: "Nama Infografis",
     sortable: true,
     searchable: true,
     width: "200px",
@@ -62,7 +62,7 @@ const columns: Column<Banner>[] = [
     sortable: true,
     width: "100px",
     render: (item: Banner): string => {
-      return item.status === "active" ? "Aktif" : "Tidak Aktif";
+      return item.status === "1" ? "Aktif" : "Tidak Aktif";
     },
   },
   {
@@ -86,7 +86,7 @@ const openCreateDialog = (): void => {
 };
 
 const handleRowClick = (item: Banner): void => {
-  router.push({ name: "app.banner.detail", params: { id: item.id.toString() } });
+  router.push({ name: "app.infografis.detail", params: { id: item.id.toString() } });
 };
 
 const handleEdit = (item: Banner): void => {
@@ -107,14 +107,14 @@ const confirmDelete = async (): Promise<void> => {
     await deleteBanner(banner.id);
     fetchData();
 
-    toast.success("Berhasil menghapus banner", {
-      description: `Banner "${banner.nama}" telah dihapus`,
+    toast.success("Berhasil menghapus infografis", {
+      description: `Infografis "${banner.nama}" telah dihapus`,
     });
 
     confirmDialog.closeDialog();
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : "Gagal menghapus banner";
-    toast.error("Gagal menghapus banner", { description: errorMessage });
+    const errorMessage = error instanceof Error ? error.message : "Gagal menghapus infografis";
+    toast.error("Gagal menghapus infografis", { description: errorMessage });
   } finally {
     confirmDialog.setLoading(false);
   }
@@ -141,8 +141,8 @@ watch(
       <!-- Header Section -->
       <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div class="space-y-1">
-          <h1 class="text-3xl font-bold tracking-tight">Banner</h1>
-          <p class="text-muted-foreground">Daftar banner dengan fitur pencarian, pengurutan, dan paginasi</p>
+          <h1 class="text-3xl font-bold tracking-tight">Infografis</h1>
+          <p class="text-muted-foreground">Daftar infografis dengan fitur pencarian, pengurutan, dan paginasi</p>
         </div>
         <Button @click="openCreateDialog" class="flex items-center gap-2 self-start sm:self-auto">
           <PlusIcon class="h-4 w-4" />
@@ -152,12 +152,12 @@ watch(
 
       <Card>
         <CardHeader class="px-8">
-          <CardTitle>Banner</CardTitle>
-          <CardDescription>List daftar banner dengan fitur pencarian, sorting, dan pagination</CardDescription>
+          <CardTitle>Infografis</CardTitle>
+          <CardDescription>List daftar infografis dengan fitur pencarian, sorting, dan pagination</CardDescription>
         </CardHeader>
         <CardContent>
           <!-- Error State -->
-          <ErrorState v-if="isError" :message="error?.message || 'Gagal memuat data banner'" @retry="fetchData" />
+          <ErrorState v-if="isError" :message="error?.message || 'Gagal memuat data infografis'" @retry="fetchData" />
 
           <!-- Data Table -->
           <DataTable
@@ -192,8 +192,8 @@ watch(
       <!-- Confirm Delete Dialog -->
       <BaseConfirmDialog
         v-model:open="confirmDialog.state.value.open"
-        title="Hapus Banner"
-        :description="`Apakah Anda yakin ingin menghapus banner '${confirmDialog.state.value.data?.nama}'? Tindakan ini tidak dapat dibatalkan.`"
+        title="Hapus Infografis"
+        :description="`Apakah Anda yakin ingin menghapus infografis '${confirmDialog.state.value.data?.nama}'? Tindakan ini tidak dapat dibatalkan.`"
         confirm-text="Hapus"
         variant="destructive"
         :loading="confirmDialog.state.value.loading"
