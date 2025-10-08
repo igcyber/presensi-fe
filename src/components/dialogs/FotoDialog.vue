@@ -79,9 +79,10 @@ async function onSubmit(values: any) {
       <BaseInputFile
         name="foto"
         label="File Foto"
-        :required="mode === 'create'"
         accept="image/*"
-        help-text="Format: JPG, JPEG, PNG, WebP. Maksimal 2MB"
+        :required="mode === 'create'"
+        description="Format: JPG, JPEG, PNG, WebP. Maksimal 2MB"
+        :existing-files="props.foto?.fotoUrl"
       />
     </div>
   </BaseFormDialog>

@@ -438,12 +438,12 @@ const formatCellValue = (item: T, column: Column<T>) => {
 
               <!-- Previewable columns -->
               <template v-else-if="column.previewable && column.previewUrl">
-                <div class="max-w-xs">
-                  <Button variant="link" size="sm" @click.stop="handlePreview(item, column)" class="h-6 w-6">
+                <Button variant="link" size="sm" @click.stop="handlePreview(item, column)" class="p-0">
+                  <span class="flex flex-col items-center justify-center gap-1 sm:flex-row">
                     <Eye class="h-3 w-3" />
-                    <span class="">{{ formatCellValue(item, column) }}</span>
-                  </Button>
-                </div>
+                    {{ formatCellValue(item, column) }}</span
+                  >
+                </Button>
               </template>
 
               <!-- Other columns -->
