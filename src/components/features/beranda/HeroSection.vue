@@ -26,8 +26,10 @@ function submitSearch() {
           <i class="bx bx-home mr-2"></i>
           Selamat datang di portal resmi
         </p>
-        <h1 class="mb-4 text-4xl font-bold md:text-5xl">Sekretariat Daerah<br />Kabupaten Kutai Kartanegara</h1>
-        <p class="mb-8 text-xl text-green-100">"Bagian Protokol dan Komunikasi Pimpinan"</p>
+        <h1 class="mb-4 text-4xl font-bold md:text-5xl">
+          Dewan Perwakilan Rakyat Daerah<br />Kabupaten Kutai Kartanegara
+        </h1>
+        <p class="mb-8 text-xl text-green-100">"DPRD Kukar"</p>
 
         <!-- Search Form -->
         <form @submit.prevent="submitSearch" class="mx-auto max-w-2xl">

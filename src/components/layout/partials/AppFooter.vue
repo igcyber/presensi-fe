@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
+import { computed } from "vue";
 
 // Import composable
 import { useAppData } from "@/composables/useAppData";
@@ -10,117 +10,152 @@ const { footerInfo, relatedLinks, profileLinks } = useAppData();
 // Computed properties
 const currentYear = computed(() => new Date().getFullYear());
 
-// Lifecycle hooks
-onMounted(() => {
-  // In real app, you would fetch related links from API here
-  // fetchRelatedLinks()
+const hasFooterInfo = computed(() => {
+  return !!(footerInfo.value.email || footerInfo.value.alamat || footerInfo.value.telepon || footerInfo.value.fax);
 });
+
+const hasProfileLinks = computed(() => profileLinks.value && profileLinks.value.length > 0);
+const hasRelatedLinks = computed(() => relatedLinks.value && relatedLinks.value.length > 0);
 </script>
 
 <template>
   <footer class="bg-portal-blue-dark text-white">
-    <div class="container py-16">
-      <div class="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
+    <div class="container py-8 sm:py-12 lg:py-16">
+      <div class="grid grid-cols-1 gap-8 sm:gap-10 md:grid-cols-2 lg:grid-cols-4 lg:gap-12">
         <!-- Logo Section -->
-        <div class="lg:col-span-1">
-          <div class="space-y-4">
-            <img class="h-12 w-auto" src="/assets/images/logos/logo-white.png" alt="Logo Kukar" />
-            <img class="w-full max-w-40" src="/assets/images/logos/logo-pse.png" alt="PSE" />
+        <div class="flex flex-col items-center md:items-start lg:col-span-1">
+          <div class="space-y-4 sm:space-y-5">
+            <img
+              class="h-10 w-auto sm:h-12 lg:h-14"
+              src="/assets/images/logos/logo-dprd-white.png"
+              alt="Logo DPRD Kutai Kartanegara"
+              loading="lazy"
+            />
+            <img
+              class="w-full max-w-[140px] sm:max-w-[160px]"
+              src="/assets/images/logos/logo-pse.png"
+              alt="Logo PSE Kominfo"
+              loading="lazy"
+            />
           </div>
         </div>
 
         <!-- Contact Information -->
-        <div class="justify-self-center lg:col-span-1">
-          <h3 class="mb-6 text-xl font-bold text-white">Terhubung</h3>
+        <div v-if="hasFooterInfo" class="lg:col-span-1">
+          <h3 class="mb-4 text-lg font-bold text-white sm:mb-6 sm:text-xl">Terhubung</h3>
 
-          <div class="space-y-4">
-            <div class="text-gray-300">
-              <div class="mb-2 flex items-start gap-2">
-                <i class="bx bx-envelope text-portal-green mt-1 flex-shrink-0"></i>
-                <div class="min-w-0">
-                  <span class="font-semibold text-white">Email:</span><br />
-                  <a :href="`mailto:${footerInfo.email}`" class="hover:text-portal-green break-all transition-colors">
-                    {{ footerInfo.email }}
-                  </a>
-                </div>
+          <div class="space-y-3 sm:space-y-4">
+            <a
+              v-if="footerInfo.email"
+              :href="`mailto:${footerInfo.email}`"
+              class="hover:text-portal-green group flex items-start gap-2.5 text-sm text-gray-300 transition-all duration-200 sm:text-base"
+              :title="`Email ke ${footerInfo.email}`"
+            >
+              <i
+                class="bx bx-envelope text-portal-green mt-0.5 flex-shrink-0 text-lg transition-transform duration-200 group-hover:scale-110 sm:text-xl"
+              ></i>
+              <div class="min-w-0 flex-1 text-left">
+                <span class="block text-xs font-semibold text-white sm:text-sm">Email</span>
+                <span class="block break-all">{{ footerInfo.email }}</span>
               </div>
+            </a>
 
-              <div class="mb-4 flex items-start gap-2">
-                <i class="bx bx-map text-portal-green mt-1 flex-shrink-0"></i>
-                <div class="min-w-0">
-                  <span class="font-semibold text-white">Alamat:</span><br />
-                  <span class="break-words">{{ footerInfo.alamat }}</span>
-                </div>
+            <div v-if="footerInfo.alamat" class="flex items-start gap-2.5 text-sm text-gray-300 sm:text-base">
+              <i class="bx bx-map text-portal-green mt-0.5 flex-shrink-0 text-lg sm:text-xl"></i>
+              <div class="min-w-0 flex-1 text-left">
+                <span class="block text-xs font-semibold text-white sm:text-sm">Alamat</span>
+                <span class="block break-words">{{ footerInfo.alamat }}</span>
               </div>
+            </div>
 
-              <div class="mb-4 flex items-start gap-2">
-                <i class="bx bx-phone-call text-portal-green mt-1 flex-shrink-0"></i>
-                <div class="min-w-0">
-                  <span class="font-semibold text-white">Telepon:</span><br />
-                  <span class="whitespace-nowrap">{{ footerInfo.telepon }}</span>
-                </div>
+            <a
+              v-if="footerInfo.telepon"
+              :href="`tel:${footerInfo.telepon}`"
+              class="hover:text-portal-green group flex items-start gap-2.5 text-sm text-gray-300 transition-all duration-200 sm:text-base"
+              :title="`Hubungi ${footerInfo.telepon}`"
+            >
+              <i
+                class="bx bx-phone-call text-portal-green mt-0.5 flex-shrink-0 text-lg transition-transform duration-200 group-hover:scale-110 sm:text-xl"
+              ></i>
+              <div class="min-w-0 flex-1 text-left">
+                <span class="block text-xs font-semibold text-white sm:text-sm">Telepon</span>
+                <span class="block whitespace-nowrap">{{ footerInfo.telepon }}</span>
               </div>
+            </a>
 
-              <div class="mb-4 flex items-start gap-2">
-                <i class="bx bx-printer text-portal-green mt-1 flex-shrink-0"></i>
-                <div class="min-w-0">
-                  <span class="font-semibold text-white">Fax:</span><br />
-                  <span class="whitespace-nowrap">{{ footerInfo.fax }}</span>
-                </div>
+            <div v-if="footerInfo.fax" class="flex items-start gap-2.5 text-sm text-gray-300 sm:text-base">
+              <i class="bx bx-printer text-portal-green mt-0.5 flex-shrink-0 text-lg sm:text-xl"></i>
+              <div class="min-w-0 flex-1 text-left">
+                <span class="block text-xs font-semibold text-white sm:text-sm">Fax</span>
+                <span class="block whitespace-nowrap">{{ footerInfo.fax }}</span>
               </div>
             </div>
           </div>
-
-          <hr class="my-6 border-gray-600" />
         </div>
 
         <!-- Profile -->
-        <div class="justify-self-center lg:col-span-1">
-          <h3 class="mb-6 text-xl font-bold text-white">Profil</h3>
-          <div class="grid gap-4 lg:grid-cols-1">
+        <div v-if="hasProfileLinks" class="lg:col-span-1">
+          <h3 class="mb-4 text-lg font-bold text-white sm:mb-6 sm:text-xl">Profil</h3>
+          <nav class="space-y-2.5 sm:space-y-3" aria-label="Profil links">
             <a
               v-for="link in profileLinks"
               :key="link.id"
               :href="link.website"
-              class="block truncate text-sm text-gray-300 transition-colors hover:text-white"
+              class="hover:text-portal-green group flex items-center gap-2 text-sm text-gray-300 transition-all duration-200 sm:text-base"
               target="_blank"
               rel="noopener noreferrer"
+              :title="link.nama"
             >
-              {{ link.nama }}
+              <i
+                class="bx bx-chevron-right text-portal-green flex-shrink-0 text-base opacity-0 transition-all duration-200 group-hover:translate-x-1 group-hover:opacity-100"
+              ></i>
+              <span>{{ link.nama }}</span>
             </a>
-          </div>
+          </nav>
         </div>
 
         <!-- Related Links -->
-        <div class="justify-self-center lg:col-span-1">
-          <h3 class="mb-6 text-xl font-bold text-white">Link Terkait</h3>
-          <div class="grid grid-cols-1 gap-4">
+        <div v-if="hasRelatedLinks" class="lg:col-span-1">
+          <h3 class="mb-4 text-lg font-bold text-white sm:mb-6 sm:text-xl">Link Terkait</h3>
+          <nav class="space-y-2.5 sm:space-y-3" aria-label="Link terkait">
             <a
               v-for="link in relatedLinks"
               :key="link.id"
               :href="link.website"
-              class="block truncate text-sm text-gray-300 transition-colors hover:text-white"
+              class="hover:text-portal-green group flex items-center gap-2 text-sm text-gray-300 transition-all duration-200 sm:text-base"
               target="_blank"
               rel="noopener noreferrer"
+              :title="link.nama"
             >
-              {{ link.nama }}
+              <i
+                class="bx bx-chevron-right text-portal-green flex-shrink-0 text-base opacity-0 transition-all duration-200 group-hover:translate-x-1 group-hover:opacity-100"
+              ></i>
+              <span>{{ link.nama }}</span>
             </a>
-          </div>
+          </nav>
         </div>
       </div>
     </div>
 
     <!-- Copyright -->
-    <div class="bg-opacity-30 bg-portal-black py-6">
+    <div class="border-t border-white/10 bg-black/30 py-4 sm:py-6">
       <div class="container">
-        <div class="text-center text-sm text-gray-400">
-          <p>
-            © {{ currentYear }} Kabupaten Kutai Kartanegara All Rights Reserved - Developed by
+        <div
+          class="flex flex-col items-center justify-center gap-2 text-center text-xs text-gray-400 sm:flex-row sm:text-sm"
+        >
+          <p class="flex flex-wrap items-center justify-center gap-1">
+            <span>© {{ currentYear }} Dewan Perwakilan Rakyat Daerah Kabupaten Kutai Kartanegara.</span>
+            <span class="hidden sm:inline">All Rights Reserved</span>
+          </p>
+          <span class="hidden text-gray-600 sm:inline">•</span>
+          <p class="flex items-center gap-1">
+            <span>Developed by</span>
             <a
               href="https://diskominfo.kukarkab.go.id/"
-              class="text-gray-300 transition-colors hover:text-white"
+              class="hover:text-portal-green font-medium text-gray-300 transition-colors duration-200"
               target="_blank"
               rel="noopener noreferrer"
+              title="Website Diskominfo Kukar"
             >
               Diskominfo Kukar
             </a>

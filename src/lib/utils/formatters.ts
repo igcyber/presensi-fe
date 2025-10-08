@@ -727,6 +727,10 @@ export function isActivePath(currentPath: string, targetPath: string): boolean {
     return false;
   }
 
+  if (targetPath === "/") {
+    return currentPath === targetPath;
+  }
+
   return currentPath.startsWith(targetPath);
 }
 

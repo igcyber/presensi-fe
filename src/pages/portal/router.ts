@@ -1,7 +1,7 @@
 import PortalPage from "@/pages/portal/IndexPage.vue";
 
 export default {
-  path: "/",
+  path: "/portal-drpd",
   name: "portal.index",
   component: PortalPage,
   meta: {

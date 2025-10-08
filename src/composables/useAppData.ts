@@ -30,14 +30,14 @@ export interface NavigationItem {
 // Reactive state
 const contactInfo = ref<ContactInfo>({
   alamat: "Jl. Wolter Monginsidi No.1 Tenggarong 75511 - Kutai Kartanegara - Kaltim",
-  telepon: "Telp. (0541) 662088 Fax. (0541) 661690",
-  email: "humaskukar@kukarkab.go.id",
+  telepon: "Telp. (0541) 661180 Fax. (0541) 661690",
+  email: "info@dprdkutaikartanegara.go.id",
 });
 
 const footerInfo = ref<FooterInfo>({
-  email: "humaskukar@kukarkab.go.id",
+  email: "info@dprdkutaikartanegara.go.id",
   alamat: "Jl. Wolter Monginsidi No.1 Tenggarong 75511 - Kutai Kartanegara - Kaltim",
-  telepon: "(0541) 662088",
+  telepon: "(0541) 661180",
   fax: "(0541) 661690",
 });
 
@@ -60,7 +60,7 @@ const relatedLinks = ref<RelatedLink[]>([
 const navigation = ref<NavigationItem[]>([
   {
     title: "BERANDA",
-    path: "/beranda",
+    path: "/",
   },
   {
     title: "SELAYANG PANDANG",
@@ -101,10 +101,6 @@ const navigation = ref<NavigationItem[]>([
     path: "/berita",
   },
   {
-    title: "SURVEI KEPUASAN",
-    path: "/survei",
-  },
-  {
     title: "PPID",
     path: "/ppid",
     children: [
@@ -113,6 +109,10 @@ const navigation = ref<NavigationItem[]>([
       { title: "Informasi Setiap Saat", path: "/ppid/informasi-setiap-saat" },
       { title: "Informasi Di Kecualikan", path: "/ppid/informasi-di-kecualikan" },
     ],
+  },
+  {
+    title: "SURVEI KEPUASAN",
+    path: "/survei",
   },
 ]);
 

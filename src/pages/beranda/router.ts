@@ -2,7 +2,7 @@ import AppLayout from "@/layouts/AppLayout.vue";
 import IndexPage from "@/pages/beranda/IndexPage.vue";
 
 export default {
-  path: "/beranda",
+  path: "/",
   component: AppLayout,
   children: [
     {
