@@ -5,75 +5,60 @@ import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 
 import BaseConfirmDialog from "@/components/dialogs/BaseConfirmDialog.vue";
-import DokumenDialog from "@/components/dialogs/DokumenDialog.vue";
+import FotoDialog from "@/components/dialogs/FotoDialog.vue";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { type Column, DataTable } from "@/components/ui/datatable";
 import ErrorState from "@/components/ui/error-state/ErrorState.vue";
 
 import { useDialog } from "@/composables/useDialog";
-import { useFormatters } from "@/composables/useFormatters";
 import { useResourceList } from "@/composables/useResourceList";
-import { deleteDokumen, getDokumens } from "@/lib/api/services/dokumen";
-import type { Dokumen } from "@/lib/api/types/dokumen.types";
+import { deleteFoto, getFotos } from "@/lib/api/services/foto";
+import type { Foto } from "@/lib/api/types/foto.types";
 
-// Composables initialization
-const {
-  items,
-  isLoading,
-  isError,
-  error,
-  pagination,
-  query,
-  fetchData,
-  handleSearch,
-  handlePageChange,
-  handleCustomFilter,
-} = useResourceList<Dokumen>((params) => getDokumens(params), { perPage: 10, searchDebounce: 500 });
+// Composables
+const { items, isLoading, isError, error, pagination, query, fetchData, handleSearch, handlePageChange } =
+  useResourceList<Foto>((params) => getFotos(params), { perPage: 10, searchDebounce: 500 });
 
-const dialog = useDialog<Dokumen>();
-const confirmDialog = useDialog<Dokumen>();
+const dialog = useDialog<Foto>();
+const confirmDialog = useDialog<Foto>();
+
+// Router
 const router = useRouter();
 
-const { truncate } = useFormatters();
-
 // Column definitions
-const columns: Column<Dokumen>[] = [
+const columns: Column<Foto>[] = [
   {
-    key: "nama",
-    label: "Nama ",
+    key: "judul",
+    label: "Judul",
     sortable: true,
     searchable: true,
     width: "300px",
   },
   {
-    key: "isi",
-    label: "Deskripsi",
-    width: "200px",
-    render: (item: Dokumen): string => truncate(item.isi, 100),
-  },
-  {
-    key: "file",
-    label: "File",
+    key: "foto",
+    label: "Preview",
     sortable: false,
     width: "150px",
     previewable: true,
-    previewUrl: (item: Dokumen): string => {
-      return item.fileUrl;
+    previewUrl: (item: Foto): string => {
+      return item.fotoUrl || item.foto_url;
     },
-    previewName: (item: Dokumen): string => {
-      return item.nama;
+    previewName: (item: Foto): string => {
+      return item.judul;
     },
-    render: (_item: Dokumen): string => {
-      return "Dokumen";
+    render: (_item: Foto): string => {
+      return "Gambar";
     },
   },
   {
     key: "createdByUser",
-    label: "Pembuat",
-    sortable: true,
+    label: "Dibuat Oleh",
+    sortable: false,
     width: "150px",
-    render: (item: Dokumen): string => item.createdByUser.fullName,
+    render: (item: Foto): string => {
+      return item.createdByUser.fullName;
+    },
   },
   {
     key: "createdAt",
@@ -88,15 +73,16 @@ const openCreateDialog = (): void => {
   dialog.openCreate();
 };
 
-const handleRowClick = (item: Dokumen): void => {
-  router.push({ name: "app.dokumen.detail", params: { id: item.id.toString() } });
+const handleRowClick = (item: Foto): void => {
+  // Navigasi ke detail
+  router.push({ name: "app.foto.detail", params: { id: item.id.toString() } });
 };
 
-const handleEdit = (item: Dokumen): void => {
+const handleEdit = (item: Foto): void => {
   dialog.openEdit(item);
 };
 
-const handleDelete = (item: Dokumen): void => {
+const handleDelete = (item: Foto): void => {
   confirmDialog.openView(item);
 };
 
@@ -105,25 +91,25 @@ const confirmDelete = async (): Promise<void> => {
 
   try {
     confirmDialog.setLoading(true);
-    const dokumen = confirmDialog.state.value.data;
+    const foto = confirmDialog.state.value.data;
 
-    await deleteDokumen(dokumen.id);
+    await deleteFoto(foto.id);
     fetchData();
 
-    toast.success("Berhasil menghapus dokumen", {
-      description: `Dokumen "${dokumen.nama}" telah dihapus`,
+    toast.success("Berhasil menghapus foto", {
+      description: `Foto "${foto.judul}" telah dihapus`,
     });
 
     confirmDialog.closeDialog();
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : "Gagal menghapus dokumen";
-    toast.error("Gagal menghapus dokumen", { description: errorMessage });
+    const errorMessage = error instanceof Error ? error.message : "Gagal menghapus foto";
+    toast.error("Gagal menghapus foto", { description: errorMessage });
   } finally {
     confirmDialog.setLoading(false);
   }
 };
 
-const handleDokumenDialogSuccess = (): void => {
+const handleFotoDialogSuccess = (): void => {
   dialog.closeDialog();
   fetchData();
 };
@@ -144,8 +130,8 @@ watch(
       <!-- Header Section -->
       <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div class="space-y-1">
-          <h1 class="text-3xl font-bold tracking-tight">Dokumen</h1>
-          <p class="text-muted-foreground">Daftar dokumen dengan fitur pencarian, pengurutan, dan paginasi</p>
+          <h1 class="text-3xl font-bold tracking-tight">Foto</h1>
+          <p class="text-muted-foreground">Daftar foto dengan fitur pencarian, pengurutan, dan paginasi</p>
         </div>
         <Button @click="openCreateDialog" class="flex items-center gap-2 self-start sm:self-auto">
           <PlusIcon class="h-4 w-4" />
@@ -155,12 +141,12 @@ watch(
 
       <Card>
         <CardHeader class="px-8">
-          <CardTitle>Dokumen</CardTitle>
-          <CardDescription>List daftar dokumen dengan fitur pencarian, sorting, dan pagination</CardDescription>
+          <CardTitle>Foto</CardTitle>
+          <CardDescription>List daftar foto dengan fitur pencarian, sorting, dan pagination</CardDescription>
         </CardHeader>
         <CardContent>
           <!-- Error State -->
-          <ErrorState v-if="isError" :message="error?.message || 'Gagal memuat data dokumen'" @retry="fetchData" />
+          <ErrorState v-if="isError" :message="error?.message || 'Gagal memuat data foto'" @retry="fetchData" />
 
           <!-- Data Table -->
           <DataTable
@@ -175,7 +161,6 @@ watch(
             :loading="isLoading"
             @page-change="handlePageChange"
             @search="handleSearch"
-            @custom-filter="handleCustomFilter"
             @row-click="handleRowClick"
             @edit="handleEdit"
             @delete="handleDelete"
@@ -183,20 +168,20 @@ watch(
         </CardContent>
       </Card>
 
-      <!-- Dokumen Dialog -->
-      <DokumenDialog
+      <!-- Foto Dialog -->
+      <FotoDialog
         v-model:open="dialog.state.value.open"
         :mode="dialog.state.value.mode"
-        :dokumen="dialog.state.value.data"
-        widthClass="sm:max-w-[600px]"
-        @success="handleDokumenDialogSuccess"
+        :foto="dialog.state.value.data"
+        widthClass="sm:max-w-[700px]"
+        @success="handleFotoDialogSuccess"
       />
 
       <!-- Confirm Delete Dialog -->
       <BaseConfirmDialog
         v-model:open="confirmDialog.state.value.open"
-        title="Hapus Dokumen"
-        :description="`Apakah Anda yakin ingin menghapus dokumen '${confirmDialog.state.value.data?.nama}'? Tindakan ini tidak dapat dibatalkan.`"
+        title="Hapus Foto"
+        :description="`Apakah Anda yakin ingin menghapus foto '${confirmDialog.state.value.data?.judul}'? Tindakan ini tidak dapat dibatalkan.`"
         confirm-text="Hapus"
         variant="destructive"
         :loading="confirmDialog.state.value.loading"

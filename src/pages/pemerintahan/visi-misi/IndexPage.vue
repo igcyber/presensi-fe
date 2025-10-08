@@ -67,7 +67,7 @@ onMounted(async () => {
             <template #other>
               <!-- Hero Image -->
               <div
-                v-if="misi.foto.split('/')[misi.foto.split('/').length - 1] != 'nopict.jpg'"
+                v-if="misi.foto && misi.foto.split('/')[misi.foto.split('/').length - 1] != 'nopict.jpg'"
                 class="mb-8 h-80 w-full overflow-hidden rounded shadow-lg"
               >
                 <img :src="misi.fotoUrl" :alt="misi.nama" class="h-full w-full object-cover" />

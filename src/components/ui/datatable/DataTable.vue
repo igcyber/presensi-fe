@@ -1,8 +1,9 @@
 <script setup lang="ts" generic="T">
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, EditIcon, Filter, RotateCcw, TrashIcon } from "lucide-vue-next";
+import { Calendar as CalendarIcon, EditIcon, Eye, Filter, RotateCcw, TrashIcon } from "lucide-vue-next";
 import { computed, ref } from "vue";
 
+import FilePreviewDialog from "@/components/dialogs/FilePreviewDialog.vue";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
@@ -20,6 +21,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
+import { useFilePreview } from "@/composables/useFilePreview";
 import { useFormatters } from "@/composables/useFormatters";
 
 // Interfaces
@@ -32,6 +34,9 @@ export interface Column<T = any> {
   render?: (item: T) => string | number;
   htmlContent?: boolean; // Untuk kolom yang berisi HTML
   stripHtml?: boolean; // Untuk menghilangkan HTML tags
+  previewable?: boolean; // Untuk kolom yang bisa di-preview (file, gambar, dll)
+  previewUrl?: (item: T) => string; // Function untuk mendapatkan URL preview
+  previewName?: (item: T) => string; // Function untuk mendapatkan nama file
 }
 
 export interface FilterOption {
@@ -83,6 +88,7 @@ const emit = defineEmits<{
 
 // Composables
 const formatters = useFormatters();
+const filePreview = useFilePreview();
 
 // State
 const searchQuery = ref("");
@@ -124,6 +130,20 @@ const handleEdit = (item: T) => {
 
 const handleDelete = (item: T) => {
   emit("delete", item);
+};
+
+const handlePreview = (item: T, column: Column<T>) => {
+  if (!column.previewable || !column.previewUrl) return;
+
+  const url = column.previewUrl(item);
+  const name = column.previewName ? column.previewName(item) : undefined;
+
+  if (url) {
+    filePreview.previewFile({
+      url,
+      name,
+    });
+  }
 };
 
 const goToPage = (page: number) => {
@@ -416,6 +436,16 @@ const formatCellValue = (item: T, column: Column<T>) => {
                 </div>
               </template>
 
+              <!-- Previewable columns -->
+              <template v-else-if="column.previewable && column.previewUrl">
+                <div class="max-w-xs">
+                  <Button variant="link" size="sm" @click.stop="handlePreview(item, column)" class="h-6 w-6">
+                    <Eye class="h-3 w-3" />
+                    <span class="">{{ formatCellValue(item, column) }}</span>
+                  </Button>
+                </div>
+              </template>
+
               <!-- Other columns -->
               <template v-else>
                 {{ formatCellValue(item, column) }}
@@ -475,4 +505,18 @@ const formatCellValue = (item: T, column: Column<T>) => {
       </PaginationContent>
     </Pagination>
   </div>
+
+  <!-- File Preview Dialog -->
+  <FilePreviewDialog
+    v-model:open="filePreview.isOpen.value"
+    :file="filePreview.currentFile.value"
+    :title="filePreview.options.value.title"
+    :show-download="filePreview.options.value.showDownload"
+    :show-external-link="filePreview.options.value.showExternalLink"
+    :show-file-info="filePreview.options.value.showFileInfo"
+    :max-width="filePreview.options.value.maxWidth"
+    :max-height="filePreview.options.value.maxHeight"
+    @download="filePreview.handleDownload"
+    @external-link="filePreview.handleExternalLink"
+  />
 </template>

@@ -19,6 +19,7 @@ import radioRoute from "@/pages/app/radio/route";
 import statikRoute from "@/pages/app/statik/route";
 import surveiKepuasanRoute from "@/pages/app/survei-kepuasan/route";
 
+import fotoRoute from "./foto/route";
 import userRoute from "./user/route";
 import videoRoute from "./video/route";
 
@@ -51,5 +52,6 @@ export default {
     ...aplikasiTerkaitRoute,
     ...surveiKepuasanRoute,
     ...ppidRoute,
+    ...fotoRoute,
   ],
 };

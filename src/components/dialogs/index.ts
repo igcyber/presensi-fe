@@ -19,4 +19,5 @@ export { default as AplikasiTerkaitDialog } from "./AplikasiTerkaitDialog.vue";
 export { default as MajalahDialog } from "./MajalahDialog.vue";
 export { default as UserDialog } from "./UserDialog.vue";
 export { default as VideoDialog } from "./VideoDialog.vue";
+export { default as FotoDialog } from "./FotoDialog.vue";
 export { default as PPIDDialog } from "./PPIDDialog.vue";

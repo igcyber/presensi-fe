@@ -29,12 +29,6 @@ export const createKontenSchema = z.object({
 export const updateKontenSchema = z.object({
   nama: z.string().min(3, "Nama minimal 3 karakter").max(100, "Nama maksimal 100 karakter").optional(),
   isi: z.string().min(1, "Isi konten wajib diisi").optional(),
-  slug: z
-    .string()
-    .min(3, "Slug minimal 3 karakter")
-    .max(100, "Slug maksimal 100 karakter")
-    .regex(/^[a-z0-9-]+$/, "Slug hanya boleh berisi huruf kecil, angka, dan tanda hubung")
-    .optional(),
   foto: z
     .any()
     .optional()

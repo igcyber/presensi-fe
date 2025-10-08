@@ -40,7 +40,6 @@ export interface CreateKontenRequest {
 export interface UpdateKontenRequest {
   nama?: string;
   isi?: string;
-  slug?: string;
   foto?: File | string;
 }
 

@@ -17,11 +17,7 @@ export const createDokumenSchema = z.object({
     }
     return false;
   }, "File wajib diisi dan harus berupa PDF"),
-  isi: z
-    .string()
-    .min(1, "Deskripsi dokumen wajib diisi")
-    .min(10, "Deskripsi minimal 10 karakter")
-    .max(1000, "Deskripsi maksimal 1000 karakter"),
+  isi: z.string().min(1, "Deskripsi dokumen wajib diisi").max(1000, "Deskripsi maksimal 1000 karakter"),
 });
 
 // Schema untuk update dokumen
@@ -40,7 +36,7 @@ export const updateDokumenSchema = z.object({
       }
       return false;
     }, "File harus berupa PDF"),
-  isi: z.string().min(10, "Deskripsi minimal 10 karakter").max(1000, "Deskripsi maksimal 1000 karakter").optional(),
+  isi: z.string().min(1, "Deskripsi dokumen wajib diisi").max(1000, "Deskripsi maksimal 1000 karakter").optional(),
 });
 
 // Schema untuk dokumen query parameters

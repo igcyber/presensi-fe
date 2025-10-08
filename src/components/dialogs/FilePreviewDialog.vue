@@ -144,14 +144,7 @@ watch([open, () => props.file], ([newOpen, newFile], [_oldOpen, oldFile]) => {
 
 <template>
   <Dialog v-model:open="open">
-    <DialogContent
-      :class="[
-        'gap-0 p-0',
-        isFullscreen
-          ? 'h-auto max-h-[90vh] min-h-[70vh] w-[95vw] max-w-[95vw] sm:max-w-[600px]'
-          : `max-w-[${maxWidth}] max-h-[${maxHeight}]`,
-      ]"
-    >
+    <DialogContent :class="['!max-w-[100vw] gap-0 p-0', isFullscreen ? `w-[80vw]` : `!w-[1000px]`]">
       <!-- Header -->
       <DialogHeader class="flex flex-col space-y-2 p-4 pb-2">
         <DialogTitle class="flex-1 truncate text-left text-base sm:text-lg">

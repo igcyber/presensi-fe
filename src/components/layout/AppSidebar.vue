@@ -130,6 +130,13 @@ const data = computed(() => ({
       isActive: routNameActive.value === "app.video" || routNameActive.value === "app.video.detail",
     },
     {
+      title: "Foto",
+      url: "/app/foto",
+      name: "app.foto",
+      icon: Image,
+      isActive: routNameActive.value === "app.foto" || routNameActive.value === "app.foto.detail",
+    },
+    {
       title: "Prestasi",
       url: "/app/prestasi",
       name: "app.prestasi",

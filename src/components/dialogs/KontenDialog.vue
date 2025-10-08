@@ -33,7 +33,6 @@ const initialValues = computed(() =>
     : {
         nama: props.konten?.nama ?? "",
         isi: props.konten?.isi ?? "",
-        slug: props.konten?.slug ?? "",
       },
 );
 
@@ -73,6 +72,7 @@ async function onSubmit(values: any) {
       <BaseInput name="nama" label="Nama Konten" placeholder="Masukkan nama konten" required />
 
       <BaseInput
+        v-if="mode === 'create'"
         name="slug"
         label="Slug"
         placeholder="Masukkan slug (contoh: visi-dan-misi)"

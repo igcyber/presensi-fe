@@ -17,4 +17,5 @@ export * from "./majalah";
 export * from "./media";
 export * from "./user";
 export * from "./video";
+export * from "./foto";
 export * from "./survei";
