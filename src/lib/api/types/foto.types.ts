@@ -18,8 +18,8 @@ export interface Foto extends BaseEntity {
   foto: string;
   createdBy: number;
   updatedBy: number;
-  createdByUser: User;
-  updatedByUser: User;
+  createdByUser: Omit<User, "nip,roles">;
+  updatedByUser: Omit<User, "nip,roles">;
   fotoUrl: string;
   foto_url: string;
 }
@@ -34,7 +34,7 @@ export type FotoListResponse = PaginatedPayload<Foto>;
  * Foto list public response interface
  * Represents paginated foto data from API for public access
  */
-export type FotoListPublicResponse = PaginatedPayload<Foto>;
+export type FotoListPublicResponse = PaginatedPayload<Omit<Foto, "createdByUser,updatedByUser">>;
 
 /**
  * Foto create request payload

@@ -77,6 +77,7 @@ const navigation = ref<NavigationItem[]>([
     path: "/media",
     children: [
       { title: "Video", path: "/media/video" },
+      { title: "Foto", path: "/media/foto" },
       { title: "Dokumen", path: "/media/dokumen" },
       { title: "Infografis", path: "/media/infografis" },
       { title: "E-Magazine", path: "/media/majalah" },

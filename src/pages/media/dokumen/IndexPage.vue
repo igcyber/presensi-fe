@@ -120,7 +120,7 @@ onMounted(async () => {
 
                   <!-- Document Name/Link -->
                   <a
-                    :href="`https://kukarkab.go.id/uploads/documents/${dokumen.file}`"
+                    :href="dokumen.fileUrl"
                     target="_blank"
                     rel="noopener noreferrer"
                     class="hover:text-portal-green mb-3 block text-center text-lg font-semibold text-gray-900 transition-colors duration-200"
@@ -142,7 +142,7 @@ onMounted(async () => {
 
                   <!-- Download Button -->
                   <a
-                    :href="`https://kukarkab.go.id/uploads/documents/${dokumen.file}`"
+                    :href="dokumen.fileUrl"
                     target="_blank"
                     rel="noopener noreferrer"
                     class="bg-portal-green hover:bg-portal-green/90 flex w-full items-center justify-center rounded-md px-4 py-2 text-white transition-colors duration-200"

@@ -8,19 +8,20 @@ import { useFetch } from "@/composables/useFetch";
 import { useFormatters } from "@/composables/useFormatters";
 import { usePagination } from "@/composables/usePagination";
 import { type ApiResponse } from "@/lib/api/core";
-import { type FotoListPayload, getFotos } from "@/lib/api/services/media";
+import { getFotoPublic } from "@/lib/api/services/foto";
+import { type FotoListPublicResponse } from "@/lib/api/types/foto.types";
 
 const { date } = useFormatters();
 const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
 
 // Fetch infografis data
-const { data, isLoading, error, isError, fetchData } = useFetch<ApiResponse<FotoListPayload>, FotoListPayload>(
-  () => getFotos(currentPage.value),
-  {
-    immediate: false,
-    extractData: (response) => response.data,
-  },
-);
+const { data, isLoading, error, isError, fetchData } = useFetch<
+  ApiResponse<FotoListPublicResponse>,
+  FotoListPublicResponse
+>(() => getFotoPublic({ page: currentPage.value }), {
+  immediate: false,
+  extractData: (response) => response.data,
+});
 
 const prevPage = () => {
   if (currentPage.value > 1) {
@@ -94,18 +95,18 @@ onMounted(async () => {
 
         <!-- Content -->
         <div v-else-if="data">
-          <template v-if="data.fotos.length > 0">
+          <template v-if="data.data.length > 0">
             <!-- Photo Gallery Grid -->
             <div class="mb-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               <div
-                v-for="foto in data.fotos"
+                v-for="foto in data.data"
                 :key="foto.id"
                 class="group overflow-hidden rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
               >
                 <!-- Photo Container -->
                 <div class="relative aspect-[4/3] overflow-hidden">
                   <img
-                    :src="`https://kukarkab.go.id/uploads/banners/${foto.foto}`"
+                    :src="foto.fotoUrl"
                     :alt="foto.judul"
                     class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     loading="lazy"
@@ -116,7 +117,7 @@ onMounted(async () => {
                     class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                   >
                     <a
-                      :href="`https://kukarkab.go.id/uploads/banners/${foto.foto}`"
+                      :href="foto.fotoUrl"
                       data-lightbox="banner"
                       target="_blank"
                       rel="noopener noreferrer"
@@ -131,8 +132,8 @@ onMounted(async () => {
                 <div class="p-4">
                   <!-- Title -->
                   <a
-                    :href="`https://kukarkab.go.id/uploads/banners/${foto.foto}`"
-                    data-lightbox="banner"
+                    :href="foto.fotoUrl"
+                    data-lightbox="foto"
                     target="_blank"
                     rel="noopener noreferrer"
                     class="hover:text-portal-green mb-3 block text-lg font-semibold text-gray-900 transition-colors duration-200"
