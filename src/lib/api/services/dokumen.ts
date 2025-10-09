@@ -138,8 +138,8 @@ export const getDokumenPublic = async (
  * console.log(response.data); // Data dokumen untuk download
  * ```
  */
-export const getDokumenDownload = async (id: number): Promise<any> => {
-  const { data } = await httpInstance.get<any>(`/api/documents/${id}/download`, {
+export const getDokumenDownload = async (id: number): Promise<Blob> => {
+  const { data } = await httpInstance.get<Blob>(`/api/documents/${id}/download`, {
     responseType: "blob",
     params: {
       _t: Date.now(), // Cache busting - memastikan setiap request unik
