@@ -126,3 +126,25 @@ export const getDokumenPublic = async (
   const { data } = await httpInstance.get<ApiResponse<DokumenListPublicResponse>>("/media/dokumen", { params });
   return data;
 };
+
+/**
+ * Mendapatkan dokumen untuk download
+ * @param id - ID dokumen
+ * @returns Promise yang mengembalikan data dokumen untuk download
+ * @endpoint GET /api/documents/{id}/download
+ * @example
+ * ```typescript
+ * const response = await getDokumenDownload(123);
+ * console.log(response.data); // Data dokumen untuk download
+ * ```
+ */
+export const getDokumenDownload = async (id: number): Promise<any> => {
+  const { data } = await httpInstance.get<any>(`/api/documents/${id}/download`, {
+    responseType: "blob",
+    params: {
+      _t: Date.now(), // Cache busting - memastikan setiap request unik
+    },
+  });
+
+  return data;
+};

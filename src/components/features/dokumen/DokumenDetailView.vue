@@ -8,8 +8,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
+import { useFetch } from "@/composables";
 import { useFilePreview } from "@/composables/useFilePreview";
 import { useFormatters } from "@/composables/useFormatters";
+import { getDokumenDownload } from "@/lib/api";
 import type { Dokumen } from "@/lib/api/types/dokumen.types";
 
 // Interface definitions
@@ -37,6 +39,9 @@ const emit = defineEmits<Emits>();
 // Composables
 const { date } = useFormatters();
 const filePreview = useFilePreview();
+const { fetchData } = useFetch(() => getDokumenDownload(props.dokumen.id), {
+  immediate: false,
+});
 
 // Computed properties
 const creatorInitials = computed(() => {
@@ -67,6 +72,12 @@ const handlePreviewFullscreen = () => {
     title: `Preview: ${props.dokumen.nama}`,
     showFileInfo: true,
   });
+};
+
+const handleFileDownload = async () => {
+  await fetchData();
+
+  filePreview.handleDownload({ url: props.dokumen.fileUrl, name: props.dokumen.nama });
 };
 </script>
 
@@ -155,11 +166,7 @@ const handlePreviewFullscreen = () => {
               </div>
             </div>
             <div class="flex flex-row gap-2">
-              <Button
-                @click="filePreview.handleDownload({ url: dokumen.fileUrl, name: dokumen.nama })"
-                size="sm"
-                class="gap-2 sm:w-auto"
-              >
+              <Button @click="handleFileDownload" size="sm" class="gap-2 sm:w-auto">
                 <Download class="h-4 w-4" />
                 <span class="hidden sm:inline">Download</span>
                 <span class="sm:hidden">Download File</span>
