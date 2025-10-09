@@ -8,14 +8,14 @@ import BaseInputFile from "@/components/forms/BaseInputFile.vue";
 import BaseSelect from "@/components/forms/BaseSelect.vue";
 import BaseTextEditorEcho from "@/components/forms/BaseTextEditorEcho.vue";
 
-import { createBanner, updateBanner } from "@/lib/api/services/banner";
-import type { Banner } from "@/lib/api/types/banner.types";
-import { createBannerSchema, updateBannerSchema } from "@/schemas/bannerSchema";
+import { createInfografis, updateInfografis } from "@/lib/api/services/infografis";
+import type { Infografis } from "@/lib/api/types/infografis.types";
+import { createInfografisSchema, updateInfografisSchema } from "@/schemas/infografisSchema";
 
 interface Props {
   open: boolean;
   mode: "create" | "edit" | "view";
-  banner?: Banner | null;
+  infografis?: Infografis | null;
   widthClass?: string;
 }
 
@@ -25,7 +25,7 @@ interface Emits {
   (e: "cancel"): void;
 }
 
-const props = withDefaults(defineProps<Props>(), { banner: null });
+const props = withDefaults(defineProps<Props>(), { infografis: null });
 const emit = defineEmits<Emits>();
 
 // Status options
@@ -38,14 +38,14 @@ const initialValues = computed(() =>
   props.mode === "create"
     ? { nama: "", url: "", status: "1", isi: "", foto: "" }
     : {
-        nama: props.banner?.nama ?? "",
-        url: props.banner?.url ?? "",
-        status: (props.banner as any)?.status === "1" ? "1" : "0",
-        isi: props.banner?.isi ?? "",
+        nama: props.infografis?.nama ?? "",
+        url: props.infografis?.url ?? "",
+        status: (props.infografis as any)?.status === "1" ? "1" : "0",
+        isi: props.infografis?.isi ?? "",
       },
 );
 
-const schema = computed(() => (props.mode === "create" ? createBannerSchema : updateBannerSchema));
+const schema = computed(() => (props.mode === "create" ? createInfografisSchema : updateInfografisSchema));
 
 const open = computed({
   get: () => props.open,
@@ -56,10 +56,10 @@ const open = computed({
 
 async function onSubmit(values: any) {
   if (props.mode === "create") {
-    await createBanner(values);
+    await createInfografis(values);
     toast.success("Berhasil", { description: "Infografis berhasil ditambahkan" });
-  } else if (props.banner) {
-    await updateBanner(props.banner.id, values);
+  } else if (props.infografis) {
+    await updateInfografis(props.infografis.id, values);
     toast.success("Berhasil", { description: "Infografis berhasil diperbarui" });
   }
 }
@@ -84,7 +84,7 @@ async function onSubmit(values: any) {
         name="url"
         label="URL Infografis"
         placeholder="Masukkan URL infografis (opsional)"
-        description="Link yang akan dibuka ketika infografis diklik"
+        help-text="Link yang akan dibuka ketika infografis diklik"
       />
 
       <BaseSelect name="status" label="Status" :options="statusOptions" placeholder="Pilih status" required />
@@ -92,8 +92,8 @@ async function onSubmit(values: any) {
       <BaseTextEditorEcho
         name="isi"
         label="Isi Infografis"
-        placeholder="Masukkan isi banner (opsional)"
-        description="Konten tambahan untuk infografis"
+        placeholder="Masukkan isi infografis (opsional)"
+        help-text="Konten tambahan untuk infografis"
       />
 
       <BaseInputFile
@@ -101,8 +101,8 @@ async function onSubmit(values: any) {
         label="Foto Infografis"
         accept="image/*"
         :required="mode === 'create'"
-        description="Format: JPG, PNG, GIF, WebP. Maksimal 5MB"
-        :existing-files="props.banner?.fileUrl"
+        help-text="Format: JPG, PNG, GIF, WebP. Maksimal 5MB"
+        :existing-files="props.infografis?.fileUrl"
       />
     </div>
   </BaseFormDialog>

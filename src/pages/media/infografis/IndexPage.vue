@@ -8,17 +8,17 @@ import { useFetch } from "@/composables/useFetch";
 import { useFormatters } from "@/composables/useFormatters";
 import { usePagination } from "@/composables/usePagination";
 import { type ApiResponse } from "@/lib/api/core";
-import { getBannerPublic } from "@/lib/api/services/banner";
-import type { BannerListPublicResponse } from "@/lib/api/types/banner.types";
+import { getInfografisPublic } from "@/lib/api/services/infografis";
+import type { InfografisListPublicResponse } from "@/lib/api/types/infografis.types";
 
 const { date } = useFormatters();
 const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
 
 // Fetch infografis data
 const { data, isLoading, error, isError, fetchData } = useFetch<
-  ApiResponse<BannerListPublicResponse>,
-  BannerListPublicResponse
->(() => getBannerPublic({ page: currentPage.value }), {
+  ApiResponse<InfografisListPublicResponse>,
+  InfografisListPublicResponse
+>(() => getInfografisPublic({ page: currentPage.value }), {
   immediate: false,
   extractData: (response) => response.data,
 });

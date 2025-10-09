@@ -9,7 +9,7 @@ export * from "./konten";
 export * from "./statik";
 export * from "./radio";
 export * from "./portal";
-export * from "./banner";
+export * from "./infografis";
 export * from "./aplikasiTerkait";
 export * from "./surveiKepuasan";
 export * from "./selayang-pandang";

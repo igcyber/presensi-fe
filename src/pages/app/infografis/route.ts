@@ -1,11 +1,11 @@
-import BannerDetailPage from "./DetailPage.vue";
-import BannerPage from "./IndexPage.vue";
+import InfografisDetailPage from "./DetailPage.vue";
+import InfografisPage from "./IndexPage.vue";
 
 export default [
   {
     path: "infografis",
     name: "app.infografis",
-    component: BannerPage,
+    component: InfografisPage,
     meta: {
       requiresAuth: true,
       title: "Infografis",
@@ -14,7 +14,7 @@ export default [
   {
     path: "infografis/:id",
     name: "app.infografis.detail",
-    component: BannerDetailPage,
+    component: InfografisDetailPage,
     meta: {
       requiresAuth: true,
       title: "Detail Infografis",

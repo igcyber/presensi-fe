@@ -11,7 +11,7 @@ export * from "./kontenSchema";
 export * from "./statikSchema";
 export * from "./radioSchema";
 export * from "./portalSchema";
-export * from "./bannerSchema";
+export * from "./infografisSchema";
 export * from "./aplikasiTerkaitSchema";
 export * from "./surveiKepuasanSchema";
 export * from "./userSchema";

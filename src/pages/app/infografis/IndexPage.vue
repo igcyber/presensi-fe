@@ -4,8 +4,8 @@ import { watch } from "vue";
 import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 
-import BannerDialog from "@/components/dialogs/BannerDialog.vue";
 import BaseConfirmDialog from "@/components/dialogs/BaseConfirmDialog.vue";
+import InfografisDialog from "@/components/dialogs/InfografisDialog.vue";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { type Column, DataTable } from "@/components/ui/datatable";
@@ -14,44 +14,50 @@ import ErrorState from "@/components/ui/error-state/ErrorState.vue";
 import { useDialog } from "@/composables/useDialog";
 import { useFormatters } from "@/composables/useFormatters";
 import { useResourceList } from "@/composables/useResourceList";
-import { deleteBanner, getBanners } from "@/lib/api/services/banner";
-import type { Banner } from "@/lib/api/types/banner.types";
+import { deleteInfografis, getInfografis } from "@/lib/api/services/infografis";
+import type { Infografis } from "@/lib/api/types/infografis.types";
 
 // Composables initialization
-const {
-  items,
-  isLoading,
-  isError,
-  error,
-  pagination,
-  query,
-  fetchData,
-  handleSearch,
-  handlePageChange,
-  handleCustomFilter,
-} = useResourceList<Banner>((params) => getBanners(params), { perPage: 10, searchDebounce: 500 });
+const { items, isLoading, isError, error, pagination, query, fetchData, handleSearch, handlePageChange } =
+  useResourceList<Infografis>((params) => getInfografis(params), { perPage: 10, searchDebounce: 500 });
 
-const dialog = useDialog<Banner>();
-const confirmDialog = useDialog<Banner>();
+const dialog = useDialog<Infografis>();
+const confirmDialog = useDialog<Infografis>();
 const router = useRouter();
 
 const { truncate } = useFormatters();
 
 // Column definitions
-const columns: Column<Banner>[] = [
+const columns: Column<Infografis>[] = [
   {
     key: "nama",
     label: "Nama Infografis",
     sortable: true,
     searchable: true,
-    width: "200px",
+    width: "250px",
+  },
+  {
+    key: "foto",
+    label: "Preview",
+    sortable: false,
+    width: "150px",
+    previewable: true,
+    previewUrl: (item: Infografis): string => {
+      return item.fileUrl || item.foto_url;
+    },
+    previewName: (item: Infografis): string => {
+      return item.nama;
+    },
+    render: (_item: Infografis): string => {
+      return "Gambar";
+    },
   },
   {
     key: "url",
     label: "URL",
     sortable: false,
     width: "200px",
-    render: (item: Banner): string => {
+    render: (item: Infografis): string => {
       const url = item.url || "";
       return url ? truncate(url, 30) : "-";
     },
@@ -61,7 +67,7 @@ const columns: Column<Banner>[] = [
     label: "Status",
     sortable: true,
     width: "100px",
-    render: (item: Banner): string => {
+    render: (item: Infografis): string => {
       return item.status === "1" ? "Aktif" : "Tidak Aktif";
     },
   },
@@ -70,7 +76,7 @@ const columns: Column<Banner>[] = [
     label: "Pembuat",
     sortable: false,
     width: "150px",
-    render: (item: Banner): string => item.createdByUser?.fullName || "Unknown",
+    render: (item: Infografis): string => item.createdByUser?.fullName || "Unknown",
   },
   {
     key: "createdAt",
@@ -85,15 +91,15 @@ const openCreateDialog = (): void => {
   dialog.openCreate();
 };
 
-const handleRowClick = (item: Banner): void => {
+const handleRowClick = (item: Infografis): void => {
   router.push({ name: "app.infografis.detail", params: { id: item.id.toString() } });
 };
 
-const handleEdit = (item: Banner): void => {
+const handleEdit = (item: Infografis): void => {
   dialog.openEdit(item);
 };
 
-const handleDelete = (item: Banner): void => {
+const handleDelete = (item: Infografis): void => {
   confirmDialog.openView(item);
 };
 
@@ -102,13 +108,13 @@ const confirmDelete = async (): Promise<void> => {
 
   try {
     confirmDialog.setLoading(true);
-    const banner = confirmDialog.state.value.data;
+    const infografis = confirmDialog.state.value.data;
 
-    await deleteBanner(banner.id);
+    await deleteInfografis(infografis.id);
     fetchData();
 
     toast.success("Berhasil menghapus infografis", {
-      description: `Infografis "${banner.nama}" telah dihapus`,
+      description: `Infografis "${infografis.nama}" telah dihapus`,
     });
 
     confirmDialog.closeDialog();
@@ -120,7 +126,7 @@ const confirmDelete = async (): Promise<void> => {
   }
 };
 
-const handleBannerDialogSuccess = (): void => {
+const handleInfografisDialogSuccess = (): void => {
   dialog.closeDialog();
   fetchData();
 };
@@ -172,7 +178,6 @@ watch(
             :loading="isLoading"
             @page-change="handlePageChange"
             @search="handleSearch"
-            @custom-filter="handleCustomFilter"
             @row-click="handleRowClick"
             @edit="handleEdit"
             @delete="handleDelete"
@@ -180,13 +185,13 @@ watch(
         </CardContent>
       </Card>
 
-      <!-- Banner Dialog -->
-      <BannerDialog
+      <!-- Infografis Dialog -->
+      <InfografisDialog
         v-model:open="dialog.state.value.open"
         :mode="dialog.state.value.mode"
-        :banner="dialog.state.value.data"
+        :infografis="dialog.state.value.data"
         widthClass="sm:max-w-[700px]"
-        @success="handleBannerDialogSuccess"
+        @success="handleInfografisDialogSuccess"
       />
 
       <!-- Confirm Delete Dialog -->

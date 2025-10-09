@@ -4,40 +4,40 @@ import { computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 
-import BannerDialog from "@/components/dialogs/BannerDialog.vue";
 import BaseConfirmDialog from "@/components/dialogs/BaseConfirmDialog.vue";
-import BannerDetailView from "@/components/features/banner/BannerDetailView.vue";
+import InfografisDialog from "@/components/dialogs/InfografisDialog.vue";
+import InfografisDetailView from "@/components/features/infografis/InfografisDetailView.vue";
 import { Button } from "@/components/ui/button";
 import ErrorState from "@/components/ui/error-state/ErrorState.vue";
 
 import { useDialog } from "@/composables/useDialog";
 import { useFetch } from "@/composables/useFetch";
 import type { ApiResponse } from "@/lib/api/core";
-import { deleteBanner, getBannerById } from "@/lib/api/services/banner";
-import type { BannerDetailResponse } from "@/lib/api/types/banner.types";
+import { deleteInfografis, getInfografisById } from "@/lib/api/services/infografis";
+import type { InfografisDetailResponse } from "@/lib/api/types/infografis.types";
 
 // Router dan route
 const route = useRoute();
 const router = useRouter();
 
 // Computed properties
-const bannerId = computed(() => {
+const infografisId = computed(() => {
   const id = route.params.id;
   return typeof id === "string" ? parseInt(id, 10) : 0;
 });
 
 // Composables
-const dialog = useDialog<BannerDetailResponse>();
-const confirmDialog = useDialog<BannerDetailResponse>();
+const dialog = useDialog<InfografisDetailResponse>();
+const confirmDialog = useDialog<InfografisDetailResponse>();
 
 const { data, isLoading, isError, error, fetchData } = useFetch<
-  ApiResponse<BannerDetailResponse>,
-  BannerDetailResponse
->(() => getBannerById(bannerId.value), {
+  ApiResponse<InfografisDetailResponse>,
+  InfografisDetailResponse
+>(() => getInfografisById(infografisId.value), {
   immediate: false,
   extractData: (response) => response.data,
   onError: (error) => {
-    toast.error("Gagal memuat detail banner", {
+    toast.error("Gagal memuat detail infografis", {
       description: error.message,
     });
   },
@@ -48,12 +48,12 @@ const handleBack = () => {
   router.push({ name: "app.infografis" });
 };
 
-const handleEdit = (banner: BannerDetailResponse) => {
-  dialog.openEdit(banner);
+const handleEdit = (infografis: InfografisDetailResponse) => {
+  dialog.openEdit(infografis);
 };
 
-const handleDelete = (banner: BannerDetailResponse) => {
-  confirmDialog.openView(banner);
+const handleDelete = (infografis: InfografisDetailResponse) => {
+  confirmDialog.openView(infografis);
 };
 
 const confirmDelete = async () => {
@@ -61,31 +61,26 @@ const confirmDelete = async () => {
 
   try {
     confirmDialog.setLoading(true);
-    const banner = confirmDialog.state.value.data;
-    await deleteBanner(banner.id);
+    const infografis = confirmDialog.state.value.data;
+    await deleteInfografis(infografis.id);
 
     toast.success("Berhasil menghapus infografis", {
-      description: `Banner "${banner.nama}" telah dihapus`,
+      description: `Infografis "${infografis.nama}" telah dihapus`,
     });
 
     confirmDialog.closeDialog();
     handleBack(); // kembali ke list setelah delete
   } catch (err: unknown) {
     const errorMessage = err instanceof Error ? err.message : "Gagal menghapus infografis";
-    toast.error("Gagal menghapus banner", { description: errorMessage });
+    toast.error("Gagal menghapus infografis", { description: errorMessage });
   } finally {
     confirmDialog.setLoading(false);
   }
 };
 
-const handleBannerDialogSuccess = (): void => {
-  dialog.closeDialog();
-  fetchData();
-};
-
 // Lifecycle hooks
 onMounted(() => {
-  if (bannerId.value > 0) {
+  if (infografisId.value > 0) {
     fetchData();
   } else {
     toast.error("ID infografis tidak valid");
@@ -106,13 +101,13 @@ onMounted(() => {
 
     <!-- Error State -->
     <div v-else-if="isError" class="flex min-h-screen items-center justify-center">
-      <ErrorState :message="error?.message || 'Gagal memuat detail banner'" @retry="fetchData" />
+      <ErrorState :message="error?.message || 'Gagal memuat detail infografis'" @retry="fetchData" />
     </div>
 
     <!-- Content -->
     <div v-else-if="data" class="py-6">
-      <BannerDetailView
-        :banner="data"
+      <InfografisDetailView
+        :infografis="data"
         :show-back-button="true"
         @back="handleBack"
         @edit="handleEdit"
@@ -123,31 +118,31 @@ onMounted(() => {
           <div class="flex flex-wrap gap-2">
             <Button variant="outline" size="sm" @click="onEdit">
               <Edit class="mr-2 h-4 w-4" />
-              Edit Banner
+              Edit Infografis
             </Button>
             <Button variant="destructive" size="sm" @click="onDelete">
               <Trash2 class="mr-2 h-4 w-4" />
-              Hapus Banner
+              Hapus Infografis
             </Button>
           </div>
         </template>
-      </BannerDetailView>
+      </InfografisDetailView>
     </div>
 
     <!-- Edit Dialog -->
-    <BannerDialog
+    <InfografisDialog
       v-model:open="dialog.state.value.open"
       :mode="dialog.state.value.mode"
-      :banner="dialog.state.value.data"
+      :infografis="dialog.state.value.data"
       widthClass="sm:max-w-[700px]"
-      @success="handleBannerDialogSuccess"
+      @success="fetchData"
     />
 
     <!-- Confirm Delete Dialog -->
     <BaseConfirmDialog
       v-model:open="confirmDialog.state.value.open"
-      title="Hapus Banner"
-      :description="`Apakah Anda yakin ingin menghapus banner '${confirmDialog.state.value.data?.nama}'? Tindakan ini tidak dapat dibatalkan.`"
+      title="Hapus Infografis"
+      :description="`Apakah Anda yakin ingin menghapus infografis '${confirmDialog.state.value.data?.nama}'? Tindakan ini tidak dapat dibatalkan.`"
       confirm-text="Hapus"
       variant="destructive"
       :loading="confirmDialog.state.value.loading"

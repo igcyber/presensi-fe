@@ -1,13 +1,6 @@
 import type { BaseEntity, PaginatedPayload } from "@/lib/api/core/apiResponse";
 
-/**
- * User interface for created/updated by information
- */
-export interface User {
-  id: number;
-  fullName: string;
-  username: string;
-}
+import type { User } from "./user.types";
 
 /**
  * Foto entity interface
@@ -18,8 +11,8 @@ export interface Foto extends BaseEntity {
   foto: string;
   createdBy: number;
   updatedBy: number;
-  createdByUser: Omit<User, "nip,roles">;
-  updatedByUser: Omit<User, "nip,roles">;
+  createdByUser: User;
+  updatedByUser: User;
   fotoUrl: string;
   foto_url: string;
 }

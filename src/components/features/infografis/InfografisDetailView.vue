@@ -9,18 +9,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
 import { useFormatters } from "@/composables/useFormatters";
-import type { Banner } from "@/lib/api/types/banner.types";
+import type { Infografis } from "@/lib/api/types/infografis.types";
 
 interface Props {
-  banner: Banner;
+  infografis: Infografis;
   showBackButton?: boolean;
   loading?: boolean;
 }
 
 interface Emits {
   (e: "back"): void;
-  (e: "edit", banner: Banner): void;
-  (e: "delete", banner: Banner): void;
+  (e: "edit", infografis: Infografis): void;
+  (e: "delete", infografis: Infografis): void;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -35,7 +35,7 @@ const { date } = useFormatters();
 
 // Computed properties
 const creatorInitials = computed(() => {
-  const name = props.banner.createdByUser?.fullName || "Unknown";
+  const name = props.infografis.createdByUser?.fullName || "Unknown";
   return name
     .split(" ")
     .map((word) => word[0])
@@ -45,7 +45,7 @@ const creatorInitials = computed(() => {
 });
 
 const statusBadge = computed(() => {
-  return props.banner.status === "1"
+  return props.infografis.status === "1"
     ? { label: "Aktif", variant: "default" as const }
     : { label: "Tidak Aktif", variant: "secondary" as const };
 });
@@ -56,16 +56,16 @@ const handleBack = () => {
 };
 
 const handleEdit = () => {
-  emit("edit", props.banner);
+  emit("edit", props.infografis);
 };
 
 const handleDelete = () => {
-  emit("delete", props.banner);
+  emit("delete", props.infografis);
 };
 
-const handleOpenBanner = () => {
-  if (props.banner.url) {
-    window.open(props.banner.url, "_blank");
+const handleOpenInfografis = () => {
+  if (props.infografis.url) {
+    window.open(props.infografis.url, "_blank");
   }
 };
 </script>
@@ -85,7 +85,7 @@ const handleOpenBanner = () => {
       <CardHeader class="space-y-4">
         <!-- Title -->
         <CardTitle class="text-2xl leading-tight font-bold lg:text-3xl">
-          {{ banner.nama }}
+          {{ infografis.nama }}
         </CardTitle>
 
         <!-- Meta Information -->
@@ -99,7 +99,7 @@ const handleOpenBanner = () => {
             </Avatar>
             <div class="flex items-center gap-1">
               <User class="h-4 w-4" />
-              <span class="truncate">{{ banner.createdByUser?.fullName || "Unknown" }}</span>
+              <span class="truncate">{{ infografis.createdByUser?.fullName || "Unknown" }}</span>
             </div>
           </div>
 
@@ -111,13 +111,13 @@ const handleOpenBanner = () => {
           <!-- Created Date -->
           <div class="flex items-center gap-1">
             <Calendar class="h-4 w-4" />
-            <span class="truncate">{{ date(banner.createdAt) }}</span>
+            <span class="truncate">{{ date(infografis.createdAt) }}</span>
           </div>
         </div>
 
         <!-- Action Buttons Slot -->
         <div class="flex flex-wrap gap-2">
-          <slot name="actions" :banner="banner" :on-edit="handleEdit" :on-delete="handleDelete">
+          <slot name="actions" :infografis="infografis" :on-edit="handleEdit" :on-delete="handleDelete">
             <!-- Default actions (can be overridden by parent) -->
             <Button variant="outline" size="sm" @click="handleEdit"> Edit </Button>
             <Button variant="destructive" size="sm" @click="handleDelete"> Hapus </Button>
@@ -126,54 +126,55 @@ const handleOpenBanner = () => {
       </CardHeader>
     </Card>
 
-    <!-- Banner Image Card -->
-    <Card v-if="banner.foto && banner.fileUrl">
+    <!-- Infografis Image Card -->
+    <Card v-if="infografis.foto && infografis.fileUrl">
       <CardHeader>
         <CardTitle class="flex items-center gap-2">
           <Image class="h-5 w-5" />
-          Gambar Banner
+          Gambar Infografis
         </CardTitle>
       </CardHeader>
       <Separator />
       <CardContent class="space-y-4">
-        <!-- Banner Image -->
+        <!-- Infografis Image -->
         <div class="flex justify-center">
           <div class="relative overflow-hidden rounded-lg border shadow-sm" style="max-width: 100%; width: 100%">
             <img
-              :src="banner.fileUrl"
-              :alt="banner.nama"
+              :src="infografis.fileUrl"
+              :alt="infografis.nama"
               class="h-auto w-full max-w-2xl object-contain"
-              style="max-height: 400px"
+              style="max-height: 600px"
+              loading="lazy"
             />
           </div>
         </div>
       </CardContent>
     </Card>
 
-    <!-- Banner Info Card -->
+    <!-- Infografis Info Card -->
     <Card>
       <CardHeader>
         <CardTitle class="flex items-center gap-2">
           <ExternalLink class="h-5 w-5" />
-          Informasi Banner
+          Informasi Infografis
         </CardTitle>
       </CardHeader>
       <Separator />
       <CardContent class="space-y-4">
-        <!-- Banner URL Info -->
-        <div v-if="banner.url" class="bg-muted/50 rounded-lg p-4">
+        <!-- Infografis URL Info -->
+        <div v-if="infografis.url" class="bg-muted/50 rounded-lg p-4">
           <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div class="flex min-w-0 flex-1 items-center gap-3">
               <div class="flex-shrink-0 rounded-lg bg-blue-100 p-2 dark:bg-blue-900/20">
                 <ExternalLink class="h-6 w-6 text-blue-600 dark:text-blue-400" />
               </div>
               <div class="min-w-0 flex-1">
-                <p class="font-medium break-words">{{ banner.nama }}</p>
-                <p class="text-muted-foreground text-sm break-all">{{ banner.url }}</p>
+                <p class="font-medium break-words">{{ infografis.nama }}</p>
+                <p class="text-muted-foreground text-sm break-all">{{ infografis.url }}</p>
               </div>
             </div>
             <div class="flex flex-shrink-0">
-              <Button @click="handleOpenBanner" class="w-full gap-2 sm:w-auto">
+              <Button @click="handleOpenInfografis" class="w-full gap-2 sm:w-auto">
                 <ExternalLink class="h-4 w-4" />
                 <span class="hidden sm:inline">Buka Link</span>
                 <span class="sm:hidden">Buka</span>
@@ -193,13 +194,13 @@ const handleOpenBanner = () => {
     </Card>
 
     <!-- Content Card -->
-    <Card v-if="banner.isi">
+    <Card v-if="infografis.isi">
       <CardHeader>
-        <CardTitle class="text-xl">Isi Banner</CardTitle>
+        <CardTitle class="text-xl">Isi Infografis</CardTitle>
       </CardHeader>
       <Separator />
       <CardContent>
-        <div class="text-foreground leading-relaxed" v-html="banner.isi"></div>
+        <div class="text-foreground leading-relaxed" v-html="infografis.isi"></div>
       </CardContent>
     </Card>
 
@@ -213,26 +214,26 @@ const handleOpenBanner = () => {
             <div class="text-muted-foreground space-y-1">
               <p class="truncate">
                 <span class="font-medium">Dibuat oleh:</span>
-                {{ banner.createdByUser?.fullName || "Unknown" }}
+                {{ infografis.createdByUser?.fullName || "Unknown" }}
               </p>
               <p class="truncate">
                 <span class="font-medium">Tanggal:</span>
-                {{ date(banner.createdAt) }}
+                {{ date(infografis.createdAt) }}
               </p>
             </div>
           </div>
 
           <!-- Updated Info (if different from created) -->
-          <div v-if="banner.updatedAt && banner.updatedAt !== banner.createdAt" class="space-y-1">
+          <div v-if="infografis.updatedAt && infografis.updatedAt !== infografis.createdAt" class="space-y-1">
             <p class="text-foreground font-medium">Informasi Update</p>
             <div class="text-muted-foreground space-y-1">
               <p class="truncate">
                 <span class="font-medium">Diperbarui oleh:</span>
-                {{ banner.updatedByUser?.fullName || "Unknown" }}
+                {{ infografis.updatedByUser?.fullName || "Unknown" }}
               </p>
               <p class="truncate">
                 <span class="font-medium">Tanggal:</span>
-                {{ date(banner.updatedAt) }}
+                {{ date(infografis.updatedAt) }}
               </p>
             </div>
           </div>

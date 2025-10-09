@@ -3,7 +3,7 @@ import { Download, ExternalLink, FileIcon, Maximize2, Minimize2, ZoomIn, ZoomOut
 import { computed, ref, watch } from "vue";
 
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 import { useFormatters } from "@/composables/useFormatters";
 
@@ -150,6 +150,10 @@ watch([open, () => props.file], ([newOpen, newFile], [_oldOpen, oldFile]) => {
         <DialogTitle class="flex-1 truncate text-left text-base sm:text-lg">
           {{ title }}
         </DialogTitle>
+
+        <DialogDescription class="text-muted-foreground text-sm">
+          Preview file untuk melihat konten secara detail
+        </DialogDescription>
 
         <!-- Actions -->
         <div class="flex flex-wrap items-center gap-1 sm:gap-2">

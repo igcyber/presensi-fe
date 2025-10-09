@@ -1,11 +1,12 @@
 import AuthLayout from "@/layouts/AuthLayout.vue";
 import aplikasiTerkaitRoute from "@/pages/app/aplikasi-terkait/route";
-import bannerRoute from "@/pages/app/banner/route";
 import beritaRoute from "@/pages/app/berita/route";
 import bupatiRoute from "@/pages/app/bupati/route";
 import dashboardDataRoute from "@/pages/app/dashboard-data/route";
 import dashboardRoute from "@/pages/app/dashboard/route";
 import dokumenRoute from "@/pages/app/dokumen/route";
+import fotoRoute from "@/pages/app/foto/route";
+import infografisRoute from "@/pages/app/infografis/route";
 import kontenRoute from "@/pages/app/konten/route";
 import layananRoute from "@/pages/app/layanan/route";
 import majalahRoute from "@/pages/app/majalah/route";
@@ -18,10 +19,8 @@ import profileRoute from "@/pages/app/profile/route";
 import radioRoute from "@/pages/app/radio/route";
 import statikRoute from "@/pages/app/statik/route";
 import surveiKepuasanRoute from "@/pages/app/survei-kepuasan/route";
-
-import fotoRoute from "./foto/route";
-import userRoute from "./user/route";
-import videoRoute from "./video/route";
+import userRoute from "@/pages/app/user/route";
+import videoRoute from "@/pages/app/video/route";
 
 export default {
   path: "/app",
@@ -46,9 +45,9 @@ export default {
     ...opdRoute,
     ...kontenRoute,
     ...statikRoute,
+    ...infografisRoute,
     ...radioRoute,
     ...portalRoute,
-    ...bannerRoute,
     ...aplikasiTerkaitRoute,
     ...surveiKepuasanRoute,
     ...ppidRoute,

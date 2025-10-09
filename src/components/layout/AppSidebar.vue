@@ -115,6 +115,13 @@ const data = computed(() => ({
       isActive: routNameActive.value === "app.foto" || routNameActive.value === "app.foto.detail",
     },
     {
+      title: "Dokumen",
+      url: "/app/dokumen",
+      name: "app.dokumen",
+      icon: FileText,
+      isActive: routNameActive.value === "app.dokumen" || routNameActive.value === "app.dokumen.detail",
+    },
+    {
       title: "Statik",
       url: "/app/statik",
       name: "app.statik",
@@ -150,13 +157,7 @@ const data = computed(() => ({
       icon: FileText,
       isActive: routNameActive.value === "app.ppid" || routNameActive.value === "app.ppid.detail",
     },
-    // {
-    //   title: "Dokumen",
-    //   url: "/app/dokumen",
-    //   name: "app.dokumen",
-    //   icon: FileText,
-    //   isActive: routNameActive.value === "app.dokumen" || routNameActive.value === "app.dokumen.detail",
-    // },
+
     // {
     //   title: "Majalah",
     //   url: "/app/majalah",

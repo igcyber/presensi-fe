@@ -14,7 +14,7 @@ export { default as RadioDialog } from "./RadioDialog.vue";
 export { default as PortalDialog } from "./PortalDialog.vue";
 export { default as PortalKatDialog } from "./PortalKatDialog.vue";
 export { default as PortalSubDialog } from "./PortalSubDialog.vue";
-export { default as BannerDialog } from "./BannerDialog.vue";
+export { default as InfografisDialog } from "./InfografisDialog.vue";
 export { default as AplikasiTerkaitDialog } from "./AplikasiTerkaitDialog.vue";
 export { default as MajalahDialog } from "./MajalahDialog.vue";
 export { default as UserDialog } from "./UserDialog.vue";
