@@ -5,7 +5,6 @@ import { toast } from "vue-sonner";
 import BaseFormDialog from "@/components/dialogs/BaseFormDialog.vue";
 import BaseInput from "@/components/forms/BaseInput.vue";
 import BaseInputFile from "@/components/forms/BaseInputFile.vue";
-import BaseSelect from "@/components/forms/BaseSelect.vue";
 import BaseTextarea from "@/components/forms/BaseTextarea.vue";
 import BaseTextEditorEcho from "@/components/forms/BaseTextEditorEcho.vue";
 
@@ -18,7 +17,6 @@ interface Props {
   open: boolean;
   mode: "create" | "edit" | "view";
   berita?: Berita | null;
-  opdOptions?: { label: string; value: number }[];
   widthClass?: string;
 }
 
@@ -29,7 +27,7 @@ interface Emits {
 }
 
 // Props
-const props = withDefaults(defineProps<Props>(), { berita: null, opdOptions: () => [] });
+const props = withDefaults(defineProps<Props>(), { berita: null });
 
 // Emits
 const emit = defineEmits<Emits>();
@@ -37,9 +35,8 @@ const emit = defineEmits<Emits>();
 // Computed properties
 const initialValues = computed(() =>
   props.mode === "create"
-    ? { opdId: 0, judul: "", isi: "", foto: "", keterangan: "", tag: "" }
+    ? { judul: "", isi: "", foto: "", keterangan: "", tag: "" }
     : {
-        opdId: props.berita?.opdId ?? 0,
         judul: props.berita?.judul ?? "",
         isi: props.berita?.isi ?? "",
         keterangan: props.berita?.keterangan ?? "",
@@ -81,17 +78,6 @@ async function onSubmit(values: any) {
     @cancel="() => $emit('cancel')"
   >
     <div class="grid grid-cols-1 gap-3">
-      <BaseSelect
-        name="opdId"
-        label="OPD"
-        :options="opdOptions"
-        placeholder="Pilih OPD"
-        searchable
-        search-placeholder="Cari OPD..."
-        required
-        :value-as-number="true"
-      />
-
       <BaseInput name="judul" label="Judul Berita" placeholder="Masukkan judul berita" required />
 
       <BaseTextEditorEcho name="isi" label="Isi Berita" placeholder="Masukkan isi berita" required />

@@ -1,6 +1,5 @@
 import type { BaseEntity, PaginatedPayload } from "@/lib/api/core/apiResponse";
 
-import type { Opd } from "./opd.types";
 import type { User } from "./user.types";
 
 /**
@@ -8,7 +7,6 @@ import type { User } from "./user.types";
  * Represents a news article in the system
  */
 export interface Berita extends BaseEntity {
-  opdId: number;
   judul: string;
   isi: string;
   foto: string;
@@ -17,7 +15,6 @@ export interface Berita extends BaseEntity {
   views: number;
   createdBy: number;
   updatedBy: number;
-  opd: Omit<Opd, "createdByUser,updatedByUser">;
   creator: Omit<User, "id,nip,roles">;
   updater: Omit<User, "id,nip,roles">;
   fotoUrl: string;
@@ -45,13 +42,12 @@ export type BeritaListResponse = PaginatedPayload<Berita>;
  * Berita list public response interface
  * Represents paginated berita data from API
  */
-export type BeritaListPublicResponse = PaginatedPayload<Omit<Berita, "opd,creator,updater">>;
+export type BeritaListPublicResponse = PaginatedPayload<Omit<Berita, "creator,updater">>;
 
 /**
  * Berita create request payload
  */
 export interface CreateBeritaRequest {
-  opdId: number;
   judul: string;
   isi: string;
   foto?: File | string;
@@ -63,7 +59,6 @@ export interface CreateBeritaRequest {
  * Berita update request payload
  */
 export interface UpdateBeritaRequest {
-  opdId?: number;
   judul?: string;
   isi?: string;
   foto?: File | string;

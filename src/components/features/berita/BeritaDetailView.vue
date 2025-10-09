@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ArrowLeft, Building, Calendar, User } from "lucide-vue-next";
+import { ArrowLeft, Calendar, User } from "lucide-vue-next";
 import { computed } from "vue";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -99,16 +99,16 @@ const handleDelete = () => {
             </div>
           </div>
 
-          <!-- OPD -->
-          <div class="flex items-center gap-1">
-            <Building class="h-4 w-4" />
-            <span>{{ berita.opd.nama }}</span>
-          </div>
-
           <!-- Date -->
           <div class="flex items-center gap-1">
             <Calendar class="h-4 w-4" />
             <span>{{ date(berita.createdAt) }}</span>
+          </div>
+
+          <!-- Views -->
+          <div class="flex items-center gap-1">
+            <i class="bx bx-show h-4 w-4"></i>
+            <span>{{ berita.views || 0 }} views</span>
           </div>
         </div>
 
@@ -153,7 +153,7 @@ const handleDelete = () => {
     <Card v-else-if="!berita.foto">
       <CardContent class="p-8 text-center">
         <div class="text-muted-foreground">
-          <Building class="mx-auto mb-2 h-12 w-12 opacity-50" />
+          <i class="bx bx-image mx-auto mb-2 text-5xl opacity-50"></i>
           <p class="text-sm">Tidak ada foto</p>
         </div>
       </CardContent>

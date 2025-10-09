@@ -2,7 +2,6 @@ import { z } from "zod";
 
 // Schema untuk create berita
 export const createBeritaSchema = z.object({
-  opdId: z.number().int().positive("OPD ID harus berupa angka positif").min(1, "OPD wajib dipilih"),
   judul: z
     .string()
     .min(1, "Judul wajib diisi")
@@ -25,7 +24,6 @@ export const createBeritaSchema = z.object({
 
 // Schema untuk update berita
 export const updateBeritaSchema = z.object({
-  opdId: z.number().int().positive("OPD ID harus berupa angka positif").min(1, "OPD wajib dipilih").optional(),
   judul: z.string().min(5, "Judul minimal 5 karakter").max(200, "Judul maksimal 200 karakter").optional(),
   isi: z.string().min(1, "Isi berita wajib diisi"),
   foto: z
@@ -56,7 +54,6 @@ export const beritaQuerySchema = z.object({
     .optional()
     .default(10),
   search: z.string().max(100, "Search maksimal 100 karakter").optional(),
-  opd: z.string().max(50, "OPD maksimal 50 karakter").optional(),
   tag: z.string().max(50, "Tag maksimal 50 karakter").optional(),
   sort_by: z.enum(["judul", "createdAt", "updatedAt"]).optional().default("createdAt"),
   sort_order: z.enum(["asc", "desc"]).optional().default("desc"),

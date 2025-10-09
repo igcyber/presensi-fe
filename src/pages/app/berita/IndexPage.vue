@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { PlusIcon } from "lucide-vue-next";
-import { onMounted, ref, watch } from "vue";
+import { watch } from "vue";
 import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 
@@ -14,9 +14,7 @@ import ErrorState from "@/components/ui/error-state/ErrorState.vue";
 import { useDialog } from "@/composables/useDialog";
 import { useResourceList } from "@/composables/useResourceList";
 import { deleteBerita, getBeritas } from "@/lib/api/services/berita";
-import { getOpds } from "@/lib/api/services/opd";
 import type { Berita } from "@/lib/api/types/berita.types";
-import type { Opd } from "@/lib/api/types/opd.types";
 
 // Composables initialization
 const {
@@ -36,9 +34,6 @@ const {
 const dialog = useDialog<Berita>();
 const confirmDialog = useDialog<Berita>();
 const router = useRouter();
-
-// Reactive state
-const opdOptions = ref<{ label: string; value: number }[]>([]);
 
 // Filter configuration
 const filterConfig: FilterConfig[] = [
@@ -60,13 +55,6 @@ const columns: Column<Berita>[] = [
     width: "300px",
   },
   {
-    key: "opd",
-    label: "OPD",
-    sortable: true,
-    width: "200px",
-    render: (item: Berita): string => item.opd.nama,
-  },
-  {
     key: "tag",
     label: "Tag",
     sortable: true,
@@ -77,13 +65,13 @@ const columns: Column<Berita>[] = [
         .map((tag) => tag.trim())
         .join(", "),
   },
-  {
-    key: "views",
-    label: "Dilihat",
-    sortable: true,
-    width: "150px",
-    render: (item: Berita): string => item.views.toString(),
-  },
+  // {
+  //   key: "views",
+  //   label: "Dilihat",
+  //   sortable: true,
+  //   width: "150px",
+  //   render: (item: Berita): string => item.views.toString(),
+  // },
   {
     key: "creator",
     label: "Pembuat",
@@ -98,17 +86,6 @@ const columns: Column<Berita>[] = [
     width: "150px",
   },
 ];
-
-// API functions
-const loadOpdOptions = async (): Promise<void> => {
-  try {
-    const opds = await getOpds();
-    opdOptions.value = opds.data.data.map((opd: Opd) => ({ label: opd.nama, value: opd.id }));
-  } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : "Gagal memuat data OPD";
-    toast.error("Gagal", { description: errorMessage });
-  }
-};
 
 // Event handlers
 const openCreateDialog = (): void => {
@@ -154,11 +131,6 @@ const handleBeritaDialogSuccess = (): void => {
   dialog.closeDialog();
   fetchData();
 };
-
-// Lifecycle hooks
-onMounted(() => {
-  loadOpdOptions();
-});
 
 // Watchers
 watch(
@@ -222,7 +194,6 @@ watch(
         v-model:open="dialog.state.value.open"
         :mode="dialog.state.value.mode"
         :berita="dialog.state.value.data"
-        :opd-options="opdOptions"
         widthClass="sm:max-w-[1000px]"
         @success="handleBeritaDialogSuccess"
       />
