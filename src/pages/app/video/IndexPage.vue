@@ -53,9 +53,9 @@ const columns: Column<Video>[] = [
     sortable: false,
     width: "120px",
     render: (item: Video): string => {
-      if (item.link.includes("youtube.com")) {
+      if (item.link.includes("youtu")) {
         return "YouTube";
-      } else if (item.link.includes("facebook.com")) {
+      } else if (item.link.includes("facebook")) {
         return "Facebook";
       }
       return "Lainnya";

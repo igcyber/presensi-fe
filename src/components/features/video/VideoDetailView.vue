@@ -24,7 +24,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<Emits>();
 
-const { date } = useFormatters();
+const { date, youtubeInfo } = useFormatters();
 
 // Methods
 const handleBack = () => {
@@ -81,7 +81,7 @@ const handleDelete = () => {
         <!-- Video Player -->
         <div class="aspect-video overflow-hidden rounded-lg border">
           <iframe
-            :src="video.link"
+            :src="youtubeInfo(video.link).embedUrl"
             class="h-full w-full"
             frameborder="0"
             allowfullscreen
