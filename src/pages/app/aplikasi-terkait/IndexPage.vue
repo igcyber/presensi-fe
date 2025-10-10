@@ -60,8 +60,15 @@ const columns: Column<AplikasiTerkait>[] = [
     label: "Cover",
     sortable: false,
     width: "150px",
+    previewable: true,
+    previewUrl: (item: AplikasiTerkait): string => {
+      return item.coverUrl || "";
+    },
+    previewName: (item: AplikasiTerkait): string => {
+      return item.text;
+    },
     render: (item: AplikasiTerkait): string => {
-      return item.cover ? "Ada" : "Tidak ada";
+      return item.cover ? "Cover" : "Tidak ada";
     },
   },
   {

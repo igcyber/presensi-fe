@@ -35,7 +35,7 @@ const dialog = useDialog<Statik>();
 const confirmDialog = useDialog<Statik>();
 const router = useRouter();
 
-const { truncate } = useFormatters();
+const { truncate, slugToTitle } = useFormatters();
 
 // Column definitions
 const columns: Column<Statik>[] = [
@@ -66,7 +66,7 @@ const columns: Column<Statik>[] = [
     sortable: true,
     width: "150px",
     render: (item: Statik): string => {
-      return item.kategori || "-";
+      return slugToTitle(item.kategori) || "-";
     },
   },
   {
