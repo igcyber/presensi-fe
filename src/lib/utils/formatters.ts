@@ -1,4 +1,10 @@
 /**
+ * 📅 DATE FORMATTERS
+ * Helper functions untuk format tanggal menggunakan moment.js
+ */
+import moment from "moment";
+
+/**
  * 💰 CURRENCY FORMATTERS
  * Helper functions untuk format mata uang
  */
@@ -119,13 +125,11 @@ export function formatFileSize(bytes: number | null | undefined, decimals: numbe
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(decimals))} ${sizes[i]}`;
 }
 
-/**
- * 📅 DATE FORMATTERS
- * Helper functions untuk format tanggal
- */
+// Set default locale to Indonesian
+moment.locale("id");
 
 /**
- * Format tanggal ke format Indonesia
+ * Format tanggal ke format Indonesia menggunakan moment.js
  * @param date - Tanggal yang akan diformat
  * @param options - Opsi formatting
  * @returns String tanggal terformat
@@ -143,55 +147,71 @@ export function formatDate(
     locale?: string;
   } = {},
 ): string {
-  const { format = "long", includeTime = false, locale = "id-ID" } = options;
+  const { format = "long", includeTime = false, locale = "id" } = options;
 
   if (!date) {
     return "-";
   }
 
-  const dateObj = typeof date === "string" ? new Date(date) : date;
+  let momentDate: moment.Moment;
 
-  if (isNaN(dateObj.getTime())) {
+  // Handle different date input types more carefully
+  if (typeof date === "string") {
+    // Check if it's a valid ISO date string or other standard formats
+    if (moment(date, moment.ISO_8601, true).isValid()) {
+      momentDate = moment(date, moment.ISO_8601, true);
+    } else if (moment(date, "YYYY-MM-DD", true).isValid()) {
+      momentDate = moment(date, "YYYY-MM-DD", true);
+    } else if (moment(date, "DD/MM/YYYY", true).isValid()) {
+      momentDate = moment(date, "DD/MM/YYYY", true);
+    } else if (moment(date, "DD-MM-YYYY", true).isValid()) {
+      momentDate = moment(date, "DD-MM-YYYY", true);
+    } else if (moment(date, "DD MMMM YYYY", true).isValid()) {
+      momentDate = moment(date, "DD MMMM YYYY", true);
+    } else {
+      // Try parsing with strict mode first, fallback to non-strict if needed
+      momentDate = moment(date, undefined, true);
+      if (!momentDate.isValid()) {
+        momentDate = moment(date);
+      }
+    }
+  } else {
+    momentDate = moment(date);
+  }
+
+  if (!momentDate.isValid()) {
     return "-";
   }
 
-  let dateOptions: Intl.DateTimeFormatOptions = {};
+  // Set locale if different from default
+  if (locale !== "id") {
+    momentDate.locale(locale);
+  }
+
+  let formatString = "";
 
   switch (format) {
     case "short":
-      dateOptions = {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      };
+      formatString = "DD/MM/YYYY";
       break;
     case "medium":
-      dateOptions = {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      };
+      formatString = "DD MMM YYYY";
       break;
     case "long":
     default:
-      dateOptions = {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-      };
+      formatString = "DD MMMM YYYY";
       break;
   }
 
   if (includeTime) {
-    dateOptions.hour = "2-digit";
-    dateOptions.minute = "2-digit";
+    formatString += ", HH:mm";
   }
 
-  return new Intl.DateTimeFormat(locale, dateOptions).format(dateObj);
+  return momentDate.format(formatString);
 }
 
 /**
- * Format tanggal relatif (berapa lama yang lalu)
+ * Format tanggal relatif (berapa lama yang lalu) menggunakan moment.js
  * @param date - Tanggal yang akan diformat
  * @param locale - Locale untuk formatting
  * @returns String tanggal relatif
@@ -200,46 +220,49 @@ export function formatDate(
  * formatRelativeDate('2024-01-14') // "1 hari yang lalu"
  * formatRelativeDate('2024-01-01') // "2 minggu yang lalu"
  */
-export function formatRelativeDate(date: string | Date | null | undefined, _locale: string = "id-ID"): string {
+export function formatRelativeDate(date: string | Date | null | undefined, locale: string = "id"): string {
   if (!date) {
     return "-";
   }
 
-  const dateObj = typeof date === "string" ? new Date(date) : date;
+  let momentDate: moment.Moment;
 
-  if (isNaN(dateObj.getTime())) {
+  // Handle different date input types more carefully
+  if (typeof date === "string") {
+    // Check if it's a valid ISO date string or other standard formats
+    if (moment(date, moment.ISO_8601, true).isValid()) {
+      momentDate = moment(date, moment.ISO_8601, true);
+    } else if (moment(date, "YYYY-MM-DD", true).isValid()) {
+      momentDate = moment(date, "YYYY-MM-DD", true);
+    } else if (moment(date, "DD/MM/YYYY", true).isValid()) {
+      momentDate = moment(date, "DD/MM/YYYY", true);
+    } else if (moment(date, "DD-MM-YYYY", true).isValid()) {
+      momentDate = moment(date, "DD-MM-YYYY", true);
+    } else {
+      // Try parsing with strict mode first, fallback to non-strict if needed
+      momentDate = moment(date, undefined, true);
+      if (!momentDate.isValid()) {
+        momentDate = moment(date);
+      }
+    }
+  } else {
+    momentDate = moment(date);
+  }
+
+  if (!momentDate.isValid()) {
     return "-";
   }
 
-  const now = new Date();
-  const diffInMs = now.getTime() - dateObj.getTime();
-  const diffInSeconds = Math.floor(diffInMs / 1000);
-  const diffInMinutes = Math.floor(diffInSeconds / 60);
-  const diffInHours = Math.floor(diffInMinutes / 60);
-  const diffInDays = Math.floor(diffInHours / 24);
-
-  if (diffInSeconds < 60) {
-    return "Baru saja";
-  } else if (diffInMinutes < 60) {
-    return `${diffInMinutes} menit yang lalu`;
-  } else if (diffInHours < 24) {
-    return `${diffInHours} jam yang lalu`;
-  } else if (diffInDays < 7) {
-    return `${diffInDays} hari yang lalu`;
-  } else if (diffInDays < 30) {
-    const weeks = Math.floor(diffInDays / 7);
-    return `${weeks} minggu yang lalu`;
-  } else if (diffInDays < 365) {
-    const months = Math.floor(diffInDays / 30);
-    return `${months} bulan yang lalu`;
-  } else {
-    const years = Math.floor(diffInDays / 365);
-    return `${years} tahun yang lalu`;
+  // Set locale if different from default
+  if (locale !== "id") {
+    momentDate.locale(locale);
   }
+
+  return momentDate.fromNow();
 }
 
 /**
- * Format waktu saja dari tanggal
+ * Format waktu saja dari tanggal menggunakan moment.js
  * @param date - Tanggal yang akan diformat
  * @param locale - Locale untuk formatting
  * @returns String waktu terformat
@@ -247,26 +270,49 @@ export function formatRelativeDate(date: string | Date | null | undefined, _loca
  * @example
  * formatTime('2024-01-15T10:30:00') // "10:30"
  * formatTime(new Date()) // "14:25"
+ * formatTime('09:00:00') // "09:00"
  */
-export function formatTime(date: string | Date | null | undefined, locale: string = "id-ID"): string {
+export function formatTime(date: string | Date | null | undefined, locale: string = "id"): string {
   if (!date) {
     return "-";
   }
 
-  const dateObj = typeof date === "string" ? new Date(date) : date;
+  let momentDate: moment.Moment;
 
-  if (isNaN(dateObj.getTime())) {
+  if (typeof date === "string") {
+    // Handle time-only strings like "09:00:00"
+    if (/^\d{2}:\d{2}:\d{2}$/.test(date)) {
+      // Parse as time only, using today's date
+      momentDate = moment(date, "HH:mm:ss");
+    } else if (moment(date, moment.ISO_8601, true).isValid()) {
+      momentDate = moment(date, moment.ISO_8601, true);
+    } else if (moment(date, "YYYY-MM-DD HH:mm:ss", true).isValid()) {
+      momentDate = moment(date, "YYYY-MM-DD HH:mm:ss", true);
+    } else {
+      // Try parsing with strict mode first, fallback to non-strict if needed
+      momentDate = moment(date, undefined, true);
+      if (!momentDate.isValid()) {
+        momentDate = moment(date);
+      }
+    }
+  } else {
+    momentDate = moment(date);
+  }
+
+  if (!momentDate.isValid()) {
     return "-";
   }
 
-  return new Intl.DateTimeFormat(locale, {
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(dateObj);
+  // Set locale if different from default
+  if (locale !== "id") {
+    momentDate.locale(locale);
+  }
+
+  return momentDate.format("HH:mm");
 }
 
 /**
- * Get month name from month number
+ * Get month name from month number menggunakan moment.js
  * @param monthNumber - Nomor bulan (1-12)
  * @param locale - Locale untuk formatting
  * @returns Nama bulan
@@ -275,17 +321,179 @@ export function formatTime(date: string | Date | null | undefined, locale: strin
  * formatMonthName(1) // "Januari"
  * formatMonthName(12) // "Desember"
  */
-export function formatMonthName(monthNumber: number | null | undefined, locale: string = "id-ID"): string {
+export function formatMonthName(monthNumber: number | null | undefined, locale: string = "id"): string {
   if (!monthNumber || monthNumber < 1 || monthNumber > 12) {
     return "-";
   }
 
-  // Create a date object with the specified month
-  const date = new Date(2024, monthNumber - 1, 1);
+  // Create a moment object with the specified month (moment months are 0-indexed)
+  const momentDate = moment().month(monthNumber - 1);
 
-  return new Intl.DateTimeFormat(locale, {
-    month: "long",
-  }).format(date);
+  // Set locale if different from default
+  if (locale !== "id") {
+    momentDate.locale(locale);
+  }
+
+  return momentDate.format("MMMM");
+}
+
+/**
+ * Format datetime dengan format custom menggunakan moment.js
+ * @param date - Tanggal yang akan diformat
+ * @param format - Format string moment.js
+ * @param locale - Locale untuk formatting
+ * @returns String tanggal terformat
+ *
+ * @example
+ * formatDateTime('2024-01-15T10:30:00', 'DD MMMM YYYY HH:mm') // "15 Januari 2024 10:30"
+ * formatDateTime(new Date(), 'dddd, DD MMMM YYYY') // "Senin, 15 Januari 2024"
+ */
+export function formatDateTime(date: string | Date | null | undefined, format: string, locale: string = "id"): string {
+  if (!date) {
+    return "-";
+  }
+
+  let momentDate: moment.Moment;
+
+  // Handle different date input types more carefully
+  if (typeof date === "string") {
+    // Check if it's a valid ISO date string or other standard formats
+    if (moment(date, moment.ISO_8601, true).isValid()) {
+      momentDate = moment(date, moment.ISO_8601, true);
+    } else if (moment(date, "YYYY-MM-DD HH:mm:ss", true).isValid()) {
+      momentDate = moment(date, "YYYY-MM-DD HH:mm:ss", true);
+    } else if (moment(date, "YYYY-MM-DD", true).isValid()) {
+      momentDate = moment(date, "YYYY-MM-DD", true);
+    } else {
+      // Try parsing with strict mode first, fallback to non-strict if needed
+      momentDate = moment(date, undefined, true);
+      if (!momentDate.isValid()) {
+        momentDate = moment(date);
+      }
+    }
+  } else {
+    momentDate = moment(date);
+  }
+
+  if (!momentDate.isValid()) {
+    return "-";
+  }
+
+  // Set locale if different from default
+  if (locale !== "id") {
+    momentDate.locale(locale);
+  }
+
+  return momentDate.format(format);
+}
+
+/**
+ * Check if date is today menggunakan moment.js
+ * @param date - Tanggal yang akan dicek
+ * @returns Boolean
+ *
+ * @example
+ * isToday(new Date()) // true
+ * isToday('2024-01-15') // false (jika hari ini bukan 15 Jan 2024)
+ */
+export function isToday(date: string | Date | null | undefined): boolean {
+  if (!date) {
+    return false;
+  }
+
+  let momentDate: moment.Moment;
+
+  // Handle different date input types more carefully
+  if (typeof date === "string") {
+    // Check if it's a valid ISO date string or other standard formats
+    if (moment(date, moment.ISO_8601, true).isValid()) {
+      momentDate = moment(date, moment.ISO_8601, true);
+    } else if (moment(date, "YYYY-MM-DD", true).isValid()) {
+      momentDate = moment(date, "YYYY-MM-DD", true);
+    } else {
+      // Try parsing with strict mode first, fallback to non-strict if needed
+      momentDate = moment(date, undefined, true);
+      if (!momentDate.isValid()) {
+        momentDate = moment(date);
+      }
+    }
+  } else {
+    momentDate = moment(date);
+  }
+
+  return momentDate.isValid() && momentDate.isSame(moment(), "day");
+}
+
+/**
+ * Get start of day menggunakan moment.js
+ * @param date - Tanggal
+ * @returns Moment object start of day
+ *
+ * @example
+ * getStartOfDay('2024-01-15T10:30:00') // moment object for 2024-01-15 00:00:00
+ */
+export function getStartOfDay(date: string | Date | null | undefined): moment.Moment | null {
+  if (!date) {
+    return null;
+  }
+
+  let momentDate: moment.Moment;
+
+  // Handle different date input types more carefully
+  if (typeof date === "string") {
+    // Check if it's a valid ISO date string or other standard formats
+    if (moment(date, moment.ISO_8601, true).isValid()) {
+      momentDate = moment(date, moment.ISO_8601, true);
+    } else if (moment(date, "YYYY-MM-DD", true).isValid()) {
+      momentDate = moment(date, "YYYY-MM-DD", true);
+    } else {
+      // Try parsing with strict mode first, fallback to non-strict if needed
+      momentDate = moment(date, undefined, true);
+      if (!momentDate.isValid()) {
+        momentDate = moment(date);
+      }
+    }
+  } else {
+    momentDate = moment(date);
+  }
+
+  return momentDate.isValid() ? momentDate.startOf("day") : null;
+}
+
+/**
+ * Get end of day menggunakan moment.js
+ * @param date - Tanggal
+ * @returns Moment object end of day
+ *
+ * @example
+ * getEndOfDay('2024-01-15T10:30:00') // moment object for 2024-01-15 23:59:59
+ */
+export function getEndOfDay(date: string | Date | null | undefined): moment.Moment | null {
+  if (!date) {
+    return null;
+  }
+
+  let momentDate: moment.Moment;
+
+  // Handle different date input types more carefully
+  if (typeof date === "string") {
+    // Check if it's a valid ISO date string or other standard formats
+    if (moment(date, moment.ISO_8601, true).isValid()) {
+      momentDate = moment(date, moment.ISO_8601, true);
+    } else if (moment(date, "YYYY-MM-DD", true).isValid()) {
+      momentDate = moment(date, "YYYY-MM-DD", true);
+    } else {
+      // Try parsing with strict mode first, fallback to non-strict if needed
+      momentDate = moment(date, undefined, true);
+      if (!momentDate.isValid()) {
+        momentDate = moment(date);
+      }
+    }
+  } else {
+    momentDate = moment(date);
+  }
+
+  return momentDate.isValid() ? momentDate.endOf("day") : null;
 }
 
 /**

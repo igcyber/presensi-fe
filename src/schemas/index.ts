@@ -20,6 +20,7 @@ export * from "./videoSchema";
 export * from "./fotoSchema";
 export * from "./surveiSchema";
 export * from "./ppidSchema";
+export * from "./rapatSchema";
 
 // Export utility functions untuk schema
 export { z } from "zod";

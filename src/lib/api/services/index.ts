@@ -22,3 +22,4 @@ export * from "./selayangPandang";
 export * from "./beranda";
 export * from "./user";
 export * from "./survei";
+export * from "./rapat";

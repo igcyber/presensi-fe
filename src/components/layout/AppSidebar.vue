@@ -10,6 +10,7 @@ import {
   Smartphone,
   UserIcon,
   UserRound,
+  Users,
   VideoIcon,
 } from "lucide-vue-next";
 import { computed } from "vue";
@@ -134,6 +135,13 @@ const data = computed(() => ({
       name: "app.infografis",
       icon: Image,
       isActive: routNameActive.value === "app.infografis" || routNameActive.value === "app.infografis.detail",
+    },
+    {
+      title: "Rapat",
+      url: "/app/rapat",
+      name: "app.rapat",
+      icon: Users,
+      isActive: routNameActive.value === "app.rapat" || routNameActive.value === "app.rapat.detail",
     },
     {
       title: "Aplikasi Terkait",

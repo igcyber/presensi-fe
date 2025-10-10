@@ -21,3 +21,4 @@ export { default as UserDialog } from "./UserDialog.vue";
 export { default as VideoDialog } from "./VideoDialog.vue";
 export { default as FotoDialog } from "./FotoDialog.vue";
 export { default as PPIDDialog } from "./PPIDDialog.vue";
+export { default as RapatDialog } from "./RapatDialog.vue";
