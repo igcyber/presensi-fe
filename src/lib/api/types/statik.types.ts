@@ -10,7 +10,9 @@ export interface Statik extends BaseEntity {
   nama: string;
   slug: string;
   isi: string;
-  jenis: "video" | "file" | "emergency" | "operasional" | "alamat" | "email" | "telepon";
+  source: "file" | "link" | "text";
+  kategori: string;
+  attachment: string | null;
   icon?: string | null;
   fileUrl?: string | null;
   createdBy: number;
@@ -30,10 +32,11 @@ export type StatikListResponse = PaginatedPayload<Statik>;
  */
 export interface CreateStatikRequest {
   nama: string;
-  jenis: "video" | "file" | "emergency" | "operasional" | "alamat" | "email" | "telepon";
+  isi?: string;
+  source: "file" | "link" | "text";
+  kategori: string;
+  attachment?: File | string | null;
   icon?: string;
-  isiText?: string;
-  isiFile?: File | string;
 }
 
 /**
@@ -41,10 +44,11 @@ export interface CreateStatikRequest {
  */
 export interface UpdateStatikRequest {
   nama?: string;
-  jenis?: "video" | "file" | "emergency" | "operasional" | "alamat" | "email" | "telepon";
+  isi?: string;
+  source?: "file" | "link" | "text";
+  kategori?: string;
+  attachment?: File | string | null;
   icon?: string;
-  isiText?: string;
-  isiFile?: File | string;
 }
 
 /**
@@ -54,7 +58,7 @@ export interface StatikQueryParams {
   page?: number;
   limit?: number;
   search?: string;
-  sort_by?: "nama" | "jenis" | "createdAt" | "updatedAt";
+  sort_by?: "nama" | "kategori" | "source" | "createdAt" | "updatedAt";
   sort_order?: "asc" | "desc";
 }
 
@@ -64,19 +68,27 @@ export interface StatikQueryParams {
 export type StatikDetailResponse = Statik;
 
 /**
- * Allowed jenis values for validation
+ * Allowed source values for validation
  */
-export const ALLOWED_JENIS = ["video", "file", "emergency", "operasional", "alamat", "email", "telepon"] as const;
+export const ALLOWED_SOURCES = ["file", "link", "text"] as const;
 
 /**
- * Jenis options for form select
+ * Source options for form select
  */
-export const JENIS_OPTIONS = [
-  { label: "Video", value: "video" },
+export const SOURCE_OPTIONS = [
   { label: "File", value: "file" },
-  { label: "Emergency", value: "emergency" },
-  { label: "Operasional", value: "operasional" },
-  { label: "Alamat", value: "alamat" },
-  { label: "Email", value: "email" },
-  { label: "Telepon", value: "telepon" },
+  { label: "Link", value: "link" },
+  { label: "Text", value: "text" },
+];
+
+/**
+ * Common kategori options for form select
+ */
+export const KATEGORI_OPTIONS = [
+  { label: "Banner", value: "banner" },
+  { label: "Social Media", value: "social-media" },
+  { label: "Contact", value: "contact" },
+  { label: "Logo", value: "logo" },
+  { label: "Aplikasi", value: "aplikasi" },
+  { label: "Custom", value: "custom" },
 ];

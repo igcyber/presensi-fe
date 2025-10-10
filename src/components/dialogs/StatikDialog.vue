@@ -10,7 +10,7 @@ import BaseTextarea from "@/components/forms/BaseTextarea.vue";
 
 import { createStatik, updateStatik } from "@/lib/api/services/statik";
 import type { Statik } from "@/lib/api/types/statik.types";
-import { JENIS_OPTIONS } from "@/lib/api/types/statik.types";
+import { KATEGORI_OPTIONS, SOURCE_OPTIONS } from "@/lib/api/types/statik.types";
 import { createStatikSchema, updateStatikSchema } from "@/schemas/statikSchema";
 
 // Interface definitions
@@ -32,17 +32,19 @@ const props = withDefaults(defineProps<Props>(), { statik: null });
 const emit = defineEmits<Emits>();
 
 // Reactive variables
-const selectedJenis = ref("");
+const selectedSource = ref<"file" | "link" | "text">("text");
 
 // Computed properties
 const initialValues = computed(() =>
   props.mode === "create"
-    ? { nama: "", jenis: "", icon: "", isiText: "", isiFile: "" }
+    ? { nama: "", isi: "", source: "text", kategori: "", icon: "", attachment: "" }
     : {
         nama: props.statik?.nama ?? "",
-        jenis: props.statik?.jenis ?? "",
+        isi: props.statik?.isi ?? "",
+        source: props.statik?.source ?? "text",
+        kategori: props.statik?.kategori ?? "",
         icon: props.statik?.icon ?? "",
-        isiText: props.statik?.isi ?? "",
+        attachment: props.statik?.attachment ?? "",
       },
 );
 
@@ -56,11 +58,15 @@ const open = computed({
 });
 
 const showFileInput = computed(() => {
-  return ["video", "file"].includes(selectedJenis.value);
+  return selectedSource.value === "file";
+});
+
+const showLinkInput = computed(() => {
+  return selectedSource.value === "link";
 });
 
 const showTextInput = computed(() => {
-  return ["emergency", "operasional", "alamat", "email", "telepon"].includes(selectedJenis.value);
+  return selectedSource.value === "text";
 });
 
 // Methods
@@ -79,9 +85,9 @@ watch(
   () => props.open,
   (isOpen) => {
     if (!isOpen) {
-      selectedJenis.value = "";
+      selectedSource.value = "text";
     } else {
-      selectedJenis.value = props.statik?.jenis ?? "";
+      selectedSource.value = (props.statik?.source ?? "text") as "file" | "link" | "text";
     }
   },
 );
@@ -102,41 +108,59 @@ watch(
     <div class="grid grid-cols-1 gap-3">
       <BaseInput name="nama" label="Nama Statik" placeholder="Masukkan nama statik" required />
 
-      <BaseSelect
-        name="jenis"
-        label="Jenis"
-        :options="JENIS_OPTIONS"
-        placeholder="Pilih jenis statik"
-        required
-        @update:model-value="selectedJenis = $event"
-      />
+      <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <BaseSelect
+          name="source"
+          label="Source"
+          :options="SOURCE_OPTIONS"
+          placeholder="Pilih source"
+          required
+          @update:model-value="selectedSource = $event as 'file' | 'link' | 'text'"
+        />
+
+        <BaseSelect
+          name="kategori"
+          label="Kategori"
+          :options="KATEGORI_OPTIONS"
+          placeholder="Pilih kategori"
+          required
+        />
+      </div>
 
       <BaseInput
         name="icon"
         label="Icon"
         placeholder="Masukkan nama icon (opsional)"
-        description="Nama icon dari library icon (contoh: street-view, water, dll)"
+        description="Nama icon dari library icon (contoh: image, facebook, phone, dll)"
       />
 
-      <!-- Text Input for non-file types -->
       <BaseTextarea
-        v-if="showTextInput"
-        name="isiText"
-        label="Isi"
-        placeholder="Masukkan isi statik"
+        name="isi"
+        label="Deskripsi/Isi"
+        placeholder="Masukkan deskripsi atau isi statik"
         :rows="3"
-        required
+        :required="showTextInput"
       />
 
-      <!-- File Input for file/video types -->
+      <!-- File Input for file source -->
       <BaseInputFile
         v-if="showFileInput"
-        name="isiFile"
+        name="attachment"
         label="File"
         :required="true"
         description="Format: JPG, PNG, WebP, PDF, DOC, DOCX, MP4, MOV. Maksimal 50MB"
         :existing-files="props.statik?.fileUrl ?? []"
         :max-size="50"
+      />
+
+      <!-- Link Input for link source -->
+      <BaseInput
+        v-if="showLinkInput"
+        name="attachment"
+        label="Link URL"
+        placeholder="https://example.com"
+        :required="true"
+        description="Masukkan URL lengkap dengan http:// atau https://"
       />
     </div>
   </BaseFormDialog>

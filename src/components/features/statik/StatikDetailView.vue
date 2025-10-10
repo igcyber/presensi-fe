@@ -1,18 +1,5 @@
 <script setup lang="ts">
-import {
-  AlertTriangle,
-  ArrowLeft,
-  Calendar,
-  Clock,
-  Download,
-  FileText,
-  Mail,
-  MapPin,
-  Maximize2,
-  Phone,
-  User,
-  Video,
-} from "lucide-vue-next";
+import { ArrowLeft, Calendar, Download, FileText, Maximize2, User } from "lucide-vue-next";
 import { computed } from "vue";
 
 import FilePreviewDialog from "@/components/dialogs/FilePreviewDialog.vue";
@@ -46,7 +33,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<Emits>();
 
 // Composables
-const { date } = useFormatters();
+const { date, slugToTitle } = useFormatters();
 const filePreview = useFilePreview();
 
 // Computed properties
@@ -60,41 +47,40 @@ const creatorInitials = computed(() => {
     .slice(0, 2);
 });
 
-const jenisConfig = computed(() => {
+const sourceConfig = computed(() => {
   const configs = {
-    video: { label: "Video", icon: Video, color: "bg-red-100 text-red-600 dark:bg-red-900/20 dark:text-red-400" },
     file: { label: "File", icon: FileText, color: "bg-blue-100 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400" },
-    emergency: {
-      label: "Emergency",
-      icon: AlertTriangle,
-      color: "bg-orange-100 text-orange-600 dark:bg-orange-900/20 dark:text-orange-400",
-    },
-    operasional: {
-      label: "Operasional",
-      icon: Clock,
+    link: {
+      label: "Link",
+      icon: Download,
       color: "bg-green-100 text-green-600 dark:bg-green-900/20 dark:text-green-400",
     },
-    alamat: {
-      label: "Alamat",
-      icon: MapPin,
+    text: {
+      label: "Text",
+      icon: FileText,
       color: "bg-purple-100 text-purple-600 dark:bg-purple-900/20 dark:text-purple-400",
     },
-    email: { label: "Email", icon: Mail, color: "bg-cyan-100 text-cyan-600 dark:bg-cyan-900/20 dark:text-cyan-400" },
-    telepon: {
-      label: "Telepon",
-      icon: Phone,
-      color: "bg-indigo-100 text-indigo-600 dark:bg-indigo-900/20 dark:text-indigo-400",
-    },
   };
-  return configs[props.statik.jenis] || configs.file;
+  return configs[props.statik.source] || configs.text;
 });
 
-const isFileType = computed(() => {
-  return ["video", "file"].includes(props.statik.jenis);
+const isFileSource = computed(() => {
+  return props.statik.source === "file";
 });
 
-const isTextType = computed(() => {
-  return ["emergency", "operasional", "alamat", "email", "telepon"].includes(props.statik.jenis);
+const isLinkSource = computed(() => {
+  return props.statik.source === "link";
+});
+
+const isTextSource = computed(() => {
+  return props.statik.source === "text";
+});
+
+// Determine if the file is video based on fileUrl extension
+const isVideoFile = computed(() => {
+  if (!props.statik.fileUrl) return false;
+  const videoExtensions = [".mp4", ".webm", ".mov", ".avi"];
+  return videoExtensions.some((ext) => props.statik.fileUrl?.toLowerCase().endsWith(ext));
 });
 
 // Methods
@@ -118,7 +104,7 @@ const handleDownload = () => {
 
 const handlePreviewFullscreen = () => {
   if (props.statik.fileUrl) {
-    const fileType = props.statik.jenis === "video" ? "video" : "image";
+    const fileType = isVideoFile.value ? "video" : "image";
     filePreview.previewFile(
       {
         url: props.statik.fileUrl,
@@ -130,6 +116,12 @@ const handlePreviewFullscreen = () => {
         showFileInfo: true,
       },
     );
+  }
+};
+
+const handleOpenLink = () => {
+  if (props.statik.fileUrl || props.statik.attachment) {
+    window.open(props.statik.fileUrl || props.statik.attachment || "", "_blank");
   }
 };
 </script>
@@ -167,12 +159,17 @@ const handlePreviewFullscreen = () => {
             </div>
           </div>
 
-          <!-- Jenis -->
+          <!-- Source -->
           <div class="flex items-center gap-2">
-            <div :class="['rounded-lg p-1', jenisConfig.color]">
-              <component :is="jenisConfig.icon" class="h-4 w-4" />
+            <div :class="['rounded-lg p-1', sourceConfig.color]">
+              <component :is="sourceConfig.icon" class="h-4 w-4" />
             </div>
-            <Badge variant="secondary" class="truncate">{{ jenisConfig.label }}</Badge>
+            <Badge variant="secondary" class="truncate">{{ sourceConfig.label }}</Badge>
+          </div>
+
+          <!-- Kategori -->
+          <div class="flex items-center gap-2">
+            <Badge variant="outline" class="truncate">{{ slugToTitle(statik.kategori) }}</Badge>
           </div>
 
           <!-- Created Date -->
@@ -197,17 +194,17 @@ const handlePreviewFullscreen = () => {
     <Card>
       <CardHeader>
         <CardTitle class="flex items-center gap-2">
-          <component :is="jenisConfig.icon" class="h-5 w-5" />
-          {{ jenisConfig.label }}
+          <component :is="sourceConfig.icon" class="h-5 w-5" />
+          {{ sourceConfig.label }} - {{ slugToTitle(statik.kategori) }}
         </CardTitle>
       </CardHeader>
       <Separator />
       <CardContent class="space-y-4">
-        <!-- Text Content -->
-        <div v-if="isTextType" class="bg-muted/50 rounded-lg p-4">
+        <!-- Text Content (source: text) -->
+        <div v-if="isTextSource" class="bg-muted/50 rounded-lg p-4">
           <div class="flex items-start gap-3">
-            <div :class="['rounded-lg p-2', jenisConfig.color]">
-              <component :is="jenisConfig.icon" class="h-5 w-5" />
+            <div :class="['rounded-lg p-2', sourceConfig.color]">
+              <component :is="sourceConfig.icon" class="h-5 w-5" />
             </div>
             <div class="min-w-0 flex-1">
               <dt class="text-muted-foreground text-sm font-medium">Isi</dt>
@@ -216,14 +213,48 @@ const handlePreviewFullscreen = () => {
           </div>
         </div>
 
-        <!-- File Content -->
-        <div v-else-if="isFileType && statik.fileUrl" class="space-y-4">
+        <!-- Link Content (source: link) -->
+        <div v-else-if="isLinkSource" class="space-y-4">
+          <div class="bg-muted/50 rounded-lg p-4">
+            <div class="flex items-start gap-3">
+              <div :class="['rounded-lg p-2', sourceConfig.color]">
+                <Download class="h-5 w-5" />
+              </div>
+              <div class="min-w-0 flex-1 space-y-2">
+                <div>
+                  <dt class="text-muted-foreground text-sm font-medium">Deskripsi</dt>
+                  <dd class="mt-1 text-sm leading-relaxed break-words">{{ statik.isi || "-" }}</dd>
+                </div>
+                <div>
+                  <dt class="text-muted-foreground text-sm font-medium">URL</dt>
+                  <dd class="mt-1 text-sm leading-relaxed break-all">
+                    <a
+                      :href="statik.fileUrl || statik.attachment || '#'"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="text-blue-600 hover:underline"
+                    >
+                      {{ statik.fileUrl || statik.attachment }}
+                    </a>
+                  </dd>
+                </div>
+                <Button v-if="statik.fileUrl || statik.attachment" @click="handleOpenLink" size="sm" class="mt-2 gap-2">
+                  <Download class="h-4 w-4" />
+                  Buka Link
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- File Content (source: file) -->
+        <div v-else-if="isFileSource && statik.fileUrl" class="space-y-4">
           <!-- File Info -->
-          <div class="bg-muted/50 rounded-lg">
+          <div class="bg-muted/50 rounded-lg p-4">
             <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div class="flex items-center gap-3">
-                <div :class="['rounded-lg p-2', jenisConfig.color]">
-                  <component :is="jenisConfig.icon" class="h-6 w-6" />
+                <div :class="['rounded-lg p-2', sourceConfig.color]">
+                  <component :is="sourceConfig.icon" class="h-6 w-6" />
                 </div>
                 <div class="min-w-0 flex-1">
                   <p class="font-medium text-wrap">{{ statik.nama }}</p>
@@ -246,12 +277,12 @@ const handlePreviewFullscreen = () => {
           </div>
 
           <!-- File Preview -->
-          <div v-if="statik.jenis === 'video'" class="relative overflow-hidden rounded-lg border">
+          <div v-if="isVideoFile" class="relative overflow-hidden rounded-lg border">
             <video :src="statik.fileUrl" class="h-64 w-full object-cover sm:h-96" controls>
               Browser Anda tidak mendukung video.
             </video>
           </div>
-          <div v-else-if="statik.jenis === 'file'" class="relative overflow-hidden rounded-lg border">
+          <div v-else class="relative overflow-hidden rounded-lg border">
             <img
               :src="statik.fileUrl"
               :alt="statik.nama"
@@ -261,9 +292,9 @@ const handlePreviewFullscreen = () => {
         </div>
 
         <!-- No File Fallback -->
-        <div v-else-if="isFileType && !statik.fileUrl" class="p-8 text-center">
+        <div v-else-if="isFileSource && !statik.fileUrl" class="p-8 text-center">
           <div class="text-muted-foreground">
-            <component :is="jenisConfig.icon" class="mx-auto mb-2 h-12 w-12 opacity-50" />
+            <component :is="sourceConfig.icon" class="mx-auto mb-2 h-12 w-12 opacity-50" />
             <p class="text-sm">Tidak ada file</p>
           </div>
         </div>

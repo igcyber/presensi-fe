@@ -47,26 +47,31 @@ const columns: Column<Statik>[] = [
     width: "250px",
   },
   {
-    key: "jenis",
-    label: "Jenis",
+    key: "source",
+    label: "Source",
     sortable: true,
-    width: "120px",
+    width: "100px",
     render: (item: Statik): string => {
-      const jenisLabels = {
-        video: "Video",
+      const sourceLabels = {
         file: "File",
-        emergency: "Emergency",
-        operasional: "Operasional",
-        alamat: "Alamat",
-        email: "Email",
-        telepon: "Telepon",
+        link: "Link",
+        text: "Text",
       };
-      return jenisLabels[item.jenis] || item.jenis;
+      return sourceLabels[item.source] || item.source;
+    },
+  },
+  {
+    key: "kategori",
+    label: "Kategori",
+    sortable: true,
+    width: "150px",
+    render: (item: Statik): string => {
+      return item.kategori || "-";
     },
   },
   {
     key: "isi",
-    label: "Isi",
+    label: "Deskripsi",
     sortable: false,
     width: "200px",
     render: (item: Statik): string => {
