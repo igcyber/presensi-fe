@@ -3,6 +3,7 @@ import {
   ChartBar,
   ClipboardCheck,
   FileText,
+  FolderTree,
   HomeIcon,
   Image,
   NewspaperIcon,
@@ -142,6 +143,13 @@ const data = computed(() => ({
       name: "app.rapat",
       icon: Users,
       isActive: routNameActive.value === "app.rapat" || routNameActive.value === "app.rapat.detail",
+    },
+    {
+      title: "Struktur",
+      url: "/app/struktur",
+      name: "app.struktur",
+      icon: FolderTree,
+      isActive: routNameActive.value === "app.struktur" || routNameActive.value === "app.struktur.detail",
     },
     {
       title: "Aplikasi Terkait",

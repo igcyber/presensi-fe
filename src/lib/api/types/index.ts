@@ -23,3 +23,4 @@ export type * from "./user.types";
 export type * from "./selayangPandang.types";
 export type * from "./survei.types";
 export type * from "./rapat.types";
+export type * from "./struktur.types";

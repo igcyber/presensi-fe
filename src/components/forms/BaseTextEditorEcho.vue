@@ -3,6 +3,7 @@
 import { Eye } from "lucide-vue-next";
 import { defineAsyncComponent, ref } from "vue";
 
+import Button from "@/components/ui/button/Button.vue";
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
 // Interface definitions
@@ -73,15 +74,10 @@ const openCustomPreview = () => {
 
       <FormDescription>
         <div class="mt-2">
-          <button
-            type="button"
-            class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
-            title="Preview (Ctrl+Shift+P)"
-            @click="openCustomPreview"
-          >
+          <Button variant="default" size="sm" title="Preview (Ctrl+Shift+P)" @click="openCustomPreview">
             <Eye class="h-4 w-4" />
             Pratinjau
-          </button>
+          </Button>
         </div>
       </FormDescription>
 
