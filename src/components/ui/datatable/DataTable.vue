@@ -245,24 +245,26 @@ const formatCellValue = (item: T, column: Column<T>) => {
 </script>
 
 <template>
-  <div class="space-y-4 overflow-x-auto p-2">
-    <!-- Search -->
-    <div v-if="searchable" class="flex w-full flex-col gap-1.5">
-      <Label for="searchKeyword" class="text-sm font-medium">Cari</Label>
-      <Input
-        v-model="searchQuery"
-        placeholder="Cari data..."
-        id="searchKeyword"
-        class="w-full max-w-sm"
-        @input="handleSearch"
-      />
-    </div>
+  <div class="space-y-4 p-2">
+    <!-- Search and Filters Container -->
+    <div class="w-full space-y-4">
+      <!-- Search -->
+      <div v-if="searchable" class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="flex flex-col gap-1.5 sm:col-span-2 lg:col-span-1">
+          <Label for="searchKeyword" class="text-sm font-medium">Cari</Label>
+          <Input
+            v-model="searchQuery"
+            placeholder="Cari data..."
+            id="searchKeyword"
+            class="w-full"
+            @input="handleSearch"
+          />
+        </div>
+      </div>
 
-    <!-- Built-in Filters -->
-    <div v-if="filters && filters.length > 0" class="mb-4 w-full">
-      <div class="space-y-4">
-        <!-- Filter Controls -->
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <!-- Built-in Filters -->
+      <div v-if="filters && filters.length > 0" class="w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-4 lg:gap-4">
           <!-- Dynamic Filters -->
           <template v-for="filter in filters" :key="filter.key">
             <!-- Select Filter -->
@@ -306,37 +308,30 @@ const formatCellValue = (item: T, column: Column<T>) => {
           </template>
 
           <!-- Action Buttons -->
-          <div
-            class="flex flex-col gap-1.5"
-            :class="
-              filters.length === 1
-                ? 'sm:col-span-2 lg:col-span-3'
-                : filters.length === 2
-                  ? 'sm:col-span-2 lg:col-span-2'
-                  : 'sm:col-span-2 lg:col-span-1'
-            "
-          >
+          <div class="flex flex-col gap-1.5 sm:col-span-2 lg:col-span-1">
             <Label for="action" class="text-sm font-medium opacity-0">Action</Label>
-            <div class="flex gap-2">
-              <Button variant="default" class="flex-1 sm:flex-none" @click="applyFilters" id="action">
+            <div class="flex w-full gap-2">
+              <Button variant="default" class="flex-1" @click="applyFilters" id="action">
                 <Filter class="mr-2 h-4 w-4" />
-                Terapkan Filter
+                <span class="hidden sm:inline">Terapkan Filter</span>
+                <span class="sm:hidden">Filter</span>
               </Button>
-              <Button variant="outline" class="flex-1 sm:flex-none" @click="resetFilters">
+              <Button variant="outline" class="flex-1" @click="resetFilters">
                 <RotateCcw class="mr-2 h-4 w-4" />
-                Reset
+                <span class="hidden sm:inline">Reset</span>
+                <span class="sm:hidden">Reset</span>
               </Button>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Custom Filters Slot (fallback) -->
-    <div v-else class="mb-4 w-full">
-      <slot name="filters" :search="searchQuery" :on-filter-change="handleCustomFilter">
-        <!-- Default: no filters -->
-      </slot>
+      <!-- Custom Filters Slot (fallback) -->
+      <div v-else-if="!searchable" class="w-full">
+        <slot name="filters" :search="searchQuery" :on-filter-change="handleCustomFilter">
+          <!-- Default: no filters -->
+        </slot>
+      </div>
     </div>
   </div>
 
