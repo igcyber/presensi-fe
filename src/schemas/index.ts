@@ -23,6 +23,7 @@ export * from "./ppidSchema";
 export * from "./rapatSchema";
 export * from "./strukturSchema";
 export * from "./menuSchema";
+export * from "./jabatanAnggotaSchema";
 
 // Export utility functions untuk schema
 export { z } from "zod";

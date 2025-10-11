@@ -10,6 +10,7 @@ import {
   NewspaperIcon,
   Settings,
   Smartphone,
+  UserCheck,
   UserIcon,
   UserRound,
   Users,
@@ -151,6 +152,13 @@ const data = computed(() => ({
       name: "app.struktur",
       icon: FolderTree,
       isActive: routNameActive.value === "app.struktur" || routNameActive.value === "app.struktur.detail",
+    },
+    {
+      title: "Jabatan Anggota",
+      url: "/app/jabatan-anggota",
+      name: "app.jabatan-anggota",
+      icon: UserCheck,
+      isActive: routNameActive.value === "app.jabatan-anggota" || routNameActive.value === "app.jabatan-anggota.detail",
     },
     {
       title: "Menu",

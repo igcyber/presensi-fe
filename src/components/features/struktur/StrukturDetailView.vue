@@ -1,15 +1,28 @@
 <script setup lang="ts">
-import { ArrowLeft, ArrowUpRight, Calendar, ChevronRight, Folder, FolderTree, User, Users } from "lucide-vue-next";
-import { computed } from "vue";
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  Briefcase,
+  Calendar,
+  ChevronRight,
+  Folder,
+  FolderTree,
+  User,
+  UserCheck,
+  Users,
+} from "lucide-vue-next";
+import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
 import { useFormatters } from "@/composables/useFormatters";
+import { getJabatanAnggotas } from "@/lib/api/services/jabatanAnggota";
+import type { JabatanAnggota } from "@/lib/api/types/jabatanAnggota.types";
 import type { Struktur } from "@/lib/api/types/struktur.types";
 
 interface Props {
@@ -35,6 +48,10 @@ const emit = defineEmits<Emits>();
 const { date } = useFormatters();
 const router = useRouter();
 
+// State untuk anggota
+const anggotaList = ref<JabatanAnggota[]>([]);
+const loadingAnggotas = ref(false);
+
 // Computed properties
 const creatorInitials = computed(() => {
   const name = props.struktur.creator?.fullName || "Unknown";
@@ -56,6 +73,14 @@ const hasChildren = computed(() => {
 
 const childrenCount = computed(() => {
   return props.struktur.children?.length || 0;
+});
+
+const hasAnggotas = computed(() => {
+  return anggotaList.value.length > 0;
+});
+
+const anggotaCount = computed(() => {
+  return anggotaList.value.length;
 });
 
 // Methods
@@ -80,6 +105,27 @@ const navigateToParent = () => {
 const navigateToChild = (childId: number) => {
   router.push({ name: "app.struktur.detail", params: { id: childId.toString() } });
 };
+
+const navigateToAnggota = (anggotaId: number) => {
+  router.push({ name: "app.jabatan-anggota.detail", params: { id: anggotaId.toString() } });
+};
+
+const loadAnggotas = async () => {
+  try {
+    loadingAnggotas.value = true;
+    const response = await getJabatanAnggotas({ struktur_id: props.struktur.id, limit: 100 });
+    anggotaList.value = response.data.data;
+  } catch (error) {
+    console.error("Failed to load anggotas:", error);
+  } finally {
+    loadingAnggotas.value = false;
+  }
+};
+
+// Lifecycle
+onMounted(() => {
+  loadAnggotas();
+});
 </script>
 
 <template>
@@ -184,11 +230,65 @@ const navigateToChild = (childId: number) => {
         </CardTitle>
       </CardHeader>
       <Separator />
-      <CardContent class="pt-6">
+      <CardContent>
         <div class="bg-muted/50 rounded-lg p-4">
           <p class="text-sm leading-relaxed break-words whitespace-pre-wrap">
             {{ struktur.tentang }}
           </p>
+        </div>
+      </CardContent>
+    </Card>
+
+    <!-- Anggota Section -->
+    <Card v-if="hasAnggotas || loadingAnggotas">
+      <CardHeader>
+        <div class="flex items-center justify-between">
+          <CardTitle class="flex items-center gap-2">
+            <UserCheck class="h-5 w-5" />
+            Anggota
+          </CardTitle>
+          <Badge v-if="!loadingAnggotas" variant="secondary">{{ anggotaCount }}</Badge>
+        </div>
+      </CardHeader>
+      <Separator />
+      <CardContent>
+        <!-- Loading State -->
+        <div v-if="loadingAnggotas" class="flex items-center justify-center py-8">
+          <div class="flex items-center gap-2">
+            <div class="border-primary h-6 w-6 animate-spin rounded-full border-2 border-t-transparent"></div>
+            <span class="text-muted-foreground text-sm">Memuat anggota...</span>
+          </div>
+        </div>
+
+        <!-- Anggota List -->
+        <div v-else class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <Card
+            v-for="anggota in anggotaList"
+            :key="anggota.id"
+            class="hover:border-primary/50 cursor-pointer transition-all hover:shadow-md"
+            @click="navigateToAnggota(anggota.id)"
+          >
+            <CardHeader class="pb-3">
+              <div class="flex items-start justify-between gap-2">
+                <div class="flex items-center gap-2">
+                  <Avatar class="h-10 w-10">
+                    <AvatarImage :src="anggota.fotoUrl" :alt="anggota.nama" />
+                    <AvatarFallback class="text-xs">
+                      {{ anggota.nama.slice(0, 2).toUpperCase() }}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div class="flex-1 space-y-1">
+                    <h4 class="line-clamp-1 text-sm font-semibold">{{ anggota.nama }}</h4>
+                    <div class="flex items-center gap-1">
+                      <Briefcase class="text-muted-foreground h-3 w-3" />
+                      <p class="text-muted-foreground line-clamp-1 text-xs">{{ anggota.jabatan }}</p>
+                    </div>
+                  </div>
+                </div>
+                <ArrowUpRight class="text-muted-foreground h-4 w-4 flex-shrink-0" />
+              </div>
+            </CardHeader>
+          </Card>
         </div>
       </CardContent>
     </Card>
@@ -205,7 +305,7 @@ const navigateToChild = (childId: number) => {
         </div>
       </CardHeader>
       <Separator />
-      <CardContent class="pt-6">
+      <CardContent>
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <Card
             v-for="child in struktur.children"

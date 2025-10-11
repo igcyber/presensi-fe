@@ -25,3 +25,4 @@ export * from "./survei";
 export * from "./rapat";
 export * from "./struktur";
 export * from "./menu";
+export * from "./jabatanAnggota";

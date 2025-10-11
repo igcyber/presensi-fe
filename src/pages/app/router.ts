@@ -7,6 +7,7 @@ import dashboardRoute from "@/pages/app/dashboard/route";
 import dokumenRoute from "@/pages/app/dokumen/route";
 import fotoRoute from "@/pages/app/foto/route";
 import infografisRoute from "@/pages/app/infografis/route";
+import jabatanAnggotaRoute from "@/pages/app/jabatan-anggota/route";
 import kontenRoute from "@/pages/app/konten/route";
 import layananRoute from "@/pages/app/layanan/route";
 import majalahRoute from "@/pages/app/majalah/route";
@@ -58,5 +59,6 @@ export default {
     ...rapatRoute,
     ...strukturRoute,
     ...menuRoute,
+    ...jabatanAnggotaRoute,
   ],
 };
