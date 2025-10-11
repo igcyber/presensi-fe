@@ -23,3 +23,4 @@ export { default as FotoDialog } from "./FotoDialog.vue";
 export { default as PPIDDialog } from "./PPIDDialog.vue";
 export { default as RapatDialog } from "./RapatDialog.vue";
 export { default as StrukturDialog } from "./StrukturDialog.vue";
+export { default as MenuDialog } from "./MenuDialog.vue";

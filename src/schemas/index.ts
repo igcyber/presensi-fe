@@ -22,6 +22,7 @@ export * from "./surveiSchema";
 export * from "./ppidSchema";
 export * from "./rapatSchema";
 export * from "./strukturSchema";
+export * from "./menuSchema";
 
 // Export utility functions untuk schema
 export { z } from "zod";

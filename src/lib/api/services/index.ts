@@ -24,3 +24,4 @@ export * from "./user";
 export * from "./survei";
 export * from "./rapat";
 export * from "./struktur";
+export * from "./menu";

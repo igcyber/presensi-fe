@@ -10,6 +10,7 @@ import infografisRoute from "@/pages/app/infografis/route";
 import kontenRoute from "@/pages/app/konten/route";
 import layananRoute from "@/pages/app/layanan/route";
 import majalahRoute from "@/pages/app/majalah/route";
+import menuRoute from "@/pages/app/menu/route";
 import opdRoute from "@/pages/app/opd/route";
 import perusdaRoute from "@/pages/app/perusda/route";
 import portalRoute from "@/pages/app/portal/route";
@@ -56,5 +57,6 @@ export default {
     ...fotoRoute,
     ...rapatRoute,
     ...strukturRoute,
+    ...menuRoute,
   ],
 };

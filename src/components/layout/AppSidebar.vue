@@ -6,6 +6,7 @@ import {
   FolderTree,
   HomeIcon,
   Image,
+  ListTree,
   NewspaperIcon,
   Settings,
   Smartphone,
@@ -150,6 +151,13 @@ const data = computed(() => ({
       name: "app.struktur",
       icon: FolderTree,
       isActive: routNameActive.value === "app.struktur" || routNameActive.value === "app.struktur.detail",
+    },
+    {
+      title: "Menu",
+      url: "/app/menu",
+      name: "app.menu",
+      icon: ListTree,
+      isActive: routNameActive.value === "app.menu" || routNameActive.value === "app.menu.detail",
     },
     {
       title: "Aplikasi Terkait",
