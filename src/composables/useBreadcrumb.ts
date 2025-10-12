@@ -29,6 +29,8 @@ export function useBreadcrumb() {
     "selayang-pandang.prestasi": "Prestasi dan Penghargaan",
 
     // Media
+    "media.berita": "Berita",
+    "media.berita.detail": "Detail Berita",
     "media.foto": "Foto",
     "media.video": "Video",
     "media.radio": "Radio",
@@ -45,10 +47,6 @@ export function useBreadcrumb() {
     "pemerintahan.bupati": "Bupati Daerah",
     "pemerintahan.transparansi-keuangan": "Transparansi Keuangan",
     "pemerintahan.transparansi-keuangan-detail": "Detail Transparansi Keuangan",
-
-    // Berita
-    "berita.index": "Berita",
-    "berita.detail": "Detail Berita",
 
     // Unit Kerja
     "unit-kerja.opd": "OPD",
@@ -111,6 +109,8 @@ export function useBreadcrumb() {
     "selayang-pandang.sejarah": ["Selayang Pandang"],
 
     // Media
+    "media.berita": ["Media"],
+    "media.berita.detail": ["Media", "media.berita"],
     "media.foto": ["Media"],
     "media.video": ["Media"],
     "media.radio": ["Media"],
@@ -132,10 +132,6 @@ export function useBreadcrumb() {
     "unit-kerja.opd": ["Unit Kerja"],
     "unit-kerja.opd.detail": ["Unit Kerja", "unit-kerja.opd"],
     "unit-kerja.perusahaan-daerah": ["Unit Kerja"],
-
-    // Berita
-    "berita.index": [],
-    "berita.detail": ["berita.index"],
 
     // App
     "app.dashboard": [],

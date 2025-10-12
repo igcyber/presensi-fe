@@ -4,12 +4,12 @@ import BeritaPage from "@/pages/berita/IndexPage.vue";
 
 export default [
   {
-    path: "/berita",
+    path: "/media/berita",
     component: AppLayout,
     children: [
       {
         path: "",
-        name: "berita.index",
+        name: "media.berita",
         component: BeritaPage,
         meta: {
           title: "Berita",
@@ -17,7 +17,7 @@ export default [
       },
       {
         path: ":id/:slug?",
-        name: "berita.detail",
+        name: "media.berita.detail",
         component: BeritaDetailPage,
         meta: {
           title: "Detail Berita",

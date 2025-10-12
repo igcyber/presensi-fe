@@ -22,7 +22,7 @@ const { slugify } = useFormatters();
       <!-- Header -->
       <div class="mb-8 flex flex-col items-center justify-between gap-4 sm:flex-row">
         <div class="flex items-center">
-          <div class="bg-portal-green mr-3 flex h-10 w-10 items-center justify-center rounded-full text-white">
+          <div class="mr-3 flex h-10 w-10 items-center justify-center rounded-full bg-yellow-600 text-white">
             <i class="bx bx-buildings text-lg"></i>
           </div>
           <h2 class="text-2xl font-bold text-gray-900">
@@ -31,7 +31,7 @@ const { slugify } = useFormatters();
         </div>
         <RouterLink
           :to="{ name: 'unit-kerja.opd' }"
-          class="bg-portal-green hover:bg-portal-green/90 inline-flex items-center rounded-md px-4 py-2 text-sm font-medium text-white transition-colors duration-200"
+          class="inline-flex items-center rounded-md bg-yellow-600 px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-yellow-700"
         >
           Lihat lebih banyak
           <i class="bx bx-chevron-right ml-2"></i>
@@ -75,7 +75,7 @@ const { slugify } = useFormatters();
                     name: 'unit-kerja.opd.detail',
                     params: { id: opd.id, slug: slugify(opd.nama) },
                   }"
-                  class="hover:text-portal-green mb-3 block text-center font-semibold text-gray-900 transition-colors duration-200"
+                  class="mb-3 block text-center font-semibold text-gray-900 transition-colors duration-200 hover:text-yellow-600"
                   style="
                     display: -webkit-box;
                     -webkit-line-clamp: 2;
@@ -91,12 +91,12 @@ const { slugify } = useFormatters();
                 <div class="space-y-2 text-sm text-gray-600">
                   <!-- Website -->
                   <div class="flex items-start">
-                    <i class="bx bx-globe text-portal-green mt-0.5 mr-2 flex-shrink-0"></i>
+                    <i class="bx bx-globe mt-0.5 mr-2 flex-shrink-0 text-yellow-600"></i>
                     <span class="break-all">{{ opd.website || "Website tidak tersedia" }}</span>
                   </div>
                   <!-- Address -->
                   <div class="flex items-start">
-                    <i class="bx bx-map text-portal-green mt-0.5 mr-2 flex-shrink-0"></i>
+                    <i class="bx bx-map mt-0.5 mr-2 flex-shrink-0 text-yellow-600"></i>
                     <span class="break-words">{{ opd.alamat || "Alamat tidak tersedia" }}</span>
                   </div>
                 </div>

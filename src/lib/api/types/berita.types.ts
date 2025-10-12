@@ -33,6 +33,20 @@ export interface BeritaSidebar {
 }
 
 /**
+ * Berita tag interface
+ * Represents news tags/categories
+ */
+export interface BeritaTag {
+  id: number;
+  namaTag: string;
+  createdAt: string;
+  updatedAt: string;
+  _count?: {
+    beritas: number;
+  };
+}
+
+/**
  * Berita list response interface
  * Represents paginated berita data from API
  */

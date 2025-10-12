@@ -85,10 +85,10 @@ onMounted(async () => {
     <!-- Main Content -->
     <main class="py-12">
       <div v-if="keyword" class="mx-auto mb-8 max-w-2xl">
-        <div class="border-portal-green bg-portal-green/10 rounded border p-8 text-center">
-          <i class="bx bx-search text-portal-green mb-4 text-4xl"></i>
-          <h4 class="text-portal-green mb-2 text-xl font-semibold">Pencarian</h4>
-          <p class="text-portal-green mb-6">
+        <div class="rounded border border-yellow-600 bg-yellow-600/10 p-8 text-center">
+          <i class="bx bx-search mb-4 text-4xl text-yellow-600"></i>
+          <h4 class="mb-2 text-xl font-semibold text-yellow-600">Pencarian</h4>
+          <p class="mb-6 text-yellow-600">
             {{
               keyword
                 ? `Menampilkan hasil pencarian untuk "${keyword}" dengan total ${data?.data.length} berita.`
@@ -96,8 +96,8 @@ onMounted(async () => {
             }}
           </p>
           <button
-            @click="router.push({ name: 'berita.index' })"
-            class="bg-portal-green hover:bg-portal-green/90 inline-flex items-center rounded-lg px-4 py-2 text-sm font-medium text-white transition-colors duration-200"
+            @click="router.push({ name: 'media.berita' })"
+            class="inline-flex items-center rounded-lg bg-yellow-600 px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-yellow-600/90"
           >
             <i class="bx bx-x mr-2"></i>
             Reset Pencarian
@@ -109,7 +109,7 @@ onMounted(async () => {
         <!-- Loading State -->
         <div v-if="isLoading" class="flex items-center justify-center py-20">
           <div class="text-center">
-            <div class="border-portal-green mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2"></div>
+            <div class="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-yellow-600"></div>
             <p class="text-gray-600">Memuat data...</p>
           </div>
         </div>
@@ -166,10 +166,10 @@ onMounted(async () => {
                   <!-- Title -->
                   <RouterLink
                     :to="{
-                      name: 'berita.detail',
+                      name: 'media.berita.detail',
                       params: { id: news.id, slug: slugify(news.judul) },
                     }"
-                    class="hover:text-portal-green mb-3 block text-lg font-semibold text-gray-900 transition-colors duration-200"
+                    class="mb-3 block text-lg font-semibold text-gray-900 transition-colors duration-200 hover:text-yellow-600"
                     style="
                       display: -webkit-box;
                       -webkit-line-clamp: 2;
@@ -197,10 +197,10 @@ onMounted(async () => {
                   <!-- Read More Button -->
                   <RouterLink
                     :to="{
-                      name: 'berita.detail',
+                      name: 'media.berita.detail',
                       params: { id: news.id, slug: slugify(news.judul) },
                     }"
-                    class="text-portal-green hover:text-portal-green/80 inline-flex items-center text-sm font-medium transition-colors duration-200"
+                    class="inline-flex items-center text-sm font-medium transition-colors duration-200 hover:text-yellow-600"
                   >
                     Baca Selengkapnya
                     <i class="bx bx-right-arrow-alt ml-1"></i>

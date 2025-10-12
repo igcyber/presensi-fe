@@ -28,8 +28,8 @@ const beritaTerpopuler = computed(() => [...props.news].sort((a, b) => b.views -
           <span class="border-b-4 border-yellow-600 pb-1">Berita Terbaru</span>
         </h2>
         <RouterLink
-          :to="{ name: 'berita.index' }"
-          class="inline-flex items-center rounded-md bg-yellow-600 px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-yellow-600/90"
+          :to="{ name: 'media.berita' }"
+          class="inline-flex items-center rounded-md bg-yellow-600 px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-yellow-700"
         >
           Lihat Semua
           <i class="bx bx-chevron-right ml-2"></i>
@@ -68,7 +68,7 @@ const beritaTerpopuler = computed(() => [...props.news].sort((a, b) => b.views -
                 <!-- Title -->
                 <RouterLink
                   :to="{
-                    name: 'berita.detail',
+                    name: 'media.berita.detail',
                     params: { id: beritaTerbaru[0].id, slug: slugify(beritaTerbaru[0].judul) },
                   }"
                   class="mb-3 block text-xl font-bold transition-colors duration-200 hover:text-yellow-600"
@@ -122,7 +122,7 @@ const beritaTerpopuler = computed(() => [...props.news].sort((a, b) => b.views -
               <!-- Title -->
               <RouterLink
                 :to="{
-                  name: 'berita.detail',
+                  name: 'media.berita.detail',
                   params: { id: berita.id, slug: slugify(berita.judul) },
                 }"
                 class="mb-2 line-clamp-2 block text-sm font-bold text-gray-900 transition-colors duration-200 hover:text-yellow-600"
@@ -175,7 +175,7 @@ const beritaTerpopuler = computed(() => [...props.news].sort((a, b) => b.views -
           >
             <RouterLink
               :to="{
-                name: 'berita.detail',
+                name: 'media.berita.detail',
                 params: { id: berita.id, slug: slugify(berita.judul) },
               }"
               class="block"

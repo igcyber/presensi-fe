@@ -72,7 +72,7 @@ onBeforeUnmount(() => {
         <!-- Loading State -->
         <div v-if="isLoading" class="flex items-center justify-center py-20">
           <div class="text-center">
-            <div class="border-portal-green mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2"></div>
+            <div class="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-yellow-600"></div>
             <p class="text-gray-600">Memuat data...</p>
           </div>
         </div>
@@ -98,8 +98,8 @@ onBeforeUnmount(() => {
           <!-- Back Button -->
           <div class="mb-6">
             <RouterLink
-              :to="{ name: 'berita.index' }"
-              class="text-portal-green hover:text-portal-green/80 inline-flex items-center transition-colors duration-200"
+              :to="{ name: 'media.berita' }"
+              class="inline-flex items-center transition-colors duration-200 hover:text-yellow-600"
             >
               <i class="bx bx-chevron-left mr-1 text-lg"></i>
               Kembali ke Berita

@@ -160,3 +160,18 @@ export const getBeritaSidebar = async (): Promise<ApiResponse<BeritaSidebar[]>> 
   const { data } = await httpInstance.get<ApiResponse<BeritaSidebar[]>>("/berita/sidebar");
   return data;
 };
+
+/**
+ * Mendapatkan daftar tag berita untuk public display
+ * @returns Promise yang mengembalikan daftar tag berita
+ * @endpoint GET /tags
+ * @example
+ * ```typescript
+ * const response = await getBeritaTagsPublic();
+ * console.log(response.data); // Array of any
+ * ```
+ */
+export const getBeritaTagsPublic = async (): Promise<ApiResponse<any>> => {
+  const { data } = await httpInstance.get<ApiResponse<any>>("/tags");
+  return data;
+};
