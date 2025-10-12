@@ -13,6 +13,7 @@ import layananRoute from "@/pages/app/layanan/route";
 import majalahRoute from "@/pages/app/majalah/route";
 import menuRoute from "@/pages/app/menu/route";
 import opdRoute from "@/pages/app/opd/route";
+import pagesRoute from "@/pages/app/pages/route";
 import perusdaRoute from "@/pages/app/perusda/route";
 import portalRoute from "@/pages/app/portal/route";
 import ppidRoute from "@/pages/app/ppid/route";
@@ -60,5 +61,6 @@ export default {
     ...strukturRoute,
     ...menuRoute,
     ...jabatanAnggotaRoute,
+    ...pagesRoute,
   ],
 };

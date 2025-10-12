@@ -5,6 +5,7 @@ import {
   Calendar,
   ChevronRight,
   ExternalLink,
+  FileText,
   FolderTree,
   Link,
   ListTree,
@@ -22,6 +23,7 @@ import { Separator } from "@/components/ui/separator";
 
 import { useFormatters } from "@/composables/useFormatters";
 import type { Menu } from "@/lib/api/types/menu.types";
+import type { Page } from "@/lib/api/types/page.types";
 
 interface Props {
   menu: Menu;
@@ -57,6 +59,14 @@ const creatorInitials = computed(() => {
     .slice(0, 2);
 });
 
+const menuPage = computed(() => {
+  return (props.menu.page as Page) ?? null;
+});
+
+const hasPage = computed(() => {
+  return props.menu.page !== null && props.menu.page !== undefined;
+});
+
 const hasParent = computed(() => {
   return props.menu.parent !== null;
 });
@@ -90,6 +100,18 @@ const navigateToParent = () => {
 
 const navigateToChild = (childId: number) => {
   router.push({ name: "app.menu.detail", params: { id: childId.toString() } });
+};
+
+const navigateToPage = (pageId: number) => {
+  router.push({ name: "app.pages.detail", params: { id: pageId.toString() } });
+};
+
+// Helper function to strip HTML
+const stripHtml = (html: string): string => {
+  if (!html) return "";
+  const div = document.createElement("div");
+  div.innerHTML = html;
+  return div.textContent || div.innerText || "";
 };
 </script>
 
@@ -211,6 +233,46 @@ const navigateToChild = (childId: number) => {
             <span>Tidak ada URL yang ditetapkan</span>
           </div>
         </div>
+      </CardContent>
+    </Card>
+
+    <!-- Page Section -->
+    <Card v-if="hasPage">
+      <CardHeader>
+        <CardTitle class="flex items-center gap-2">
+          <FileText class="h-5 w-5" />
+          Page
+        </CardTitle>
+      </CardHeader>
+      <Separator />
+      <CardContent>
+        <Card
+          class="hover:border-primary/50 cursor-pointer transition-all hover:shadow-md"
+          @click="navigateToPage(menuPage.id)"
+        >
+          <CardHeader class="pb-3">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <div class="bg-primary/10 rounded-md p-1.5">
+                  <FileText class="text-primary h-4 w-4" />
+                </div>
+                <div class="flex-1 space-y-1">
+                  <h4 class="line-clamp-1 text-sm font-semibold">{{ menuPage.nama }}</h4>
+                  <Badge :variant="menuPage.tipe === 'page' ? 'default' : 'secondary'" class="text-xs">
+                    {{ menuPage.tipe === "page" ? "Page" : "File" }}
+                  </Badge>
+                </div>
+              </div>
+              <ArrowUpRight class="text-muted-foreground h-4 w-4 flex-shrink-0" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p v-if="menuPage.content" class="text-muted-foreground line-clamp-2 text-xs">
+              {{ stripHtml(menuPage.content).substring(0, 80) }}...
+            </p>
+            <p v-else class="text-muted-foreground text-xs italic">No content</p>
+          </CardContent>
+        </Card>
       </CardContent>
     </Card>
 

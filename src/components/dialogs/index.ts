@@ -25,3 +25,4 @@ export { default as RapatDialog } from "./RapatDialog.vue";
 export { default as StrukturDialog } from "./StrukturDialog.vue";
 export { default as MenuDialog } from "./MenuDialog.vue";
 export { default as JabatanAnggotaDialog } from "./JabatanAnggotaDialog.vue";
+export { default as PageDialog } from "./PageDialog.vue";

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { toast } from "vue-sonner";
 
 import BaseFormDialog from "@/components/dialogs/BaseFormDialog.vue";
@@ -140,15 +140,8 @@ watch(
       loadStrukturs();
     }
   },
+  { immediate: true },
 );
-
-// Lifecycle hooks
-onMounted(() => {
-  if (props.open) {
-    loadAnggotas();
-    loadStrukturs();
-  }
-});
 </script>
 
 <template>

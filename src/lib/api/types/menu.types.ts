@@ -1,5 +1,6 @@
 import type { BaseEntity, PaginatedPayload } from "@/lib/api/core/apiResponse";
 
+import type { Page } from "./page.types";
 import type { User } from "./user.types";
 
 /**
@@ -11,6 +12,7 @@ export interface Menu extends BaseEntity {
   slug: string;
   url: string | null;
   menuId: number | null;
+  page: Page | null;
   parent: Menu | null;
   creator: User | null;
   updater: User | null;

@@ -26,3 +26,4 @@ export type * from "./rapat.types";
 export type * from "./struktur.types";
 export type * from "./menu.types";
 export type * from "./jabatanAnggota.types";
+export type * from "./page.types";

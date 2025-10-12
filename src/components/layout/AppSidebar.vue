@@ -168,6 +168,13 @@ const data = computed(() => ({
       isActive: routNameActive.value === "app.menu" || routNameActive.value === "app.menu.detail",
     },
     {
+      title: "Pages",
+      url: "/app/pages",
+      name: "app.pages",
+      icon: FileText,
+      isActive: routNameActive.value === "app.pages" || routNameActive.value === "app.pages.detail",
+    },
+    {
       title: "Aplikasi Terkait",
       url: "/app/aplikasi-terkait",
       name: "app.aplikasi-terkait",

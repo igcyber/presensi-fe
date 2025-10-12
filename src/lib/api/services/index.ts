@@ -26,3 +26,4 @@ export * from "./rapat";
 export * from "./struktur";
 export * from "./menu";
 export * from "./jabatanAnggota";
+export * from "./page";
