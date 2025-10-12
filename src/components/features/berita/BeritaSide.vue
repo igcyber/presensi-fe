@@ -125,7 +125,7 @@ onMounted(async () => {
       <template v-else>
         <div class="rounded border border-yellow-200 bg-yellow-50 p-4 text-center">
           <i class="bx bx-info-circle mb-2 text-2xl text-yellow-600"></i>
-          <p class="text-sm text-yellow-800">Data tidak tersedia</p>
+          <p class="text-sm text-yellow-600">Data tidak tersedia</p>
         </div>
       </template>
     </div>

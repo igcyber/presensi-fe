@@ -4,10 +4,13 @@ import type {
   CreateMenuRequest,
   Menu,
   MenuDetailResponse,
+  MenuListPublicResponse,
   MenuListResponse,
   MenuQueryParams,
   UpdateMenuRequest,
 } from "@/lib/api/types/menu.types";
+
+import { httpInstance } from "../core";
 
 const base = "/api/menus";
 
@@ -105,3 +108,18 @@ export const updateMenu = (id: number, payload: UpdateMenuRequest): Promise<ApiR
  * ```
  */
 export const deleteMenu = (id: number): Promise<ApiResponse<null>> => menuService.remove(id);
+
+// ==================== Public Api ====================
+/**
+ * Mendapatkan daftar menu untuk public display
+ * @returns Promise yang mengembalikan daftar menu public
+ * @endpoint GET /api/menu
+ * @example
+ * ```typescript
+ * const response = await getMenuPublic();
+ * console.log(response.data.data); // Array of menu
+ */
+export const getMenuPublic = async (params?: MenuQueryParams): Promise<ApiResponse<MenuListPublicResponse>> => {
+  const { data } = await httpInstance.get<ApiResponse<MenuListPublicResponse>>(`/menu`, { params });
+  return data;
+};

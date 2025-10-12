@@ -17,15 +17,18 @@ export interface NewsItem extends BaseEntity {
   judul: string;
   foto: string;
   isi: string;
+  views: number;
+  tag: string;
   fotoUrl: string;
 }
 
 /**
- * Banner/Infographic item interface
+ * Infografis item interface
  */
-export interface BannerItem extends BaseEntity {
+export interface InfografisItem extends BaseEntity {
   foto: string;
   nama: string;
+  isi: string;
   fileUrl: string;
 }
 
@@ -85,7 +88,7 @@ export interface AplikasiTerkaitItem extends BaseEntity {
 export interface BerandaData {
   emergencies: EmergencyItem[];
   berita: NewsItem[];
-  banners: BannerItem[];
+  infografis: InfografisItem[];
   videos: VideoItem[];
   layanans: LayananItem[];
   sistems: SistemItem[];

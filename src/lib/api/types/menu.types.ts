@@ -26,6 +26,30 @@ export interface Menu extends BaseEntity {
 export type MenuListResponse = PaginatedPayload<Menu>;
 
 /**
+ * Menu public interface
+ * Represents menu data from public API
+ */
+export interface MenuPublic {
+  id: number;
+  nama: string;
+  slug: string;
+  menuId: number | null;
+  url: string;
+  createdBy: string | null;
+  updatedBy: string | null;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  children?: MenuPublic[];
+}
+
+/**
+ * Menu list public response interface
+ * Represents menu data array from public API
+ */
+export type MenuListPublicResponse = MenuPublic[];
+
+/**
  * Menu create request payload
  */
 export interface CreateMenuRequest {

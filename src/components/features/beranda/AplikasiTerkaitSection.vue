@@ -1,8 +1,5 @@
 <script setup lang="ts">
 // import { RouterLink } from "vue-router";
-import VueCarousel from "@/components/features/media/VueCarousel.vue";
-
-import { useFormatters } from "@/composables/useFormatters";
 import type { AplikasiTerkaitItem } from "@/lib/api/types/beranda.types";
 
 interface Props {
@@ -11,124 +8,129 @@ interface Props {
 
 defineProps<Props>();
 
-const { date } = useFormatters();
+// Function untuk mendapatkan gradient color berdasarkan index
+const getCardGradient = (index: number) => {
+  const gradients = [
+    "bg-gradient-to-br from-blue-600 to-blue-800",
+    "bg-gradient-to-br from-purple-600 to-purple-800",
+    "bg-gradient-to-br from-green-600 to-green-800",
+    "bg-gradient-to-br from-red-600 to-red-800",
+    "bg-gradient-to-br from-orange-600 to-orange-800",
+    "bg-gradient-to-br from-indigo-600 to-indigo-800",
+  ];
+  return gradients[index % gradients.length];
+};
+
+const getBorderClasses = (index: number) => {
+  return {
+    "border-t-4 md:border-l-4": index == 0,
+    "md:border-t-4 ": index == 1,
+    "md:border-l-4 lg:border-t-4 lg:border-l-0": index == 2,
+    "lg:border-l-4": index == 3,
+    "md:border-l-4 md:border-b-4 lg:border-l-0": index == 4,
+    "": index == 5,
+  };
+};
 </script>
 
 <template>
   <!-- Aplikasi Terkait Section -->
   <section class="bg-gray-50 py-16">
-    <div class="container">
-      <!-- Header -->
-      <div class="mb-8 flex flex-col items-center justify-between gap-4 sm:flex-row">
-        <div class="flex items-center">
-          <div class="bg-portal-green mr-3 flex h-10 w-10 items-center justify-center rounded-full text-white">
-            <i class="bx bx-mobile text-lg"></i>
-          </div>
-          <h2 class="text-2xl font-bold text-gray-900">
-            <span class="font-bold">Aplikasi</span> Terkait ({{ aplikasiTerkait.length }})
-          </h2>
-        </div>
-        <!-- <RouterLink
-          :to="{ name: 'app.aplikasi-terkait' }"
-          class="bg-portal-green hover:bg-portal-green/90 inline-flex items-center rounded-md px-4 py-2 text-sm font-medium text-white transition-colors duration-200"
-        >
-          Lihat lebih banyak
-          <i class="bx bx-chevron-right ml-2"></i>
-        </RouterLink> -->
-      </div>
-
-      <template v-if="aplikasiTerkait.length">
-        <!-- Aplikasi Terkait Carousel -->
-        <VueCarousel
-          :items="aplikasiTerkait"
-          :items-per-view="4"
-          :autoplay="false"
-          :autoplay-delay="4000"
-          :responsive="{
-            0: { itemsPerView: 1 },
-            640: { itemsPerView: 2 },
-            1024: { itemsPerView: 3 },
-            1280: { itemsPerView: 4 },
-          }"
-        >
-          <template #default="{ item: aplikasi }">
-            <div
-              class="group h-full overflow-hidden rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-            >
-              <!-- App Cover/Icon -->
-              <div class="relative aspect-square overflow-hidden bg-gray-100">
-                <template v-if="aplikasi.coverUrl">
-                  <img
-                    :src="aplikasi.coverUrl"
-                    :alt="aplikasi.text"
-                    class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    loading="lazy"
-                  />
-                </template>
-                <template v-else>
-                  <div class="flex h-full w-full items-center justify-center">
-                    <i class="bx bx-mobile text-6xl text-gray-400"></i>
-                  </div>
-                </template>
-                <!-- Overlay -->
-                <div
-                  class="absolute inset-0 bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                ></div>
-                <!-- Open Icon -->
-                <div
-                  class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                >
-                  <a
-                    :href="aplikasi.link"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 text-gray-900"
-                  >
-                    <i class="bx bx-link-external text-xl"></i>
-                  </a>
-                </div>
-              </div>
-
-              <!-- App Info -->
-              <div class="p-4">
-                <h3
-                  class="mb-2 font-semibold text-gray-900"
-                  style="
-                    display: -webkit-box;
-                    -webkit-line-clamp: 2;
-                    line-clamp: 2;
-                    -webkit-box-orient: vertical;
-                    overflow: hidden;
-                  "
-                >
-                  {{ aplikasi.text }}
-                </h3>
-                <div class="flex items-center justify-between">
-                  <a
-                    :href="aplikasi.link"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="bg-portal-green hover:bg-portal-green/90 inline-flex items-center rounded-md px-3 py-1.5 text-xs font-medium text-white transition-colors duration-200"
-                  >
-                    <i class="bx bx-link-external mr-1"></i>
-                    Buka Aplikasi
-                  </a>
-                  <div class="text-xs text-gray-500">
-                    <i class="bx bx-calendar mr-1"></i>
-                    {{ date(aplikasi.createdAt) }}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </template>
-        </VueCarousel>
-      </template>
-      <template v-else>
-        <div class="rounded bg-white p-8 text-center shadow-md">
-          <i class="bx bx-mobile mb-4 text-4xl text-gray-400"></i>
-          <p class="text-gray-600">Belum ada aplikasi terkait tersedia</p>
-        </div>
-      </template>
+    <!-- Header -->
+    <div class="container mb-6 flex items-center justify-between">
+      <h2 class="text-2xl font-bold text-gray-800 uppercase">
+        <span class="hidden border-b-4 border-yellow-600 pb-1 md:block">Aplikasi Terkait</span>
+        <span class="block border-b-4 border-yellow-600 pb-1 md:hidden">Aplikasi</span>
+      </h2>
+      <RouterLink
+        :to="{ name: 'media.video' }"
+        class="inline-flex items-center rounded-md bg-yellow-600 px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-yellow-600/90"
+      >
+        Lihat Semua
+        <i class="bx bx-chevron-right ml-2"></i>
+      </RouterLink>
     </div>
+
+    <template v-if="aplikasiTerkait.length">
+      <!-- Aplikasi Terkait Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <article
+          v-for="(aplikasi, index) in aplikasiTerkait"
+          :key="aplikasi.id"
+          class="group relative min-h-[200px] overflow-hidden border-4 border-t-0 border-yellow-600 shadow-lg transition-all duration-300 md:border-l-0"
+          :class="getBorderClasses(index)"
+        >
+          <!-- Background Image dengan Animasi Slide -->
+          <div class="absolute inset-0 overflow-hidden">
+            <template v-if="aplikasi.coverUrl">
+              <div
+                class="absolute inset-0 z-11 -translate-x-full transform bg-cover bg-center transition-transform duration-700 ease-out group-hover:translate-x-0"
+                :style="{ backgroundImage: `url(${aplikasi.coverUrl})` }"
+              ></div>
+              <!-- Yellow overlay untuk serasi dengan border -->
+              <div
+                class="absolute inset-0 z-12 -translate-x-full transform bg-yellow-600/50 transition-transform duration-700 ease-out group-hover:translate-x-0"
+              ></div>
+            </template>
+            <template v-else>
+              <div
+                class="absolute inset-0 -translate-x-full transform transition-transform duration-700 ease-out group-hover:translate-x-0"
+                :class="getCardGradient(index)"
+              ></div>
+              <!-- Yellow overlay untuk serasi dengan border -->
+              <div
+                class="absolute inset-0 z-12 -translate-x-full transform bg-yellow-600/50 transition-transform duration-700 ease-out group-hover:translate-x-0"
+              ></div>
+            </template>
+          </div>
+
+          <!-- Gradient Overlay -->
+          <div
+            class="absolute inset-0 z-10 bg-contain bg-bottom-left bg-no-repeat"
+            style="background-image: url(/assets/images/backgrounds/bg-aplikasi.png); background-size: 100%"
+          ></div>
+
+          <!-- Content -->
+          <div class="relative z-12 flex h-full flex-col p-4 sm:p-6">
+            <!-- Icon di pojok kanan atas -->
+            <div class="absolute top-3 right-3 sm:top-4 sm:right-4">
+              <i class="bx bx-mobile text-2xl text-gray-800 group-hover:text-white sm:text-3xl"></i>
+            </div>
+
+            <!-- Title -->
+            <h3 class="mb-2 line-clamp-2 text-xl font-bold text-gray-800 group-hover:text-white sm:text-xl lg:text-2xl">
+              {{ aplikasi.text }}
+            </h3>
+
+            <!-- Description -->
+            <p
+              class="mb-3 line-clamp-3 flex-1 text-base text-gray-800/90 group-hover:text-white sm:mb-4 sm:text-sm lg:text-base"
+            >
+              Akses aplikasi {{ aplikasi.text }} untuk mendapatkan informasi dan layanan terbaik.
+            </p>
+
+            <!-- Button -->
+            <a
+              :href="aplikasi.link"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center text-base text-gray-800 transition-colors duration-200 group-hover:text-white hover:text-yellow-300 sm:text-sm lg:text-lg"
+            >
+              <span class="mr-2">Selengkapnya</span>
+              <i
+                class="bx bx-right-arrow-alt transform transition-transform duration-200 group-hover:translate-x-1"
+              ></i>
+            </a>
+          </div>
+        </article>
+      </div>
+    </template>
+    <!-- Empty State -->
+    <template v-else>
+      <div class="rounded-lg bg-white p-8 text-center shadow-md">
+        <i class="bx bx-mobile mb-4 text-4xl text-gray-400"></i>
+        <p class="text-gray-600">Belum ada aplikasi terkait tersedia</p>
+      </div>
+    </template>
   </section>
 </template>

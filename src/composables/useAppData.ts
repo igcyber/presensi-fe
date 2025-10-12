@@ -1,5 +1,8 @@
 import { ref } from "vue";
 
+import { getMenuPublic } from "@/lib/api/services/menu";
+import type { MenuPublic } from "@/lib/api/types/menu.types";
+
 // Interfaces
 interface ContactInfo {
   alamat: string;
@@ -139,6 +142,7 @@ const unitKerjaNavigation = ref<NavigationItem[]>([
 ]);
 
 const isLoading = ref(false);
+const isLoadingMenu = ref(false);
 const error = ref<string | null>(null);
 
 // Methods
@@ -202,23 +206,44 @@ const fetchRelatedLinks = async () => {
   }
 };
 
+/**
+ * Transform MenuPublic to NavigationItem recursively
+ */
+const transformMenuToNavigation = (menu: MenuPublic): NavigationItem => {
+  const navItem: NavigationItem = {
+    title: menu.nama,
+    path: menu.url,
+  };
+
+  // Transform children recursively if exists
+  if (menu.children && menu.children.length > 0) {
+    navItem.children = menu.children.map(transformMenuToNavigation);
+  }
+
+  return navItem;
+};
+
 const fetchNavigation = async () => {
   try {
-    isLoading.value = true;
+    isLoadingMenu.value = true;
     error.value = null;
 
-    // TODO: Replace with actual API call
-    // const response = await fetch('/api/navigation')
-    // const data = await response.json()
-    // navigation.value = data
+    // Call API to get menu
+    const response = await getMenuPublic();
 
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    // Transform response to NavigationItem format
+    if (response.data && Array.isArray(response.data)) {
+      navigation.value = response.data.map(transformMenuToNavigation);
+    } else {
+      navigation.value = [];
+    }
   } catch (err) {
     error.value = "Gagal memuat navigasi";
     console.error("Error fetching navigation:", err);
+    // Fallback to empty array on error
+    navigation.value = [];
   } finally {
-    isLoading.value = false;
+    isLoadingMenu.value = false;
   }
 };
 
@@ -250,6 +275,7 @@ export function useAppData() {
     pemerintahanNavigation,
     unitKerjaNavigation,
     isLoading,
+    isLoadingMenu,
     error,
 
     // Methods

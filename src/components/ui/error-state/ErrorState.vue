@@ -31,7 +31,7 @@ const handleRetry = () => {
 const iconClass = computed(() => {
   switch (props.variant) {
     case "warning":
-      return "text-yellow-500";
+      return "text-yellow-600";
     case "info":
       return "text-blue-500";
     default:

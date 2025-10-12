@@ -79,9 +79,6 @@ onMounted(async () => {
 
 <template>
   <div class="min-h-screen bg-gray-50">
-    <!-- Navigation Spacer -->
-    <div class="h-26.5 lg:h-47.5 2xl:h-40.5"></div>
-
     <!-- Breadcrumb -->
     <AppBreadcrumb />
 
@@ -229,7 +226,7 @@ onMounted(async () => {
             <div class="mx-auto max-w-2xl">
               <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
                 <i class="bx bx-news mb-4 text-4xl text-yellow-600"></i>
-                <h4 class="mb-4 text-xl font-semibold text-yellow-800">Tidak Ada Berita</h4>
+                <h4 class="mb-4 text-xl font-semibold text-yellow-600">Tidak Ada Berita</h4>
                 <p class="text-yellow-700">
                   {{
                     keyword

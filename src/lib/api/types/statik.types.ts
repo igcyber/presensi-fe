@@ -90,5 +90,7 @@ export const KATEGORI_OPTIONS = [
   { label: "Contact", value: "contact" },
   { label: "Logo", value: "logo" },
   { label: "Aplikasi", value: "aplikasi" },
+  { label: "Emergency", value: "emergency" },
+  { label: "Operasional", value: "operasional" },
   { label: "Custom", value: "custom" },
 ];

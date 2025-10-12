@@ -18,7 +18,7 @@ function submitSearch() {
 <template>
   <!-- Hero Banner Section -->
   <section
-    class="relative bg-black/60 bg-gradient-to-br bg-[url('/assets/images/backgrounds/bg-hero.png')] bg-cover bg-position-[bottom_right_-100px] bg-no-repeat py-30 text-white bg-blend-multiply sm:bg-position-[bottom_right]"
+    class="relative bg-black/60 bg-gradient-to-br bg-[url('/assets/images/backgrounds/bg-hero-dprd.png')] bg-cover bg-position-[top_-70px_center] bg-no-repeat py-30 text-white bg-blend-multiply sm:bg-position-[top_-70px_center]"
   >
     <div class="container">
       <div class="mx-auto max-w-4xl text-center">
@@ -43,7 +43,7 @@ function submitSearch() {
             />
             <button
               type="submit"
-              class="bg-portal-green hover:bg-portal-green/90 cursor-pointer rounded-md px-8 py-4 font-semibold text-white shadow-lg transition-all duration-200 hover:shadow-xl"
+              class="cursor-pointer rounded-md bg-yellow-600 px-8 py-4 font-semibold text-white shadow-lg transition-all duration-200 hover:bg-yellow-600/90 hover:shadow-xl"
             >
               <i class="bx bx-search mr-2"></i>
               Cari

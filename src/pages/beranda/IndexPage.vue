@@ -9,8 +9,8 @@ import {
   HeroSection,
   InfografisSection,
   NewsSection,
-  OpdSection,
-  ServicesSection,
+  // OpdSection,
+  // ServicesSection,
   VideoSection,
 } from "@/components/features/beranda";
 import VideoModal from "@/components/modals/VideoModal.vue";
@@ -18,8 +18,8 @@ import VideoModal from "@/components/modals/VideoModal.vue";
 import { getBeranda } from "@/lib/api/services/beranda";
 import {
   type AplikasiTerkaitItem,
-  type BannerItem,
   type EmergencyItem,
+  type InfografisItem,
   type LayananItem,
   type NewsItem,
   type OpdItem,
@@ -31,7 +31,7 @@ const isLoading = ref<boolean>(false);
 
 const emergencies = ref<EmergencyItem[]>([]);
 const news = ref<NewsItem[]>([]);
-const banners = ref<BannerItem[]>([]);
+const infografis = ref<InfografisItem[]>([]);
 const videos = ref<VideoItem[]>([]);
 const layanans = ref<LayananItem[]>([]);
 const sistems = ref<SistemItem[]>([]);
@@ -54,7 +54,7 @@ const fetchBeranda = async () => {
 
     emergencies.value = responseData.emergencies;
     news.value = responseData.berita;
-    banners.value = responseData.banners;
+    infografis.value = responseData.infografis;
     videos.value = responseData.videos;
     layanans.value = responseData.layanans;
     sistems.value = responseData.sistems;
@@ -74,9 +74,6 @@ onMounted(async () => {
 
 <template>
   <div class="min-h-screen">
-    <!-- Navigation Spacer -->
-    <div class="h-26.5 lg:h-47.5 2xl:h-40.5"></div>
-
     <!-- Loading State -->
     <div v-if="isLoading" class="flex min-h-[50vh] flex-col items-center justify-center">
       <div class="border-portal-green h-12 w-12 animate-spin rounded-full border-b-2"></div>
@@ -93,16 +90,11 @@ onMounted(async () => {
       <!-- Features Section -->
       <FeaturesSection />
 
-      <!-- News & Election Info Section -->
+      <!-- News Section -->
       <section class="bg-gray-50 py-16">
         <div class="container">
-          <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
-            <!-- News Section -->
-            <NewsSection :news="news" />
-
-            <!-- Election Info Section -->
-            <!-- <ElectionInfoSection /> -->
-          </div>
+          <!-- News Section -->
+          <NewsSection :news="news" />
         </div>
       </section>
 
@@ -110,7 +102,7 @@ onMounted(async () => {
       <section class="bg-gray-100 py-16">
         <div class="container space-y-16">
           <!-- Infografis Section -->
-          <InfografisSection :banners="banners" />
+          <InfografisSection :infografis="infografis" />
 
           <!-- Video Section -->
           <VideoSection :videos="videos" @open-video-modal="openVideoModal" />
@@ -118,13 +110,13 @@ onMounted(async () => {
       </section>
 
       <!-- Services Section -->
-      <ServicesSection :layanans="layanans" :sistems="sistems" />
+      <!-- <ServicesSection :layanans="layanans" :sistems="sistems" /> -->
 
       <!-- Aplikasi Terkait Section -->
       <AplikasiTerkaitSection :aplikasi-terkait="aplikasiTerkait" />
 
       <!-- OPD Section -->
-      <OpdSection :opds="opds" />
+      <!-- <OpdSection :opds="opds" /> -->
 
       <VideoModal ref="videoModalRef" />
     </template>
