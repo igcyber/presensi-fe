@@ -69,7 +69,7 @@ onMounted(async () => {
         <!-- Loading State -->
         <div v-if="isLoading" class="flex items-center justify-center py-20">
           <div class="text-center">
-            <div class="border-portal-green mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2"></div>
+            <div class="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-yellow-600"></div>
             <p class="text-gray-600">Memuat data...</p>
           </div>
         </div>
@@ -94,11 +94,11 @@ onMounted(async () => {
         <div v-else-if="data">
           <template v-if="data.data.length > 0">
             <!-- Photo Gallery Grid -->
-            <div class="mb-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="mb-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               <div
                 v-for="foto in data.data"
                 :key="foto.id"
-                class="group overflow-hidden rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                class="group overflow-hidden rounded-lg bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
               >
                 <!-- Photo Container -->
                 <div class="relative aspect-[4/3] overflow-hidden">
@@ -133,7 +133,7 @@ onMounted(async () => {
                     data-lightbox="foto"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="hover:text-portal-green mb-3 block text-lg font-semibold text-gray-900 transition-colors duration-200"
+                    class="mb-3 block text-lg font-bold text-gray-900 transition-colors duration-200 hover:text-yellow-600"
                     style="
                       display: -webkit-box;
                       -webkit-line-clamp: 2;

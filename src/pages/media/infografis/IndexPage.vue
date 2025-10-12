@@ -94,7 +94,7 @@ onMounted(async () => {
         <div v-else-if="data">
           <template v-if="data.data.length > 0">
             <!-- Infografis Gallery Grid -->
-            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
               <div
                 v-for="infografis in data.data"
                 :key="infografis.id"

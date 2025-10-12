@@ -98,10 +98,10 @@ onMounted(async () => {
     <!-- Main Content -->
     <main class="py-12">
       <div v-if="keyword" class="mx-auto mb-8 max-w-2xl">
-        <div class="border-portal-green bg-portal-green/10 rounded border p-8 text-center">
-          <i class="bx bx-search text-portal-green mb-4 text-4xl"></i>
-          <h4 class="text-portal-green mb-2 text-xl font-semibold">Pencarian</h4>
-          <p class="text-portal-green mb-6">
+        <div class="rounded-lg border border-yellow-600 bg-yellow-600/10 p-8 text-center">
+          <i class="bx bx-search mb-4 text-4xl text-yellow-600"></i>
+          <h4 class="mb-2 text-xl font-semibold text-yellow-600">Pencarian</h4>
+          <p class="mb-6 text-yellow-600">
             {{
               keyword
                 ? `Menampilkan hasil pencarian untuk "${keyword}" dengan total ${data?.length} dokumen PPID.`
@@ -110,7 +110,7 @@ onMounted(async () => {
           </p>
           <button
             @click="router.push({ name: 'ppid.index', params: { type: ppidType } })"
-            class="bg-portal-green hover:bg-portal-green/90 inline-flex items-center rounded-lg px-4 py-2 text-sm font-medium text-white transition-colors duration-200"
+            class="inline-flex items-center rounded-lg bg-yellow-600 px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-yellow-700"
           >
             <i class="bx bx-x mr-2"></i>
             Reset Pencarian
@@ -128,7 +128,7 @@ onMounted(async () => {
         <!-- Loading State -->
         <div v-if="isLoading" class="flex items-center justify-center py-20">
           <div class="text-center">
-            <div class="border-portal-green mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2"></div>
+            <div class="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-yellow-600"></div>
             <p class="text-gray-600">Memuat data PPID...</p>
           </div>
         </div>
@@ -157,7 +157,7 @@ onMounted(async () => {
               <article
                 v-for="ppid in data"
                 :key="ppid.id"
-                class="group hover:ring-portal-green/20 relative overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-gray-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                class="group relative overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-200 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:ring-yellow-600/20"
               >
                 <!-- Modern File Type Header -->
                 <div class="relative flex items-center justify-between border-b border-gray-100 p-4">
@@ -216,7 +216,7 @@ onMounted(async () => {
                 <div class="flex flex-col p-4">
                   <!-- Title -->
                   <h3
-                    class="hover:text-portal-green mb-3 text-lg font-semibold text-gray-900 transition-colors duration-200"
+                    class="mb-3 text-lg font-bold text-gray-900 transition-colors duration-200 hover:text-yellow-600"
                     style="
                       display: -webkit-box;
                       -webkit-line-clamp: 2;
@@ -252,7 +252,7 @@ onMounted(async () => {
                     v-if="ppid.fileUrl"
                     :href="ppid.fileUrl"
                     target="_blank"
-                    class="bg-portal-green hover:bg-portal-green/90 inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium text-white transition-all duration-200 hover:shadow-md"
+                    class="inline-flex items-center justify-center rounded-lg bg-yellow-600 px-4 py-2 text-sm font-medium text-white transition-all duration-200 hover:bg-yellow-700 hover:shadow-md"
                   >
                     <i class="bx bx-download mr-2"></i>
                     Download File

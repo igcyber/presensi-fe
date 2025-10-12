@@ -69,7 +69,7 @@ onMounted(async () => {
         <!-- Loading State -->
         <div v-if="isLoading" class="flex items-center justify-center py-20">
           <div class="text-center">
-            <div class="border-portal-green mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2"></div>
+            <div class="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-yellow-600"></div>
             <p class="text-gray-600">Memuat data...</p>
           </div>
         </div>
@@ -94,18 +94,18 @@ onMounted(async () => {
         <div v-else-if="data">
           <template v-if="data.data.length > 0">
             <!-- Document Grid -->
-            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="mb-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               <div
                 v-for="dokumen in data.data"
                 :key="dokumen.id"
-                class="group overflow-hidden rounded bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                class="group overflow-hidden rounded-lg bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
               >
                 <!-- Document Icon & Content -->
                 <div class="p-6">
                   <!-- Document Icon -->
                   <div class="mb-4 flex items-center justify-center">
-                    <div class="bg-portal-green/10 flex h-16 w-16 items-center justify-center rounded-full">
-                      <i class="bx bx-file text-portal-green text-3xl"></i>
+                    <div class="flex h-16 w-16 items-center justify-center rounded-full bg-yellow-600/10">
+                      <i class="bx bx-file text-3xl text-yellow-600"></i>
                     </div>
                   </div>
 
@@ -120,7 +120,7 @@ onMounted(async () => {
                     :href="dokumen.fileUrl"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="hover:text-portal-green mb-3 block text-center text-lg font-semibold text-gray-900 transition-colors duration-200"
+                    class="mb-3 block text-center text-lg font-bold text-gray-900 transition-colors duration-200 hover:text-yellow-600"
                     style="
                       display: -webkit-box;
                       -webkit-line-clamp: 2;
@@ -142,7 +142,7 @@ onMounted(async () => {
                     :href="dokumen.fileUrl"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="bg-portal-green hover:bg-portal-green/90 flex w-full items-center justify-center rounded-md px-4 py-2 text-white transition-colors duration-200"
+                    class="flex w-full items-center justify-center rounded-lg bg-yellow-600 px-4 py-2 font-medium text-white transition-colors duration-200 hover:bg-yellow-700"
                   >
                     <i class="bx bx-download mr-2"></i>
                     Unduh Dokumen
