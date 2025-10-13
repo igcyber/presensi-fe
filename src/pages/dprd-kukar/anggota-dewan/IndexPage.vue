@@ -79,7 +79,7 @@ onMounted(async () => {
         <div v-else-if="strukturList.length > 0" class="space-y-8">
           <!-- Loop Parent Structures -->
           <Card v-for="struktur in strukturList" :key="struktur.id" class="shadow-lg">
-            <CardHeader class="bg-gradient-to-r from-yellow-50 to-yellow-100">
+            <CardHeader class="bg-gradient-to-r from-yellow-50 to-yellow-100 py-6">
               <CardTitle class="flex items-center gap-3 text-2xl text-gray-800">
                 <div class="flex h-10 w-10 items-center justify-center rounded-full bg-yellow-600">
                   <Building class="h-5 w-5 text-white" />

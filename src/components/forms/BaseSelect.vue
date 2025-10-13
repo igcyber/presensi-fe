@@ -34,6 +34,7 @@ interface Props {
   loadingText?: string;
   emptyText?: string;
   minSearchLength?: number;
+  customCss?: string;
 }
 
 // Props dengan default values
@@ -235,6 +236,7 @@ watch(
           <SelectTrigger
             :id="props.name"
             class="w-full"
+            :class="props.customCss"
             :aria-invalid="!!(!meta.valid && errorMessage)"
             :aria-describedby="props.description ? `${props.name}-description` : undefined"
           >

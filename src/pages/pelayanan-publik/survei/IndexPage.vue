@@ -66,7 +66,7 @@ const handleSubmit = () => {
         <!-- Loading State -->
         <div v-if="isLoading" class="flex items-center justify-center py-20">
           <div class="text-center">
-            <div class="border-portal-green mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2"></div>
+            <div class="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-yellow-600"></div>
             <p class="text-gray-600">Memuat data survei...</p>
           </div>
         </div>

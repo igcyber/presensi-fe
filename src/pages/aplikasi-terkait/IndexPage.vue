@@ -98,7 +98,7 @@ onMounted(() => {
         <!-- Loading State -->
         <div v-if="loading" class="flex items-center justify-center py-20">
           <div class="text-center">
-            <div class="border-portal-green mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2"></div>
+            <div class="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-yellow-600"></div>
             <p class="text-gray-600">Memuat data aplikasi terkait...</p>
           </div>
         </div>
@@ -132,7 +132,7 @@ onMounted(() => {
               <div class="mb-4 flex items-center justify-center">
                 <div
                   class="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br"
-                  :class="aplikasi.iconBgClass || 'from-blue-500 to-blue-600'"
+                  :class="aplikasi.iconBgClass || 'from-yellow-500 to-yellow-600'"
                 >
                   <DynamicIcon :name="aplikasi.icon || 'bx-link-external'" icon-class="h-8 w-8 text-white" />
                 </div>
@@ -143,7 +143,7 @@ onMounted(() => {
                 :href="aplikasi.url"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
+                class="flex items-center justify-center gap-2 rounded-lg bg-yellow-600 px-4 py-2 text-white transition-colors hover:bg-yellow-700"
               >
                 Buka Aplikasi
                 <ExternalLink class="h-4 w-4" />

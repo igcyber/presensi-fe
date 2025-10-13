@@ -147,7 +147,7 @@ const socialMedia = [
           </div>
 
           <!-- Map -->
-          <Card class="lg:row-span-2">
+          <Card class="h-[600px]">
             <CardHeader>
               <CardTitle class="flex items-center gap-3">
                 <div class="flex h-8 w-8 items-center justify-center rounded-full bg-red-100">
@@ -156,13 +156,12 @@ const socialMedia = [
                 Lokasi Kami
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div class="aspect-video w-full overflow-hidden rounded-lg">
+            <CardContent class="flex h-full flex-col">
+              <div class="flex-1 overflow-hidden rounded-lg">
                 <iframe
                   :src="contactInfo.mapEmbedUrl"
                   class="h-full w-full"
                   style="border: 0"
-                  allowfullscreen=""
                   loading="lazy"
                   referrerpolicy="no-referrer-when-downgrade"
                 ></iframe>

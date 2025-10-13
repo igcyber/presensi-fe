@@ -74,7 +74,7 @@ watch(
         <div v-else-if="menuData">
           <!-- Has Page Content -->
           <Card v-if="menuData.page" class="shadow-lg">
-            <CardHeader class="bg-gradient-to-r from-yellow-50 to-yellow-100">
+            <CardHeader class="bg-gradient-to-r from-yellow-50 to-yellow-100 py-6">
               <CardTitle class="flex items-center gap-3 text-2xl text-gray-800">
                 <div class="flex h-10 w-10 items-center justify-center rounded-full bg-yellow-600">
                   <FileText class="h-5 w-5 text-white" />

@@ -46,4 +46,3 @@ export interface DashboardData {
   views: DashboardViews;
   popular: DashboardPopular;
 }
-

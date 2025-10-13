@@ -76,7 +76,9 @@ onMounted(() => {
         <!-- Content -->
         <div v-else-if="menuData && menuData.page" class="mx-auto max-w-5xl">
           <Card class="overflow-hidden shadow-2xl backdrop-blur-sm">
-            <CardHeader class="border-b border-yellow-200 bg-gradient-to-r from-yellow-50 via-yellow-100 to-yellow-50">
+            <CardHeader
+              class="border-b border-yellow-200 bg-gradient-to-r from-yellow-50 via-yellow-100 to-yellow-50 pt-6"
+            >
               <div class="text-center">
                 <div
                   class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-yellow-600 shadow-lg"
