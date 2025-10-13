@@ -66,6 +66,13 @@ const data = computed(() => ({
       icon: HomeIcon,
       isActive: routNameActive.value === "app.dashboard",
     },
+    {
+      title: "Dashboard Data",
+      url: "/app/dashboard-data",
+      name: "app.dashboard-data",
+      icon: ChartBar,
+      isActive: routNameActive.value === "app.dashboard-data",
+    },
   ],
   navMaster: [
     {

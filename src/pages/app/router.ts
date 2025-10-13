@@ -2,6 +2,7 @@ import AuthLayout from "@/layouts/AuthLayout.vue";
 import aplikasiTerkaitRoute from "@/pages/app/aplikasi-terkait/route";
 import beritaRoute from "@/pages/app/berita/route";
 import bupatiRoute from "@/pages/app/bupati/route";
+import dashboardDataRoute from "@/pages/app/dashboard-data/route";
 import dashboardRoute from "@/pages/app/dashboard/route";
 import dokumenRoute from "@/pages/app/dokumen/route";
 import fotoRoute from "@/pages/app/foto/route";
@@ -37,6 +38,7 @@ export default {
       redirect: { name: "not-found" },
     },
     ...dashboardRoute,
+    ...dashboardDataRoute,
     ...profileRoute,
     ...userRoute,
     ...beritaRoute,
