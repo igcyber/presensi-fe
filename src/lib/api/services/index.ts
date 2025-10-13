@@ -1,6 +1,7 @@
 // Service exports
 export * from "./auth";
 export * from "./berita";
+export * from "./dashboard";
 export * from "./dokumen";
 export * from "./prestasi";
 export * from "./perusda";

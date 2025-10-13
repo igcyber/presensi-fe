@@ -1,114 +1,139 @@
 <script setup lang="ts">
 import {
-  AlertTriangleIcon,
-  BarChart3Icon,
-  CheckCircleIcon,
-  FileTextIcon,
+  BookOpen,
+  FileText,
+  Image,
+  NewspaperIcon,
   PlusIcon,
-  SettingsIcon,
-  ShoppingCartIcon,
-  TrendingUpIcon,
-  UserPlusIcon,
-  UsersIcon,
+  Settings,
+  VideoIcon,
 } from "lucide-vue-next";
+import { computed } from "vue";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-// Data statistik
-const stats = [
+import { useFetch } from "@/composables/useFetch";
+import { getDashboard } from "@/lib/api/services";
+import type { DashboardData } from "@/lib/api/types/dashboard.types";
+import type { ApiResponse } from "@/lib/api/core/apiResponse";
+import { RouterLink } from "vue-router";
+
+// Fetch data dari API Dashboard
+const { data: dashboardResponse, isLoading } = useFetch<ApiResponse<DashboardData>, ApiResponse<DashboardData>>(
+  () => getDashboard(),
   {
-    title: "Total Pengguna",
-    value: "2,847",
-    change: "+12%",
-    changeType: "positive",
-    icon: UsersIcon,
+    immediate: true,
+    onSuccess: (data) => {
+      console.log("Dashboard data loaded:", data);
+    },
+  },
+);
+
+// Computed untuk dashboard data
+const dashboardData = computed(() => {
+  if (!dashboardResponse.value || !dashboardResponse.value.data) {
+    return {
+      views: {
+        berita: 0,
+        dokumen: 0,
+        infografis: 0,
+        video: 0,
+        foto: 0,
+      },
+      popular: {
+        berita: [],
+      },
+    };
+  }
+  return dashboardResponse.value.data;
+});
+
+// Data statistik views
+const stats = computed(() => [
+  {
+    title: "Views Berita",
+    value: dashboardData.value.views.berita.toLocaleString("id-ID"),
+    icon: NewspaperIcon,
     color: "blue",
   },
   {
-    title: "Pendapatan",
-    value: "Rp 45.2M",
-    change: "+8%",
-    changeType: "positive",
-    icon: TrendingUpIcon,
+    title: "Views Dokumen",
+    value: dashboardData.value.views.dokumen.toLocaleString("id-ID"),
+    icon: FileText,
     color: "green",
   },
   {
-    title: "Pesanan Aktif",
-    value: "1,234",
-    change: "-3%",
-    changeType: "negative",
-    icon: ShoppingCartIcon,
+    title: "Views Infografis",
+    value: dashboardData.value.views.infografis.toLocaleString("id-ID"),
+    icon: BookOpen,
     color: "orange",
   },
   {
-    title: "Tingkat Konversi",
-    value: "3.24%",
-    change: "+0.5%",
-    changeType: "positive",
-    icon: BarChart3Icon,
+    title: "Views Video",
+    value: dashboardData.value.views.video.toLocaleString("id-ID"),
+    icon: VideoIcon,
     color: "purple",
   },
-];
-
-// Data aktivitas terbaru
-const recentActivities = [
   {
-    id: 1,
-    type: "user",
-    title: "Pengguna baru mendaftar",
-    description: "Ahmad Rizki bergabung dengan platform",
-    time: "2 menit yang lalu",
-    icon: UserPlusIcon,
+    title: "Views Foto",
+    value: dashboardData.value.views.foto.toLocaleString("id-ID"),
+    icon: Image,
+    color: "pink",
+  },
+]);
+
+// Data berita populer sebagai aktivitas terbaru
+const recentActivities = computed(() => {
+  console.log("Dashboard Data:", dashboardData.value);
+  console.log("Popular Berita:", dashboardData.value.popular?.berita);
+
+  if (!dashboardData.value.popular?.berita || dashboardData.value.popular.berita.length === 0) {
+    console.log("No popular berita found");
+    return [];
+  }
+
+  return dashboardData.value.popular.berita.map((berita) => ({
+    id: berita.id,
+    type: "berita",
+    title: berita.judul,
+    description: berita.isi.substring(0, 100) + "...",
+    time: new Date(berita.createdAt).toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }),
+    icon: NewspaperIcon,
     color: "blue",
-  },
-  {
-    id: 2,
-    type: "order",
-    title: "Pesanan berhasil diproses",
-    description: "Pesanan #ORD-2024-001 telah selesai",
-    time: "15 menit yang lalu",
-    icon: CheckCircleIcon,
-    color: "green",
-  },
-  {
-    id: 3,
-    type: "warning",
-    title: "Peringatan sistem",
-    description: "Kapasitas server mencapai 85%",
-    time: "1 jam yang lalu",
-    icon: AlertTriangleIcon,
-    color: "orange",
-  },
-];
-
-// Data ringkasan hari ini
-const todaySummary = [
-  { label: "Pengguna Aktif", value: "1,247" },
-  { label: "Pesanan Baru", value: "23" },
-  { label: "Pendapatan", value: "Rp 2.4M" },
-  { label: "Tugas Selesai", value: "18/25" },
-];
+    image: berita.fotoUrl,
+    tags: [`Tag ${berita.tagId}`],
+    views: berita.views,
+  }));
+});
 </script>
 
 <template>
   <div class="bg-background p-4 md:p-6 lg:p-8">
-    <div class="space-y-8">
-      <!-- Header Section -->
-      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div class="space-y-1">
-          <h1 class="text-3xl font-bold tracking-tight">Dashboard</h1>
-          <p class="text-muted-foreground">Selamat datang kembali! Berikut adalah ringkasan aktivitas Anda.</p>
+    <!-- Loading State -->
+    <div v-if="isLoading" class="flex min-h-[400px] items-center justify-center">
+      <div class="text-center">
+        <div class="mb-4 inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status">
+          <span class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Loading...</span>
         </div>
-        <Button class="flex items-center gap-2 self-start sm:self-auto">
-          <PlusIcon class="h-4 w-4" />
-          Tambah Baru
-        </Button>
+        <p class="text-muted-foreground">Memuat data dashboard...</p>
+      </div>
+    </div>
+
+    <div v-else class="space-y-8">
+      <!-- Header Section -->
+      <div class="space-y-1">
+        <h1 class="text-3xl font-bold tracking-tight">Dashboard</h1>
+        <p class="text-muted-foreground">Ringkasan data yang sering diakses</p>
       </div>
 
       <!-- Statistics Cards -->
-      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <Card
           v-for="stat in stats"
           :key="stat.title"
@@ -119,13 +144,10 @@ const todaySummary = [
               <div class="space-y-2">
                 <p class="text-muted-foreground text-sm font-medium">{{ stat.title }}</p>
                 <p class="text-2xl font-bold">{{ stat.value }}</p>
-                <Badge :variant="stat.changeType === 'positive' ? 'default' : 'destructive'" class="text-xs">
-                  {{ stat.change }} dari bulan lalu
-                </Badge>
               </div>
               <div
                 :class="[
-                  'rounded-full p-3',
+                  'rounded-full p-3 transition-colors duration-200',
                   stat.color === 'blue' && 'bg-blue-100 dark:bg-blue-900/20',
                   stat.color === 'green' && 'bg-green-100 dark:bg-green-900/20',
                   stat.color === 'orange' && 'bg-orange-100 dark:bg-orange-900/20',
@@ -150,47 +172,82 @@ const todaySummary = [
 
       <!-- Main Content Grid -->
       <div class="grid gap-6 lg:grid-cols-3">
-        <!-- Recent Activities -->
+        <!-- Popular News -->
         <div class="lg:col-span-2">
-          <Card class="h-fit">
-            <CardHeader>
+          <Card>
+            <CardHeader class="pb-4">
               <div class="flex items-center justify-between">
                 <div>
-                  <CardTitle>Aktivitas Terbaru</CardTitle>
-                  <CardDescription>Aktivitas terbaru dalam sistem Anda</CardDescription>
+                  <CardTitle class="text-xl font-semibold">Berita Populer</CardTitle>
+                  <CardDescription class="mt-1">
+                    Berita yang paling banyak dilihat
+                    <span v-if="recentActivities.length > 0" class="ml-1">
+                      ({{ recentActivities.length }} berita)
+                    </span>
+                  </CardDescription>
                 </div>
-                <Button variant="ghost" size="sm" class="hover:bg-muted text-sm"> Lihat Semua </Button>
+                <Button variant="ghost" size="sm" as-child>
+                  <RouterLink to="/app/berita"> Lihat Semua </RouterLink>
+                </Button>
               </div>
             </CardHeader>
-            <CardContent class="space-y-4">
-              <div
-                v-for="activity in recentActivities"
-                :key="activity.id"
-                class="hover:bg-muted/50 flex items-start space-x-4 rounded-lg border p-4 transition-colors"
-              >
-                <div
-                  :class="[
-                    'rounded-full p-2',
-                    activity.color === 'blue' && 'bg-blue-100 dark:bg-blue-900/20',
-                    activity.color === 'green' && 'bg-green-100 dark:bg-green-900/20',
-                    activity.color === 'orange' && 'bg-orange-100 dark:bg-orange-900/20',
-                  ]"
+            <CardContent class="p-0">
+              <!-- Pesan ketika tidak ada berita -->
+              <div v-if="recentActivities.length === 0" class="p-6 text-center">
+                <p class="text-muted-foreground">Belum ada berita populer</p>
+              </div>
+
+              <!-- Daftar berita populer dengan scroll -->
+              <div v-else class="max-h-[600px] divide-y overflow-y-auto">
+                <RouterLink
+                  v-for="activity in recentActivities"
+                  :key="activity.id"
+                  :to="`/app/berita/${activity.id}`"
+                  class="hover:bg-muted/50 flex items-start gap-4 p-6 transition-colors cursor-pointer"
                 >
-                  <component
-                    :is="activity.icon"
+                  <div v-if="activity.image" class="h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg">
+                    <img :src="activity.image" :alt="activity.title" class="h-full w-full object-cover" />
+                  </div>
+                  <div
+                    v-else
                     :class="[
-                      'h-4 w-4',
-                      activity.color === 'blue' && 'text-blue-600 dark:text-blue-400',
-                      activity.color === 'green' && 'text-green-600 dark:text-green-400',
-                      activity.color === 'orange' && 'text-orange-600 dark:text-orange-400',
+                      'rounded-full p-2',
+                      activity.color === 'blue' && 'bg-blue-100 dark:bg-blue-900/20',
+                      activity.color === 'green' && 'bg-green-100 dark:bg-green-900/20',
+                      activity.color === 'orange' && 'bg-orange-100 dark:bg-orange-900/20',
+                      activity.color === 'purple' && 'bg-purple-100 dark:bg-purple-900/20',
                     ]"
-                  />
-                </div>
-                <div class="flex-1 space-y-1">
-                  <p class="text-sm font-medium">{{ activity.title }}</p>
-                  <p class="text-muted-foreground text-xs">{{ activity.description }}</p>
-                  <p class="text-muted-foreground/70 text-xs">{{ activity.time }}</p>
-                </div>
+                  >
+                    <component
+                      :is="activity.icon"
+                      :class="[
+                        'h-4 w-4',
+                        activity.color === 'blue' && 'text-blue-600 dark:text-blue-400',
+                        activity.color === 'green' && 'text-green-600 dark:text-green-400',
+                        activity.color === 'orange' && 'text-orange-600 dark:text-orange-400',
+                        activity.color === 'purple' && 'text-purple-600 dark:text-purple-400',
+                      ]"
+                    />
+                  </div>
+                  <div class="flex-1 space-y-2">
+                    <p class="font-medium">{{ activity.title }}</p>
+                    <p class="text-muted-foreground text-sm">{{ activity.description }}</p>
+                    <div class="flex items-center gap-2">
+                      <Badge
+                        v-for="tag in activity.tags"
+                        :key="tag"
+                        variant="secondary"
+                        class="text-xs"
+                      >
+                        {{ tag }}
+                      </Badge>
+                    </div>
+                    <div class="flex items-center justify-between">
+                      <p class="text-muted-foreground text-xs">{{ activity.time }}</p>
+                      <p class="text-muted-foreground text-xs">{{ activity.views }} views</p>
+                    </div>
+                  </div>
+                </RouterLink>
               </div>
             </CardContent>
           </Card>
@@ -200,72 +257,19 @@ const todaySummary = [
         <div class="space-y-6">
           <!-- Quick Actions -->
           <Card>
-            <CardHeader>
-              <CardTitle>Aksi Cepat</CardTitle>
+            <CardHeader class="pb-4">
+              <CardTitle class="text-lg font-semibold">Aksi Cepat</CardTitle>
               <CardDescription>Akses fitur yang sering digunakan</CardDescription>
             </CardHeader>
-            <CardContent class="space-y-3">
-              <Button class="w-full justify-start" variant="outline">
-                <PlusIcon class="mr-2 h-4 w-4" />
+            <CardContent class="space-y-2">
+              <Button class="w-full justify-start" variant="ghost">
+                <PlusIcon class="mr-3 h-4 w-4" />
                 Tambah Pengguna
               </Button>
-              <Button class="w-full justify-start" variant="outline">
-                <FileTextIcon class="mr-2 h-4 w-4" />
-                Buat Laporan
-              </Button>
-              <Button class="w-full justify-start" variant="outline">
-                <SettingsIcon class="mr-2 h-4 w-4" />
+              <Button class="w-full justify-start" variant="ghost">
+                <Settings class="mr-3 h-4 w-4" />
                 Pengaturan
               </Button>
-            </CardContent>
-          </Card>
-
-          <!-- Today's Summary -->
-          <Card>
-            <CardHeader>
-              <CardTitle>Ringkasan Hari Ini</CardTitle>
-            </CardHeader>
-            <CardContent class="space-y-4">
-              <div v-for="item in todaySummary" :key="item.label" class="flex items-center justify-between py-2">
-                <span class="text-muted-foreground text-sm">{{ item.label }}</span>
-                <span class="font-semibold">{{ item.value }}</span>
-              </div>
-            </CardContent>
-          </Card>
-
-          <!-- Progress Card -->
-          <Card>
-            <CardHeader>
-              <CardTitle>Progress Bulanan</CardTitle>
-            </CardHeader>
-            <CardContent class="space-y-4">
-              <div class="space-y-2">
-                <div class="flex justify-between text-sm">
-                  <span class="text-muted-foreground">Target Penjualan</span>
-                  <span class="font-medium">72%</span>
-                </div>
-                <div class="bg-muted h-2 rounded-full">
-                  <div class="bg-primary h-2 w-[72%] rounded-full"></div>
-                </div>
-              </div>
-              <div class="space-y-2">
-                <div class="flex justify-between text-sm">
-                  <span class="text-muted-foreground">Kepuasan Pelanggan</span>
-                  <span class="font-medium">89%</span>
-                </div>
-                <div class="bg-muted h-2 rounded-full">
-                  <div class="h-2 w-[89%] rounded-full bg-green-500"></div>
-                </div>
-              </div>
-              <div class="space-y-2">
-                <div class="flex justify-between text-sm">
-                  <span class="text-muted-foreground">Efisiensi Operasional</span>
-                  <span class="font-medium">94%</span>
-                </div>
-                <div class="bg-muted h-2 rounded-full">
-                  <div class="h-2 w-[94%] rounded-full bg-blue-500"></div>
-                </div>
-              </div>
             </CardContent>
           </Card>
         </div>

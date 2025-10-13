@@ -1,6 +1,7 @@
 // Type exports
 export type * from "./auth.types";
 export type * from "./berita.types";
+export type * from "./dashboard.types";
 export type * from "./dokumen.types";
 export type * from "./prestasi.types";
 export type * from "./perusda.types";
