@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Newspaper } from "lucide-vue-next";
+
 // No props needed for static election widget
 </script>
 
@@ -7,7 +9,7 @@
   <div class="lg:col-span-1">
     <div class="mb-6 flex items-center">
       <div class="mr-3 flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-white">
-        <i class="bx bx-news text-lg"></i>
+        <Newspaper class="h-5 w-5" />
       </div>
       <h3 class="text-xl font-bold text-gray-900"><span class="font-normal">Info</span> Pemilu</h3>
     </div>

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ArrowRight, ChevronRight, Smartphone } from "lucide-vue-next";
+
 // import { RouterLink } from "vue-router";
 import type { AplikasiTerkaitItem } from "@/lib/api/types/beranda.types";
 
@@ -47,7 +49,7 @@ const getBorderClasses = (index: number) => {
         class="inline-flex items-center rounded-md bg-yellow-600 px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-yellow-600/90"
       >
         Lihat Semua
-        <i class="bx bx-chevron-right ml-2"></i>
+        <ChevronRight class="ml-2 h-4 w-4" />
       </RouterLink>
     </div>
 
@@ -94,7 +96,7 @@ const getBorderClasses = (index: number) => {
           <div class="relative z-12 flex h-full flex-col p-4 sm:p-6">
             <!-- Icon di pojok kanan atas -->
             <div class="absolute top-3 right-3 sm:top-4 sm:right-4">
-              <i class="bx bx-mobile text-2xl text-gray-800 group-hover:text-white sm:text-3xl"></i>
+              <Smartphone class="h-6 w-6 text-gray-800 group-hover:text-white sm:h-8 sm:w-8" />
             </div>
 
             <!-- Title -->
@@ -117,9 +119,7 @@ const getBorderClasses = (index: number) => {
               class="inline-flex items-center text-base text-gray-800 transition-colors duration-200 group-hover:text-white hover:text-yellow-300 sm:text-sm lg:text-lg"
             >
               <span class="mr-2">Selengkapnya</span>
-              <i
-                class="bx bx-right-arrow-alt transform transition-transform duration-200 group-hover:translate-x-1"
-              ></i>
+              <ArrowRight class="h-4 w-4 transform transition-transform duration-200 group-hover:translate-x-1" />
             </a>
           </div>
         </article>
@@ -128,7 +128,7 @@ const getBorderClasses = (index: number) => {
     <!-- Empty State -->
     <template v-else>
       <div class="rounded-lg bg-white p-8 text-center shadow-md">
-        <i class="bx bx-mobile mb-4 text-4xl text-gray-400"></i>
+        <Smartphone class="mx-auto mb-4 h-10 w-10 text-gray-400" />
         <p class="text-gray-600">Belum ada aplikasi terkait tersedia</p>
       </div>
     </template>

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { CheckCircle, Info } from "lucide-vue-next";
+
 import VueCarousel from "@/components/features/media/VueCarousel.vue";
 
 import type { LayananItem, SistemItem } from "@/lib/api/types/beranda.types";
@@ -20,7 +22,7 @@ defineProps<Props>();
         <div class="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row">
           <div class="flex items-center">
             <div class="mr-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/20">
-              <i class="bx bx-check-circle text-lg"></i>
+              <CheckCircle class="h-5 w-5" />
             </div>
             <h2 class="text-2xl font-bold"><span class="font-bold">Layanan</span> Publik ({{ layanans.length }})</h2>
           </div>
@@ -60,7 +62,7 @@ defineProps<Props>();
         </template>
         <template v-else>
           <div class="rounded bg-white/10 p-8 text-center backdrop-blur-sm">
-            <i class="bx bx-info-circle mb-4 text-4xl text-white/60"></i>
+            <Info class="mx-auto mb-4 h-10 w-10 text-white/60" />
             <p class="text-white/80">Belum ada layanan publik tersedia</p>
           </div>
         </template>
@@ -71,7 +73,7 @@ defineProps<Props>();
         <div class="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row">
           <div class="flex items-center">
             <div class="mr-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/20">
-              <i class="bx bx-check-circle text-lg"></i>
+              <CheckCircle class="h-5 w-5" />
             </div>
             <h2 class="text-2xl font-bold">
               <span class="font-bold">Sistem</span> Administrasi ({{ sistems.length }})
@@ -113,7 +115,7 @@ defineProps<Props>();
         </template>
         <template v-else>
           <div class="rounded bg-white/10 p-8 text-center backdrop-blur-sm">
-            <i class="bx bx-info-circle mb-4 text-4xl text-white/60"></i>
+            <Info class="mx-auto mb-4 h-10 w-10 text-white/60" />
             <p class="text-white/80">Belum ada sistem administrasi tersedia</p>
           </div>
         </template>

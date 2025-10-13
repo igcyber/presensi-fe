@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Calendar, Folder, Info, Newspaper, Search } from "lucide-vue-next";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
@@ -74,7 +75,7 @@ onMounted(async () => {
           class="cursor-pointer rounded border-l border-gray-200 bg-yellow-600 px-6 py-3 text-white transition-colors hover:bg-yellow-600/90"
           type="submit"
         >
-          <i class="bx bx-search"></i>
+          <Search class="h-5 w-5" />
         </button>
       </form>
     </div>
@@ -84,7 +85,7 @@ onMounted(async () => {
       <!-- Section Header -->
       <div class="mb-6">
         <h3 class="flex items-center gap-2 text-xl font-bold text-gray-800">
-          <i class="bx bx-news text-yellow-600"></i>
+          <Newspaper class="h-5 w-5 text-yellow-600" />
           <span>Berita</span>
           <span class="font-normal text-gray-600">Lainnya</span>
         </h3>
@@ -120,7 +121,7 @@ onMounted(async () => {
           <div class="p-4">
             <!-- Date -->
             <div class="mb-2 flex items-center gap-1 text-xs text-gray-500">
-              <i class="bx bx-calendar"></i>
+              <Calendar class="h-4 w-4" />
               {{ date(firstPost.createdAt) }}
             </div>
 
@@ -150,7 +151,7 @@ onMounted(async () => {
             <div class="min-w-0 flex-1">
               <!-- Date -->
               <div class="mb-2 flex items-center gap-1 text-xs text-gray-500">
-                <i class="bx bx-calendar"></i>
+                <Calendar class="h-4 w-4" />
                 {{ date(post.createdAt) }}
               </div>
 
@@ -167,7 +168,7 @@ onMounted(async () => {
       </template>
       <template v-else>
         <div class="rounded border border-yellow-200 bg-yellow-50 p-4 text-center">
-          <i class="bx bx-info-circle mb-2 text-2xl text-yellow-600"></i>
+          <Info class="mb-2 h-8 w-8 text-yellow-600" />
           <p class="text-sm text-yellow-600">Data tidak tersedia</p>
         </div>
       </template>
@@ -178,7 +179,7 @@ onMounted(async () => {
       <!-- Header -->
       <div class="mb-6">
         <h3 class="flex items-center gap-2 text-xl font-bold text-gray-800">
-          <i class="bx bx-folder text-yellow-600"></i>
+          <Folder class="h-5 w-5 text-yellow-600" />
           <span>+TAGS</span>
         </h3>
       </div>
@@ -211,18 +212,18 @@ onMounted(async () => {
             class="flex items-center justify-between border-b border-gray-100 pb-3 transition-colors hover:text-yellow-600"
           >
             <div class="flex items-center gap-2">
-              <i class="bx bx-folder text-gray-400"></i>
+              <Folder class="h-4 w-4 text-gray-400" />
               <span class="font-medium uppercase">{{ tag.namaTag }}</span>
             </div>
             <span class="rounded bg-gray-100 px-2 py-1 text-sm font-semibold text-gray-600">
-              {{ tag._count?.beritas || 0 }}
+              {{ tag.beritaRelation.length || 0 }}
             </span>
           </router-link>
         </div>
       </template>
       <template v-else>
         <div class="rounded border border-yellow-200 bg-yellow-50 p-4 text-center">
-          <i class="bx bx-info-circle mb-2 text-2xl text-yellow-600"></i>
+          <Info class="mb-2 h-8 w-8 text-yellow-600" />
           <p class="text-sm text-yellow-600">Data tag tidak tersedia</p>
         </div>
       </template>

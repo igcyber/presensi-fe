@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ChevronRight, Play, Video } from "lucide-vue-next";
 import { RouterLink } from "vue-router";
 
 import { useFormatters } from "@/composables/useFormatters";
@@ -30,7 +31,7 @@ const { youtubeInfo } = useFormatters();
         class="inline-flex items-center rounded-md bg-yellow-600 px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-yellow-700"
       >
         Lihat Semua
-        <i class="bx bx-chevron-right ml-2"></i>
+        <ChevronRight class="ml-2 h-4 w-4" />
       </RouterLink>
     </div>
 
@@ -60,7 +61,7 @@ const { youtubeInfo } = useFormatters();
                   <div
                     class="bg-portal-red flex h-10 w-10 items-center justify-center rounded-full text-white transition-transform duration-300 group-hover:scale-110"
                   >
-                    <i class="bx bx-play text-2xl"></i>
+                    <Play class="h-6 w-6" />
                   </div>
                 </div>
 
@@ -87,7 +88,7 @@ const { youtubeInfo } = useFormatters();
     <!-- Empty State -->
     <template v-else>
       <div class="rounded-lg bg-white p-8 text-center shadow-md">
-        <i class="bx bx-video mb-4 text-4xl text-gray-400"></i>
+        <Video class="mx-auto mb-4 h-10 w-10 text-gray-400" />
         <p class="text-gray-600">Belum ada video tersedia</p>
       </div>
     </template>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Loader2 } from "lucide-vue-next";
 import { computed, ref, watch } from "vue";
 
 import BaseForm from "@/components/forms/BaseForm.vue";
@@ -240,7 +241,7 @@ watch(currentStep, (newStep) => {
             :disabled="!meta.valid || isSubmitting"
             class="bg-portal-green hover:bg-portal-green-dark rounded px-6 py-3 font-medium text-white transition-colors disabled:bg-gray-400"
           >
-            <i v-if="isSubmitting" class="bx bx-loader-alt mr-2 animate-spin"></i>
+            <Loader2 v-if="isSubmitting" class="mr-2 h-4 w-4 animate-spin" />
             {{ isSubmitting ? "Mengirim..." : "Kirim Survei" }}
           </button>
         </div>

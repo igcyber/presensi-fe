@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Building, Info, Newspaper, Video } from "lucide-vue-next";
 import { ref } from "vue";
 
 import AppBreadcrumb from "@/components/layout/partials/AppBreadcrumb.vue";
@@ -73,7 +74,7 @@ const latestNews = ref([
           <div class="col-md-3 col-sm-6 mb-4">
             <div class="quick-link-card">
               <div class="card-icon">
-                <i class="bx bx-news"></i>
+                <Newspaper class="h-6 w-6" />
               </div>
               <h3>Berita</h3>
               <p>Informasi terbaru seputar Kabupaten Kutai Kartanegara</p>
@@ -83,7 +84,7 @@ const latestNews = ref([
           <div class="col-md-3 col-sm-6 mb-4">
             <div class="quick-link-card">
               <div class="card-icon">
-                <i class="bx bx-video"></i>
+                <Video class="h-6 w-6" />
               </div>
               <h3>Media</h3>
               <p>Video, dokumen, dan infografis terkait Kukar</p>
@@ -93,7 +94,7 @@ const latestNews = ref([
           <div class="col-md-3 col-sm-6 mb-4">
             <div class="quick-link-card">
               <div class="card-icon">
-                <i class="bx bx-building"></i>
+                <Building class="h-6 w-6" />
               </div>
               <h3>Pemerintahan</h3>
               <p>Informasi struktur dan program pemerintah</p>
@@ -105,7 +106,7 @@ const latestNews = ref([
           <div class="col-md-3 col-sm-6 mb-4">
             <div class="quick-link-card">
               <div class="card-icon">
-                <i class="bx bx-info-circle"></i>
+                <Info class="h-6 w-6" />
               </div>
               <h3>PPID</h3>
               <p>Pejabat Pengelola Informasi dan Dokumentasi</p>

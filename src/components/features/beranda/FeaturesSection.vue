@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { BarChart3, MessageSquare, Wallet } from "lucide-vue-next";
+
 // No props needed for static features
 </script>
 
@@ -15,7 +17,7 @@
             <div
               class="mr-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-blue-600 transition-colors duration-300 group-hover:bg-blue-600 group-hover:text-white"
             >
-              <i class="bx bx-chart text-2xl"></i>
+              <BarChart3 class="h-6 w-6" />
             </div>
             <div>
               <a
@@ -39,7 +41,7 @@
             <div
               class="mr-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-green-600 transition-colors duration-300 group-hover:bg-green-600 group-hover:text-white"
             >
-              <i class="bx bx-wallet text-2xl"></i>
+              <Wallet class="h-6 w-6" />
             </div>
             <div>
               <RouterLink
@@ -61,7 +63,7 @@
             <div
               class="mr-4 flex h-16 w-16 items-center justify-center rounded-full bg-orange-100 text-orange-600 transition-colors duration-300 group-hover:bg-orange-600 group-hover:text-white"
             >
-              <i class="bx bx-chat text-2xl"></i>
+              <MessageSquare class="h-6 w-6" />
             </div>
             <div>
               <a

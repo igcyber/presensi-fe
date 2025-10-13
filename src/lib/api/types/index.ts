@@ -27,3 +27,5 @@ export type * from "./struktur.types";
 export type * from "./menu.types";
 export type * from "./jabatanAnggota.types";
 export type * from "./page.types";
+export type * from "./tag.types";
+export type * from "./standarPelayanan.types";

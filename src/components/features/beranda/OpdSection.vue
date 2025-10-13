@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Building2, ChevronRight, Globe, Map } from "lucide-vue-next";
 import { RouterLink } from "vue-router";
 
 import VueCarousel from "@/components/features/media/VueCarousel.vue";
@@ -23,7 +24,7 @@ const { slugify } = useFormatters();
       <div class="mb-8 flex flex-col items-center justify-between gap-4 sm:flex-row">
         <div class="flex items-center">
           <div class="mr-3 flex h-10 w-10 items-center justify-center rounded-full bg-yellow-600 text-white">
-            <i class="bx bx-buildings text-lg"></i>
+            <Building2 class="h-5 w-5" />
           </div>
           <h2 class="text-2xl font-bold text-gray-900">
             <span class="font-normal">Daftar OPD</span> ({{ opds.length }})
@@ -34,7 +35,7 @@ const { slugify } = useFormatters();
           class="inline-flex items-center rounded-md bg-yellow-600 px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-yellow-700"
         >
           Lihat lebih banyak
-          <i class="bx bx-chevron-right ml-2"></i>
+          <ChevronRight class="ml-2 h-4 w-4" />
         </RouterLink>
       </div>
 
@@ -91,12 +92,12 @@ const { slugify } = useFormatters();
                 <div class="space-y-2 text-sm text-gray-600">
                   <!-- Website -->
                   <div class="flex items-start">
-                    <i class="bx bx-globe mt-0.5 mr-2 flex-shrink-0 text-yellow-600"></i>
+                    <Globe class="mt-0.5 mr-2 h-4 w-4 flex-shrink-0 text-yellow-600" />
                     <span class="break-all">{{ opd.website || "Website tidak tersedia" }}</span>
                   </div>
                   <!-- Address -->
                   <div class="flex items-start">
-                    <i class="bx bx-map mt-0.5 mr-2 flex-shrink-0 text-yellow-600"></i>
+                    <Map class="mt-0.5 mr-2 h-4 w-4 flex-shrink-0 text-yellow-600" />
                     <span class="break-words">{{ opd.alamat || "Alamat tidak tersedia" }}</span>
                   </div>
                 </div>
@@ -107,7 +108,7 @@ const { slugify } = useFormatters();
       </template>
       <template v-else>
         <div class="rounded bg-white p-8 text-center shadow-md">
-          <i class="bx bx-buildings mb-4 text-4xl text-gray-400"></i>
+          <Building2 class="mx-auto mb-4 h-10 w-10 text-gray-400" />
           <p class="text-gray-600">Belum ada OPD tersedia</p>
         </div>
       </template>

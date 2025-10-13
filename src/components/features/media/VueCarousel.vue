@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ChevronLeft, ChevronRight } from "lucide-vue-next";
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
 interface Props {
@@ -214,7 +215,7 @@ defineExpose({
         @click="previousSlide"
         class="absolute top-1/2 -left-3 z-10 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/80 text-gray-700 shadow-lg transition-all duration-200 hover:scale-110 hover:bg-white"
       >
-        <i class="bx bx-chevron-left text-xl"></i>
+        <ChevronLeft class="h-5 w-5" />
       </button>
 
       <!-- Next Button -->
@@ -222,7 +223,7 @@ defineExpose({
         @click="nextSlide"
         class="absolute top-1/2 -right-3 z-10 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/80 text-gray-700 shadow-lg transition-all duration-200 hover:scale-110 hover:bg-white"
       >
-        <i class="bx bx-chevron-right text-xl"></i>
+        <ChevronRight class="h-5 w-5" />
       </button>
     </template>
   </div>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Calendar, ChevronRight, Image, ZoomIn } from "lucide-vue-next";
 import { RouterLink } from "vue-router";
 
 import VueCarousel from "@/components/features/media/VueCarousel.vue";
@@ -27,7 +28,7 @@ const { date } = useFormatters();
         class="inline-flex items-center rounded-md bg-yellow-600 px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-yellow-600/90"
       >
         Lihat Semua
-        <i class="bx bx-chevron-right ml-2"></i>
+        <ChevronRight class="ml-2 h-4 w-4" />
       </RouterLink>
     </div>
 
@@ -70,7 +71,7 @@ const { date } = useFormatters();
                   :data-title="infografisItem.nama"
                   class="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 text-gray-900 transition-transform duration-200 hover:scale-110"
                 >
-                  <i class="bx bx-zoom-in text-xl"></i>
+                  <ZoomIn class="h-5 w-5" />
                 </a>
               </div>
 
@@ -80,7 +81,7 @@ const { date } = useFormatters();
                   {{ infografisItem.nama }}
                 </h3>
                 <div class="flex items-center text-xs text-white/90">
-                  <i class="bx bx-calendar mr-1"></i>
+                  <Calendar class="mr-1 h-4 w-4" />
                   <time :datetime="new Date(infografisItem.createdAt || '').toISOString()">
                     {{ date(infografisItem.createdAt) }}
                   </time>
@@ -94,7 +95,7 @@ const { date } = useFormatters();
     <!-- Empty State -->
     <template v-else>
       <div class="rounded-lg bg-white p-8 text-center shadow-md">
-        <i class="bx bx-image mb-4 text-4xl text-gray-400"></i>
+        <Image class="mx-auto mb-4 h-10 w-10 text-gray-400" />
         <p class="text-gray-600">Belum ada infografis tersedia</p>
       </div>
     </template>

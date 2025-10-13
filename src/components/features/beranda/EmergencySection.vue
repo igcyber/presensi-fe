@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { Phone } from "lucide-vue-next";
+
+import DynamicIcon from "@/components/ui/DynamicIcon.vue";
+
 import type { EmergencyItem } from "@/lib/api/types/beranda.types";
 
 interface Props {
@@ -19,7 +23,7 @@ defineProps<Props>();
             <div
               class="mr-3 flex h-12 w-12 items-center justify-center rounded-full bg-white/20 sm:h-14 sm:w-14 lg:h-12 lg:w-12"
             >
-              <i class="bx bx-phone-call text-lg sm:text-xl lg:text-lg"></i>
+              <Phone class="h-5 w-5 sm:h-6 sm:w-6 lg:h-5 lg:w-5" />
             </div>
             <div>
               <h2 class="text-sm leading-tight font-medium sm:text-base lg:text-sm xl:text-base">
@@ -41,7 +45,7 @@ defineProps<Props>();
                 class="flex items-center justify-center sm:justify-start"
               >
                 <div class="mr-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/20 sm:h-12 sm:w-12">
-                  <i :class="`bx bx-${emergency.icon}`" class="text-base sm:text-lg"></i>
+                  <DynamicIcon :name="`bx-${emergency.icon}`" icon-class="h-4 w-4 sm:h-5 sm:w-5" />
                 </div>
                 <div class="text-center sm:text-left">
                   <p class="text-sm font-semibold sm:text-base lg:text-sm xl:text-base">{{ emergency.nama }}</p>

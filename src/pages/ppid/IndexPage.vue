@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { AlertCircle, Calendar, Download, File, FileText, Folder, Image, RefreshCw, Search, X } from "lucide-vue-next";
 import { computed, onMounted } from "vue";
 import { watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -99,7 +100,7 @@ onMounted(async () => {
     <main class="py-12">
       <div v-if="keyword" class="mx-auto mb-8 max-w-2xl">
         <div class="rounded-lg border border-yellow-600 bg-yellow-600/10 p-8 text-center">
-          <i class="bx bx-search mb-4 text-4xl text-yellow-600"></i>
+          <Search class="mx-auto mb-4 h-10 w-10 text-yellow-600" />
           <h4 class="mb-2 text-xl font-semibold text-yellow-600">Pencarian</h4>
           <p class="mb-6 text-yellow-600">
             {{
@@ -112,7 +113,7 @@ onMounted(async () => {
             @click="router.push({ name: 'ppid.index', params: { type: ppidType } })"
             class="inline-flex items-center rounded-lg bg-yellow-600 px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-yellow-700"
           >
-            <i class="bx bx-x mr-2"></i>
+            <X class="mr-2 h-4 w-4" />
             Reset Pencarian
           </button>
         </div>
@@ -136,14 +137,14 @@ onMounted(async () => {
         <!-- Error State -->
         <div v-else-if="isError" class="mx-auto max-w-2xl">
           <div class="rounded border border-red-200 bg-red-50 p-8 text-center">
-            <i class="bx bx-error-circle text-destructive mb-4 text-4xl"></i>
+            <AlertCircle class="text-destructive mx-auto mb-4 h-10 w-10" />
             <h4 class="mb-4 text-xl font-semibold text-red-800">Terjadi Kesalahan</h4>
             <p class="mb-6 text-red-700">{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
             <button
-              class="rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
+              class="inline-flex items-center rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
               @click="fetchData"
             >
-              <i class="bx bx-refresh mr-2"></i>
+              <RefreshCw class="mr-2 h-4 w-4" />
               Coba Lagi
             </button>
           </div>
@@ -167,19 +168,19 @@ onMounted(async () => {
                       v-if="ppid.jenisFile === 'dokumen'"
                       class="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-red-500 to-red-600 shadow-sm"
                     >
-                      <i class="bx bx-file-pdf text-lg text-white"></i>
+                      <FileText class="h-5 w-5 text-white" />
                     </div>
                     <div
                       v-else-if="ppid.jenisFile === 'gambar'"
                       class="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-green-500 to-green-600 shadow-sm"
                     >
-                      <i class="bx bx-image text-lg text-white"></i>
+                      <Image class="h-5 w-5 text-white" />
                     </div>
                     <div
                       v-else
                       class="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 shadow-sm"
                     >
-                      <i class="bx bx-file text-lg text-white"></i>
+                      <File class="h-5 w-5 text-white" />
                     </div>
 
                     <!-- File Type Label -->
@@ -207,7 +208,7 @@ onMounted(async () => {
 
                   <!-- Date Badge -->
                   <div class="flex items-center text-xs text-gray-500">
-                    <i class="bx bx-calendar mr-1"></i>
+                    <Calendar class="mr-1 h-4 w-4" />
                     <time :datetime="ppid.createdAt">{{ date(ppid.createdAt) }}</time>
                   </div>
                 </div>
@@ -230,7 +231,7 @@ onMounted(async () => {
 
                   <!-- Category -->
                   <div class="mb-3 flex items-center text-sm text-gray-500">
-                    <i class="bx bx-folder mr-2"></i>
+                    <Folder class="mr-2 h-4 w-4" />
                     <span>{{ ppid.subKategori }}</span>
                   </div>
 
@@ -254,7 +255,7 @@ onMounted(async () => {
                     target="_blank"
                     class="inline-flex items-center justify-center rounded-lg bg-yellow-600 px-4 py-2 text-sm font-medium text-white transition-all duration-200 hover:bg-yellow-700 hover:shadow-md"
                   >
-                    <i class="bx bx-download mr-2"></i>
+                    <Download class="mr-2 h-4 w-4" />
                     Download File
                   </a>
                 </div>
@@ -277,7 +278,7 @@ onMounted(async () => {
           <template v-else>
             <div class="mx-auto max-w-2xl">
               <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
-                <i class="bx bx-file-blank mb-4 text-4xl text-yellow-600"></i>
+                <File class="mx-auto mb-4 h-10 w-10 text-yellow-600" />
                 <h4 class="mb-4 text-xl font-semibold text-yellow-600">Tidak Ada Dokumen PPID</h4>
                 <p class="text-yellow-700">
                   {{

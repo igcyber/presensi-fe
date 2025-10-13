@@ -19,7 +19,14 @@ export const createBeritaSchema = z.object({
     return false;
   }, "Foto wajib diisi dan format file harus berupa JPG, PNG, atau WebP"),
   keterangan: z.string().max(500, "Keterangan maksimal 500 karakter").optional(),
-  tag: z.string().min(1, "Tag wajib diisi").min(2, "Tag minimal 2 karakter").max(200, "Tag maksimal 200 karakter"),
+  tagId: z
+    .union([z.number(), z.string()])
+    .transform((val) => {
+      if (val === null || val === undefined || val === "") throw new Error("Tag wajib dipilih");
+      return typeof val === "string" ? parseInt(val, 10) : val;
+    })
+    .refine((val) => !isNaN(val) && val > 0, "Tag wajib dipilih"),
+  temporaryFileNames: z.array(z.string()).optional(),
 });
 
 // Schema untuk update berita
@@ -40,7 +47,15 @@ export const updateBeritaSchema = z.object({
       return false;
     }, "Format file harus berupa JPG, PNG, atau WebP"),
   keterangan: z.string().max(500, "Keterangan maksimal 500 karakter").optional(),
-  tag: z.string().min(2, "Tag minimal 2 karakter").max(200, "Tag maksimal 200 karakter").optional(),
+  tagId: z
+    .union([z.number(), z.string()])
+    .optional()
+    .nullable()
+    .transform((val) => {
+      if (val === null || val === undefined || val === "") return undefined;
+      return typeof val === "string" ? parseInt(val, 10) : val;
+    }),
+  temporaryFileNames: z.array(z.string()).optional(),
 });
 
 // Schema untuk berita query parameters

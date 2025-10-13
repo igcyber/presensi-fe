@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Calendar, ChevronRight, Eye, Newspaper, TrendingUp } from "lucide-vue-next";
 import { computed } from "vue";
 import { RouterLink } from "vue-router";
 
@@ -32,7 +33,7 @@ const beritaTerpopuler = computed(() => [...props.news].sort((a, b) => b.views -
           class="inline-flex items-center rounded-md bg-yellow-600 px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-yellow-700"
         >
           Lihat Semua
-          <i class="bx bx-chevron-right ml-2"></i>
+          <ChevronRight class="ml-2 h-4 w-4" />
         </RouterLink>
       </div>
 
@@ -61,7 +62,7 @@ const beritaTerpopuler = computed(() => [...props.news].sort((a, b) => b.views -
                 <!-- Tag Kategori -->
                 <div class="mb-3">
                   <span class="rounded bg-yellow-600 px-3 py-1 text-xs font-semibold text-white uppercase">
-                    {{ beritaTerbaru[0].tag }}
+                    {{ beritaTerbaru[0].tagRelation.namaTag }}
                   </span>
                 </div>
 
@@ -79,11 +80,11 @@ const beritaTerpopuler = computed(() => [...props.news].sort((a, b) => b.views -
                 <!-- Meta Info -->
                 <div class="flex items-center justify-between text-sm text-white/90">
                   <div class="flex items-center">
-                    <i class="bx bx-show mr-2"></i>
+                    <Eye class="mr-2 h-4 w-4" />
                     <span>{{ beritaTerbaru[0].views }}</span>
                   </div>
                   <div class="flex items-center">
-                    <i class="bx bx-calendar mr-2"></i>
+                    <Calendar class="mr-2 h-4 w-4" />
                     <time
                       :datetime="beritaTerbaru[0].createdAt ? new Date(beritaTerbaru[0].createdAt).toISOString() : ''"
                     >
@@ -112,7 +113,7 @@ const beritaTerpopuler = computed(() => [...props.news].sort((a, b) => b.views -
               <!-- Tag Kategori -->
               <div class="absolute top-2 left-2">
                 <span class="rounded bg-yellow-600 px-2 py-1 text-xs font-semibold text-white uppercase">
-                  {{ berita.tag }}
+                  {{ berita.tagRelation.namaTag }}
                 </span>
               </div>
             </div>
@@ -136,11 +137,11 @@ const beritaTerpopuler = computed(() => [...props.news].sort((a, b) => b.views -
               <!-- Meta Info -->
               <div class="flex items-center justify-between text-xs text-gray-500">
                 <div class="flex items-center">
-                  <i class="bx bx-show mr-1"></i>
+                  <Eye class="mr-1 h-3 w-3" />
                   <span>{{ berita.views }}</span>
                 </div>
                 <div class="flex items-center">
-                  <i class="bx bx-calendar mr-1"></i>
+                  <Calendar class="mr-1 h-3 w-3" />
                   <time :datetime="berita.createdAt ? new Date(berita.createdAt).toISOString() : ''">
                     {{ berita.createdAt ? date(berita.createdAt) : "-" }}
                   </time>
@@ -154,7 +155,7 @@ const beritaTerpopuler = computed(() => [...props.news].sort((a, b) => b.views -
       <!-- Empty News State -->
       <template v-else>
         <div class="rounded-lg bg-white p-8 text-center shadow-md">
-          <i class="bx bx-news mb-4 text-4xl text-gray-400"></i>
+          <Newspaper class="mx-auto mb-4 h-10 w-10 text-gray-400" />
           <p class="text-gray-600">Belum ada berita terbaru</p>
         </div>
       </template>
@@ -196,7 +197,7 @@ const beritaTerpopuler = computed(() => [...props.news].sort((a, b) => b.views -
       <!-- Empty State -->
       <template v-else>
         <div class="rounded-lg bg-white p-6 text-center shadow-md">
-          <i class="bx bx-trending-up mb-3 text-3xl text-gray-400"></i>
+          <TrendingUp class="mx-auto mb-3 h-8 w-8 text-gray-400" />
           <p class="text-sm text-gray-600">Belum ada data terpopuler</p>
         </div>
       </template>

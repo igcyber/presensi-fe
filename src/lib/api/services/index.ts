@@ -27,3 +27,5 @@ export * from "./struktur";
 export * from "./menu";
 export * from "./jabatanAnggota";
 export * from "./page";
+export * from "./tag";
+export * from "./standarPelayanan";

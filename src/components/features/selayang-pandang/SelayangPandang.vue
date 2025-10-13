@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { MoreHorizontal } from "lucide-vue-next";
+
 import BeritaSide from "@/components/features/berita/BeritaSide.vue";
 import NavigationContent from "@/components/navigation/NavigationContent.vue";
 
@@ -27,7 +29,7 @@ defineProps<{
           {{ title }}
         </h1>
         <div class="text-portal-green flex items-center text-2xl">
-          <i class="bx bx-dots-horizontal-rounded"></i>
+          <MoreHorizontal class="h-5 w-5" />
         </div>
       </div>
 

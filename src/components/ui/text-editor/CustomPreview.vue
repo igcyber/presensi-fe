@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Printer, X } from "lucide-vue-next";
 import { computed, ref } from "vue";
 
 import { Button } from "@/components/ui/button";
@@ -134,12 +135,12 @@ const printContent = () => {
       <div class="mb-4 flex items-center justify-between border-b pb-3">
         <div class="flex items-center gap-2">
           <Button variant="outline" size="sm" @click="printContent">
-            <i class="bx bx-printer mr-2"></i>
+            <Printer class="mr-2 h-4 w-4" />
             Cetak
           </Button>
         </div>
         <Button variant="outline" size="sm" @click="closePreview">
-          <i class="bx bx-x mr-2"></i>
+          <X class="mr-2 h-4 w-4" />
           Tutup
         </Button>
       </div>

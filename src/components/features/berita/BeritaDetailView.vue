@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ArrowLeft, Calendar, User } from "lucide-vue-next";
+import { ArrowLeft, Calendar, Eye, Image, User } from "lucide-vue-next";
 import { computed } from "vue";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -34,12 +34,8 @@ const emit = defineEmits<Emits>();
 const { date } = useFormatters();
 
 // Computed properties
-const formattedTags = computed(() => {
-  if (!props.berita.tag) return [];
-  return props.berita.tag
-    .split(",")
-    .map((tag) => tag.trim())
-    .filter((tag) => tag.length > 0);
+const tagName = computed(() => {
+  return props.berita.tagRelation?.namaTag || "Tidak ada tag";
 });
 
 const creatorInitials = computed(() => {
@@ -107,15 +103,15 @@ const handleDelete = () => {
 
           <!-- Views -->
           <div class="flex items-center gap-1">
-            <i class="bx bx-show h-4 w-4"></i>
+            <Eye class="h-4 w-4" />
             <span>{{ berita.views || 0 }} views</span>
           </div>
         </div>
 
-        <!-- Tags -->
-        <div v-if="formattedTags.length > 0" class="flex flex-wrap gap-2">
-          <Badge v-for="tag in formattedTags" :key="tag" variant="secondary" class="text-xs">
-            {{ tag }}
+        <!-- Tag -->
+        <div class="flex items-center gap-2">
+          <Badge variant="default" class="text-xs">
+            {{ tagName }}
           </Badge>
         </div>
 
@@ -153,7 +149,7 @@ const handleDelete = () => {
     <Card v-else-if="!berita.foto">
       <CardContent class="p-8 text-center">
         <div class="text-muted-foreground">
-          <i class="bx bx-image mx-auto mb-2 text-5xl opacity-50"></i>
+          <Image class="mx-auto mb-2 h-12 w-12 opacity-50" />
           <p class="text-sm">Tidak ada foto</p>
         </div>
       </CardContent>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ArrowLeft } from "lucide-vue-next";
+import { ArrowLeft, Calendar, CalendarClock, Image, Link, User, UserCog } from "lucide-vue-next";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -55,13 +55,13 @@ const handleDelete = () => {
       <CardHeader>
         <div class="flex items-start gap-4">
           <div class="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100">
-            <i class="bx bx-image text-3xl text-blue-600"></i>
+            <Image class="h-8 w-8 text-blue-600" />
           </div>
           <div class="flex-1">
             <CardTitle class="mb-2">{{ foto.judul }}</CardTitle>
             <CardDescription>
               <div class="flex items-center gap-2 text-sm text-gray-500">
-                <i class="bx bx-calendar"></i>
+                <Calendar class="h-4 w-4" />
                 <span>{{ date(foto.createdAt) }}</span>
               </div>
             </CardDescription>
@@ -95,7 +95,7 @@ const handleDelete = () => {
             <h3 class="text-lg font-semibold">Informasi Foto</h3>
             <div class="space-y-3">
               <div class="flex items-start gap-3 rounded-lg border p-3">
-                <i class="bx bx-image text-gray-400"></i>
+                <Image class="h-4 w-4 text-gray-400" />
                 <div class="flex-1">
                   <p class="text-sm font-medium text-gray-500">Judul</p>
                   <p class="font-medium">{{ foto.judul }}</p>
@@ -103,7 +103,7 @@ const handleDelete = () => {
               </div>
 
               <div class="flex items-start gap-3 rounded-lg border p-3">
-                <i class="bx bx-link text-gray-400"></i>
+                <Link class="h-4 w-4 text-gray-400" />
                 <div class="flex-1">
                   <p class="text-sm font-medium text-gray-500">Path File</p>
                   <p class="font-medium break-all text-blue-600">{{ foto.foto }}</p>
@@ -111,7 +111,7 @@ const handleDelete = () => {
               </div>
 
               <div class="flex items-start gap-3 rounded-lg border p-3">
-                <i class="bx bx-user text-gray-400"></i>
+                <User class="h-4 w-4 text-gray-400" />
                 <div class="flex-1">
                   <p class="text-sm font-medium text-gray-500">Dibuat Oleh</p>
                   <p class="font-medium">{{ foto.createdByUser.fullName }}</p>
@@ -125,7 +125,7 @@ const handleDelete = () => {
             <h3 class="text-lg font-semibold">Informasi Sistem</h3>
             <div class="space-y-3">
               <div class="flex items-center gap-3 rounded-lg border p-3">
-                <i class="bx bx-calendar text-gray-400"></i>
+                <Calendar class="h-4 w-4 text-gray-400" />
                 <div class="flex-1">
                   <p class="text-sm font-medium text-gray-500">Dibuat</p>
                   <p class="font-medium">{{ date(foto.createdAt) }}</p>
@@ -133,7 +133,7 @@ const handleDelete = () => {
               </div>
 
               <div class="flex items-center gap-3 rounded-lg border p-3">
-                <i class="bx bx-calendar-edit text-gray-400"></i>
+                <CalendarClock class="h-4 w-4 text-gray-400" />
                 <div class="flex-1">
                   <p class="text-sm font-medium text-gray-500">Terakhir Diupdate</p>
                   <p class="font-medium">{{ date(foto.updatedAt) }}</p>
@@ -141,7 +141,7 @@ const handleDelete = () => {
               </div>
 
               <div class="flex items-center gap-3 rounded-lg border p-3">
-                <i class="bx bx-user-edit text-gray-400"></i>
+                <UserCog class="h-4 w-4 text-gray-400" />
                 <div class="flex-1">
                   <p class="text-sm font-medium text-gray-500">Diupdate Oleh</p>
                   <p class="font-medium">{{ foto.updatedByUser.fullName }}</p>

@@ -11,7 +11,11 @@ export interface Berita extends BaseEntity {
   isi: string;
   foto: string;
   keterangan?: string | null;
-  tag: string;
+  tagId: number;
+  tagRelation: {
+    id: number;
+    namaTag: string;
+  };
   views: number;
   createdBy: number;
   updatedBy: number;
@@ -41,9 +45,10 @@ export interface BeritaTag {
   namaTag: string;
   createdAt: string;
   updatedAt: string;
-  _count?: {
-    beritas: number;
-  };
+  beritaRelation: {
+    id: number;
+    namaTag: string;
+  }[];
 }
 
 /**
@@ -66,7 +71,8 @@ export interface CreateBeritaRequest {
   isi: string;
   foto?: File | string;
   keterangan?: string;
-  tag: string;
+  tagId: number;
+  temporaryFileNames?: string[];
 }
 
 /**
@@ -77,7 +83,8 @@ export interface UpdateBeritaRequest {
   isi?: string;
   foto?: File | string;
   keterangan?: string;
-  tag?: string;
+  tagId?: number;
+  temporaryFileNames?: string[];
 }
 
 /**

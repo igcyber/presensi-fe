@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { AlertCircle, Calendar, File, Play, RefreshCw } from "lucide-vue-next";
 import { onMounted, ref, watch } from "vue";
 
 import BasePagination from "@/components/base/BasePagination.vue";
@@ -85,14 +86,14 @@ onMounted(async () => {
         <!-- Error State -->
         <div v-else-if="isError" class="mx-auto max-w-2xl">
           <div class="rounded border border-red-200 bg-red-50 p-8 text-center">
-            <i class="bx bx-error-circle text-destructive mb-4 text-4xl"></i>
+            <AlertCircle class="text-destructive mx-auto mb-4 h-10 w-10" />
             <h4 class="mb-4 text-xl font-semibold text-red-800">Terjadi Kesalahan</h4>
             <p class="mb-6 text-red-700">{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
             <button
-              class="rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
+              class="inline-flex items-center rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
               @click="fetchData"
             >
-              <i class="bx bx-refresh mr-2"></i>
+              <RefreshCw class="mr-2 h-4 w-4" />
               Coba Lagi
             </button>
           </div>
@@ -123,7 +124,7 @@ onMounted(async () => {
                 <div class="p-4">
                   <!-- Date -->
                   <div class="mb-3 flex items-center text-sm text-gray-500">
-                    <i class="bx bx-calendar mr-2"></i>
+                    <Calendar class="mr-2 h-4 w-4" />
                     <span>{{ date(radio.createdAt) }}</span>
                   </div>
 
@@ -153,7 +154,7 @@ onMounted(async () => {
                     @click="openVideoModal(toEmbedUrl(radio.link))"
                     class="bg-portal-green hover:bg-portal-green/90 flex w-full cursor-pointer items-center justify-center rounded-md px-4 py-2 text-white transition-colors duration-200"
                   >
-                    <i class="bx bx-play mr-2"></i>
+                    <Play class="mr-2 h-4 w-4" />
                     Putar Radio
                   </button>
                 </div>
@@ -176,7 +177,7 @@ onMounted(async () => {
           <template v-else>
             <div class="mx-auto max-w-2xl">
               <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
-                <i class="bx bx-file-blank mb-4 text-4xl text-yellow-600"></i>
+                <File class="mx-auto mb-4 h-10 w-10 text-yellow-600" />
                 <h4 class="mb-4 text-xl font-semibold text-yellow-600">Tidak Ada Radio</h4>
                 <p class="text-yellow-700">Maaf, belum ada radio yang tersedia saat ini.</p>
               </div>
