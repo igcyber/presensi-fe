@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BookOpen, FileText, Image, NewspaperIcon, PlusIcon, Settings, VideoIcon } from "lucide-vue-next";
+import { BookOpen, FileText, Image, NewspaperIcon, VideoIcon } from "lucide-vue-next";
 import { computed } from "vue";
 import { RouterLink } from "vue-router";
 
@@ -78,11 +78,7 @@ const stats = computed(() => [
 
 // Data berita populer sebagai aktivitas terbaru
 const recentActivities = computed(() => {
-  console.log("Dashboard Data:", dashboardData.value);
-  console.log("Popular Berita:", dashboardData.value.popular?.berita);
-
   if (!dashboardData.value.popular?.berita || dashboardData.value.popular.berita.length === 0) {
-    console.log("No popular berita found");
     return [];
   }
 
@@ -90,7 +86,7 @@ const recentActivities = computed(() => {
     id: berita.id,
     type: "berita",
     title: berita.judul,
-    description: berita.isi.substring(0, 100) + "...",
+    description: berita.isi,
     time: new Date(berita.createdAt).toLocaleDateString("id-ID", {
       day: "numeric",
       month: "long",
@@ -169,10 +165,10 @@ const recentActivities = computed(() => {
       </div>
 
       <!-- Main Content Grid -->
-      <div class="grid gap-6 lg:grid-cols-3">
+      <div class="grid gap-2 lg:grid-cols-1">
         <!-- Popular News -->
         <div class="lg:col-span-2">
-          <Card>
+          <Card class="gap-0">
             <CardHeader class="pb-4">
               <div class="flex items-center justify-between">
                 <div>
@@ -229,7 +225,7 @@ const recentActivities = computed(() => {
                   </div>
                   <div class="flex-1 space-y-2">
                     <p class="font-medium">{{ activity.title }}</p>
-                    <p class="text-muted-foreground text-sm">{{ activity.description }}</p>
+                    <p class="text-muted-foreground text-sm" v-html="activity.description"></p>
                     <div class="flex items-center gap-2">
                       <Badge v-for="tag in activity.tags" :key="tag" variant="secondary" class="text-xs">
                         {{ tag }}
@@ -242,27 +238,6 @@ const recentActivities = computed(() => {
                   </div>
                 </RouterLink>
               </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <!-- Sidebar -->
-        <div class="space-y-6">
-          <!-- Quick Actions -->
-          <Card>
-            <CardHeader class="pb-4">
-              <CardTitle class="text-lg font-semibold">Aksi Cepat</CardTitle>
-              <CardDescription>Akses fitur yang sering digunakan</CardDescription>
-            </CardHeader>
-            <CardContent class="space-y-2">
-              <Button class="w-full justify-start" variant="ghost">
-                <PlusIcon class="mr-3 h-4 w-4" />
-                Tambah Pengguna
-              </Button>
-              <Button class="w-full justify-start" variant="ghost">
-                <Settings class="mr-3 h-4 w-4" />
-                Pengaturan
-              </Button>
             </CardContent>
           </Card>
         </div>
