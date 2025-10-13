@@ -3,6 +3,7 @@ import { createCrudService } from "@/lib/api/factories/crudServiceFactory";
 import type {
   CreateMenuRequest,
   Menu,
+  MenuBySlugResponse,
   MenuDetailResponse,
   MenuListPublicResponse,
   MenuListResponse,
@@ -121,5 +122,21 @@ export const deleteMenu = (id: number): Promise<ApiResponse<null>> => menuServic
  */
 export const getMenuPublic = async (params?: MenuQueryParams): Promise<ApiResponse<MenuListPublicResponse>> => {
   const { data } = await httpInstance.get<ApiResponse<MenuListPublicResponse>>(`/menu`, { params });
+  return data;
+};
+
+/**
+ * Mendapatkan menu berdasarkan slug untuk public display
+ * @param slug - Slug menu yang akan diambil
+ * @returns Promise yang mengembalikan data menu dengan page content
+ * @endpoint GET /menu/{slug}
+ * @example
+ * ```typescript
+ * const response = await getMenuBySlug('visi-misi');
+ * console.log(response.data.page.content);
+ * ```
+ */
+export const getMenuBySlug = async (slug: string): Promise<ApiResponse<MenuBySlugResponse>> => {
+  const { data } = await httpInstance.get<ApiResponse<MenuBySlugResponse>>(`/menu/${slug}`);
   return data;
 };

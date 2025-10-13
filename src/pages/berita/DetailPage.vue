@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { AlertCircle, Calendar, ChevronLeft, Eye, Info, RefreshCw } from "lucide-vue-next";
 import { computed, onBeforeUnmount, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 
@@ -80,14 +81,14 @@ onBeforeUnmount(() => {
         <!-- Error State -->
         <div v-else-if="isError" class="mx-auto max-w-2xl">
           <div class="rounded border border-red-200 bg-red-50 p-8 text-center">
-            <i class="bx bx-error-circle text-destructive mb-4 text-4xl"></i>
+            <AlertCircle class="text-destructive mx-auto mb-4 h-10 w-10" />
             <h4 class="mb-4 text-xl font-semibold text-red-800">Terjadi Kesalahan</h4>
             <p class="mb-6 text-red-700">{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
             <button
               class="rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
               @click="fetchData"
             >
-              <i class="bx bx-refresh mr-2"></i>
+              <RefreshCw class="mr-2 h-4 w-4" />
               Coba Lagi
             </button>
           </div>
@@ -101,7 +102,7 @@ onBeforeUnmount(() => {
               :to="{ name: 'media.berita' }"
               class="inline-flex items-center transition-colors duration-200 hover:text-yellow-600"
             >
-              <i class="bx bx-chevron-left mr-1 text-lg"></i>
+              <ChevronLeft class="mr-1 h-5 w-5" />
               Kembali ke Berita
             </RouterLink>
           </div>
@@ -120,11 +121,11 @@ onBeforeUnmount(() => {
                 <!-- Meta Information -->
                 <div class="mb-4 flex flex-wrap items-center gap-4 text-sm text-gray-600">
                   <div class="flex items-center">
-                    <i class="bx bx-calendar mr-2"></i>
+                    <Calendar class="mr-2 h-4 w-4" />
                     <time :datetime="data?.createdAt">{{ date(data?.createdAt) }}</time>
                   </div>
                   <div class="flex items-center">
-                    <i class="bx bx-show mr-2"></i>
+                    <Eye class="mr-2 h-4 w-4" />
                     <span>{{ data?.views || 0 }} kali dilihat</span>
                   </div>
                 </div>
@@ -160,7 +161,7 @@ onBeforeUnmount(() => {
         <!-- Empty State -->
         <div v-else class="mx-auto max-w-2xl">
           <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
-            <i class="bx bx-info-circle mb-4 text-4xl text-yellow-600"></i>
+            <Info class="mx-auto mb-4 h-10 w-10 text-yellow-600" />
             <h4 class="mb-4 text-xl font-semibold text-yellow-600">Data Tidak Ditemukan</h4>
             <p class="text-yellow-700">Maaf, data yang Anda cari tidak tersedia saat ini.</p>
           </div>

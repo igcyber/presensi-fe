@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { AlertCircle, Building2, Info, Map, Phone, RefreshCw } from "lucide-vue-next";
 import { computed, onMounted, watch } from "vue";
 
 import BasePagination from "@/components/base/BasePagination.vue";
@@ -82,14 +83,14 @@ onMounted(async () => {
         <!-- Error State -->
         <div v-else-if="isError" class="mx-auto max-w-2xl">
           <div class="rounded border border-red-200 bg-red-50 p-8 text-center">
-            <i class="bx bx-error-circle text-destructive mb-4 text-4xl"></i>
+            <AlertCircle class="text-destructive mx-auto mb-4 h-10 w-10" />
             <h4 class="mb-4 text-xl font-semibold text-red-800">Terjadi Kesalahan</h4>
             <p class="mb-6 text-red-700">{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
             <button
-              class="rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
+              class="inline-flex items-center rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
               @click="fetchData"
             >
-              <i class="bx bx-refresh mr-2"></i>
+              <RefreshCw class="mr-2 h-4 w-4" />
               Coba Lagi
             </button>
           </div>
@@ -148,7 +149,7 @@ onMounted(async () => {
                           <div
                             class="bg-portal-green/10 text-portal-green flex h-8 w-8 items-center justify-center rounded-full"
                           >
-                            <i class="bx bx-phone text-sm"></i>
+                            <Phone class="h-4 w-4" />
                           </div>
                           <div class="min-w-0 flex-1">
                             <a
@@ -167,7 +168,7 @@ onMounted(async () => {
                           <div
                             class="bg-portal-green/10 text-portal-green flex h-8 w-8 items-center justify-center rounded-full"
                           >
-                            <i class="bx bx-map text-sm"></i>
+                            <Map class="h-4 w-4" />
                           </div>
                           <div class="min-w-0 flex-1">
                             <span class="line-clamp-2 text-gray-600">{{
@@ -186,9 +187,7 @@ onMounted(async () => {
                           }"
                           class="bg-portal-green hover:bg-portal-green/90 group/btn inline-flex w-full items-center justify-center rounded-xl px-4 py-3 text-sm font-semibold text-white transition-all duration-200 hover:shadow-lg"
                         >
-                          <i
-                            class="bx bx-info-circle mr-2 transition-transform duration-200 group-hover/btn:scale-110"
-                          ></i>
+                          <Info class="mr-2 h-4 w-4 transition-transform duration-200 group-hover/btn:scale-110" />
                           Lihat Detail
                         </RouterLink>
                       </div>
@@ -214,7 +213,7 @@ onMounted(async () => {
               <template v-else>
                 <div class="mx-auto max-w-2xl">
                   <div class="rounded border border-blue-200 bg-blue-50 p-8 text-center">
-                    <i class="bx bx-buildings mb-4 text-4xl text-blue-600"></i>
+                    <Building2 class="mx-auto mb-4 h-10 w-10 text-blue-600" />
                     <h4 class="mb-4 text-xl font-semibold text-blue-800">Tidak Ada Perusahaan Daerah</h4>
                     <p class="text-blue-700">Maaf, belum ada data perusahaan daerah yang tersedia saat ini.</p>
                   </div>
@@ -227,7 +226,7 @@ onMounted(async () => {
         <!-- Empty State -->
         <div v-else class="mx-auto max-w-2xl">
           <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
-            <i class="bx bx-info-circle mb-4 text-4xl text-yellow-600"></i>
+            <Info class="mx-auto mb-4 h-10 w-10 text-yellow-600" />
             <h4 class="mb-4 text-xl font-semibold text-yellow-600">Data Tidak Ditemukan</h4>
             <p class="text-yellow-700">Maaf, data yang Anda cari tidak tersedia saat ini.</p>
           </div>

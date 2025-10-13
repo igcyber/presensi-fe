@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { AlertCircle, Award, Info, RefreshCw } from "lucide-vue-next";
 import { onMounted, ref, watch } from "vue";
 import { RouterLink } from "vue-router";
 
@@ -92,14 +93,14 @@ onMounted(async () => {
         <!-- Error State -->
         <div v-else-if="isError" class="mx-auto max-w-2xl">
           <div class="rounded border border-red-200 bg-red-50 p-8 text-center">
-            <i class="bx bx-error-circle text-destructive mb-4 text-4xl"></i>
+            <AlertCircle class="text-destructive mx-auto mb-4 h-10 w-10" />
             <h4 class="mb-4 text-xl font-semibold text-red-800">Terjadi Kesalahan</h4>
             <p class="mb-6 text-red-700">{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
             <button
-              class="rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
+              class="inline-flex items-center rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
               @click="fetchData"
             >
-              <i class="bx bx-refresh mr-2"></i>
+              <RefreshCw class="mr-2 h-4 w-4" />
               Coba Lagi
             </button>
           </div>
@@ -111,7 +112,7 @@ onMounted(async () => {
           <div>
             <div class="mb-6">
               <h3 class="mb-2 text-xl font-semibold text-gray-900">
-                <i class="bx bx-trophy text-portal-green mr-2"></i>
+                <Award class="text-portal-green mr-2 h-5 w-5" />
                 Daftar Transparansi Keuangan
               </h3>
               <p class="text-sm text-gray-600">
@@ -184,7 +185,7 @@ onMounted(async () => {
                     <tr v-if="data?.data?.length === 0">
                       <td colspan="4" class="px-6 py-12 text-center">
                         <div class="text-gray-400">
-                          <i class="bx bx-trophy mb-3 text-4xl"></i>
+                          <Award class="mx-auto mb-3 h-10 w-10" />
                           <p class="text-sm">Belum ada data transparansi keuangan</p>
                         </div>
                       </td>
@@ -223,7 +224,7 @@ onMounted(async () => {
 
                 <!-- Mobile Empty State -->
                 <div v-if="data?.data?.length === 0" class="py-8 text-center">
-                  <i class="bx bx-trophy mb-3 text-4xl text-gray-400"></i>
+                  <Award class="mx-auto mb-3 h-10 w-10 text-gray-400" />
                   <p class="text-sm text-gray-500">Belum ada data transparansi keuangan</p>
                 </div>
               </div>
@@ -247,7 +248,7 @@ onMounted(async () => {
         <!-- Empty State -->
         <div v-else class="mx-auto max-w-2xl">
           <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
-            <i class="bx bx-info-circle mb-4 text-4xl text-yellow-600"></i>
+            <Info class="mx-auto mb-4 h-10 w-10 text-yellow-600" />
             <h4 class="mb-4 text-xl font-semibold text-yellow-600">Data Tidak Ditemukan</h4>
             <p class="text-yellow-700">Maaf, data yang Anda cari tidak tersedia saat ini.</p>
           </div>

@@ -18,6 +18,7 @@ interface Props {
   showCounter?: boolean;
   description?: string;
   spellcheck?: boolean;
+  customCss?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -73,6 +74,7 @@ const handleInput = (e: Event, componentFieldOnInput: (e: Event) => void) => {
           :aria-describedby="props.description ? `${props.name}-description` : undefined"
           :style="props.autoResize ? { resize: 'none', overflow: 'hidden' } : {}"
           @input="(e: Event) => handleInput(e, componentField.onInput)"
+          :class="props.customCss"
         />
       </FormControl>
       <p v-if="props.description" :id="`${props.name}-description`" class="text-muted-foreground text-sm">

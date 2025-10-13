@@ -61,7 +61,7 @@ const orientationClasses = {
               :id="`${props.name}-${option.value}`"
               :value="option.value"
               :disabled="option.disabled || props.disabled"
-              :class="sizeClasses[props.size]"
+              :class="sizeClasses[props.size] + ' !fill-yellow-600 text-yellow-600'"
             />
             <label
               :for="`${props.name}-${option.value}`"

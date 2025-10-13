@@ -9,6 +9,8 @@ import type {
   UpdateStrukturRequest,
 } from "@/lib/api/types/struktur.types";
 
+import { httpInstance } from "../core";
+
 const base = "/api/strukturs";
 
 export const strukturService = createCrudService<
@@ -113,3 +115,19 @@ export const updateStruktur = (
  * ```
  */
 export const deleteStruktur = (id: number): Promise<ApiResponse<null>> => strukturService.remove(id);
+
+// ==================== Public Api ====================
+/**
+ * Mendapatkan daftar struktur untuk public display
+ * @returns Promise yang mengembalikan daftar struktur public dengan children dan jabatanAnggota
+ * @endpoint GET /struktur
+ * @example
+ * ```typescript
+ * const response = await getStrukturPublic();
+ * console.log(response.data); // Array of Struktur dengan nested data
+ * ```
+ */
+export const getStrukturPublic = async (): Promise<ApiResponse<Struktur[]>> => {
+  const { data } = await httpInstance.get<ApiResponse<Struktur[]>>(`/struktur`);
+  return data;
+};

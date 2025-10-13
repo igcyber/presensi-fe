@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { AlertCircle, Calendar, Download, Info, RefreshCw } from "lucide-vue-next";
 import { onBeforeUnmount, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 
@@ -66,14 +67,14 @@ onBeforeUnmount(() => {
         <!-- Error State -->
         <div v-else-if="isError" class="mx-auto max-w-2xl">
           <div class="rounded border border-red-200 bg-red-50 p-8 text-center">
-            <i class="bx bx-error-circle text-destructive mb-4 text-4xl"></i>
+            <AlertCircle class="text-destructive mx-auto mb-4 h-10 w-10" />
             <h4 class="mb-4 text-xl font-semibold text-red-800">Terjadi Kesalahan</h4>
             <p class="mb-6 text-red-700">{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
             <button
-              class="rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
+              class="inline-flex items-center rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
               @click="fetchData"
             >
-              <i class="bx bx-refresh mr-2"></i>
+              <RefreshCw class="mr-2 h-4 w-4" />
               Coba Lagi
             </button>
           </div>
@@ -110,7 +111,7 @@ onBeforeUnmount(() => {
                 <div class="mb-6">
                   <dt class="mb-2 text-sm font-medium text-gray-600">Tanggal Publikasi</dt>
                   <dd class="flex items-center text-gray-900">
-                    <i class="bx bx-calendar text-portal-green mr-2"></i>
+                    <Calendar class="text-portal-green mr-2 h-4 w-4" />
                     <time v-if="data.createdAt" :datetime="data.createdAt">
                       {{ date(data.createdAt) }}
                     </time>
@@ -130,7 +131,7 @@ onBeforeUnmount(() => {
                         rel="noopener noreferrer"
                         class="bg-portal-green hover:bg-portal-green/90 inline-flex items-center rounded-md px-4 py-2 text-sm font-medium text-white transition-colors duration-200"
                       >
-                        <i class="bx bx-download mr-2"></i>
+                        <Download class="mr-2 h-4 w-4" />
                         Unduh: {{ data.file }}
                       </a>
                     </div>
@@ -138,7 +139,7 @@ onBeforeUnmount(() => {
                     <!-- No files message -->
                     <div v-if="!data.file && !data.isi" class="rounded-md bg-yellow-50 p-3">
                       <div class="flex items-center">
-                        <i class="bx bx-info-circle mr-2 text-yellow-600"></i>
+                        <Info class="mr-2 h-4 w-4 text-yellow-600" />
                         <span class="text-sm text-yellow-700">Tidak ada file atau tautan yang tersedia</span>
                       </div>
                     </div>
@@ -161,7 +162,7 @@ onBeforeUnmount(() => {
         <!-- Empty State -->
         <div v-else class="mx-auto max-w-2xl">
           <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
-            <i class="bx bx-info-circle mb-4 text-4xl text-yellow-600"></i>
+            <Info class="mx-auto mb-4 h-10 w-10 text-yellow-600" />
             <h4 class="mb-4 text-xl font-semibold text-yellow-600">Data Tidak Ditemukan</h4>
             <p class="text-yellow-700">Maaf, data yang Anda cari tidak tersedia saat ini.</p>
           </div>

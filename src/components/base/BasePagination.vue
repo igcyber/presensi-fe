@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ChevronLeft, ChevronRight } from "lucide-vue-next";
 import { computed } from "vue";
 
 import { type PaginationItem, usePagination } from "@/composables/usePagination";
@@ -48,7 +49,7 @@ const onPage = (page: PaginationItem) => {
         class="focus:ring-portal-green flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg border border-gray-300 bg-white text-sm font-medium text-gray-500 transition-colors duration-200 hover:bg-gray-50 hover:text-gray-700 focus:ring-2 focus:ring-offset-2 focus:outline-none"
         aria-label="Previous page"
       >
-        <i class="bx bx-chevron-left text-lg"></i>
+        <ChevronLeft class="h-5 w-5" />
       </button>
       <span
         v-else
@@ -56,7 +57,7 @@ const onPage = (page: PaginationItem) => {
         aria-disabled="true"
         aria-label="Previous page (disabled)"
       >
-        <i class="bx bx-chevron-left text-lg"></i>
+        <ChevronLeft class="h-5 w-5" />
       </span>
 
       <!-- Page Numbers -->
@@ -99,7 +100,7 @@ const onPage = (page: PaginationItem) => {
         class="focus:ring-portal-green flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg border border-gray-300 bg-white text-sm font-medium text-gray-500 transition-colors duration-200 hover:bg-gray-50 hover:text-gray-700 focus:ring-2 focus:ring-offset-2 focus:outline-none"
         aria-label="Next page"
       >
-        <i class="bx bx-chevron-right text-lg"></i>
+        <ChevronRight class="h-5 w-5" />
       </button>
       <span
         v-else
@@ -107,7 +108,7 @@ const onPage = (page: PaginationItem) => {
         aria-disabled="true"
         aria-label="Next page (disabled)"
       >
-        <i class="bx bx-chevron-right text-lg"></i>
+        <ChevronRight class="h-5 w-5" />
       </span>
     </div>
   </nav>

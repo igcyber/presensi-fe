@@ -1,6 +1,8 @@
 import { computed, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
+import { useFormatters } from "@/composables/useFormatters";
+
 export interface BreadcrumbItem {
   label: string;
   href?: string;
@@ -17,6 +19,7 @@ const context = ref<string>("");
 export function useBreadcrumb() {
   const route = useRoute();
   const router = useRouter();
+  const { slugToTitle } = useFormatters();
 
   /**
    * Mapping untuk label breadcrumb berdasarkan route name
@@ -31,7 +34,7 @@ export function useBreadcrumb() {
     // Media
     "media.berita": "Berita",
     "media.berita.detail": "Detail Berita",
-    "media.foto": "Foto",
+    "media.kegiatan": "Kegiatan",
     "media.video": "Video",
     "media.radio": "Radio",
     "media.dokumen": "Dokumen",
@@ -52,6 +55,22 @@ export function useBreadcrumb() {
     "unit-kerja.opd": "OPD",
     "unit-kerja.opd.detail": "Detail OPD",
     "unit-kerja.perusahaan-daerah": "Perusahaan Daerah",
+
+    // PPID
+    "ppid.index": "PPID",
+
+    // DPRD Kukar
+    "dprd-kukar.anggota-dewan": "Anggota Dewan",
+    "dprd-kukar.dynamic": "DPRD Kukar",
+
+    // Pelayanan Publik
+    "pelayanan-publik.maklumat": "Maklumat Pelayanan Publik",
+    "pelayanan-publik.survey": "Survey Kepuasan Pelayanan Publik",
+    "pelayanan-publik.standar": "Standar Pelayanan",
+
+    // Aplikasi & Kontak
+    "aplikasi-terkait.index": "Aplikasi Terkait",
+    "kontak-kami.index": "Kontak Kami",
 
     // App
     "app.dashboard": "Dashboard",
@@ -96,6 +115,8 @@ export function useBreadcrumb() {
     "app.survei-kepuasan.detail": "Detail Survei Kepuasan",
     "app.ppid": "PPID",
     "app.ppid.detail": "Detail PPID",
+    "app.standar-pelayanan": "Standar Pelayanan",
+    "app.standar-pelayanan.detail": "Detail Standar Pelayanan",
   };
 
   /**
@@ -111,7 +132,7 @@ export function useBreadcrumb() {
     // Media
     "media.berita": ["Media"],
     "media.berita.detail": ["Media", "media.berita"],
-    "media.foto": ["Media"],
+    "media.kegiatan": ["Media"],
     "media.video": ["Media"],
     "media.radio": ["Media"],
     "media.dokumen": ["Media"],
@@ -132,6 +153,22 @@ export function useBreadcrumb() {
     "unit-kerja.opd": ["Unit Kerja"],
     "unit-kerja.opd.detail": ["Unit Kerja", "unit-kerja.opd"],
     "unit-kerja.perusahaan-daerah": ["Unit Kerja"],
+
+    // PPID
+    "ppid.index": ["PPID"],
+
+    // DPRD Kukar
+    "dprd-kukar.anggota-dewan": ["DPRD Kukar"],
+    "dprd-kukar.dynamic": ["DPRD Kukar"],
+
+    // Pelayanan Publik
+    "pelayanan-publik.maklumat": ["Pelayanan Publik"],
+    "pelayanan-publik.survey": ["Pelayanan Publik"],
+    "pelayanan-publik.standar": ["Pelayanan Publik"],
+
+    // Aplikasi & Kontak (no parent)
+    "aplikasi-terkait.index": [],
+    "kontak-kami.index": [],
 
     // App
     "app.dashboard": [],
@@ -176,6 +213,18 @@ export function useBreadcrumb() {
     "app.survei-kepuasan.detail": ["app.dashboard", "app.survei-kepuasan"],
     "app.ppid": ["app.dashboard"],
     "app.ppid.detail": ["app.dashboard", "app.ppid"],
+    "app.standar-pelayanan": ["app.dashboard"],
+    "app.standar-pelayanan.detail": ["app.dashboard", "app.standar-pelayanan"],
+  };
+
+  /**
+   * Mapping untuk PPID type ke label
+   */
+  const ppidTypeLabels: Record<string, string> = {
+    "informasi-berkala": "Informasi Berkala",
+    "informasi-setiap-saat": "Informasi Setiap Saat",
+    "informasi-serta-merta": "Informasi Serta Merta",
+    "informasi-dikecualikan": "Informasi Dikecualikan",
   };
 
   /**
@@ -247,6 +296,20 @@ export function useBreadcrumb() {
 
     if (routeName === "pemerintahan.transparansi-keuangan-detail" && context.value) {
       return `${context.value}`;
+    }
+
+    // Handle dynamic PPID type
+    if (routeName === "ppid.index" && route.params.type) {
+      const typeLabel = ppidTypeLabels[route.params.type as string];
+      if (typeLabel) {
+        return typeLabel;
+      }
+    }
+
+    // Handle dynamic DPRD Kukar menu
+    if (routeName === "dprd-kukar.dynamic" && route.params.slug) {
+      const slug = route.params.slug as string;
+      return slugToTitle(slug);
     }
 
     // Cek di meta.title dulu

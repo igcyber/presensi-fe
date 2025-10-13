@@ -16,11 +16,11 @@ export default {
       redirect: { name: "not-found" },
     },
     {
-      path: "foto",
-      name: "media.foto",
+      path: "kegiatan",
+      name: "media.kegiatan",
       component: FotoPage,
       meta: {
-        title: "Foto",
+        title: "Kegiatan",
       },
     },
     {

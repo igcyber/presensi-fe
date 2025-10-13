@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ChevronRight, Home } from "lucide-vue-next";
 import { RouterLink } from "vue-router";
 
 import { useBreadcrumb } from "@/composables/useBreadcrumb";
@@ -18,13 +19,13 @@ const { breadcrumbItems, getTitleFromRoute } = useBreadcrumb();
           :to="{ name: 'beranda.index' }"
           class="flex items-center text-gray-300 transition-colors hover:text-yellow-600"
         >
-          <i class="bx bx-home mr-1"></i>
+          <Home class="mr-1 h-4 w-4" />
           Home
         </RouterLink>
 
         <template v-for="(item, index) in breadcrumbItems" :key="index">
           <span class="text-gray-400">
-            <i class="bx bx-chevron-right text-xs"></i>
+            <ChevronRight class="h-3 w-3" />
           </span>
 
           <template v-if="item.href && item.href !== '#'">

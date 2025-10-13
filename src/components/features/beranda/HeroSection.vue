@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Home, Search } from "lucide-vue-next";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
@@ -23,7 +24,7 @@ function submitSearch() {
     <div class="container">
       <div class="mx-auto max-w-4xl text-center">
         <p class="mb-4 flex items-center justify-center text-lg">
-          <i class="bx bx-home mr-2"></i>
+          <Home class="mr-2 h-5 w-5" />
           Selamat datang di portal resmi
         </p>
         <h1 class="mb-4 text-4xl font-bold md:text-5xl">
@@ -43,9 +44,9 @@ function submitSearch() {
             />
             <button
               type="submit"
-              class="cursor-pointer rounded-md bg-yellow-600 px-8 py-4 font-semibold text-white shadow-lg transition-all duration-200 hover:bg-yellow-600/90 hover:shadow-xl"
+              class="flex cursor-pointer items-center justify-center rounded-md bg-yellow-600 px-8 py-4 font-semibold text-white shadow-lg transition-all duration-200 hover:bg-yellow-600/90 hover:shadow-xl"
             >
-              <i class="bx bx-search mr-2"></i>
+              <Search class="mr-2 h-5 w-5" />
               Cari
             </button>
           </div>

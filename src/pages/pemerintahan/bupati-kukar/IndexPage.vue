@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { AlertCircle, Calendar, Info, RefreshCw, User } from "lucide-vue-next";
 import { computed, onMounted } from "vue";
 
 import SelayangPandang from "@/components/features/selayang-pandang/SelayangPandang.vue";
@@ -42,14 +43,14 @@ onMounted(async () => {
         <!-- Error State -->
         <div v-else-if="isError" class="mx-auto max-w-2xl">
           <div class="rounded border border-red-200 bg-red-50 p-8 text-center">
-            <i class="bx bx-error-circle text-destructive mb-4 text-4xl"></i>
+            <AlertCircle class="text-destructive mx-auto mb-4 h-10 w-10" />
             <h4 class="mb-4 text-xl font-semibold text-red-800">Terjadi Kesalahan</h4>
             <p class="mb-6 text-red-700">{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
             <button
-              class="rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
+              class="inline-flex items-center rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
               @click="fetchData"
             >
-              <i class="bx bx-refresh mr-2"></i>
+              <RefreshCw class="mr-2 h-4 w-4" />
               Coba Lagi
             </button>
           </div>
@@ -101,7 +102,7 @@ onMounted(async () => {
 
                     <!-- Period Information -->
                     <div class="flex items-center space-x-2 text-sm text-gray-600">
-                      <i class="bx bx-calendar text-portal-green text-lg"></i>
+                      <Calendar class="text-portal-green h-5 w-5" />
                       <span class="font-medium">Periode:</span>
                       <span class="rounded-md bg-gray-100 px-2 py-1 font-semibold text-gray-800">
                         {{ item.tahunAwal }}/{{ item.tahunAkhir }}
@@ -113,7 +114,7 @@ onMounted(async () => {
                       <span
                         class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800"
                       >
-                        <i class="bx bx-user-circle mr-1 text-sm"></i>
+                        <User class="mr-1 h-4 w-4" />
                         Bupati & Wakil Bupati
                       </span>
                     </div>
@@ -132,7 +133,7 @@ onMounted(async () => {
         <!-- Empty State -->
         <div v-else class="mx-auto max-w-2xl">
           <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
-            <i class="bx bx-info-circle mb-4 text-4xl text-yellow-600"></i>
+            <Info class="mx-auto mb-4 h-10 w-10 text-yellow-600" />
             <h4 class="mb-4 text-xl font-semibold text-yellow-600">Data Tidak Ditemukan</h4>
             <p class="text-yellow-700">Maaf, data yang Anda cari tidak tersedia saat ini.</p>
           </div>

@@ -17,4 +17,3 @@ export const getDashboard = async (): Promise<ApiResponse<DashboardData>> => {
   const response = await httpInstance.get<ApiResponse<DashboardData>>("/api/dashboard");
   return response.data;
 };
-

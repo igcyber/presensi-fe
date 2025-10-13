@@ -92,3 +92,29 @@ export interface MenuOption {
   label: string;
   value: number;
 }
+
+/**
+ * Menu by slug response interface
+ * Represents menu data with page content from API by slug
+ */
+export interface MenuBySlugResponse {
+  id: number;
+  nama: string;
+  slug: string;
+  menuId: number | null;
+  url: string;
+  children: Menu[];
+  page: {
+    id: number;
+    menuId: number;
+    slug: string;
+    nama: string;
+    tipe: "page" | "file";
+    content: string;
+    createdBy: number;
+    updatedBy: number | null;
+    createdAt: string;
+    updatedAt: string;
+    deletedAt: string | null;
+  } | null;
+}

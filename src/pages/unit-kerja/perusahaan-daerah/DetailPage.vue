@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { AlertCircle, Building2, ChevronLeft, Info, Mail, Map, MapPin, Phone, RefreshCw } from "lucide-vue-next";
 import { onBeforeUnmount, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 
@@ -63,14 +64,14 @@ onBeforeUnmount(() => {
         <!-- Error State -->
         <div v-else-if="isError" class="mx-auto max-w-2xl">
           <div class="rounded border border-red-200 bg-red-50 p-8 text-center">
-            <i class="bx bx-error-circle text-destructive mb-4 text-4xl"></i>
+            <AlertCircle class="text-destructive mx-auto mb-4 h-10 w-10" />
             <h4 class="mb-4 text-xl font-semibold text-red-800">Terjadi Kesalahan</h4>
             <p class="mb-6 text-red-700">{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
             <button
-              class="rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
+              class="inline-flex items-center rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
               @click="fetchData"
             >
-              <i class="bx bx-refresh mr-2"></i>
+              <RefreshCw class="mr-2 h-4 w-4" />
               Coba Lagi
             </button>
           </div>
@@ -84,7 +85,7 @@ onBeforeUnmount(() => {
               :to="{ name: 'unit-kerja.perusahaan-daerah' }"
               class="text-portal-green hover:text-portal-green/80 inline-flex items-center transition-colors duration-200"
             >
-              <i class="bx bx-chevron-left mr-1 text-lg"></i>
+              <ChevronLeft class="mr-1 h-5 w-5" />
               Kembali ke Daftar Perusahaan Daerah
             </RouterLink>
           </div>
@@ -108,7 +109,7 @@ onBeforeUnmount(() => {
                 <div class="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-gray-200/50">
                   <div class="border-b border-gray-200 px-6 py-4">
                     <h3 class="text-lg font-semibold text-gray-900">
-                      <i class="bx bx-phone text-portal-green mr-2"></i>
+                      <Phone class="text-portal-green mr-2 h-4 w-4" />
                       Informasi Kontak
                     </h3>
                   </div>
@@ -118,7 +119,7 @@ onBeforeUnmount(() => {
                       <div
                         class="bg-portal-green/10 text-portal-green flex h-8 w-8 items-center justify-center rounded-full"
                       >
-                        <i class="bx bx-phone text-sm"></i>
+                        <Phone class="h-4 w-4" />
                       </div>
                       <div class="flex-1">
                         <a
@@ -137,7 +138,7 @@ onBeforeUnmount(() => {
                       <div
                         class="bg-portal-green/10 text-portal-green flex h-8 w-8 items-center justify-center rounded-full"
                       >
-                        <i class="bx bx-envelope text-sm"></i>
+                        <Mail class="h-4 w-4" />
                       </div>
                       <div class="flex-1">
                         <a
@@ -157,7 +158,7 @@ onBeforeUnmount(() => {
                 <div class="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-gray-200/50">
                   <div class="border-b border-gray-200 px-6 py-4">
                     <h3 class="text-lg font-semibold text-gray-900">
-                      <i class="bx bx-map text-portal-green mr-2"></i>
+                      <Map class="text-portal-green mr-2 h-4 w-4" />
                       Lokasi
                     </h3>
                   </div>
@@ -172,7 +173,7 @@ onBeforeUnmount(() => {
                   </div>
                   <div class="aspect-[4/3]" v-else>
                     <div class="flex h-full items-center justify-center">
-                      <i class="bx bx-map-alt text-2xl text-gray-500"></i>
+                      <MapPin class="h-6 w-6 text-gray-500" />
                       <p class="text-sm text-gray-500">Tidak ada peta yang tersedia</p>
                     </div>
                   </div>
@@ -186,7 +187,7 @@ onBeforeUnmount(() => {
                 <!-- Company Header -->
                 <div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-200/50">
                   <div class="mb-4 flex items-center">
-                    <i class="bx bx-buildings text-portal-green mr-3 text-2xl"></i>
+                    <Building2 class="text-portal-green mr-3 h-6 w-6" />
                     <h1 class="text-2xl font-bold text-gray-900 md:text-3xl">{{ data.nama }}</h1>
                   </div>
 
@@ -196,7 +197,7 @@ onBeforeUnmount(() => {
                       <div
                         class="bg-portal-green/10 text-portal-green flex h-8 w-8 items-center justify-center rounded-full"
                       >
-                        <i class="bx bx-map text-sm"></i>
+                        <Map class="h-4 w-4" />
                       </div>
                       <div class="flex-1">
                         <span class="text-gray-600">{{ data.alamat || "Alamat tidak tersedia" }}</span>
@@ -212,7 +213,7 @@ onBeforeUnmount(() => {
                 <div class="rounded-2xl bg-white shadow-sm ring-1 ring-gray-200/50">
                   <div class="border-b border-gray-200 px-6 py-4">
                     <h2 class="text-lg font-semibold text-gray-900">
-                      <i class="bx bx-info-circle text-portal-green mr-2"></i>
+                      <Info class="text-portal-green mr-2 h-4 w-4" />
                       Informasi Perusahaan
                     </h2>
                   </div>

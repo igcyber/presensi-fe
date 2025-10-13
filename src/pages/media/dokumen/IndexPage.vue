@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { AlertCircle, Calendar, Download, File, RefreshCw } from "lucide-vue-next";
 import { onMounted, watch } from "vue";
 
 import BasePagination from "@/components/base/BasePagination.vue";
@@ -77,14 +78,14 @@ onMounted(async () => {
         <!-- Error State -->
         <div v-else-if="isError" class="mx-auto max-w-2xl">
           <div class="rounded border border-red-200 bg-red-50 p-8 text-center">
-            <i class="bx bx-error-circle text-destructive mb-4 text-4xl"></i>
+            <AlertCircle class="text-destructive mx-auto mb-4 h-10 w-10" />
             <h4 class="mb-4 text-xl font-semibold text-red-800">Terjadi Kesalahan</h4>
             <p class="mb-6 text-red-700">{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
             <button
-              class="rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
+              class="inline-flex items-center rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
               @click="fetchData"
             >
-              <i class="bx bx-refresh mr-2"></i>
+              <RefreshCw class="mr-2 h-4 w-4" />
               Coba Lagi
             </button>
           </div>
@@ -105,13 +106,13 @@ onMounted(async () => {
                   <!-- Document Icon -->
                   <div class="mb-4 flex items-center justify-center">
                     <div class="flex h-16 w-16 items-center justify-center rounded-full bg-yellow-600/10">
-                      <i class="bx bx-file text-3xl text-yellow-600"></i>
+                      <File class="h-8 w-8 text-yellow-600" />
                     </div>
                   </div>
 
                   <!-- Date -->
                   <div class="mb-3 flex items-center justify-center text-sm text-gray-500">
-                    <i class="bx bx-calendar mr-2"></i>
+                    <Calendar class="mr-2 h-4 w-4" />
                     <span>{{ date(dokumen.createdAt) }}</span>
                   </div>
 
@@ -144,7 +145,7 @@ onMounted(async () => {
                     rel="noopener noreferrer"
                     class="flex w-full items-center justify-center rounded-lg bg-yellow-600 px-4 py-2 font-medium text-white transition-colors duration-200 hover:bg-yellow-700"
                   >
-                    <i class="bx bx-download mr-2"></i>
+                    <Download class="mr-2 h-4 w-4" />
                     Unduh Dokumen
                   </a>
                 </div>
@@ -167,7 +168,7 @@ onMounted(async () => {
           <template v-else>
             <div class="mx-auto max-w-2xl">
               <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
-                <i class="bx bx-file-blank mb-4 text-4xl text-yellow-600"></i>
+                <File class="mx-auto mb-4 h-10 w-10 text-yellow-600" />
                 <h4 class="mb-4 text-xl font-semibold text-yellow-600">Tidak Ada Dokumen</h4>
                 <p class="text-yellow-700">Maaf, belum ada dokumen yang tersedia saat ini.</p>
               </div>

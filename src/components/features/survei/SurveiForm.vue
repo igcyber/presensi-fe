@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ChevronLeft, ChevronRight, Loader2, Send } from "lucide-vue-next";
 import { computed, ref, watch } from "vue";
 
 import BaseForm from "@/components/forms/BaseForm.vue";
@@ -6,6 +7,7 @@ import BaseInput from "@/components/forms/BaseInput.vue";
 import BaseRadio from "@/components/forms/BaseRadio.vue";
 import BaseSelect from "@/components/forms/BaseSelect.vue";
 import BaseTextarea from "@/components/forms/BaseTextarea.vue";
+import { Button } from "@/components/ui/button";
 
 import { useSurvei } from "@/composables/useSurvei";
 import type { Kuesioner, LayananSurvei } from "@/lib/api/types/survei.types";
@@ -92,7 +94,7 @@ watch(currentStep, (newStep) => {
       </div>
       <div class="h-2 w-full rounded-full bg-gray-200">
         <div
-          class="bg-portal-green h-2 rounded-full transition-all duration-300"
+          class="h-2 rounded-full bg-yellow-600 transition-all duration-300"
           :style="{ width: `${stepProgress}%` }"
         ></div>
       </div>
@@ -108,10 +110,23 @@ watch(currentStep, (newStep) => {
         :initial-values="respondenData"
         :on-submit="handleRespondenSubmit"
       >
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-          <BaseInput name="nama" label="Nama Lengkap" placeholder="Masukkan nama lengkap" required />
+        <div class="grid grid-cols-1 items-start gap-6 md:grid-cols-2">
+          <BaseInput
+            name="nama"
+            label="Nama Lengkap"
+            placeholder="Masukkan nama lengkap"
+            required
+            customCss="border-yellow-600/50 focus-visible:border-yellow-600/50 focus-visible:ring-yellow-600/50"
+          />
 
-          <BaseInput name="hp" label="Nomor HP" placeholder="Masukkan nomor HP" type="tel" required />
+          <BaseInput
+            name="hp"
+            label="Nomor HP"
+            placeholder="Masukkan nomor HP"
+            type="tel"
+            required
+            customCss="border-yellow-600/50 focus-visible:border-yellow-600/50 focus-visible:ring-yellow-600/50"
+          />
 
           <BaseSelect
             name="jenis_kelamin"
@@ -119,9 +134,17 @@ watch(currentStep, (newStep) => {
             :options="JENIS_KELAMIN_OPTIONS"
             placeholder="Pilih jenis kelamin"
             required
+            customCss="border-yellow-600/50 focus-visible:border-yellow-600/50 focus-visible:ring-yellow-600/50"
           />
 
-          <BaseInput name="usia" label="Usia" placeholder="Masukkan usia" type="number" required />
+          <BaseInput
+            name="usia"
+            label="Usia"
+            placeholder="Masukkan usia"
+            type="number"
+            required
+            customCss="border-yellow-600/50 focus-visible:border-yellow-600/50 focus-visible:ring-yellow-600/50"
+          />
 
           <BaseSelect
             name="pendidikan"
@@ -129,19 +152,28 @@ watch(currentStep, (newStep) => {
             :options="PENDIDIKAN_OPTIONS"
             placeholder="Pilih pendidikan"
             required
+            customCss="border-yellow-600/50 focus-visible:border-yellow-600/50 focus-visible:ring-yellow-600/50"
           />
 
-          <BaseInput name="pekerjaan" label="Pekerjaan" placeholder="Masukkan pekerjaan" required />
+          <BaseInput
+            name="pekerjaan"
+            label="Pekerjaan"
+            placeholder="Masukkan pekerjaan"
+            required
+            customCss="border-yellow-600/50 focus-visible:border-yellow-600/50 focus-visible:ring-yellow-600/50"
+          />
         </div>
 
         <div class="mt-8 flex justify-end">
-          <button
+          <Button
             type="submit"
             :disabled="!meta.valid"
-            class="bg-portal-green hover:bg-portal-green-dark rounded px-6 py-3 font-medium text-white transition-colors disabled:bg-gray-400"
+            class="bg-yellow-600 text-white hover:bg-yellow-700 disabled:bg-gray-400"
+            size="lg"
           >
+            <ChevronRight class="ml-2 h-4 w-4" />
             Selanjutnya
-          </button>
+          </Button>
         </div>
       </BaseForm>
     </div>
@@ -157,7 +189,7 @@ watch(currentStep, (newStep) => {
           @click="selectLayanan(layanan)"
           class="cursor-pointer rounded-lg border-2 p-4 transition-all hover:shadow-md"
           :class="{
-            'border-portal-green bg-green-50': selectedLayanan?.id === layanan.id,
+            'border-yellow-600 bg-yellow-50': selectedLayanan?.id === layanan.id,
             'border-gray-200 hover:border-gray-300': selectedLayanan?.id !== layanan.id,
           }"
         >
@@ -170,19 +202,19 @@ watch(currentStep, (newStep) => {
       </div>
 
       <div class="mt-8 flex justify-between">
-        <button
-          @click="prevStep"
-          class="rounded border border-gray-300 px-6 py-3 font-medium text-gray-700 transition-colors hover:bg-gray-50"
-        >
+        <Button @click="prevStep" variant="outline" size="lg">
+          <ChevronLeft class="mr-2 h-4 w-4" />
           Kembali
-        </button>
-        <button
+        </Button>
+        <Button
           @click="nextStep"
           :disabled="!canProceedToStep3"
-          class="bg-portal-green hover:bg-portal-green-dark rounded px-6 py-3 font-medium text-white transition-colors disabled:bg-gray-400"
+          class="bg-yellow-600 text-white hover:bg-yellow-700 disabled:bg-gray-400"
+          size="lg"
         >
+          <ChevronRight class="ml-2 h-4 w-4" />
           Selanjutnya
-        </button>
+        </Button>
       </div>
     </div>
 
@@ -224,25 +256,25 @@ watch(currentStep, (newStep) => {
             label="Masukkan dan Saran (Opsional)"
             placeholder="Berikan masukkan dan saran untuk perbaikan layanan..."
             :rows="4"
+            customCss="border-yellow-600/50 focus-visible:border-yellow-600/50 focus-visible:ring-yellow-600/50"
           />
         </div>
 
         <div class="mt-8 flex justify-between">
-          <button
-            type="button"
-            @click="prevStep"
-            class="rounded border border-gray-300 px-6 py-3 font-medium text-gray-700 transition-colors hover:bg-gray-50"
-          >
+          <Button type="button" @click="prevStep" variant="outline" size="lg">
+            <ChevronLeft class="mr-2 h-4 w-4" />
             Kembali
-          </button>
-          <button
+          </Button>
+          <Button
             type="submit"
             :disabled="!meta.valid || isSubmitting"
-            class="bg-portal-green hover:bg-portal-green-dark rounded px-6 py-3 font-medium text-white transition-colors disabled:bg-gray-400"
+            class="bg-yellow-600 text-white hover:bg-yellow-700 disabled:bg-gray-400"
+            size="lg"
           >
-            <i v-if="isSubmitting" class="bx bx-loader-alt mr-2 animate-spin"></i>
+            <Loader2 v-if="isSubmitting" class="mr-2 h-4 w-4 animate-spin" />
+            <Send v-else class="mr-2 h-4 w-4" />
             {{ isSubmitting ? "Mengirim..." : "Kirim Survei" }}
-          </button>
+          </Button>
         </div>
       </BaseForm>
     </div>

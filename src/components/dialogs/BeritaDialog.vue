@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 import { toast } from "vue-sonner";
 
 import BaseFormDialog from "@/components/dialogs/BaseFormDialog.vue";
 import BaseInput from "@/components/forms/BaseInput.vue";
 import BaseInputFile from "@/components/forms/BaseInputFile.vue";
+import BaseSelect from "@/components/forms/BaseSelect.vue";
 import BaseTextarea from "@/components/forms/BaseTextarea.vue";
 import BaseTextEditorEcho from "@/components/forms/BaseTextEditorEcho.vue";
 
 import { createBerita, updateBerita } from "@/lib/api/services/berita";
+import { getTags } from "@/lib/api/services/tag";
 import type { Berita } from "@/lib/api/types/berita.types";
+import type { Tag } from "@/lib/api/types/tag.types";
 import { createBeritaSchema, updateBeritaSchema } from "@/schemas/beritaSchema";
 
 // Interface definitions
@@ -32,15 +35,20 @@ const props = withDefaults(defineProps<Props>(), { berita: null });
 // Emits
 const emit = defineEmits<Emits>();
 
+// Reactive variables
+const tagList = ref<Tag[]>([]);
+const loadingTags = ref(false);
+
 // Computed properties
 const initialValues = computed(() =>
   props.mode === "create"
-    ? { judul: "", isi: "", foto: "", keterangan: "", tag: "" }
+    ? { judul: "", isi: "", foto: "", keterangan: "", tagId: null, temporaryFileNames: [] }
     : {
         judul: props.berita?.judul ?? "",
         isi: props.berita?.isi ?? "",
         keterangan: props.berita?.keterangan ?? "",
-        tag: props.berita?.tag ?? "",
+        tagId: props.berita?.tagId ?? null,
+        temporaryFileNames: [],
       },
 );
 
@@ -53,7 +61,27 @@ const open = computed({
   },
 });
 
+const tagOptions = computed(() => {
+  return tagList.value.map((tag) => ({
+    label: tag.namaTag,
+    value: tag.id.toString(),
+  }));
+});
+
 // Methods
+async function loadTags() {
+  try {
+    loadingTags.value = true;
+    const response = await getTags({ limit: 100 }); // Load semua tags
+    tagList.value = response.data.data;
+  } catch (error) {
+    console.error("Failed to load tags:", error);
+    toast.error("Gagal memuat daftar tags");
+  } finally {
+    loadingTags.value = false;
+  }
+}
+
 async function onSubmit(values: any) {
   if (props.mode === "create") {
     await createBerita(values);
@@ -63,6 +91,17 @@ async function onSubmit(values: any) {
     toast.success("Berhasil", { description: "Berita berhasil diperbarui" });
   }
 }
+
+// Watchers
+watch(
+  () => props.open,
+  (isOpen) => {
+    if (isOpen) {
+      loadTags();
+    }
+  },
+  { immediate: true },
+);
 </script>
 
 <template>
@@ -93,7 +132,16 @@ async function onSubmit(values: any) {
 
       <BaseTextarea name="keterangan" label="Keterangan" placeholder="Masukkan keterangan (opsional)" :rows="3" />
 
-      <BaseInput name="tag" label="Tag" placeholder="Masukkan tag (pisahkan dengan koma)" required />
+      <BaseSelect
+        name="tagId"
+        label="Tag Berita"
+        :options="tagOptions"
+        placeholder="Pilih tag"
+        required
+        searchable
+        :disabled="loadingTags"
+        description="Pilih kategori tag untuk berita"
+      />
     </div>
   </BaseFormDialog>
 </template>

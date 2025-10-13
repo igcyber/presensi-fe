@@ -26,3 +26,5 @@ export { default as StrukturDialog } from "./StrukturDialog.vue";
 export { default as MenuDialog } from "./MenuDialog.vue";
 export { default as JabatanAnggotaDialog } from "./JabatanAnggotaDialog.vue";
 export { default as PageDialog } from "./PageDialog.vue";
+export { default as TagDialog } from "./TagDialog.vue";
+export { default as StandarPelayananDialog } from "./StandarPelayananDialog.vue";

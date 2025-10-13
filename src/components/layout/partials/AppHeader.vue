@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ChevronDown, Mail, Map as MapIcon, Menu, Phone, X } from "lucide-vue-next";
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
@@ -140,7 +141,7 @@ onUnmounted(() => {
             rel="noopener noreferrer"
             :title="contactInfo.alamat"
           >
-            <i class="bx bx-map text-base text-yellow-600 xl:text-lg"></i>
+            <MapIcon class="h-4 w-4 text-yellow-600 xl:h-5 xl:w-5" />
             <span class="max-w-[200px] truncate text-white xl:max-w-none">{{ contactInfo.alamat }}</span>
           </a>
           <a
@@ -149,7 +150,7 @@ onUnmounted(() => {
             :href="`tel:${contactInfo.telepon}`"
             :title="`Hubungi ${contactInfo.telepon}`"
           >
-            <i class="bx bx-phone-call text-base text-yellow-600 xl:text-lg"></i>
+            <Phone class="h-4 w-4 text-yellow-600 xl:h-5 xl:w-5" />
             <span class="text-white">{{ contactInfo.telepon }}</span>
           </a>
           <a
@@ -158,7 +159,7 @@ onUnmounted(() => {
             :href="`mailto:${contactInfo.email}`"
             :title="`Email ke ${contactInfo.email}`"
           >
-            <i class="bx bx-envelope text-base text-yellow-600 xl:text-lg"></i>
+            <Mail class="h-4 w-4 text-yellow-600 xl:h-5 xl:w-5" />
             <span class="text-white">{{ contactInfo.email }}</span>
           </a>
         </div>
@@ -188,10 +189,8 @@ onUnmounted(() => {
             :aria-label="showMobileMenu ? 'Tutup menu' : 'Buka menu'"
             :aria-expanded="showMobileMenu"
           >
-            <i
-              class="bx text-xl transition-transform duration-300 ease-in-out"
-              :class="showMobileMenu ? 'bx-x' : 'bx-menu'"
-            ></i>
+            <X v-if="showMobileMenu" class="h-6 w-6 transition-transform duration-300 ease-in-out" />
+            <Menu v-else class="h-6 w-6 transition-transform duration-300 ease-in-out" />
           </button>
 
           <!-- Desktop Navigation -->
@@ -236,10 +235,10 @@ onUnmounted(() => {
                     :aria-label="`${item.title} menu`"
                   >
                     {{ item.title }}
-                    <i
-                      class="bx bx-chevron-down text-xs transition-transform duration-300 ease-in-out"
+                    <ChevronDown
+                      class="h-3 w-3 transition-transform duration-300 ease-in-out"
                       :class="{ 'rotate-180': showDesktopMenu && activeDesktopMenu === idx }"
-                    ></i>
+                    />
                   </button>
 
                   <!-- Dropdown Menu -->
@@ -329,10 +328,10 @@ onUnmounted(() => {
                       :aria-label="`${item.title} menu`"
                     >
                       {{ item.title }}
-                      <i
-                        class="bx bx-chevron-down text-base transition-transform duration-300 ease-in-out"
+                      <ChevronDown
+                        class="h-4 w-4 transition-transform duration-300 ease-in-out"
                         :class="{ 'rotate-180': activeSubmenu === idx }"
-                      ></i>
+                      />
                     </button>
 
                     <Transition

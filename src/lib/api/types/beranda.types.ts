@@ -18,7 +18,10 @@ export interface NewsItem extends BaseEntity {
   foto: string;
   isi: string;
   views: number;
-  tag: string;
+  tagRelation: {
+    id: number;
+    namaTag: string;
+  };
   fotoUrl: string;
 }
 

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { X } from "lucide-vue-next";
 import { defineExpose, onBeforeUnmount, ref, watch } from "vue";
 
 const videoContainerRef = ref<HTMLDivElement | null>(null);
@@ -121,7 +122,7 @@ defineExpose({ open, close });
                 class="h-10 w-10 cursor-pointer rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600"
                 aria-label="Tutup modal"
               >
-                <i class="bx bx-x text-2xl"></i>
+                <X class="h-6 w-6" />
               </button>
             </div>
 

@@ -10,6 +10,7 @@ import {
   NewspaperIcon,
   Settings,
   Smartphone,
+  Tag,
   UserCheck,
   UserIcon,
   UserRound,
@@ -89,6 +90,13 @@ const data = computed(() => ({
           url: "#",
         },
       ],
+    },
+    {
+      title: "Tags",
+      url: "/app/tags",
+      name: "app.tags",
+      icon: Tag,
+      isActive: routNameActive.value === "app.tags" || routNameActive.value === "app.tags.detail",
     },
     {
       title: "Berita",
@@ -181,6 +189,14 @@ const data = computed(() => ({
       name: "app.survei-kepuasan",
       icon: ClipboardCheck,
       isActive: routNameActive.value === "app.survei-kepuasan" || routNameActive.value === "app.survei-kepuasan.detail",
+    },
+    {
+      title: "Standar Pelayanan",
+      url: "/app/standar-pelayanan",
+      name: "app.standar-pelayanan",
+      icon: ClipboardCheck,
+      isActive:
+        routNameActive.value === "app.standar-pelayanan" || routNameActive.value === "app.standar-pelayanan.detail",
     },
     {
       title: "PPID",

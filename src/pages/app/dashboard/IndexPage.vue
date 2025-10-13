@@ -1,24 +1,16 @@
 <script setup lang="ts">
-import {
-  BookOpen,
-  FileText,
-  Image,
-  NewspaperIcon,
-  PlusIcon,
-  Settings,
-  VideoIcon,
-} from "lucide-vue-next";
+import { BookOpen, FileText, Image, NewspaperIcon, PlusIcon, Settings, VideoIcon } from "lucide-vue-next";
 import { computed } from "vue";
+import { RouterLink } from "vue-router";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { useFetch } from "@/composables/useFetch";
+import type { ApiResponse } from "@/lib/api/core/apiResponse";
 import { getDashboard } from "@/lib/api/services";
 import type { DashboardData } from "@/lib/api/types/dashboard.types";
-import type { ApiResponse } from "@/lib/api/core/apiResponse";
-import { RouterLink } from "vue-router";
 
 // Fetch data dari API Dashboard
 const { data: dashboardResponse, isLoading } = useFetch<ApiResponse<DashboardData>, ApiResponse<DashboardData>>(
@@ -118,8 +110,14 @@ const recentActivities = computed(() => {
     <!-- Loading State -->
     <div v-if="isLoading" class="flex min-h-[400px] items-center justify-center">
       <div class="text-center">
-        <div class="mb-4 inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status">
-          <span class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Loading...</span>
+        <div
+          class="mb-4 inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+          role="status"
+        >
+          <span
+            class="!absolute !-m-px !h-px !w-px !overflow-hidden !border-0 !p-0 !whitespace-nowrap ![clip:rect(0,0,0,0)]"
+            >Loading...</span
+          >
         </div>
         <p class="text-muted-foreground">Memuat data dashboard...</p>
       </div>
@@ -203,7 +201,7 @@ const recentActivities = computed(() => {
                   v-for="activity in recentActivities"
                   :key="activity.id"
                   :to="`/app/berita/${activity.id}`"
-                  class="hover:bg-muted/50 flex items-start gap-4 p-6 transition-colors cursor-pointer"
+                  class="hover:bg-muted/50 flex cursor-pointer items-start gap-4 p-6 transition-colors"
                 >
                   <div v-if="activity.image" class="h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg">
                     <img :src="activity.image" :alt="activity.title" class="h-full w-full object-cover" />
@@ -233,12 +231,7 @@ const recentActivities = computed(() => {
                     <p class="font-medium">{{ activity.title }}</p>
                     <p class="text-muted-foreground text-sm">{{ activity.description }}</p>
                     <div class="flex items-center gap-2">
-                      <Badge
-                        v-for="tag in activity.tags"
-                        :key="tag"
-                        variant="secondary"
-                        class="text-xs"
-                      >
+                      <Badge v-for="tag in activity.tags" :key="tag" variant="secondary" class="text-xs">
                         {{ tag }}
                       </Badge>
                     </div>

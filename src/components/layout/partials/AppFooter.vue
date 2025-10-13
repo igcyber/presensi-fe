@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ChevronRight, Mail, Map, Phone, Printer } from "lucide-vue-next";
 import { computed } from "vue";
 
 // Import composable
@@ -51,9 +52,9 @@ const hasRelatedLinks = computed(() => relatedLinks.value && relatedLinks.value.
               class="group flex items-start gap-2.5 text-sm text-gray-300 transition-all duration-200 hover:text-yellow-300 sm:text-base"
               :title="`Email ke ${footerInfo.email}`"
             >
-              <i
-                class="bx bx-envelope mt-0.5 flex-shrink-0 text-lg text-yellow-600 transition-transform duration-200 group-hover:scale-110 sm:text-xl"
-              ></i>
+              <Mail
+                class="mt-0.5 h-5 w-5 flex-shrink-0 text-yellow-600 transition-transform duration-200 group-hover:scale-110 sm:h-6 sm:w-6"
+              />
               <div class="min-w-0 flex-1 text-left">
                 <span class="block text-xs font-semibold text-white sm:text-sm">Email</span>
                 <span class="block break-all">{{ footerInfo.email }}</span>
@@ -61,7 +62,7 @@ const hasRelatedLinks = computed(() => relatedLinks.value && relatedLinks.value.
             </a>
 
             <div v-if="footerInfo.alamat" class="flex items-start gap-2.5 text-sm text-gray-300 sm:text-base">
-              <i class="bx bx-map mt-0.5 flex-shrink-0 text-lg text-yellow-600 sm:text-xl"></i>
+              <Map class="mt-0.5 h-5 w-5 flex-shrink-0 text-yellow-600 sm:h-6 sm:w-6" />
               <div class="min-w-0 flex-1 text-left">
                 <span class="block text-xs font-semibold text-white sm:text-sm">Alamat</span>
                 <span class="block break-words">{{ footerInfo.alamat }}</span>
@@ -74,9 +75,9 @@ const hasRelatedLinks = computed(() => relatedLinks.value && relatedLinks.value.
               class="group flex items-start gap-2.5 text-sm text-gray-300 transition-all duration-200 hover:text-yellow-300 sm:text-base"
               :title="`Hubungi ${footerInfo.telepon}`"
             >
-              <i
-                class="bx bx-phone-call mt-0.5 flex-shrink-0 text-lg text-yellow-600 transition-transform duration-200 group-hover:scale-110 sm:text-xl"
-              ></i>
+              <Phone
+                class="mt-0.5 h-5 w-5 flex-shrink-0 text-yellow-600 transition-transform duration-200 group-hover:scale-110 sm:h-6 sm:w-6"
+              />
               <div class="min-w-0 flex-1 text-left">
                 <span class="block text-xs font-semibold text-white sm:text-sm">Telepon</span>
                 <span class="block whitespace-nowrap">{{ footerInfo.telepon }}</span>
@@ -84,7 +85,7 @@ const hasRelatedLinks = computed(() => relatedLinks.value && relatedLinks.value.
             </a>
 
             <div v-if="footerInfo.fax" class="flex items-start gap-2.5 text-sm text-gray-300 sm:text-base">
-              <i class="bx bx-printer mt-0.5 flex-shrink-0 text-lg text-yellow-600 sm:text-xl"></i>
+              <Printer class="mt-0.5 h-5 w-5 flex-shrink-0 text-yellow-600 sm:h-6 sm:w-6" />
               <div class="min-w-0 flex-1 text-left">
                 <span class="block text-xs font-semibold text-white sm:text-sm">Fax</span>
                 <span class="block whitespace-nowrap">{{ footerInfo.fax }}</span>
@@ -106,9 +107,9 @@ const hasRelatedLinks = computed(() => relatedLinks.value && relatedLinks.value.
               rel="noopener noreferrer"
               :title="link.nama"
             >
-              <i
-                class="bx bx-chevron-right flex-shrink-0 text-base text-yellow-600 opacity-0 transition-all duration-200 group-hover:translate-x-1 group-hover:opacity-100"
-              ></i>
+              <ChevronRight
+                class="h-4 w-4 flex-shrink-0 text-yellow-600 opacity-0 transition-all duration-200 group-hover:translate-x-1 group-hover:opacity-100"
+              />
               <span>{{ link.nama }}</span>
             </a>
           </nav>
@@ -127,9 +128,9 @@ const hasRelatedLinks = computed(() => relatedLinks.value && relatedLinks.value.
               rel="noopener noreferrer"
               :title="link.nama"
             >
-              <i
-                class="bx bx-chevron-right flex-shrink-0 text-base text-yellow-600 opacity-0 transition-all duration-200 group-hover:translate-x-1 group-hover:opacity-100"
-              ></i>
+              <ChevronRight
+                class="h-4 w-4 flex-shrink-0 text-yellow-600 opacity-0 transition-all duration-200 group-hover:translate-x-1 group-hover:opacity-100"
+              />
               <span>{{ link.nama }}</span>
             </a>
           </nav>

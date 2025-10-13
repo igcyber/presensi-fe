@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { AlertCircle, Clock, Info, RefreshCw } from "lucide-vue-next";
 import { onMounted } from "vue";
 
 import SurveiForm from "@/components/features/survei/SurveiForm.vue";
@@ -41,7 +42,7 @@ const handleSubmit = () => {
           <h1 class="mb-4 text-3xl font-bold text-gray-900">Survei Kepuasan Masyarakat</h1>
           <p class="text-lg text-gray-600">Berikan penilaian Anda terhadap kualitas pelayanan yang telah Anda terima</p>
           <p class="mt-2 text-sm text-gray-500">
-            <i class="bx bx-info-circle mr-1"></i>
+            <Info class="mr-1 h-4 w-4" />
             Setelah submit survei, Anda harus menunggu 30 menit sebelum dapat mengisi survei lagi
           </p>
         </div>
@@ -49,7 +50,7 @@ const handleSubmit = () => {
         <!-- Cooldown Warning -->
         <div v-if="cooldownStatus.isOnCooldown" class="mb-8 rounded-lg border border-orange-200 bg-orange-50 p-6">
           <div class="flex items-center justify-center gap-3">
-            <i class="bx bx-time text-2xl text-orange-600"></i>
+            <Clock class="h-6 w-6 text-orange-600" />
             <div class="text-center">
               <h3 class="text-lg font-semibold text-orange-800">Survei Sedang dalam Cooldown</h3>
               <p class="text-orange-700">
@@ -65,7 +66,7 @@ const handleSubmit = () => {
         <!-- Loading State -->
         <div v-if="isLoading" class="flex items-center justify-center py-20">
           <div class="text-center">
-            <div class="border-portal-green mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2"></div>
+            <div class="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-yellow-600"></div>
             <p class="text-gray-600">Memuat data survei...</p>
           </div>
         </div>
@@ -73,7 +74,7 @@ const handleSubmit = () => {
         <!-- Error State -->
         <div v-else-if="error" class="mx-auto max-w-2xl">
           <div class="rounded border border-red-200 bg-red-50 p-8 text-center">
-            <i class="bx bx-error-circle text-destructive mb-4 text-4xl"></i>
+            <AlertCircle class="text-destructive mx-auto mb-4 h-10 w-10" />
             <h4 class="mb-4 text-xl font-semibold text-red-800">Terjadi Kesalahan</h4>
             <p class="mb-6 text-red-700">{{ error }}</p>
             <button
@@ -83,7 +84,7 @@ const handleSubmit = () => {
                 fetchKuesionerList();
               "
             >
-              <i class="bx bx-refresh mr-2"></i>
+              <RefreshCw class="mr-2 h-4 w-4" />
               Coba Lagi
             </button>
           </div>
@@ -97,7 +98,7 @@ const handleSubmit = () => {
         <!-- Empty State -->
         <div v-else-if="layananList.length === 0" class="mx-auto max-w-2xl">
           <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
-            <i class="bx bx-info-circle mb-4 text-4xl text-yellow-600"></i>
+            <Info class="mx-auto mb-4 h-10 w-10 text-yellow-600" />
             <h4 class="mb-4 text-xl font-semibold text-yellow-600">Data Tidak Ditemukan</h4>
             <p class="text-yellow-700">Maaf, tidak ada layanan yang tersedia untuk survei saat ini.</p>
           </div>

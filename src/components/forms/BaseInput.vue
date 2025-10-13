@@ -21,6 +21,7 @@ interface Props {
   maxlength?: number;
   pattern?: string;
   description?: string;
+  customCss?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -80,7 +81,7 @@ const togglePasswordVisibility = () => {
           :maxlength="props.maxlength"
           :pattern="props.pattern"
           :autocomplete="autocompleteValue"
-          :class="props.type === 'password' ? 'pr-10' : ''"
+          :class="props.type === 'password' ? 'pr-10' : '' + props.customCss"
         />
 
         <!-- Toggle Password Visibility -->

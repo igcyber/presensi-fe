@@ -57,13 +57,9 @@ const columns: Column<Berita>[] = [
   {
     key: "tag",
     label: "Tag",
-    sortable: true,
+    sortable: false,
     width: "150px",
-    render: (item: Berita): string =>
-      item.tag
-        .split(",")
-        .map((tag) => tag.trim())
-        .join(", "),
+    render: (item: Berita): string => item.tagRelation?.namaTag || "-",
   },
   // {
   //   key: "views",

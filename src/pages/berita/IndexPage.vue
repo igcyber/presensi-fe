@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { AlertCircle, ArrowRight, Calendar, Newspaper, RefreshCw, Search, X } from "lucide-vue-next";
 import { computed, onMounted } from "vue";
 import { watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -86,7 +87,7 @@ onMounted(async () => {
     <main class="py-12">
       <div v-if="keyword" class="mx-auto mb-8 max-w-2xl">
         <div class="rounded border border-yellow-600 bg-yellow-600/10 p-8 text-center">
-          <i class="bx bx-search mb-4 text-4xl text-yellow-600"></i>
+          <Search class="mx-auto mb-4 h-10 w-10 text-yellow-600" />
           <h4 class="mb-2 text-xl font-semibold text-yellow-600">Pencarian</h4>
           <p class="mb-6 text-yellow-600">
             {{
@@ -99,7 +100,7 @@ onMounted(async () => {
             @click="router.push({ name: 'media.berita' })"
             class="inline-flex items-center rounded-lg bg-yellow-600 px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-yellow-600/90"
           >
-            <i class="bx bx-x mr-2"></i>
+            <X class="mr-2 h-4 w-4" />
             Reset Pencarian
           </button>
         </div>
@@ -117,14 +118,14 @@ onMounted(async () => {
         <!-- Error State -->
         <div v-else-if="isError" class="mx-auto max-w-2xl">
           <div class="rounded border border-red-200 bg-red-50 p-8 text-center">
-            <i class="bx bx-error-circle text-destructive mb-4 text-4xl"></i>
+            <AlertCircle class="text-destructive mx-auto mb-4 h-10 w-10" />
             <h4 class="mb-4 text-xl font-semibold text-red-800">Terjadi Kesalahan</h4>
             <p class="mb-6 text-red-700">{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
             <button
-              class="rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
+              class="inline-flex items-center rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
               @click="fetchData"
             >
-              <i class="bx bx-refresh mr-2"></i>
+              <RefreshCw class="mr-2 h-4 w-4" />
               Coba Lagi
             </button>
           </div>
@@ -149,6 +150,13 @@ onMounted(async () => {
                     loading="lazy"
                   />
 
+                  <!-- Tag Kategori -->
+                  <div class="absolute top-2 left-2">
+                    <span class="rounded bg-yellow-600 px-2 py-1 text-xs font-semibold text-white uppercase">
+                      {{ news.tagRelation?.namaTag || "Umum" }}
+                    </span>
+                  </div>
+
                   <!-- Image Overlay -->
                   <div
                     class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
@@ -159,7 +167,7 @@ onMounted(async () => {
                 <div class="flex flex-col p-4">
                   <!-- Date -->
                   <div class="mb-3 flex items-center text-sm text-gray-500">
-                    <i class="bx bx-calendar mr-2"></i>
+                    <Calendar class="mr-2 h-4 w-4" />
                     <time :datetime="news.createdAt">{{ date(news.createdAt) }}</time>
                   </div>
 
@@ -203,7 +211,7 @@ onMounted(async () => {
                     class="inline-flex items-center text-sm font-medium transition-colors duration-200 hover:text-yellow-600"
                   >
                     Baca Selengkapnya
-                    <i class="bx bx-right-arrow-alt ml-1"></i>
+                    <ArrowRight class="ml-1 h-4 w-4" />
                   </RouterLink>
                 </div>
               </article>
@@ -225,7 +233,7 @@ onMounted(async () => {
           <template v-else>
             <div class="mx-auto max-w-2xl">
               <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
-                <i class="bx bx-news mb-4 text-4xl text-yellow-600"></i>
+                <Newspaper class="mx-auto mb-4 h-10 w-10 text-yellow-600" />
                 <h4 class="mb-4 text-xl font-semibold text-yellow-600">Tidak Ada Berita</h4>
                 <p class="text-yellow-700">
                   {{
