@@ -295,9 +295,9 @@ defineExpose({
 <template>
   <div>
     <EchoEditor
-      class="rounded-md border border-[#4ade80]/50 focus-within:border-[#4ade80] focus-within:ring-[3px] focus-within:ring-[#4ade80]/50"
+      class="!bg-background rounded-md border border-[#f59e0b]/50 focus-within:border-[#f59e0b] focus-within:ring-[3px] focus-within:ring-[#f59e0b]/50"
       :class="{
-        '!border-[#a24639] !ring-[#a24639]/20 dark:!ring-[#a24639]/40': error,
+        '!border-[#ef4444] !ring-[#ef4444]/20 dark:!ring-[#ef4444]/40': error,
       }"
       v-model="content"
       :extensions="extensions"

@@ -290,7 +290,7 @@ const formatCellValue = (item: T, column: Column<T>) => {
                   <Button
                     variant="outline"
                     :id="`filter-${filter.key}`"
-                    class="w-full justify-start border-[#4ade80]/50 text-left font-normal focus-within:border-[#4ade80] focus-within:ring-[3px] focus-within:ring-[#4ade80]/50 dark:border-[#4ade80]/40 dark:focus-within:border-[#4ade80] dark:focus-within:ring-[#4ade80]/40"
+                    class="border-ring/50 focus-within:border-ring focus-within:ring-ring/50 dark:border-ring/40 dark:focus-within:border-ring dark:focus-within:ring-ring/40 w-full justify-start text-left font-normal focus-within:ring-[3px]"
                     :class="!filterValues[filter.key] && 'text-muted-foreground'"
                   >
                     <CalendarIcon class="mr-2 h-4 w-4" />
