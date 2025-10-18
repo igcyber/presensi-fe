@@ -21,7 +21,7 @@ onMounted(() => {
     <AppHeader />
 
     <!-- Main Content with padding for fixed header -->
-    <main class="pt-[65px] lg:pt-[110px] xl:pt-[135px]">
+    <main class="pt-[65px] lg:pt-[110px] xl:pt-[133px]">
       <RouterView />
     </main>
 

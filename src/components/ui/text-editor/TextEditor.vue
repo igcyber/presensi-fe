@@ -323,6 +323,14 @@ defineExpose({
   padding-top: 55px !important;
   width: 650px !important;
 }
+/* Tambahkan background color ke editor */
+.echo-editor .bg-background {
+  background-color: white !important;
+}
+
+.dark .echo-editor .bg-background {
+  background-color: #171717 !important;
+}
 </style>
 
 <style scoped>
