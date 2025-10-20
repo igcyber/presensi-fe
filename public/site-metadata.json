@@ -1,6 +1,6 @@
 {
   "website": {
-    "name": "DPRD Kutai Kartanegara",
+    "name": "Sekretariat DPRD Kutai Kartanegara",
     "shortName": "DPRD Kukar",
     "description": "Website resmi DPRD Kabupaten Kutai Kartanegara",
     "url": "https://dprd.rizkipadhil.my.id",
@@ -19,14 +19,14 @@
     }
   },
   "seo": {
-    "title": "DPRD Kutai Kartanegara - Portal Resmi",
+    "title": "Sekretariat DPRD Kutai Kartanegara - Portal Resmi",
     "description": "Website resmi DPRD Kabupaten Kutai Kartanegara",
     "keywords": ["dprd", "kutai kartanegara", "kukar", "pemerintahan"],
-    "author": "DPRD Kutai Kartanegara",
+    "author": "Sekretariat DPRD Kutai Kartanegara",
     "robots": "index, follow"
   },
   "openGraph": {
-    "title": "DPRD Kutai Kartanegara",
+    "title": "Sekretariat DPRD Kutai Kartanegara",
     "description": "Website resmi DPRD Kabupaten Kutai Kartanegara",
     "image": "/assets/images/og-image.png",
     "imageWidth": "1200",

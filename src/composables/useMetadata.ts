@@ -142,7 +142,7 @@ export function useMetadata() {
   }
 
   const getFullTitle = (pageTitle?: string): string => {
-    if (!siteMetadata.value) return pageTitle || 'DPRD Kutai Kartanegara'
+    if (!siteMetadata.value) return pageTitle || 'Sekretariat DPRD Kutai Kartanegara'
     
     if (pageTitle) {
       return `${pageTitle} - ${siteMetadata.value.website.name}`

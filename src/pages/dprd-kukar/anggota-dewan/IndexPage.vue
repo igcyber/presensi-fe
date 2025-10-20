@@ -48,7 +48,7 @@ onMounted(async () => {
         <!-- Header -->
         <div class="mb-8 text-center">
           <h1 class="mb-4 text-3xl font-bold text-gray-900">Struktur Organisasi DPRD</h1>
-          <p class="text-lg text-gray-600">Susunan Anggota Dewan DPRD Kutai Kartanegara</p>
+          <p class="text-lg text-gray-600">Susunan Anggota Dewan Sekretariat DPRD Kutai Kartanegara</p>
         </div>
 
         <!-- Loading State -->

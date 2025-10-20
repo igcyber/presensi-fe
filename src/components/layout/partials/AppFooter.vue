@@ -29,7 +29,7 @@ const hasRelatedLinks = computed(() => relatedLinks.value && relatedLinks.value.
             <img
               class="h-10 w-auto sm:h-12 lg:h-14"
               src="/assets/images/logos/logo-dprd-white.png"
-              alt="Logo DPRD Kutai Kartanegara"
+              alt="Logo Sekretariat DPRD Kutai Kartanegara"
               loading="lazy"
             />
             <img

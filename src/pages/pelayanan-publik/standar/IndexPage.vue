@@ -164,7 +164,7 @@ onMounted(async () => {
         <!-- Header -->
         <div class="mb-8 text-center">
           <h1 class="mb-4 text-3xl font-bold text-gray-900">Standar Pelayanan</h1>
-          <p class="text-lg text-gray-600">Standar Pelayanan Publik DPRD Kutai Kartanegara</p>
+          <p class="text-lg text-gray-600">Standar Pelayanan Publik Sekretariat DPRD Kutai Kartanegara</p>
         </div>
 
         <!-- Search -->
