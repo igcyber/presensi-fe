@@ -5,6 +5,7 @@ export * from "./useDialog";
 export * from "./useFetch";
 export * from "./useFilePreview";
 export * from "./useFormatters";
+export * from "./useMetadata";
 export * from "./usePagination";
 export * from "./usePaginationApp";
 export * from "./usePortal";
