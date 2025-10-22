@@ -18,6 +18,7 @@ import perusdaRoute from "@/pages/app/perusda/route";
 import portalRoute from "@/pages/app/portal/route";
 import ppidRoute from "@/pages/app/ppid/route";
 import prestasiRoute from "@/pages/app/prestasi/route";
+import pengaduanRoute from "@/pages/app/pengaduan/route";
 import profileRoute from "@/pages/app/profile/route";
 import radioRoute from "@/pages/app/radio/route";
 import rapatRoute from "@/pages/app/rapat/route";
@@ -56,6 +57,7 @@ export default {
     ...radioRoute,
     ...portalRoute,
     ...aplikasiTerkaitRoute,
+    ...pengaduanRoute,
     ...surveiKepuasanRoute,
     ...ppidRoute,
     ...fotoRoute,

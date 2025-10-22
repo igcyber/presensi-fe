@@ -51,7 +51,8 @@ export const createPengaduanPublic = async (payload: CreatePengaduanRequest): Pr
  * ```
  */
 export const getPengaduans = (params?: PengaduanQueryParams): Promise<ApiResponse<PengaduanListResponse>> => {
-  return httpInstance.get<ApiResponse<PengaduanListResponse>>("/api/pengaduan", { params });
+  return httpInstance.get<ApiResponse<PengaduanListResponse>>("/api/pengaduan", { params })
+    .then(res => res.data);
 };
 
 /**

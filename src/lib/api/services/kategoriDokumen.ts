@@ -94,3 +94,19 @@ export const updateKategoriDokumen = (id: number, payload: UpdateKategoriDokumen
  * ```
  */
 export const deleteKategoriDokumen = (id: number): Promise<ApiResponse<null>> => kategoriDokumenService.remove(id);
+
+// ==================== Public Api ====================
+/**
+ * Mendapatkan daftar kategori dokumen untuk public display
+ * @returns Promise yang mengembalikan daftar kategori dokumen public
+ * @endpoint GET /media/kategori-dokumen
+ * @example
+ * ```typescript
+ * const response = await getKategoriDokumenPublic();
+ * console.log(response.data); // Array of KategoriDokumen
+ * ```
+ */
+export const getKategoriDokumenPublic = async (): Promise<ApiResponse<KategoriDokumen[]>> => {
+  const { data } = await httpInstance.get<ApiResponse<KategoriDokumen[]>>("/media/kategori-dokumen");
+  return data;
+};

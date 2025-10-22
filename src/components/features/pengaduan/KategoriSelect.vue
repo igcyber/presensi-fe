@@ -1,11 +1,5 @@
 <script setup lang="ts">
-import { Check, ChevronsUpDown } from "lucide-vue-next";
-import { computed, onMounted, ref } from "vue";
-
-import { Button } from "@/components/ui/button";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+import { onMounted, ref } from "vue";
 
 import { getKategoriPengaduan } from "@/lib/api/services/pengaduan";
 import type { KategoriPengaduan } from "@/lib/api/types/pengaduan.types";
@@ -17,10 +11,10 @@ interface Props {
   placeholder?: string;
 }
 
-const props = withDefaults(defineProps<Props>(), {
+const _props = withDefaults(defineProps<Props>(), {
   modelValue: "",
   disabled: false,
-  placeholder: "Pilih kategori...",
+  placeholder: "Pilih atau ketik kategori...",
 });
 
 // Emits
@@ -29,14 +23,8 @@ const emit = defineEmits<{
 }>();
 
 // State
-const open = ref(false);
 const kategoriList = ref<KategoriPengaduan[]>([]);
 const isLoading = ref(false);
-
-// Computed
-const selectedKategori = computed(() => {
-  return kategoriList.value.find(kategori => kategori.kategori_aduan === props.modelValue);
-});
 
 // Methods
 const fetchKategoriList = async () => {
@@ -52,16 +40,9 @@ const fetchKategoriList = async () => {
   }
 };
 
-const handleSelect = (kategori: string) => {
-  emit("update:modelValue", kategori);
-  open.value = false;
-};
-
-const handleAddNew = (value: string) => {
-  if (value.trim()) {
-    emit("update:modelValue", value.trim());
-    open.value = false;
-  }
+const handleInput = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  emit("update:modelValue", target.value);
 };
 
 // Lifecycle
@@ -71,54 +52,28 @@ onMounted(() => {
 </script>
 
 <template>
-  <Popover v-model:open="open">
-    <PopoverTrigger as-child>
-      <Button
-        variant="outline"
-        role="combobox"
-        :aria-expanded="open"
-        :disabled="disabled"
-        class="w-full justify-between"
-      >
-        {{ selectedKategori?.kategori_aduan || placeholder }}
-        <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
-      </Button>
-    </PopoverTrigger>
-    <PopoverContent class="w-full p-0" :style="{ width: 'var(--radix-popover-trigger-width)' }">
-      <Command>
-        <CommandInput
-          placeholder="Cari kategori..."
-          @keydown.enter="handleAddNew($event.target.value)"
-        />
-        <CommandList>
-          <CommandEmpty>
-            <div class="py-2 text-center text-sm text-muted-foreground">
-              Kategori tidak ditemukan.
-              <br />
-              <span class="text-xs">Tekan Enter untuk menambah kategori baru</span>
-            </div>
-          </CommandEmpty>
-          <CommandGroup v-if="!isLoading">
-            <CommandItem
-              v-for="kategori in kategoriList"
-              :key="kategori.kategori_aduan"
-              :value="kategori.kategori_aduan"
-              @select="handleSelect(kategori.kategori_aduan)"
-            >
-              <Check
-                :class="cn(
-                  'mr-2 h-4 w-4',
-                  modelValue === kategori.kategori_aduan ? 'opacity-100' : 'opacity-0'
-                )"
-              />
-              {{ kategori.kategori_aduan }}
-            </CommandItem>
-          </CommandGroup>
-          <div v-else class="py-2 text-center text-sm text-muted-foreground">
-            Memuat kategori...
-          </div>
-        </CommandList>
-      </Command>
-    </PopoverContent>
-  </Popover>
+  <div class="relative">
+    <input
+      :value="_props.modelValue"
+      :placeholder="_props.placeholder"
+      :disabled="_props.disabled"
+      list="kategori-list"
+      class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+      @input="handleInput"
+    />
+
+    <!-- Datalist untuk autocomplete suggestions -->
+    <datalist id="kategori-list">
+      <option
+        v-for="kategori in kategoriList"
+        :key="kategori.kategori_aduan"
+        :value="kategori.kategori_aduan"
+      />
+    </datalist>
+
+    <!-- Loading indicator -->
+    <div v-if="isLoading" class="absolute right-3 top-1/2 -translate-y-1/2">
+      <div class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
+    </div>
+  </div>
 </template>
