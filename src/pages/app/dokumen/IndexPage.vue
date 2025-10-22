@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { PlusIcon } from "lucide-vue-next";
-import { watch } from "vue";
+import { PlusIcon, Settings } from "lucide-vue-next";
+import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 
 import BaseConfirmDialog from "@/components/dialogs/BaseConfirmDialog.vue";
 import DokumenDialog from "@/components/dialogs/DokumenDialog.vue";
+import KategoriDokumenManagementDialog from "@/components/dialogs/KategoriDokumenManagementDialog.vue";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { type Column, DataTable } from "@/components/ui/datatable";
@@ -37,6 +38,9 @@ const router = useRouter();
 
 const { truncate } = useFormatters();
 
+// State for kategori management dialog
+const kategoriDialogOpen = ref(false);
+
 // Column definitions
 const columns: Column<Dokumen>[] = [
   {
@@ -67,6 +71,13 @@ const columns: Column<Dokumen>[] = [
     render: (_item: Dokumen): string => {
       return "Dokumen";
     },
+  },
+  {
+    key: "kategoriDokumen",
+    label: "Kategori",
+    sortable: false,
+    width: "150px",
+    render: (item: Dokumen): string => item.kategoriDokumen?.nama || "-",
   },
   {
     key: "createdByUser",
@@ -128,6 +139,16 @@ const handleDokumenDialogSuccess = (): void => {
   fetchData();
 };
 
+const openKategoriDialog = (): void => {
+  kategoriDialogOpen.value = true;
+};
+
+const handleKategoriDialogClose = (): void => {
+  kategoriDialogOpen.value = false;
+  // Refresh dokumen list after kategori changes
+  fetchData();
+};
+
 // Watchers
 watch(
   query,
@@ -147,10 +168,16 @@ watch(
           <h1 class="text-3xl font-bold tracking-tight">Dokumen</h1>
           <p class="text-muted-foreground">Daftar dokumen dengan fitur pencarian, pengurutan, dan paginasi</p>
         </div>
-        <Button @click="openCreateDialog" class="flex items-center gap-2 self-start sm:self-auto">
-          <PlusIcon class="h-4 w-4" />
-          Tambah Baru
-        </Button>
+        <div class="flex gap-2 self-start sm:self-auto">
+          <Button @click="openKategoriDialog" variant="outline" class="flex items-center gap-2">
+            <Settings class="h-4 w-4" />
+            Kelola Kategori
+          </Button>
+          <Button @click="openCreateDialog" class="flex items-center gap-2">
+            <PlusIcon class="h-4 w-4" />
+            Tambah Baru
+          </Button>
+        </div>
       </div>
 
       <Card>
@@ -201,6 +228,12 @@ watch(
         variant="destructive"
         :loading="confirmDialog.state.value.loading"
         @confirm="confirmDelete"
+      />
+
+      <!-- Kategori Management Dialog -->
+      <KategoriDokumenManagementDialog
+        v-model:open="kategoriDialogOpen"
+        @update:open="handleKategoriDialogClose"
       />
     </div>
   </div>

@@ -1,0 +1,318 @@
+{
+	"info": {
+		"_postman_id": "966f49b7-ff7e-40bb-93b8-32fdc6384da8",
+		"name": "Pengaduan API (Public & Admin)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "46638946"
+	},
+	"item": [
+		{
+			"name": "Public",
+			"item": [
+				{
+					"name": "Create Pengaduan (Public)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nama\": \"Budi Santoso\",\n  \"nik\": \"6471012300000001\",\n  \"alamat\": \"Jl. Kenanga No. 12, Tenggarong\",\n  \"noHp\": \"081234567890\",\n  \"email\": \"contohemail@gmail.com\",\n  \"aduan\": \"Lampu jalan padam\",\n  \"deskripsi\": \"Lampu jalan di depan rumah padam sejak 3 hari lalu.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/pengaduan",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pengaduan"
+							]
+						},
+						"description": "Public endpoint: create a new pengaduan"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "List Pengaduan (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/pengaduan",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"pengaduan"
+							]
+						},
+						"description": "Admin list with optional filters"
+					},
+					"response": []
+				},
+				{
+					"name": "List Kategori Pengaduan (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/pengaduan/kategori",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"pengaduan",
+								"kategori"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Show Pengaduan by ID (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/pengaduan/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"pengaduan",
+								"1"
+							]
+						},
+						"description": "Get detail of pengaduan id=1"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Status (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"diterima\",\n  \"kategori_aduan\": \"Infrastruktur\",\n  \"keterangan\": \"Diteruskan ke bidang terkait.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/pengaduan/2/status",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"pengaduan",
+								"2",
+								"status"
+							]
+						},
+						"description": "Change status (belum | diterima). kategori_aduan required when status=diterima."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Kategori (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"kategori_aduan\": \"Pelayanan\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/pengaduan/1/kategori",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"pengaduan",
+								"1",
+								"kategori"
+							]
+						},
+						"description": "Update kategori_aduan only."
+					},
+					"response": []
+				},
+				{
+					"name": "Export Excel (Admin)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/pengaduan/export?tanggal_mulai=2025-01-01&tanggal_akhir=2025-12-31",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"pengaduan",
+								"export"
+							],
+							"query": [
+								{
+									"key": "tanggal_mulai",
+									"value": "2025-01-01"
+								},
+								{
+									"key": "tanggal_akhir",
+									"value": "2025-12-31"
+								}
+							]
+						},
+						"description": "Streams an .xlsx file"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": ""
+		},
+		{
+			"key": "adminToken",
+			"value": "",
+			"type": "default"
+		}
+	]
+}

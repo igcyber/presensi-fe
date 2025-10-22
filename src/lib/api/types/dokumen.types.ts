@@ -10,11 +10,16 @@ export interface Dokumen extends BaseEntity {
   nama: string;
   file: string;
   isi: string;
+  kategoriId: number;
   createdBy: number;
   updatedBy: number;
   createdByUser: Omit<User, "nip,roles">;
   updatedByUser: Omit<User, "nip,roles">;
   fileUrl: string;
+  kategoriDokumen?: {
+    id: number;
+    nama: string;
+  };
 }
 
 /**
@@ -41,6 +46,7 @@ export interface CreateDokumenRequest {
   nama: string;
   file: File | string;
   isi: string;
+  kategoriId: number;
 }
 
 /**
@@ -50,6 +56,7 @@ export interface UpdateDokumenRequest {
   nama?: string;
   file?: File | string;
   isi?: string;
+  kategoriId?: number;
 }
 
 /**
@@ -61,5 +68,6 @@ export interface DokumenQueryParams {
   search?: string;
   sort_by?: "nama" | "createdAt" | "updatedAt";
   sort_order?: "asc" | "desc";
+  kategoriId?: number;
   customFilters?: Array<Record<string, any>>;
 }

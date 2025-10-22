@@ -1,14 +1,18 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { toast } from "vue-sonner";
 
 import BaseFormDialog from "@/components/dialogs/BaseFormDialog.vue";
 import BaseInput from "@/components/forms/BaseInput.vue";
 import BaseInputFile from "@/components/forms/BaseInputFile.vue";
+import BaseSelect from "@/components/forms/BaseSelect.vue";
 import BaseTextarea from "@/components/forms/BaseTextarea.vue";
 
+import { useFetch } from "@/composables/useFetch";
 import { createDokumen, updateDokumen } from "@/lib/api/services/dokumen";
+import { getKategoriDokumens } from "@/lib/api/services/kategoriDokumen";
 import type { Dokumen } from "@/lib/api/types/dokumen.types";
+import type { KategoriDokumenListResponse } from "@/lib/api/types/kategoriDokumen.types";
 import { createDokumenSchema, updateDokumenSchema } from "@/schemas/dokumenSchema";
 
 // Interface definitions
@@ -31,15 +35,34 @@ const props = withDefaults(defineProps<Props>(), { dokumen: null });
 // Emits
 const emit = defineEmits<Emits>();
 
+// Fetch kategori dokumen
+const { data: kategoriList, fetchData: fetchKategori, isLoading: isLoadingKategori } = useFetch<
+  any,
+  KategoriDokumenListResponse
+>(() => getKategoriDokumens({ per_page: 100 }), {
+  immediate: false,
+  extractData: (response) => response.data,
+});
+
 // Computed properties
 const initialValues = computed(() =>
   props.mode === "create"
-    ? { nama: "", file: "", isi: "" }
+    ? { nama: "", file: "", isi: "", kategoriId: 0 }
     : {
         nama: props.dokumen?.nama ?? "",
         isi: props.dokumen?.isi ?? "",
+        kategoriId: props.dokumen?.kategoriId ?? 0,
       },
 );
+
+const kategoriOptions = computed(() => {
+  return (
+    kategoriList.value?.data?.map((kategori) => ({
+      label: kategori.nama,
+      value: kategori.id,
+    })) || []
+  );
+});
 
 const schema = computed(() => (props.mode === "create" ? createDokumenSchema : updateDokumenSchema));
 
@@ -60,6 +83,11 @@ async function onSubmit(values: any) {
     toast.success("Berhasil", { description: "Dokumen berhasil diperbarui" });
   }
 }
+
+// Lifecycle
+onMounted(() => {
+  fetchKategori();
+});
 </script>
 
 <template>
@@ -76,6 +104,15 @@ async function onSubmit(values: any) {
   >
     <div class="grid grid-cols-1 gap-3">
       <BaseInput name="nama" label="Nama Dokumen" placeholder="Masukkan nama dokumen" required />
+
+      <BaseSelect
+        name="kategoriId"
+        label="Kategori Dokumen"
+        placeholder="Pilih kategori dokumen"
+        :options="kategoriOptions"
+        :loading="isLoadingKategori"
+        required
+      />
 
       <BaseInputFile
         name="file"

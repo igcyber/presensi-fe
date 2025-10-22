@@ -18,6 +18,7 @@ export const createDokumenSchema = z.object({
     return false;
   }, "File wajib diisi dan harus berupa PDF"),
   isi: z.string().min(1, "Deskripsi dokumen wajib diisi").max(1000, "Deskripsi maksimal 1000 karakter"),
+  kategoriId: z.number().int().positive("Kategori wajib dipilih"),
 });
 
 // Schema untuk update dokumen
@@ -37,6 +38,7 @@ export const updateDokumenSchema = z.object({
       return false;
     }, "File harus berupa PDF"),
   isi: z.string().min(1, "Deskripsi dokumen wajib diisi").max(1000, "Deskripsi maksimal 1000 karakter").optional(),
+  kategoriId: z.number().int().positive("Kategori wajib dipilih").optional(),
 });
 
 // Schema untuk dokumen query parameters

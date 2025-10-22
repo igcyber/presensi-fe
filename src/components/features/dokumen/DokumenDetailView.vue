@@ -101,6 +101,12 @@ const handleFileDownload = async () => {
 
         <!-- Meta Information -->
         <div class="text-muted-foreground flex flex-col gap-3 text-sm sm:flex-row sm:items-center sm:gap-6">
+          <!-- Kategori -->
+          <div v-if="dokumen.kategoriDokumen" class="flex items-center gap-1">
+            <span class="font-medium">Kategori:</span>
+            <span class="truncate">{{ dokumen.kategoriDokumen.nama }}</span>
+          </div>
+
           <!-- Creator -->
           <div class="flex items-center gap-2">
             <Avatar class="h-6 w-6">
