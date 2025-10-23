@@ -75,7 +75,7 @@ const canSubmitAgain = computed(() => !cooldownStatus.value.isOnCooldown);
 
       <div class="p-6">
         <!-- Countdown Timer -->
-        <div class="rounded-md bg-yellow-50 p-6 text-center">
+        <!-- <div class="rounded-md bg-yellow-50 p-6 text-center">
           <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-yellow-100">
             <Clock class="h-8 w-8 text-yellow-600" />
           </div>
@@ -87,7 +87,7 @@ const canSubmitAgain = computed(() => !cooldownStatus.value.isOnCooldown);
           <p class="mt-2 text-sm text-yellow-700">
             Anda dapat mengajukan pengaduan kembali setelah waktu di atas habis
           </p>
-        </div>
+        </div> -->
 
         <!-- Information -->
         <div class="mt-6 rounded-md bg-blue-50 p-4">

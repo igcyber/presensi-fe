@@ -67,7 +67,8 @@ export const getPengaduans = (params?: PengaduanQueryParams): Promise<ApiRespons
  * ```
  */
 export const getPengaduanById = (id: number): Promise<ApiResponse<PengaduanDetailResponse>> => {
-  return httpInstance.get<ApiResponse<PengaduanDetailResponse>>(`/api/pengaduan/${id}`);
+  return httpInstance.get<ApiResponse<PengaduanDetailResponse>>(`/api/pengaduan/${id}`)
+    .then(res => res.data);
 };
 
 /**

@@ -52,6 +52,12 @@ export interface PengaduanListResponse {
     per_page: number;
     total: number;
   };
+  links?: {
+    first: string | null;
+    last: string | null;
+    prev: string | null;
+    next: string | null;
+  };
 }
 
 export interface PengaduanDetailResponse extends Pengaduan {}

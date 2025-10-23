@@ -79,7 +79,7 @@ const handleSubmit = async () => {
       deskripsi: formData.value.deskripsi,
     });
 
-    if (response.data.success) {
+    if (response.success) {
       toast.success("Pengaduan berhasil dikirim!", {
         description: "Terima kasih atas pengaduan Anda. Kami akan segera memprosesnya.",
       });
@@ -103,7 +103,7 @@ const handleSubmit = async () => {
       // Emit success event
       emit("success");
     } else {
-      throw new Error(response.data.message || "Gagal mengirim pengaduan");
+      throw new Error(response.message || "Gagal mengirim pengaduan");
     }
   } catch (error: any) {
     console.error("Error submitting pengaduan:", error);
