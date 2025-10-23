@@ -38,7 +38,8 @@ export default defineConfig({
   ],
   server: {
     allowedHosts: [
-      'dprd.rizkipadhil.my.id'
+      "dev-pelayanan-dprd.kukarkab.go.id"
+      "pelayanan-dprd.kukarkab.go.id"
     ]
   },
   resolve: {
