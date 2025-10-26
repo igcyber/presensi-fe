@@ -3,15 +3,15 @@ import KontakKamiPage from "@/pages/kontak-kami/IndexPage.vue";
 
 export default [
   {
-    path: "/kontak-kami",
+    path: "/kontak",
     component: AppLayout,
     children: [
       {
         path: "",
-        name: "kontak-kami.index",
+        name: "kontak.index",
         component: KontakKamiPage,
         meta: {
-          title: "Kontak Kami",
+          title: "Kontak",
         },
       },
     ],

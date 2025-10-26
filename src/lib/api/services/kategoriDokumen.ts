@@ -80,8 +80,10 @@ export const createKategoriDokumen = (payload: CreateKategoriDokumenRequest) => 
  * console.log(response.data.nama);
  * ```
  */
-export const updateKategoriDokumen = (id: number, payload: UpdateKategoriDokumenRequest): Promise<ApiResponse<KategoriDokumen>> =>
-  kategoriDokumenService.update(id, payload);
+export const updateKategoriDokumen = (
+  id: number,
+  payload: UpdateKategoriDokumenRequest,
+): Promise<ApiResponse<KategoriDokumen>> => kategoriDokumenService.update(id, payload);
 
 /**
  * Menghapus kategori dokumen

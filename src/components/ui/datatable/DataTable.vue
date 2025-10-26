@@ -435,7 +435,8 @@ const formatCellValue = (item: T, column: Column<T>) => {
               <template v-else-if="column.previewable && column.previewUrl">
                 <Button variant="link" size="sm" @click.stop="handlePreview(item, column)" class="p-0">
                   <span class="flex flex-col items-center justify-center gap-1 sm:flex-row">
-                    <Eye class="h-3 w-3" />
+                    <Eye v-if="column.previewUrl(item)" class="h-3 w-3" />
+
                     {{ formatCellValue(item, column) }}</span
                   >
                 </Button>

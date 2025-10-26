@@ -4,6 +4,7 @@ import { toast } from "vue-sonner";
 
 import BaseFormDialog from "@/components/dialogs/BaseFormDialog.vue";
 import BaseInput from "@/components/forms/BaseInput.vue";
+import BaseInputFile from "@/components/forms/BaseInputFile.vue";
 import BaseSelect from "@/components/forms/BaseSelect.vue";
 import BaseTextEditorEcho from "@/components/forms/BaseTextEditorEcho.vue";
 
@@ -44,6 +45,7 @@ const initialValues = computed(() => {
       nama: "",
       tipe: "page",
       content: "",
+      file: "",
       menuId: null,
       temporaryFileNames: [],
     };
@@ -53,6 +55,7 @@ const initialValues = computed(() => {
     nama: props.page?.nama ?? "",
     tipe: props.page?.tipe ?? "page",
     content: props.page?.content ?? "",
+    file: props.page?.file ?? "",
     menuId: props.page?.menuId ?? null,
     temporaryFileNames: [],
   };
@@ -74,8 +77,8 @@ const menuOptions = computed(() => {
   }));
 });
 
-const showContentEditor = computed(() => {
-  return selectedTipe.value === "page";
+const showFileInput = computed(() => {
+  return selectedTipe.value === "file";
 });
 
 // Methods
@@ -85,6 +88,7 @@ async function loadMenus() {
     const response = await getMenus({ limit: 100 }); // Load semua menu
     let data: Menu[] = response.data.data;
     data = data.filter((d: Menu) => {
+      if (initialValues.value.menuId && initialValues.value.menuId == d.id) return true;
       return d.menuId !== null && d.page === null;
     });
 
@@ -158,11 +162,20 @@ watch(
 
       <!-- Content Editor - hanya untuk tipe 'page' -->
       <BaseTextEditorEcho
-        v-if="showContentEditor"
         name="content"
         label="Content"
         placeholder="Masukkan content page..."
         description="Gunakan editor untuk membuat content halaman"
+      />
+
+      <!-- File Input - hanya untuk tipe 'file' -->
+      <BaseInputFile
+        v-if="showFileInput"
+        name="file"
+        label="File"
+        accept="application/pdf"
+        description="Format: PDF. Maksimal 10MB"
+        :existing-files="page?.fileUrl"
       />
 
       <!-- Info untuk tipe 'file' -->

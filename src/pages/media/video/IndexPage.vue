@@ -107,7 +107,7 @@ onMounted(async () => {
               <div
                 v-for="video in data.data"
                 :key="video.id"
-                class="group overflow-hidden rounded-lg bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
+                class="group flex h-full flex-col overflow-hidden rounded-lg bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
               >
                 <!-- Video Thumbnail/Embed -->
                 <div class="relative aspect-video bg-gray-100">
@@ -121,7 +121,7 @@ onMounted(async () => {
                 </div>
 
                 <!-- Video Info -->
-                <div class="p-4">
+                <div class="flex flex-1 flex-col p-4">
                   <!-- Date -->
                   <div class="mb-3 flex items-center text-sm text-gray-500">
                     <Calendar class="mr-2 h-4 w-4" />
@@ -139,14 +139,14 @@ onMounted(async () => {
                   </a>
 
                   <!-- Source -->
-                  <div class="mb-4 text-sm text-gray-600">
+                  <div class="mb-4 flex-1 text-sm text-gray-600">
                     <span class="font-medium">Sumber:</span> {{ video.isi ?? "Video" }}
                   </div>
 
                   <!-- Watch Button -->
                   <button
                     @click="openVideoModal(youtubeInfo(video.link).embedUrl)"
-                    class="flex w-full items-center justify-center rounded-lg bg-yellow-600 px-4 py-2 font-medium text-white transition-colors duration-200 hover:bg-yellow-700"
+                    class="mt-auto flex w-full items-center justify-center rounded-lg bg-yellow-600 px-4 py-2 font-medium text-white transition-colors duration-200 hover:bg-yellow-700"
                   >
                     <Play class="mr-2 h-4 w-4" />
                     Tonton Video

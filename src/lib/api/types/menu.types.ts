@@ -111,6 +111,8 @@ export interface MenuBySlugResponse {
     nama: string;
     tipe: "page" | "file";
     content: string;
+    file: string | null;
+    fileUrl: string | null;
     createdBy: number;
     updatedBy: number | null;
     createdAt: string;

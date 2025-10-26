@@ -50,7 +50,7 @@ const canSubmitAgain = computed(() => !cooldownStatus.value.isOnCooldown);
         <div class="mt-6 flex justify-center">
           <button
             @click="props.onBackToForm"
-            class="inline-flex items-center rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+            class="inline-flex items-center rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:outline-none"
           >
             <RefreshCw class="mr-2 h-4 w-4" />
             Ajukan Pengaduan Lain
@@ -94,13 +94,17 @@ const canSubmitAgain = computed(() => !cooldownStatus.value.isOnCooldown);
           <div class="flex">
             <div class="flex-shrink-0">
               <svg class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                <path
+                  fill-rule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                  clip-rule="evenodd"
+                />
               </svg>
             </div>
             <div class="ml-3">
               <h3 class="text-sm font-medium text-blue-800">Informasi Penting</h3>
               <div class="mt-2 text-sm text-blue-700">
-                <ul class="list-disc list-inside space-y-1">
+                <ul class="list-inside list-disc space-y-1">
                   <li>Pengaduan Anda sedang dalam proses peninjauan</li>
                   <li>Tim kami akan menghubungi Anda jika diperlukan informasi tambahan</li>
                   <li>Status pengaduan akan dikirim melalui email</li>
@@ -115,7 +119,7 @@ const canSubmitAgain = computed(() => !cooldownStatus.value.isOnCooldown);
         <div class="mt-6 flex justify-center">
           <button
             disabled
-            class="inline-flex items-center rounded-md bg-gray-300 px-4 py-2 text-sm font-medium text-gray-500 cursor-not-allowed"
+            class="inline-flex cursor-not-allowed items-center rounded-md bg-gray-300 px-4 py-2 text-sm font-medium text-gray-500"
           >
             <Clock class="mr-2 h-4 w-4" />
             Tunggu {{ cooldownTimeFormatted }} untuk pengaduan berikutnya

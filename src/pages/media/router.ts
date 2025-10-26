@@ -11,7 +11,7 @@ export default {
   component: AppLayout,
   children: [
     {
-      // Route kosong untuk menangani akses langsung ke /selayang-pandang
+      // Route kosong untuk menangani akses langsung ke /media
       path: "",
       redirect: { name: "not-found" },
     },
@@ -44,7 +44,7 @@ export default {
       name: "media.dokumen",
       component: DokumenPage,
       meta: {
-        title: "Dokumen",
+        title: "JDIH",
       },
     },
     {

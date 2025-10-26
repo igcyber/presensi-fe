@@ -13,9 +13,11 @@ export interface Page extends BaseEntity {
   nama: string;
   tipe: "file" | "page";
   content: string | null;
+  file: string | null;
   menu: Menu;
   creator: User;
   updater: User | null;
+  fileUrl?: string;
 }
 
 /**
@@ -31,6 +33,7 @@ export interface CreatePageRequest {
   nama: string;
   tipe: "file" | "page";
   content?: string;
+  file?: File | string;
   menuId?: number;
   temporaryFileNames?: string[];
 }
@@ -42,6 +45,7 @@ export interface UpdatePageRequest {
   nama?: string;
   tipe?: "file" | "page";
   content?: string;
+  file?: File | string;
   menuId?: number;
   temporaryFileNames?: string[];
 }

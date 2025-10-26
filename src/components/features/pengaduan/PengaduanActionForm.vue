@@ -9,16 +9,21 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
-import KategoriSelect from "./KategoriSelect.vue";
-
 import { updatePengaduanKategori, updatePengaduanStatus } from "@/lib/api/services/pengaduan";
 import type { Pengaduan } from "@/lib/api/types/pengaduan.types";
-import { updateKategoriSchema, updateStatusSchema, type UpdateKategoriFormData, type UpdateStatusFormData } from "@/schemas/pengaduanSchema";
+import {
+  type UpdateKategoriFormData,
+  updateKategoriSchema,
+  type UpdateStatusFormData,
+  updateStatusSchema,
+} from "@/schemas/pengaduanSchema";
+
+import KategoriSelect from "./KategoriSelect.vue";
 
 // Props
 interface Props {
   pengaduan: Pengaduan;
-  actionType: 'status' | 'kategori';
+  actionType: "status" | "kategori";
   onSuccess?: () => void;
   onCancel?: () => void;
 }
@@ -43,10 +48,10 @@ const formData = ref<UpdateStatusFormData | UpdateKategoriFormData>({
 });
 
 // Computed
-const isStatusAction = computed(() => props.actionType === 'status');
-const isKategoriAction = computed(() => props.actionType === 'kategori');
+const isStatusAction = computed(() => props.actionType === "status");
+const isKategoriAction = computed(() => props.actionType === "kategori");
 const showKategoriField = computed(() => {
-  return isStatusAction.value && formData.value.status === 'diterima';
+  return isStatusAction.value && formData.value.status === "diterima";
 });
 
 const schema = computed(() => {
@@ -54,13 +59,13 @@ const schema = computed(() => {
 });
 
 const title = computed(() => {
-  return isStatusAction.value ? 'Update Status' : 'Update Kategori';
+  return isStatusAction.value ? "Update Status" : "Update Kategori";
 });
 
 const description = computed(() => {
   return isStatusAction.value
-    ? 'Ubah status pengaduan dan tentukan kategori jika diperlukan'
-    : 'Ubah kategori pengaduan';
+    ? "Ubah status pengaduan dan tentukan kategori jika diperlukan"
+    : "Ubah kategori pengaduan";
 });
 
 // Methods
@@ -122,11 +127,14 @@ const handleCancel = () => {
 };
 
 // Watchers
-watch(() => formData.value.status, (newStatus) => {
-  if (newStatus === 'belum') {
-    formData.value.kategori_aduan = "";
-  }
-});
+watch(
+  () => formData.value.status,
+  (newStatus) => {
+    if (newStatus === "belum") {
+      formData.value.kategori_aduan = "";
+    }
+  },
+);
 </script>
 
 <template>
@@ -164,30 +172,18 @@ watch(() => formData.value.status, (newStatus) => {
       <!-- Keterangan Field (only for status action) -->
       <div v-if="isStatusAction" class="space-y-2">
         <Label for="keterangan">Keterangan (Opsional)</Label>
-        <Textarea
-          v-model="formData.keterangan"
-          placeholder="Tambahkan keterangan jika diperlukan..."
-          rows="3"
-        />
+        <Textarea v-model="formData.keterangan" placeholder="Tambahkan keterangan jika diperlukan..." rows="3" />
         <p v-if="errors.keterangan" class="text-sm text-red-600">{{ errors.keterangan }}</p>
       </div>
 
       <!-- Action Buttons -->
       <div class="flex gap-2 pt-2">
-        <Button
-          @click="handleSubmit"
-          :disabled="isLoading"
-          class="flex-1"
-        >
+        <Button @click="handleSubmit" :disabled="isLoading" class="flex-1">
           <Save v-if="!isLoading" class="mr-2 h-4 w-4" />
           <div v-else class="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
           {{ isLoading ? "Menyimpan..." : "Simpan" }}
         </Button>
-        <Button
-          variant="outline"
-          @click="handleCancel"
-          :disabled="isLoading"
-        >
+        <Button variant="outline" @click="handleCancel" :disabled="isLoading">
           <X class="mr-2 h-4 w-4" />
           Batal
         </Button>

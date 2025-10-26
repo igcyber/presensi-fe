@@ -30,6 +30,7 @@ import {
   OrderedList,
   Printer,
   SlashCommand,
+  SourceCode,
   Strike,
   Table,
   TaskList,
@@ -236,6 +237,7 @@ const extensions = computed(() => [
   CodeBlock,
   Table,
   Code,
+  SourceCode,
   FindAndReplace.configure({ spacer: true }),
   Printer,
   CustomPreviewExtension.configure({

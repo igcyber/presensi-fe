@@ -1,15 +1,5 @@
 <script lang="ts" setup>
-import {
-  AlertCircle,
-  Calendar,
-  Download,
-  FileText,
-  RefreshCw,
-  Search,
-  FolderOpen,
-  Eye,
-  X
-} from "lucide-vue-next";
+import { AlertCircle, Calendar, Download, Eye, FileText, FolderOpen, RefreshCw, Search, X } from "lucide-vue-next";
 import { computed, onMounted, ref, watch } from "vue";
 
 import BasePagination from "@/components/base/BasePagination.vue";
@@ -44,32 +34,33 @@ const openPdfPreview = (fileUrl: string) => {
 const {
   data: kategoriData,
   isLoading: isLoadingKategori,
-  fetchData: fetchKategori
-} = useFetch<ApiResponse<KategoriDokumen[]>, KategoriDokumen[]>(
-  () => getKategoriDokumenPublic(),
-  {
-    immediate: false,
-    extractData: (response) => response.data,
-  }
-);
+  fetchData: fetchKategori,
+} = useFetch<ApiResponse<KategoriDokumen[]>, KategoriDokumen[]>(() => getKategoriDokumenPublic(), {
+  immediate: false,
+  extractData: (response) => response.data,
+});
 
 // Fetch dokumen data
 const { data, isLoading, error, isError, fetchData } = useFetch<
   ApiResponse<DokumenListPublicResponse>,
   DokumenListPublicResponse
->(() => getDokumenPublic({
-  page: currentPage.value,
-  search: searchQuery.value || undefined,
-  kategoriId: selectedKategori.value || undefined
-}), {
-  immediate: false,
-  extractData: (response) => response.data,
-});
+>(
+  () =>
+    getDokumenPublic({
+      page: currentPage.value,
+      search: searchQuery.value || undefined,
+      kategoriId: selectedKategori.value || undefined,
+    }),
+  {
+    immediate: false,
+    extractData: (response) => response.data,
+  },
+);
 
 // Computed
 const selectedKategoriName = computed(() => {
   if (!selectedKategori.value || !kategoriData.value) return "Semua Kategori";
-  const kategori = kategoriData.value.find(k => k.id === selectedKategori.value);
+  const kategori = kategoriData.value.find((k) => k.id === selectedKategori.value);
   return kategori?.nama || "Semua Kategori";
 });
 
@@ -128,10 +119,7 @@ watch(searchQuery, () => {
 });
 
 onMounted(async () => {
-  await Promise.all([
-    fetchKategori(),
-    fetchData()
-  ]);
+  await Promise.all([fetchKategori(), fetchData()]);
 
   setPagination({
     currentPage: data.value?.meta?.current_page ?? 1,
@@ -150,11 +138,9 @@ onMounted(async () => {
     <!-- Hero Section -->
     <section class="relative overflow-hidden bg-gradient-to-br from-yellow-600 via-yellow-500 to-yellow-700 py-20">
       <div class="absolute inset-0 bg-black/10"></div>
-      <div class="container relative">
+      <div class="relative container">
         <div class="mx-auto max-w-4xl text-center text-white">
-          <h1 class="mb-6 text-4xl font-bold lg:text-5xl">
-            Jaringan Dokumentasi dan Informasi Hukum
-          </h1>
+          <h1 class="mb-6 text-4xl font-bold lg:text-5xl">Jaringan Dokumentasi dan Informasi Hukum</h1>
           <p class="mb-8 text-xl text-yellow-100">
             Akses mudah terhadap dokumen hukum dan peraturan daerah Kutai Kartanegara
           </p>
@@ -186,19 +172,19 @@ onMounted(async () => {
           <!-- Search Bar -->
           <div class="mb-8">
             <div class="relative mx-auto max-w-2xl">
-              <Search class="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+              <Search class="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-gray-400" />
               <input
                 v-model="searchQuery"
                 type="text"
                 placeholder="Cari dokumen..."
-                class="w-full rounded-lg border border-gray-300 bg-white py-4 pl-12 pr-4 text-gray-900 placeholder-gray-500 shadow-sm transition-all duration-200 focus:border-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500/20"
+                class="w-full rounded-lg border border-gray-300 bg-white py-4 pr-4 pl-12 text-gray-900 placeholder-gray-500 shadow-sm transition-all duration-200 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 focus:outline-none"
               />
             </div>
           </div>
 
           <!-- Kategori Grid -->
           <div v-if="!isLoadingKategori && kategoriData" class="mb-8">
-            <h3 class="mb-6 text-center text-xl font-semibold text-gray-900">Kategori Dokumen</h3>
+            <h3 class="mb-6 text-center text-xl font-semibold text-gray-900">Kategori JDIH</h3>
             <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8">
               <!-- All Categories Card -->
               <button
@@ -207,7 +193,7 @@ onMounted(async () => {
                   'group relative overflow-hidden rounded-lg border-2 p-4 text-center transition-all duration-200',
                   selectedKategori === null
                     ? 'border-yellow-500 bg-yellow-50 text-yellow-700'
-                    : 'border-gray-200 bg-white text-gray-700 hover:border-yellow-300 hover:bg-yellow-50'
+                    : 'border-gray-200 bg-white text-gray-700 hover:border-yellow-300 hover:bg-yellow-50',
                 ]"
               >
                 <FolderOpen class="mx-auto mb-2 h-8 w-8" />
@@ -223,7 +209,7 @@ onMounted(async () => {
                   'group relative overflow-hidden rounded-lg border-2 p-4 text-center transition-all duration-200',
                   selectedKategori === kategori.id
                     ? 'border-yellow-500 bg-yellow-50 text-yellow-700'
-                    : 'border-gray-200 bg-white text-gray-700 hover:border-yellow-300 hover:bg-yellow-50'
+                    : 'border-gray-200 bg-white text-gray-700 hover:border-yellow-300 hover:bg-yellow-50',
                 ]"
               >
                 <FileText class="mx-auto mb-2 h-8 w-8" />
@@ -251,12 +237,7 @@ onMounted(async () => {
               {{ selectedKategoriName }}
               <X class="ml-1 h-3 w-3" />
             </button>
-            <button
-              @click="clearFilters"
-              class="text-sm text-gray-500 hover:text-gray-700"
-            >
-              Hapus semua filter
-            </button>
+            <button @click="clearFilters" class="text-sm text-gray-500 hover:text-gray-700">Hapus semua filter</button>
           </div>
         </div>
 
@@ -317,7 +298,7 @@ onMounted(async () => {
                   </div>
 
                   <!-- Document Name -->
-                  <h3 class="mb-4 text-center text-lg font-bold text-gray-900 line-clamp-2">
+                  <h3 class="mb-4 line-clamp-2 text-center text-lg font-bold text-gray-900">
                     {{ dokumen.nama }}
                   </h3>
 
@@ -330,7 +311,7 @@ onMounted(async () => {
                   <div class="flex gap-2">
                     <button
                       @click="openPdfPreview(dokumen.fileUrl)"
-                      class="flex-1 inline-flex items-center justify-center rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-200"
+                      class="inline-flex flex-1 items-center justify-center rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-200"
                     >
                       <Eye class="mr-2 h-4 w-4" />
                       Preview
@@ -339,7 +320,7 @@ onMounted(async () => {
                       :href="dokumen.fileUrl"
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="flex-1 inline-flex items-center justify-center rounded-lg bg-yellow-600 px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-yellow-700"
+                      class="inline-flex flex-1 items-center justify-center rounded-lg bg-yellow-600 px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-yellow-700"
                     >
                       <Download class="mr-2 h-4 w-4" />
                       Download
@@ -366,8 +347,8 @@ onMounted(async () => {
             <div class="mx-auto max-w-2xl">
               <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
                 <FileText class="mx-auto mb-4 h-10 w-10 text-yellow-600" />
-                <h4 class="mb-4 text-xl font-semibold text-yellow-600">Tidak Ada Dokumen</h4>
-                <p class="text-yellow-700">Maaf, belum ada dokumen yang tersedia saat ini.</p>
+                <h4 class="mb-4 text-xl font-semibold text-yellow-600">Tidak Ada JDIH</h4>
+                <p class="text-yellow-700">Maaf, belum ada JDIH yang tersedia saat ini.</p>
                 <button
                   v-if="searchQuery || selectedKategori"
                   @click="clearFilters"

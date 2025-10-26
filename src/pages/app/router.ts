@@ -4,6 +4,7 @@ import beritaRoute from "@/pages/app/berita/route";
 import bupatiRoute from "@/pages/app/bupati/route";
 import dashboardDataRoute from "@/pages/app/dashboard-data/route";
 import dashboardRoute from "@/pages/app/dashboard/route";
+import dokumenKategoriRoute from "@/pages/app/dokumen-kategori/route";
 import dokumenRoute from "@/pages/app/dokumen/route";
 import fotoRoute from "@/pages/app/foto/route";
 import infografisRoute from "@/pages/app/infografis/route";
@@ -14,11 +15,11 @@ import majalahRoute from "@/pages/app/majalah/route";
 import menuRoute from "@/pages/app/menu/route";
 import opdRoute from "@/pages/app/opd/route";
 import pagesRoute from "@/pages/app/pages/route";
+import pengaduanRoute from "@/pages/app/pengaduan/route";
 import perusdaRoute from "@/pages/app/perusda/route";
 import portalRoute from "@/pages/app/portal/route";
 import ppidRoute from "@/pages/app/ppid/route";
 import prestasiRoute from "@/pages/app/prestasi/route";
-import pengaduanRoute from "@/pages/app/pengaduan/route";
 import profileRoute from "@/pages/app/profile/route";
 import radioRoute from "@/pages/app/radio/route";
 import rapatRoute from "@/pages/app/rapat/route";
@@ -46,6 +47,7 @@ export default {
     ...videoRoute,
     ...majalahRoute,
     ...dokumenRoute,
+    ...dokumenKategoriRoute,
     ...prestasiRoute,
     ...perusdaRoute,
     ...layananRoute,

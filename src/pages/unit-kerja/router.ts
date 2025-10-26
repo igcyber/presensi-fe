@@ -9,7 +9,7 @@ export default {
   component: AppLayout,
   children: [
     {
-      // Route kosong untuk menangani akses langsung ke /selayang-pandang
+      // Route kosong untuk menangani akses langsung ke /unit-kerja
       path: "",
       redirect: { name: "not-found" },
     },

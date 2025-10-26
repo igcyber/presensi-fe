@@ -106,6 +106,23 @@ const columns: Column<Page>[] = [
     },
   },
   {
+    key: "file",
+    label: "File",
+    sortable: false,
+    width: "150px",
+    previewable: true,
+    previewUrl: (item: Page): string => {
+      return item.fileUrl ?? "";
+    },
+    previewName: (item: Page): string => {
+      return item.nama;
+    },
+    render: (item: Page): string => {
+      if (item.tipe === "file") return "File";
+      return "-";
+    },
+  },
+  {
     key: "creator",
     label: "Pembuat",
     sortable: false,
@@ -194,7 +211,7 @@ watch(
 
       <Card>
         <CardHeader class="px-8">
-          <CardTitle>Pages</CardTitle>
+          <CardTitle>Pages Dinamis</CardTitle>
           <CardDescription>
             List daftar halaman konten dengan fitur pencarian, filter tanggal & tipe, sorting, dan pagination
           </CardDescription>

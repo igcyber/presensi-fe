@@ -8,8 +8,8 @@ import PengaduanActionForm from "@/components/features/pengaduan/PengaduanAction
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import ErrorState from "@/components/ui/error-state/ErrorState.vue";
+import { Separator } from "@/components/ui/separator";
 
 import { useFetch } from "@/composables/useFetch";
 import { getPengaduanById } from "@/lib/api/services/pengaduan";
@@ -27,22 +27,22 @@ const pengaduanId = computed(() => {
 
 // Composables
 
-const { data, isLoading, isError, error, fetchData } = useFetch<
-  any,
-  PengaduanDetailResponse
->(() => getPengaduanById(pengaduanId.value), {
-  immediate: false,
-  extractData: (response) => response.data,
-  onError: (error) => {
-    toast.error("Gagal memuat detail pengaduan", {
-      description: error.message,
-    });
+const { data, isLoading, isError, error, fetchData } = useFetch<any, PengaduanDetailResponse>(
+  () => getPengaduanById(pengaduanId.value),
+  {
+    immediate: false,
+    extractData: (response) => response.data,
+    onError: (error) => {
+      toast.error("Gagal memuat detail pengaduan", {
+        description: error.message,
+      });
+    },
   },
-});
+);
 
 // State
 const showActionForm = ref(false);
-const actionType = ref<'status' | 'kategori'>('status');
+const actionType = ref<"status" | "kategori">("status");
 
 // Event handlers
 const handleBack = () => {
@@ -50,12 +50,12 @@ const handleBack = () => {
 };
 
 const handleUpdateStatus = () => {
-  actionType.value = 'status';
+  actionType.value = "status";
   showActionForm.value = true;
 };
 
 const handleUpdateKategori = () => {
-  actionType.value = 'kategori';
+  actionType.value = "kategori";
   showActionForm.value = true;
 };
 
@@ -114,7 +114,7 @@ onMounted(() => {
 
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <!-- Main Content -->
-          <div class="lg:col-span-2 space-y-6">
+          <div class="space-y-6 lg:col-span-2">
             <!-- Pengaduan Information -->
             <Card>
               <CardHeader>
@@ -126,32 +126,32 @@ onMounted(() => {
               <CardContent class="space-y-4">
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div>
-                    <label class="text-sm font-medium text-muted-foreground">Nama Lengkap</label>
+                    <label class="text-muted-foreground text-sm font-medium">Nama Lengkap</label>
                     <p class="text-sm">{{ data.nama }}</p>
                   </div>
                   <div>
-                    <label class="text-sm font-medium text-muted-foreground">NIK</label>
-                    <p class="text-sm font-mono">{{ data.nik }}</p>
+                    <label class="text-muted-foreground text-sm font-medium">NIK</label>
+                    <p class="font-mono text-sm">{{ data.nik }}</p>
                   </div>
                   <div>
-                    <label class="text-sm font-medium text-muted-foreground">No. HP</label>
-                    <p class="text-sm flex items-center gap-1">
+                    <label class="text-muted-foreground text-sm font-medium">No. HP</label>
+                    <p class="flex items-center gap-1 text-sm">
                       <Phone class="h-4 w-4" />
                       {{ data.noHp }}
                     </p>
                   </div>
                   <div>
-                    <label class="text-sm font-medium text-muted-foreground">Email</label>
-                    <p class="text-sm flex items-center gap-1">
+                    <label class="text-muted-foreground text-sm font-medium">Email</label>
+                    <p class="flex items-center gap-1 text-sm">
                       <Mail class="h-4 w-4" />
                       {{ data.email }}
                     </p>
                   </div>
                 </div>
                 <div>
-                  <label class="text-sm font-medium text-muted-foreground">Alamat</label>
-                  <p class="text-sm flex items-start gap-1">
-                    <MapPin class="h-4 w-4 mt-0.5 flex-shrink-0" />
+                  <label class="text-muted-foreground text-sm font-medium">Alamat</label>
+                  <p class="flex items-start gap-1 text-sm">
+                    <MapPin class="mt-0.5 h-4 w-4 flex-shrink-0" />
                     {{ data.alamat }}
                   </p>
                 </div>
@@ -166,12 +166,12 @@ onMounted(() => {
               </CardHeader>
               <CardContent class="space-y-4">
                 <div>
-                  <label class="text-sm font-medium text-muted-foreground">Jenis Aduan</label>
+                  <label class="text-muted-foreground text-sm font-medium">Jenis Aduan</label>
                   <p class="text-sm font-medium">{{ data.aduan }}</p>
                 </div>
                 <Separator />
                 <div>
-                  <label class="text-sm font-medium text-muted-foreground">Deskripsi</label>
+                  <label class="text-muted-foreground text-sm font-medium">Deskripsi</label>
                   <p class="text-sm whitespace-pre-wrap">{{ data.deskripsi }}</p>
                 </div>
               </CardContent>
@@ -190,21 +190,21 @@ onMounted(() => {
               </CardHeader>
               <CardContent class="space-y-4">
                 <div>
-                  <label class="text-sm font-medium text-muted-foreground">Status</label>
+                  <label class="text-muted-foreground text-sm font-medium">Status</label>
                   <div class="mt-1">
                     <Badge :variant="data.status === 'diterima' ? 'default' : 'secondary'">
-                      {{ data.status === 'diterima' ? 'Diterima' : 'Belum' }}
+                      {{ data.status === "diterima" ? "Diterima" : "Belum" }}
                     </Badge>
                   </div>
                 </div>
 
                 <div v-if="data.kategoriAduan">
-                  <label class="text-sm font-medium text-muted-foreground">Kategori</label>
+                  <label class="text-muted-foreground text-sm font-medium">Kategori</label>
                   <p class="text-sm">{{ data.kategoriAduan }}</p>
                 </div>
 
                 <div v-if="data.keterangan">
-                  <label class="text-sm font-medium text-muted-foreground">Keterangan</label>
+                  <label class="text-muted-foreground text-sm font-medium">Keterangan</label>
                   <p class="text-sm whitespace-pre-wrap">{{ data.keterangan }}</p>
                 </div>
 
@@ -233,12 +233,12 @@ onMounted(() => {
               </CardHeader>
               <CardContent class="space-y-3">
                 <div>
-                  <label class="text-sm font-medium text-muted-foreground">Dibuat</label>
-                  <p class="text-sm">{{ new Date(data.createdAt).toLocaleString('id-ID') }}</p>
+                  <label class="text-muted-foreground text-sm font-medium">Dibuat</label>
+                  <p class="text-sm">{{ new Date(data.createdAt).toLocaleString("id-ID") }}</p>
                 </div>
                 <div v-if="data.updatedAt !== data.createdAt">
-                  <label class="text-sm font-medium text-muted-foreground">Terakhir Diupdate</label>
-                  <p class="text-sm">{{ new Date(data.updatedAt).toLocaleString('id-ID') }}</p>
+                  <label class="text-muted-foreground text-sm font-medium">Terakhir Diupdate</label>
+                  <p class="text-sm">{{ new Date(data.updatedAt).toLocaleString("id-ID") }}</p>
                 </div>
               </CardContent>
             </Card>

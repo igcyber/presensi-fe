@@ -1,21 +1,19 @@
 <script setup lang="ts">
 import { PlusIcon } from "lucide-vue-next";
 import { watch } from "vue";
-import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 
 import BaseConfirmDialog from "@/components/dialogs/BaseConfirmDialog.vue";
-import DokumenDialog from "@/components/dialogs/DokumenDialog.vue";
+import KategoriDokumenDialog from "@/components/dialogs/KategoriDokumenDialog.vue";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { type Column, DataTable } from "@/components/ui/datatable";
 import ErrorState from "@/components/ui/error-state/ErrorState.vue";
 
 import { useDialog } from "@/composables/useDialog";
-import { useFormatters } from "@/composables/useFormatters";
 import { useResourceList } from "@/composables/useResourceList";
-import { deleteDokumen, getDokumens } from "@/lib/api/services/dokumen";
-import type { Dokumen } from "@/lib/api/types/dokumen.types";
+import { deleteKategoriDokumen, getKategoriDokumens } from "@/lib/api/services/kategoriDokumen";
+import type { KategoriDokumen } from "@/lib/api/types/kategoriDokumen.types";
 
 // Composables initialization
 const {
@@ -29,16 +27,13 @@ const {
   handleSearch,
   handlePageChange,
   handleCustomFilter,
-} = useResourceList<Dokumen>((params) => getDokumens(params), { perPage: 10, searchDebounce: 500 });
+} = useResourceList<KategoriDokumen>((params) => getKategoriDokumens(params), { perPage: 10, searchDebounce: 500 });
 
-const dialog = useDialog<Dokumen>();
-const confirmDialog = useDialog<Dokumen>();
-const router = useRouter();
-
-const { truncate } = useFormatters();
+const dialog = useDialog<KategoriDokumen>();
+const confirmDialog = useDialog<KategoriDokumen>();
 
 // Column definitions
-const columns: Column<Dokumen>[] = [
+const columns: Column<KategoriDokumen>[] = [
   {
     key: "nama",
     label: "Nama ",
@@ -47,40 +42,11 @@ const columns: Column<Dokumen>[] = [
     width: "300px",
   },
   {
-    key: "isi",
-    label: "Deskripsi",
-    width: "200px",
-    render: (item: Dokumen): string => truncate(item.isi, 100),
-  },
-  {
-    key: "file",
-    label: "File",
-    sortable: false,
-    width: "150px",
-    previewable: true,
-    previewUrl: (item: Dokumen): string => {
-      return item.fileUrl;
-    },
-    previewName: (item: Dokumen): string => {
-      return item.nama;
-    },
-    render: (_item: Dokumen): string => {
-      return "JDIH";
-    },
-  },
-  {
-    key: "kategoriDokumen",
-    label: "Kategori",
-    sortable: false,
-    width: "150px",
-    render: (item: Dokumen): string => item.kategoriDokumen?.nama || "-",
-  },
-  {
     key: "createdByUser",
     label: "Pembuat",
     sortable: true,
     width: "150px",
-    render: (item: Dokumen): string => item.createdByUser.fullName,
+    render: (item: KategoriDokumen): string => item.createdByUser.fullName,
   },
   {
     key: "createdAt",
@@ -95,15 +61,16 @@ const openCreateDialog = (): void => {
   dialog.openCreate();
 };
 
-const handleRowClick = (item: Dokumen): void => {
-  router.push({ name: "app.dokumen.detail", params: { id: item.id.toString() } });
-};
-
-const handleEdit = (item: Dokumen): void => {
+const handleRowClick = (item: KategoriDokumen): void => {
+  // KategoriDokumen tidak memiliki detail page, bisa diarahkan ke edit atau tidak ada action
   dialog.openEdit(item);
 };
 
-const handleDelete = (item: Dokumen): void => {
+const handleEdit = (item: KategoriDokumen): void => {
+  dialog.openEdit(item);
+};
+
+const handleDelete = (item: KategoriDokumen): void => {
   confirmDialog.openView(item);
 };
 
@@ -112,25 +79,25 @@ const confirmDelete = async (): Promise<void> => {
 
   try {
     confirmDialog.setLoading(true);
-    const dokumen = confirmDialog.state.value.data;
+    const kategori = confirmDialog.state.value.data;
 
-    await deleteDokumen(dokumen.id);
+    await deleteKategoriDokumen(kategori.id);
     fetchData();
 
-    toast.success("Berhasil menghapus JDIH", {
-      description: `JDIH "${dokumen.nama}" telah dihapus`,
+    toast.success("Berhasil menghapus kategori JDIH", {
+      description: `Kategori JDIH "${kategori.nama}" telah dihapus`,
     });
 
     confirmDialog.closeDialog();
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : "Gagal menghapus JDIH";
-    toast.error("Gagal menghapus JDIH", { description: errorMessage });
+    const errorMessage = error instanceof Error ? error.message : "Gagal menghapus kategori JDIH";
+    toast.error("Gagal menghapus kategori JDIH", { description: errorMessage });
   } finally {
     confirmDialog.setLoading(false);
   }
 };
 
-const handleDokumenDialogSuccess = (): void => {
+const handleKategoriDialogSuccess = (): void => {
   dialog.closeDialog();
   fetchData();
 };
@@ -151,8 +118,8 @@ watch(
       <!-- Header Section -->
       <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div class="space-y-1">
-          <h1 class="text-3xl font-bold tracking-tight">JDIH</h1>
-          <p class="text-muted-foreground">Daftar JDIH dengan fitur pencarian, pengurutan, dan paginasi</p>
+          <h1 class="text-3xl font-bold tracking-tight">Kategori JDIH</h1>
+          <p class="text-muted-foreground">Daftar kategori JDIH dengan fitur pencarian, pengurutan, dan paginasi</p>
         </div>
         <div class="flex gap-2 self-start sm:self-auto">
           <Button @click="openCreateDialog" class="flex items-center gap-2">
@@ -164,12 +131,16 @@ watch(
 
       <Card>
         <CardHeader class="px-8">
-          <CardTitle>JDIH</CardTitle>
-          <CardDescription>List daftar JDIH dengan fitur pencarian, sorting, dan pagination</CardDescription>
+          <CardTitle>Kategori JDIH</CardTitle>
+          <CardDescription>List daftar kategori JDIH dengan fitur pencarian, sorting, dan pagination</CardDescription>
         </CardHeader>
         <CardContent>
           <!-- Error State -->
-          <ErrorState v-if="isError" :message="error?.message || 'Gagal memuat data JDIH'" @retry="fetchData" />
+          <ErrorState
+            v-if="isError"
+            :message="error?.message || 'Gagal memuat data kategori JDIH'"
+            @retry="fetchData"
+          />
 
           <!-- Data Table -->
           <DataTable
@@ -192,20 +163,20 @@ watch(
         </CardContent>
       </Card>
 
-      <!-- Dokumen Dialog -->
-      <DokumenDialog
+      <!-- Kategori Dokumen Dialog -->
+      <KategoriDokumenDialog
         v-model:open="dialog.state.value.open"
         :mode="dialog.state.value.mode"
-        :dokumen="dialog.state.value.data"
+        :kategoriDokumen="dialog.state.value.data"
         widthClass="sm:max-w-[600px]"
-        @success="handleDokumenDialogSuccess"
+        @success="handleKategoriDialogSuccess"
       />
 
       <!-- Confirm Delete Dialog -->
       <BaseConfirmDialog
         v-model:open="confirmDialog.state.value.open"
-        title="Hapus JDIH"
-        :description="`Apakah Anda yakin ingin menghapus JDIH '${confirmDialog.state.value.data?.nama}'? Tindakan ini tidak dapat dibatalkan.`"
+        title="Hapus Kategori JDIH"
+        :description="`Apakah Anda yakin ingin menghapus kategori JDIH '${confirmDialog.state.value.data?.nama}'? Tindakan ini tidak dapat dibatalkan.`"
         confirm-text="Hapus"
         variant="destructive"
         :loading="confirmDialog.state.value.loading"

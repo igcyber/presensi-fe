@@ -169,7 +169,7 @@ onUnmounted(() => {
     <!-- Main Navigation -->
     <div class="border-b border-gray-200 bg-gray-50">
       <div class="container">
-        <div class="flex items-center justify-between py-2 sm:py-3">
+        <div class="flex items-center justify-between gap-4 py-2 sm:py-3">
           <!-- Logo -->
           <router-link to="/" class="flex items-center" :title="'Beranda'">
             <img
@@ -257,20 +257,25 @@ onUnmounted(() => {
                       :aria-label="`${item.title} submenu`"
                     >
                       <div class="py-1">
-                        <router-link
+                        <component
+                          :is="child.path.startsWith('http') ? 'a' : 'router-link'"
                           v-for="(child, cIdx) in item.children"
                           :key="`submenu-${idx}-${cIdx}`"
                           class="block px-4 py-2.5 text-xs text-gray-700 transition-all duration-200 ease-in-out hover:bg-gray-50 hover:text-yellow-600 xl:text-sm"
                           :class="{
                             'bg-gray-50 font-medium text-yellow-600': isActivePath(route.path, child.path),
                           }"
-                          :to="child.path"
+                          v-bind="
+                            child.path.startsWith('http')
+                              ? { href: child.path, target: '_blank', rel: 'noopener noreferrer' }
+                              : { to: child.path }
+                          "
                           @click="closeDesktopMenu"
                           role="menuitem"
                           :title="child.title"
                         >
                           {{ child.title }}
-                        </router-link>
+                        </component>
                       </div>
                     </div>
                   </Transition>

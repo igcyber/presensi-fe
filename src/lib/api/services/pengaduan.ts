@@ -3,13 +3,13 @@ import httpInstance from "@/lib/api/core/httpInstance";
 import type {
   CreatePengaduanRequest,
   CreatePengaduanResponse,
+  KategoriPengaduan,
   Pengaduan,
-  PengaduanListResponse,
   PengaduanDetailResponse,
+  PengaduanListResponse,
   PengaduanQueryParams,
-  UpdateStatusRequest,
   UpdateKategoriRequest,
-  KategoriPengaduan
+  UpdateStatusRequest,
 } from "@/lib/api/types/pengaduan.types";
 
 /**
@@ -31,7 +31,9 @@ import type {
  * console.log(response.data.success);
  * ```
  */
-export const createPengaduanPublic = async (payload: CreatePengaduanRequest): Promise<ApiResponse<CreatePengaduanResponse>> => {
+export const createPengaduanPublic = async (
+  payload: CreatePengaduanRequest,
+): Promise<ApiResponse<CreatePengaduanResponse>> => {
   const { data } = await httpInstance.post<ApiResponse<CreatePengaduanResponse>>("/pengaduan", payload);
   return data;
 };
@@ -51,8 +53,7 @@ export const createPengaduanPublic = async (payload: CreatePengaduanRequest): Pr
  * ```
  */
 export const getPengaduans = (params?: PengaduanQueryParams): Promise<ApiResponse<PengaduanListResponse>> => {
-  return httpInstance.get<ApiResponse<PengaduanListResponse>>("/api/pengaduan", { params })
-    .then(res => res.data);
+  return httpInstance.get<ApiResponse<PengaduanListResponse>>("/api/pengaduan", { params }).then((res) => res.data);
 };
 
 /**
@@ -102,7 +103,10 @@ export const updatePengaduanStatus = (id: number, payload: UpdateStatusRequest):
  * });
  * ```
  */
-export const updatePengaduanKategori = (id: number, payload: UpdateKategoriRequest): Promise<ApiResponse<Pengaduan>> => {
+export const updatePengaduanKategori = (
+  id: number,
+  payload: UpdateKategoriRequest,
+): Promise<ApiResponse<Pengaduan>> => {
   return httpInstance.put<ApiResponse<Pengaduan>>(`/api/pengaduan/${id}/kategori`, payload);
 };
 
@@ -137,6 +141,6 @@ export const getKategoriPengaduan = (): Promise<ApiResponse<KategoriPengaduan[]>
 export const exportPengaduanExcel = (params?: PengaduanQueryParams): Promise<Blob> => {
   return httpInstance.get("/api/pengaduan/export", {
     params,
-    responseType: 'blob'
+    responseType: "blob",
   });
 };

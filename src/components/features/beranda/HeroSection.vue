@@ -19,7 +19,7 @@ function submitSearch() {
 <template>
   <!-- Hero Banner Section -->
   <section
-    class="relative bg-black/60 bg-gradient-to-br bg-[url('/assets/images/backgrounds/bg-hero-dprd.png')] bg-cover bg-position-[top_-70px_center] bg-no-repeat py-30 text-white bg-blend-multiply sm:bg-position-[top_-70px_center]"
+    class="relative bg-black/60 bg-gradient-to-br bg-[url('/assets/images/backgrounds/bg-hero-dprd.png')] bg-cover bg-position-[left_45%_center] bg-no-repeat py-30 text-white bg-blend-multiply sm:bg-position-[center] lg:bg-position-[top_-70px_center] lg:py-33"
   >
     <div class="container">
       <div class="mx-auto max-w-4xl text-center">
@@ -27,10 +27,8 @@ function submitSearch() {
           <Home class="mr-2 h-5 w-5" />
           Selamat datang di portal resmi
         </p>
-        <h1 class="mb-4 text-4xl font-bold md:text-5xl">
-          Dewan Perwakilan Rakyat Daerah<br />Kabupaten Kutai Kartanegara
-        </h1>
-        <p class="mb-8 text-xl text-green-100">"DPRD Kukar"</p>
+        <h1 class="mb-4 text-4xl font-bold md:text-5xl">Sistem Informasi Pelayanan Sekretariat Unggul Terpadu</h1>
+        <p class="mb-8 text-xl text-green-100">"DPRD Kabupaten Kutai Kartanegara"</p>
 
         <!-- Search Form -->
         <form @submit.prevent="submitSearch" class="mx-auto max-w-2xl">

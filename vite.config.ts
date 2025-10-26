@@ -24,8 +24,8 @@ const siteMetadata = loadSiteMetadata();
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
-    vue(), 
-    vueDevTools(), 
+    vue(),
+    vueDevTools(),
     tailwindcss(),
     createHtmlPlugin({
       minify: true,

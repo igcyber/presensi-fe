@@ -8,7 +8,7 @@ export default [
     component: DokumenPage,
     meta: {
       requiresAuth: true,
-      title: "Dokumen",
+      title: "JDIH",
     },
   },
   {
@@ -17,7 +17,7 @@ export default [
     component: DokumenDetailPage,
     meta: {
       requiresAuth: true,
-      title: "Detail Dokumen",
+      title: "Detail JDIH",
     },
   },
 ];

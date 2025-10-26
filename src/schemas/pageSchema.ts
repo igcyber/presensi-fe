@@ -4,22 +4,63 @@ import { z } from "zod";
 const allowedTipe = ["file", "page"] as const;
 
 // Schema untuk create page
-export const createPageSchema = z.object({
-  nama: z.string().min(1, "Nama wajib diisi").min(3, "Nama minimal 3 karakter").max(200, "Nama maksimal 200 karakter"),
-  tipe: z.enum(allowedTipe, {
-    errorMap: () => ({ message: "Tipe harus dipilih (File atau Page)" }),
-  }),
-  content: z.string().optional(),
-  menuId: z
-    .union([z.number(), z.string()])
-    .optional()
-    .nullable()
-    .transform((val) => {
-      if (val === null || val === undefined || val === "") return undefined;
-      return typeof val === "string" ? parseInt(val, 10) : val;
+export const createPageSchema = z
+  .object({
+    nama: z
+      .string()
+      .min(1, "Nama wajib diisi")
+      .min(3, "Nama minimal 3 karakter")
+      .max(200, "Nama maksimal 200 karakter"),
+    tipe: z.enum(allowedTipe, {
+      errorMap: () => ({ message: "Tipe harus dipilih (File atau Page)" }),
     }),
-  temporaryFileNames: z.array(z.string()).optional(),
-});
+    content: z.string().optional(),
+    file: z.any().optional(),
+    menuId: z
+      .union([z.number(), z.string()])
+      .optional()
+      .nullable()
+      .transform((val) => {
+        if (val === null || val === undefined || val === "") return undefined;
+        return typeof val === "string" ? parseInt(val, 10) : val;
+      }),
+
+    temporaryFileNames: z.array(z.string()).optional(),
+  })
+  .superRefine((data, ctx) => {
+    // Jika tipe adalah 'file', maka file wajib diisi dan harus PDF
+    if (data.tipe === "file") {
+      const file = data.file;
+
+      if (!file) {
+        ctx.addIssue({
+          path: ["file"],
+          message: "File wajib diisi karena tipe adalah File",
+          code: z.ZodIssueCode.custom,
+        });
+        return;
+      }
+
+      if (typeof file === "string") return; // URL string (sudah di-upload sebelumnya)
+
+      if (file instanceof File) {
+        const allowedTypes = ["application/pdf"];
+        if (!allowedTypes.includes(file.type)) {
+          ctx.addIssue({
+            path: ["file"],
+            message: "File harus berupa PDF",
+            code: z.ZodIssueCode.custom,
+          });
+        }
+      } else {
+        ctx.addIssue({
+          path: ["file"],
+          message: "File tidak valid",
+          code: z.ZodIssueCode.custom,
+        });
+      }
+    }
+  });
 
 // Schema untuk update page
 export const updatePageSchema = z.object({
@@ -30,6 +71,7 @@ export const updatePageSchema = z.object({
     })
     .optional(),
   content: z.string().optional(),
+  file: z.any().optional(),
   menuId: z
     .union([z.number(), z.string()])
     .optional()

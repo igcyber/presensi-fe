@@ -1,94 +1,58 @@
 <script setup lang="ts">
-import { AlertCircle, Calendar, Download, File, FileText, Folder, Image, RefreshCw, Search, X } from "lucide-vue-next";
-import { computed, onMounted } from "vue";
-import { watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { Calendar, Clock, FileText, Shield, TrendingUp } from "lucide-vue-next";
+import { useRouter } from "vue-router";
 
-import BasePagination from "@/components/base/BasePagination.vue";
 import AppBreadcrumb from "@/components/layout/partials/AppBreadcrumb.vue";
 
-import { useFetch } from "@/composables/useFetch";
-import { useFormatters } from "@/composables/useFormatters";
-import { usePagination } from "@/composables/usePagination";
-import type { ApiResponse } from "@/lib/api/core";
-import { getPPIDKategoriPublic } from "@/lib/api/services/ppid";
-import type { PPID, PPIDType } from "@/lib/api/types/ppid.types";
-
-const route = useRoute();
 const router = useRouter();
 
-// Computed
-const ppidType = computed(() => route.params.type as string);
-const keyword = computed(() => (route.query.keyword as string) ?? "");
-
-// Composables
-const { date, slugToTitle } = useFormatters();
-const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
-
-// Fetch PPID data
-const { data, isLoading, error, isError, fetchData } = useFetch<ApiResponse<PPID[]>, PPID[]>(
-  () =>
-    getPPIDKategoriPublic(ppidType.value as PPIDType, {
-      page: currentPage.value,
-      keyword: keyword.value,
-    }),
+// PPID Categories Data
+const ppidCategories = [
   {
-    immediate: false,
-    extractData: (response) => response.data,
+    id: "informasi-berkala",
+    title: "Informasi Berkala",
+    description: "Informasi yang wajib disediakan dan diumumkan secara berkala",
+    icon: Calendar,
+    gradient: "from-blue-500 to-blue-600",
+    bgColor: "bg-blue-50",
+    textColor: "text-blue-700",
+    hoverColor: "hover:bg-blue-100",
   },
-);
+  {
+    id: "informasi-dikecualikan",
+    title: "Informasi Dikecualikan",
+    description: "Informasi yang dikecualikan untuk diakses oleh publik",
+    icon: Shield,
+    gradient: "from-red-500 to-red-600",
+    bgColor: "bg-red-50",
+    textColor: "text-red-700",
+    hoverColor: "hover:bg-red-100",
+  },
+  {
+    id: "informasi-serta-merta",
+    title: "Informasi Serta Merta",
+    description: "Informasi yang wajib diumumkan segera setelah peristiwa terjadi",
+    icon: TrendingUp,
+    gradient: "from-green-500 to-green-600",
+    bgColor: "bg-green-50",
+    textColor: "text-green-700",
+    hoverColor: "hover:bg-green-100",
+  },
+  {
+    id: "informasi-setiap-saat",
+    title: "Informasi Setiap Saat",
+    description: "Informasi yang wajib tersedia setiap saat dan dapat diakses publik",
+    icon: Clock,
+    gradient: "from-purple-500 to-purple-600",
+    bgColor: "bg-purple-50",
+    textColor: "text-purple-700",
+    hoverColor: "hover:bg-purple-100",
+  },
+];
 
-const prevPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value -= 1;
-  }
+const navigateToCategory = (categoryId: string) => {
+  router.push({ name: "ppid.kategori", params: { type: categoryId } });
 };
-
-const nextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value += 1;
-  }
-};
-
-const onPage = (page: number) => {
-  currentPage.value = page;
-};
-
-// Watchers
-watch(currentPage, () => {
-  fetchData();
-  window.scrollTo({ top: 0, behavior: "smooth" });
-});
-
-watch(keyword, async () => {
-  await fetchData();
-  setPagination({
-    currentPage: 1,
-    totalPages: 1,
-    totalItems: data.value?.length ?? 0,
-    itemsPerPage: 10,
-  });
-});
-
-watch(ppidType, async () => {
-  await fetchData();
-  setPagination({
-    currentPage: 1,
-    totalPages: 1,
-    totalItems: data.value?.length ?? 0,
-    itemsPerPage: 10,
-  });
-});
-
-onMounted(async () => {
-  await fetchData();
-  setPagination({
-    currentPage: 1,
-    totalPages: 1,
-    totalItems: data.value?.length ?? 0,
-    itemsPerPage: 10,
-  });
-});
 </script>
 
 <template>
@@ -98,198 +62,73 @@ onMounted(async () => {
 
     <!-- Main Content -->
     <main class="py-12">
-      <div v-if="keyword" class="mx-auto mb-8 max-w-2xl">
-        <div class="rounded-lg border border-yellow-600 bg-yellow-600/10 p-8 text-center">
-          <Search class="mx-auto mb-4 h-10 w-10 text-yellow-600" />
-          <h4 class="mb-2 text-xl font-semibold text-yellow-600">Pencarian</h4>
-          <p class="mb-6 text-yellow-600">
-            {{
-              keyword
-                ? `Menampilkan hasil pencarian untuk "${keyword}" dengan total ${data?.length} dokumen PPID.`
-                : "Maaf, belum ada dokumen PPID yang tersedia saat ini."
-            }}
-          </p>
-          <button
-            @click="router.push({ name: 'ppid.index', params: { type: ppidType } })"
-            class="inline-flex items-center rounded-lg bg-yellow-600 px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-yellow-700"
-          >
-            <X class="mr-2 h-4 w-4" />
-            Reset Pencarian
-          </button>
-        </div>
-      </div>
-
       <div class="container">
         <!-- Header -->
-        <div class="mb-8 text-center">
-          <h1 class="mb-4 text-3xl font-bold text-gray-900">PPID - {{ slugToTitle(ppidType) }}</h1>
-          <p class="text-lg text-gray-600">Akses informasi publik berdasarkan kategori</p>
+        <div class="mb-12 text-center">
+          <h1 class="mb-4 text-4xl font-bold text-gray-900">Pejabat Pengelola Informasi dan Dokumentasi (PPID)</h1>
+          <p class="mx-auto max-w-3xl text-lg text-gray-600">
+            Akses informasi publik berdasarkan kategori sesuai dengan Undang-Undang Keterbukaan Informasi Publik
+          </p>
         </div>
 
-        <!-- Loading State -->
-        <div v-if="isLoading" class="flex items-center justify-center py-20">
-          <div class="text-center">
-            <div class="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-yellow-600"></div>
-            <p class="text-gray-600">Memuat data PPID...</p>
-          </div>
-        </div>
-
-        <!-- Error State -->
-        <div v-else-if="isError" class="mx-auto max-w-2xl">
-          <div class="rounded border border-red-200 bg-red-50 p-8 text-center">
-            <AlertCircle class="text-destructive mx-auto mb-4 h-10 w-10" />
-            <h4 class="mb-4 text-xl font-semibold text-red-800">Terjadi Kesalahan</h4>
-            <p class="mb-6 text-red-700">{{ error?.message || "Terjadi kesalahan saat memuat data" }}</p>
-            <button
-              class="inline-flex items-center rounded bg-red-600 px-6 py-3 font-medium text-white transition-colors hover:bg-red-700"
-              @click="fetchData"
-            >
-              <RefreshCw class="mr-2 h-4 w-4" />
-              Coba Lagi
-            </button>
-          </div>
-        </div>
-
-        <!-- Content -->
-        <div v-else-if="data">
-          <template v-if="data.length > 0">
-            <!-- PPID Grid -->
-            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              <article
-                v-for="ppid in data"
-                :key="ppid.id"
-                class="group relative overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-200 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:ring-yellow-600/20"
+        <!-- PPID Categories Grid -->
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
+          <div
+            v-for="category in ppidCategories"
+            :key="category.id"
+            @click="navigateToCategory(category.id)"
+            class="group relative cursor-pointer overflow-hidden rounded-2xl bg-white shadow-lg ring-1 ring-gray-200 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:ring-yellow-600/20"
+          >
+            <!-- Icon Section -->
+            <div class="relative p-8 text-center">
+              <div
+                class="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br shadow-lg transition-transform duration-300 group-hover:scale-110"
+                :class="category.gradient"
               >
-                <!-- Modern File Type Header -->
-                <div class="relative flex items-center justify-between border-b border-gray-100 p-4">
-                  <div class="flex items-center space-x-3">
-                    <!-- File Type Icon with Modern Design -->
-                    <div
-                      v-if="ppid.jenisFile === 'dokumen'"
-                      class="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-red-500 to-red-600 shadow-sm"
-                    >
-                      <FileText class="h-5 w-5 text-white" />
-                    </div>
-                    <div
-                      v-else-if="ppid.jenisFile === 'gambar'"
-                      class="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-green-500 to-green-600 shadow-sm"
-                    >
-                      <Image class="h-5 w-5 text-white" />
-                    </div>
-                    <div
-                      v-else
-                      class="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 shadow-sm"
-                    >
-                      <File class="h-5 w-5 text-white" />
-                    </div>
+                <component :is="category.icon" class="h-10 w-10 text-white" />
+              </div>
 
-                    <!-- File Type Label -->
-                    <div>
-                      <span
-                        v-if="ppid.jenisFile === 'dokumen'"
-                        class="inline-flex items-center rounded-full bg-red-50 px-2 py-1 text-xs font-medium text-red-700"
-                      >
-                        PDF Document
-                      </span>
-                      <span
-                        v-else-if="ppid.jenisFile === 'gambar'"
-                        class="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700"
-                      >
-                        Image File
-                      </span>
-                      <span
-                        v-else
-                        class="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700"
-                      >
-                        Document
-                      </span>
-                    </div>
-                  </div>
+              <!-- Title -->
+              <h3
+                class="mb-3 text-xl font-bold text-gray-900 transition-colors duration-200 group-hover:text-yellow-600"
+              >
+                {{ category.title }}
+              </h3>
 
-                  <!-- Date Badge -->
-                  <div class="flex items-center text-xs text-gray-500">
-                    <Calendar class="mr-1 h-4 w-4" />
-                    <time :datetime="ppid.createdAt">{{ date(ppid.createdAt) }}</time>
-                  </div>
-                </div>
-
-                <!-- PPID Content -->
-                <div class="flex flex-col p-4">
-                  <!-- Title -->
-                  <h3
-                    class="mb-3 text-lg font-bold text-gray-900 transition-colors duration-200 hover:text-yellow-600"
-                    style="
-                      display: -webkit-box;
-                      -webkit-line-clamp: 2;
-                      line-clamp: 2;
-                      -webkit-box-orient: vertical;
-                      overflow: hidden;
-                    "
-                  >
-                    {{ ppid.judul }}
-                  </h3>
-
-                  <!-- Category -->
-                  <div class="mb-3 flex items-center text-sm text-gray-500">
-                    <Folder class="mr-2 h-4 w-4" />
-                    <span>{{ ppid.subKategori }}</span>
-                  </div>
-
-                  <!-- Excerpt -->
-                  <div
-                    class="mb-4 text-sm text-gray-600"
-                    style="
-                      display: -webkit-box;
-                      -webkit-line-clamp: 3;
-                      line-clamp: 3;
-                      -webkit-box-orient: vertical;
-                      overflow: hidden;
-                    "
-                    v-html="ppid.keterangan"
-                  ></div>
-
-                  <!-- Download Button -->
-                  <a
-                    v-if="ppid.fileUrl"
-                    :href="ppid.fileUrl"
-                    target="_blank"
-                    class="inline-flex items-center justify-center rounded-lg bg-yellow-600 px-4 py-2 text-sm font-medium text-white transition-all duration-200 hover:bg-yellow-700 hover:shadow-md"
-                  >
-                    <Download class="mr-2 h-4 w-4" />
-                    Download File
-                  </a>
-                </div>
-              </article>
+              <!-- Description -->
+              <p class="text-sm leading-relaxed text-gray-600">
+                {{ category.description }}
+              </p>
             </div>
 
-            <!-- Pagination -->
-            <div v-if="totalPages > 1" class="flex justify-center">
-              <BasePagination
-                :page="currentPage"
-                :items-per-page="itemsPerPage"
-                :total-items="totalItems"
-                :total-pages="totalPages"
-                @previousPage="prevPage"
-                @nextPage="nextPage"
-                @page="onPage"
-              />
-            </div>
-          </template>
-          <template v-else>
-            <div class="mx-auto max-w-2xl">
-              <div class="rounded border border-yellow-200 bg-yellow-50 p-8 text-center">
-                <File class="mx-auto mb-4 h-10 w-10 text-yellow-600" />
-                <h4 class="mb-4 text-xl font-semibold text-yellow-600">Tidak Ada Dokumen PPID</h4>
-                <p class="text-yellow-700">
-                  {{
-                    keyword
-                      ? `Tidak ditemukan dokumen PPID dengan kata kunci "${keyword}".`
-                      : "Maaf, belum ada dokumen PPID yang tersedia saat ini."
-                  }}
-                </p>
+            <!-- Hover Effect Background -->
+            <div
+              class="absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-5"
+              :class="category.bgColor"
+            ></div>
+
+            <!-- Arrow Icon -->
+            <div
+              class="absolute right-4 bottom-4 translate-x-2 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
+            >
+              <div class="flex h-8 w-8 items-center justify-center rounded-full bg-yellow-600 text-white">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
               </div>
             </div>
-          </template>
+          </div>
+        </div>
+
+        <!-- Additional Information -->
+        <div class="mt-16 rounded-2xl bg-gradient-to-r from-yellow-50 to-yellow-100 p-8 text-center">
+          <FileText class="mx-auto mb-4 h-12 w-12 text-yellow-600" />
+          <h3 class="mb-4 text-2xl font-bold text-gray-900">Tentang PPID</h3>
+          <p class="mx-auto max-w-3xl leading-relaxed text-gray-700">
+            Pejabat Pengelola Informasi dan Dokumentasi (PPID) adalah pejabat yang bertanggung jawab di bidang
+            penyimpanan, pendokumentasian, dan/atau pelayanan informasi di badan publik. PPID bertugas melayani
+            permintaan informasi sesuai dengan ketentuan peraturan perundang-undangan.
+          </p>
         </div>
       </div>
     </main>

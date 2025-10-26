@@ -50,28 +50,35 @@ export const createPengaduanSchema = z.object({
     .string()
     .min(1, "Captcha wajib diisi")
     .refine((val) => {
-      const storedAnswer = localStorage.getItem('captcha_answer');
+      const storedAnswer = localStorage.getItem("captcha_answer");
       return storedAnswer && val === storedAnswer;
     }, "Captcha tidak valid"),
+
+  persetujuan: z.boolean().refine((val: boolean) => val === true, "Persetujuan wajib dicentang"),
 });
 
 // Schema untuk update status pengaduan (admin)
-export const updateStatusSchema = z.object({
-  status: z.enum(['belum', 'diterima'], {
-    errorMap: () => ({ message: "Status harus dipilih" }),
-  }),
-  kategori_aduan: z.string().optional(),
-  keterangan: z.string().optional(),
-}).refine((data) => {
-  // Jika status diterima, kategori_aduan wajib diisi
-  if (data.status === 'diterima' && !data.kategori_aduan) {
-    return false;
-  }
-  return true;
-}, {
-  message: "Kategori aduan wajib diisi saat status diterima",
-  path: ["kategori_aduan"],
-});
+export const updateStatusSchema = z
+  .object({
+    status: z.enum(["belum", "diterima"], {
+      errorMap: () => ({ message: "Status harus dipilih" }),
+    }),
+    kategori_aduan: z.string().optional(),
+    keterangan: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      // Jika status diterima, kategori_aduan wajib diisi
+      if (data.status === "diterima" && !data.kategori_aduan) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "Kategori aduan wajib diisi saat status diterima",
+      path: ["kategori_aduan"],
+    },
+  );
 
 // Schema untuk update kategori pengaduan (admin)
 export const updateKategoriSchema = z.object({

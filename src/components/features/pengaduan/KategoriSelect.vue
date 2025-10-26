@@ -58,21 +58,17 @@ onMounted(() => {
       :placeholder="_props.placeholder"
       :disabled="_props.disabled"
       list="kategori-list"
-      class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+      class="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
       @input="handleInput"
     />
 
     <!-- Datalist untuk autocomplete suggestions -->
     <datalist id="kategori-list">
-      <option
-        v-for="kategori in kategoriList"
-        :key="kategori.kategori_aduan"
-        :value="kategori.kategori_aduan"
-      />
+      <option v-for="kategori in kategoriList" :key="kategori.kategori_aduan" :value="kategori.kategori_aduan" />
     </datalist>
 
     <!-- Loading indicator -->
-    <div v-if="isLoading" class="absolute right-3 top-1/2 -translate-y-1/2">
+    <div v-if="isLoading" class="absolute top-1/2 right-3 -translate-y-1/2">
       <div class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
     </div>
   </div>

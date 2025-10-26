@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted } from "vue";
 import { toast } from "vue-sonner";
 
 import BaseFormDialog from "@/components/dialogs/BaseFormDialog.vue";
@@ -36,10 +36,11 @@ const props = withDefaults(defineProps<Props>(), { dokumen: null });
 const emit = defineEmits<Emits>();
 
 // Fetch kategori dokumen
-const { data: kategoriList, fetchData: fetchKategori, isLoading: isLoadingKategori } = useFetch<
-  any,
-  KategoriDokumenListResponse
->(() => getKategoriDokumens({ per_page: 100 }), {
+const {
+  data: kategoriList,
+  fetchData: fetchKategori,
+  isLoading: isLoadingKategori,
+} = useFetch<any, KategoriDokumenListResponse>(() => getKategoriDokumens({ per_page: 100 }), {
   immediate: false,
   extractData: (response) => response.data,
 });
@@ -77,10 +78,10 @@ const open = computed({
 async function onSubmit(values: any) {
   if (props.mode === "create") {
     await createDokumen(values);
-    toast.success("Berhasil", { description: "Dokumen berhasil ditambahkan" });
+    toast.success("Berhasil", { description: "JDIH berhasil ditambahkan" });
   } else if (props.dokumen) {
     await updateDokumen(props.dokumen.id, values);
-    toast.success("Berhasil", { description: "Dokumen berhasil diperbarui" });
+    toast.success("Berhasil", { description: "JDIH berhasil diperbarui" });
   }
 }
 
@@ -94,7 +95,7 @@ onMounted(() => {
   <BaseFormDialog
     v-model:open="open"
     :mode="mode"
-    resource-name="Dokumen"
+    resource-name="JDIH"
     :schema="schema"
     :initial-values="initialValues"
     :onSubmit="onSubmit"
@@ -103,12 +104,12 @@ onMounted(() => {
     @cancel="() => $emit('cancel')"
   >
     <div class="grid grid-cols-1 gap-3">
-      <BaseInput name="nama" label="Nama Dokumen" placeholder="Masukkan nama dokumen" required />
+      <BaseInput name="nama" label="Nama JDIH" placeholder="Masukkan nama JDIH" required />
 
       <BaseSelect
         name="kategoriId"
-        label="Kategori Dokumen"
-        placeholder="Pilih kategori dokumen"
+        label="Kategori JDIH"
+        placeholder="Pilih kategori JDIH"
         :options="kategoriOptions"
         :loading="isLoadingKategori"
         required
@@ -116,14 +117,14 @@ onMounted(() => {
 
       <BaseInputFile
         name="file"
-        label="File Dokumen"
+        label="File JDIH"
         accept="application/pdf"
         :required="mode === 'create'"
         description="Format: PDF. Maksimal 10MB"
         :existing-files="props.dokumen?.fileUrl"
       />
 
-      <BaseTextarea name="isi" label="Deskripsi" placeholder="Masukkan deskripsi dokumen" :rows="4" required />
+      <BaseTextarea name="isi" label="Deskripsi" placeholder="Masukkan deskripsi JDIH" :rows="4" required />
     </div>
   </BaseFormDialog>
 </template>

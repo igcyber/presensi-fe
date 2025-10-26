@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { X, FileText, AlertCircle } from "lucide-vue-next";
+import { AlertCircle, FileText, X } from "lucide-vue-next";
 import { defineExpose, onBeforeUnmount, ref, watch } from "vue";
 
 const pdfContainerRef = ref<HTMLDivElement | null>(null);

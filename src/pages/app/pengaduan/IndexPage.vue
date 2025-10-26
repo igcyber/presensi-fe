@@ -91,7 +91,7 @@ const columns: Column<Pengaduan>[] = [
     sortable: true,
     searchable: true,
     width: "250px",
-    render: (item: Pengaduan): string => item.aduan.length > 50 ? item.aduan.substring(0, 50) + "..." : item.aduan,
+    render: (item: Pengaduan): string => (item.aduan.length > 50 ? item.aduan.substring(0, 50) + "..." : item.aduan),
   },
   {
     key: "kategoriAduan",
@@ -107,7 +107,7 @@ const columns: Column<Pengaduan>[] = [
     width: "120px",
     render: (item: Pengaduan): string => {
       const status = item.status;
-      return status === 'diterima' ? 'Diterima' : 'Belum';
+      return status === "diterima" ? "Diterima" : "Belum";
     },
   },
   {
@@ -138,9 +138,9 @@ const handleExportExcel = async (): Promise<void> => {
 
     // Create download link
     const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
-    link.download = `Data Pengaduan ${new Date().toISOString().split('T')[0]}.xlsx`;
+    link.download = `Data Pengaduan ${new Date().toISOString().split("T")[0]}.xlsx`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -182,12 +182,7 @@ watch(
           <p class="text-muted-foreground">Kelola pengaduan masyarakat dengan fitur pencarian, filter, dan aksi</p>
         </div>
         <div class="flex gap-2">
-          <Button
-            @click="handleExportExcel"
-            :disabled="isExporting"
-            variant="outline"
-            class="flex items-center gap-2"
-          >
+          <Button @click="handleExportExcel" :disabled="isExporting" variant="outline" class="flex items-center gap-2">
             <Download v-if="!isExporting" class="h-4 w-4" />
             <div v-else class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
             {{ isExporting ? "Exporting..." : "Export Excel" }}

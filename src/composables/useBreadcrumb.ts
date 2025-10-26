@@ -58,6 +58,7 @@ export function useBreadcrumb() {
 
     // PPID
     "ppid.index": "PPID",
+    "ppid.kategori": "PPID Kategori",
 
     // DPRD Kukar
     "dprd-kukar.anggota-dewan": "Anggota Dewan",
@@ -155,7 +156,8 @@ export function useBreadcrumb() {
     "unit-kerja.perusahaan-daerah": ["Unit Kerja"],
 
     // PPID
-    "ppid.index": ["PPID"],
+    "ppid.index": [],
+    "ppid.kategori": ["ppid.index"],
 
     // DPRD Kukar
     "dprd-kukar.anggota-dewan": ["DPRD Kukar"],
@@ -299,7 +301,7 @@ export function useBreadcrumb() {
     }
 
     // Handle dynamic PPID type
-    if (routeName === "ppid.index" && route.params.type) {
+    if (routeName === "ppid.kategori" && route.params.type) {
       const typeLabel = ppidTypeLabels[route.params.type as string];
       if (typeLabel) {
         return typeLabel;

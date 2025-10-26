@@ -5,7 +5,7 @@ import { toast } from "vue-sonner";
 
 import { createPengaduanPublic } from "@/lib/api/services/pengaduan";
 import { clearCaptcha, generateCaptcha } from "@/lib/utils/captcha";
-import { createPengaduanSchema, type CreatePengaduanFormData } from "@/schemas/pengaduanSchema";
+import { type CreatePengaduanFormData, createPengaduanSchema } from "@/schemas/pengaduanSchema";
 
 // Emits
 const emit = defineEmits<{
@@ -31,7 +31,7 @@ const formData = ref<CreatePengaduanFormData>({
 
 // Computed
 const isFormValid = computed(() => {
-  return Object.values(formData.value).every(value => value.trim() !== "");
+  return Object.values(formData.value).every((value) => value.trim() !== "");
 });
 
 // Methods
@@ -127,9 +127,7 @@ onMounted(() => {
       <!-- Header -->
       <div class="bg-gradient-to-r from-yellow-50 to-yellow-100 px-6 py-4">
         <h2 class="text-xl font-semibold text-yellow-800">Form Pengaduan Masyarakat</h2>
-        <p class="mt-1 text-sm text-yellow-700">
-          Silakan isi form di bawah ini untuk mengajukan pengaduan Anda
-        </p>
+        <p class="mt-1 text-sm text-yellow-700">Silakan isi form di bawah ini untuk mengajukan pengaduan Anda</p>
       </div>
 
       <!-- Form -->
@@ -255,13 +253,11 @@ onMounted(() => {
           <div class="mt-1 flex items-center space-x-3">
             <div class="flex-1">
               <div class="flex items-center space-x-2">
-                <span class="text-lg font-mono text-gray-600">
-                  {{ captchaData?.question }} = ?
-                </span>
+                <span class="font-mono text-lg text-gray-600"> {{ captchaData?.question }} = ? </span>
                 <button
                   type="button"
                   @click="generateNewCaptcha"
-                  class="inline-flex items-center rounded-md bg-gray-100 p-2 text-gray-600 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                  class="inline-flex items-center rounded-md bg-gray-100 p-2 text-gray-600 hover:bg-gray-200 focus:ring-2 focus:ring-yellow-500 focus:outline-none"
                 >
                   <RefreshCw class="h-4 w-4" />
                 </button>
@@ -283,7 +279,7 @@ onMounted(() => {
           <button
             type="submit"
             :disabled="isLoading || !isFormValid"
-            class="w-full inline-flex items-center justify-center rounded-md bg-yellow-600 px-4 py-3 text-sm font-medium text-white shadow-sm transition-colors hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            class="inline-flex w-full items-center justify-center rounded-md bg-yellow-600 px-4 py-3 text-sm font-medium text-white shadow-sm transition-colors hover:bg-yellow-700 focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:bg-gray-400"
           >
             <Send v-if="!isLoading" class="mr-2 h-4 w-4" />
             <div v-else class="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>

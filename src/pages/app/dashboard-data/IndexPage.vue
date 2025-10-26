@@ -2,7 +2,6 @@
 import {
   BarChart3Icon,
   BookOpen,
-  DownloadIcon,
   Eye,
   FileText,
   Image,
@@ -35,9 +34,6 @@ const {
   refresh,
 } = useFetch<ApiResponse<DashboardData>, ApiResponse<DashboardData>>(() => getDashboard(), {
   immediate: true,
-  onSuccess: (data) => {
-    console.log("Dashboard data loaded:", data);
-  },
 });
 
 // Computed untuk dashboard data
@@ -68,7 +64,7 @@ const stats = computed(() => [
     color: "blue",
   },
   {
-    title: "Views Dokumen",
+    title: "Views JDIH",
     value: dashboardData.value.views.dokumen.toLocaleString("id-ID"),
     icon: FileText,
     color: "green",
@@ -96,7 +92,6 @@ const stats = computed(() => [
 // Total views
 const totalViews = computed(() => {
   const views = dashboardData.value.views;
-  console.log("Views:", views);
   return (
     parseInt(views.berita as any) +
     parseInt(views.dokumen as any) +
@@ -161,11 +156,6 @@ const hasData = computed(() => totalViews.value >= 0);
 const handleRefresh = () => {
   refresh();
 };
-
-// Handle export
-const handleExport = () => {
-  // TODO: Implement export functionality
-};
 </script>
 
 <template>
@@ -197,10 +187,6 @@ const handleExport = () => {
           <Button variant="outline" class="flex items-center gap-2" @click="handleRefresh">
             <RefreshCwIcon class="h-4 w-4" />
             Refresh Data
-          </Button>
-          <Button variant="outline" class="flex items-center gap-2" @click="handleExport">
-            <DownloadIcon class="h-4 w-4" />
-            Ekspor Data
           </Button>
         </div>
       </div>

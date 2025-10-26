@@ -51,10 +51,10 @@ const open = computed({
 async function onSubmit(values: any) {
   if (props.mode === "create") {
     await createKategoriDokumen(values);
-    toast.success("Berhasil", { description: "Kategori dokumen berhasil ditambahkan" });
+    toast.success("Berhasil", { description: "Kategori JDIH berhasil ditambahkan" });
   } else if (props.kategoriDokumen) {
     await updateKategoriDokumen(props.kategoriDokumen.id, values);
-    toast.success("Berhasil", { description: "Kategori dokumen berhasil diperbarui" });
+    toast.success("Berhasil", { description: "Kategori JDIH berhasil diperbarui" });
   }
 }
 </script>
@@ -63,7 +63,7 @@ async function onSubmit(values: any) {
   <BaseFormDialog
     v-model:open="open"
     :mode="mode"
-    resource-name="Kategori Dokumen"
+    resource-name="Kategori JDIH"
     :schema="schema"
     :initial-values="initialValues"
     :onSubmit="onSubmit"
@@ -72,7 +72,7 @@ async function onSubmit(values: any) {
     @cancel="() => $emit('cancel')"
   >
     <div class="grid grid-cols-1 gap-3">
-      <BaseInput name="nama" label="Nama Kategori" placeholder="Masukkan nama kategori dokumen" required />
+      <BaseInput name="nama" label="Nama Kategori" placeholder="Masukkan nama kategori JDIH" required />
     </div>
   </BaseFormDialog>
 </template>

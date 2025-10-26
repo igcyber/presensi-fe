@@ -1,21 +1,27 @@
 <script setup lang="ts">
-import { AlertCircle, File, FileText, RefreshCw, Search } from "lucide-vue-next";
+import { AlertCircle, Download, File, FileText, Maximize2, RefreshCw, Search } from "lucide-vue-next";
 import { computed, watch } from "vue";
 import { useRoute } from "vue-router";
 
+import FilePreviewDialog from "@/components/dialogs/FilePreviewDialog.vue";
 import AppBreadcrumb from "@/components/layout/partials/AppBreadcrumb.vue";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 import { useFetch } from "@/composables/useFetch";
+import { useFilePreview } from "@/composables/useFilePreview";
 import { useFormatters } from "@/composables/useFormatters";
 import type { ApiResponse } from "@/lib/api/core";
 import { getMenuBySlug } from "@/lib/api/services/menu";
 import type { MenuBySlugResponse } from "@/lib/api/types/menu.types";
 
+// Composables
 const route = useRoute();
 const { slugToTitle } = useFormatters();
+const filePreview = useFilePreview();
 
-// Computed
+// Computed properties
 const slug = computed(() => route.params.slug as string);
 
 // Fetch menu data
@@ -28,11 +34,34 @@ const { data, isLoading, error, isError, fetchData } = useFetch<ApiResponse<Menu
 );
 
 const menuData = computed(() => data.value);
+const isFileType = computed(() => menuData.value?.page?.tipe === "file");
+const fileUrl = computed(() => menuData.value?.page?.fileUrl || "");
+const fileName = computed(() => menuData.value?.page?.file || "");
 
+// Methods
+const handlePreviewFullscreen = () => {
+  if (fileUrl.value) {
+    filePreview.previewPDF(fileUrl.value, menuData.value?.page?.nama || "Dokumen", {
+      title: `Preview: ${menuData.value?.page?.nama || "Dokumen"}`,
+      showFileInfo: true,
+    });
+  }
+};
+
+const handleFileDownload = () => {
+  if (fileUrl.value) {
+    filePreview.handleDownload({
+      url: fileUrl.value,
+      name: menuData.value?.page?.nama || fileName.value.split("/").pop() || "dokumen.pdf",
+    });
+  }
+};
+
+// Watchers
 watch(
   slug,
-  () => {
-    fetchData();
+  async () => {
+    await fetchData();
   },
   { immediate: true },
 );
@@ -72,8 +101,75 @@ watch(
 
         <!-- Content -->
         <div v-else-if="menuData">
-          <!-- Has Page Content -->
-          <Card v-if="menuData.page" class="shadow-lg">
+          <!-- File Type Content -->
+          <div v-if="menuData.page && isFileType" class="space-y-6">
+            <!-- Header Card -->
+            <Card class="shadow-lg">
+              <CardHeader class="bg-gradient-to-r from-yellow-50 to-yellow-100 py-6">
+                <CardTitle class="flex items-center gap-3 text-2xl text-gray-800">
+                  <div class="flex h-10 w-10 items-center justify-center rounded-full bg-yellow-600">
+                    <FileText class="h-5 w-5 text-white" />
+                  </div>
+                  {{ menuData.nama }}
+                </CardTitle>
+              </CardHeader>
+              <CardContent class="p-6">
+                <!-- File Info -->
+                <div class="bg-muted/50 mb-6 rounded-lg p-4">
+                  <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div class="flex items-center gap-3">
+                      <div class="rounded-lg bg-red-100 p-2 dark:bg-red-900/20">
+                        <FileText class="h-6 w-6 text-red-600 dark:text-red-400" />
+                      </div>
+                      <div class="min-w-0 flex-1">
+                        <p class="font-medium text-wrap">{{ fileName.split("/").pop() }}</p>
+                        <p class="text-muted-foreground text-sm text-wrap">{{ fileName }}</p>
+                      </div>
+                    </div>
+                    <div class="flex flex-row gap-2">
+                      <Button @click="handleFileDownload" size="sm" class="gap-2 sm:w-auto">
+                        <Download class="h-4 w-4" />
+                        <span class="hidden sm:inline">Download</span>
+                        <span class="sm:hidden">Download File</span>
+                      </Button>
+                      <Button variant="outline" size="sm" @click="handlePreviewFullscreen" class="gap-2 sm:w-auto">
+                        <Maximize2 class="h-4 w-4" />
+                        <span class="hidden sm:inline">Fullscreen</span>
+                        <span class="sm:hidden">Preview</span>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- PDF Embed -->
+                <div v-if="fileUrl" class="relative overflow-hidden rounded-lg border">
+                  <iframe
+                    :src="fileUrl"
+                    class="h-64 w-full border-0 sm:h-96 lg:h-[500px]"
+                    title="Dokumen PDF Preview"
+                    loading="lazy"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            <!-- Content Card (if has content) -->
+            <Card v-if="menuData.page.content" class="shadow-lg">
+              <CardHeader>
+                <CardTitle class="text-xl">Deskripsi Dokumen</CardTitle>
+              </CardHeader>
+              <Separator />
+              <CardContent class="p-6">
+                <div
+                  class="prose prose-lg prose-headings:text-gray-800 prose-p:text-gray-700 prose-strong:text-gray-800 prose-ul:text-gray-700 prose-ol:text-gray-700 prose-li:text-gray-700 prose-a:text-yellow-600 hover:prose-a:text-yellow-700 max-w-none"
+                  v-html="menuData.page.content"
+                ></div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <!-- Text Content Type -->
+          <Card v-else-if="menuData.page && !isFileType" class="shadow-lg">
             <CardHeader class="bg-gradient-to-r from-yellow-50 to-yellow-100 py-6">
               <CardTitle class="flex items-center gap-3 text-2xl text-gray-800">
                 <div class="flex h-10 w-10 items-center justify-center rounded-full bg-yellow-600">
@@ -127,5 +223,19 @@ watch(
         </div>
       </div>
     </main>
+
+    <!-- File Preview Dialog -->
+    <FilePreviewDialog
+      v-model:open="filePreview.isOpen.value"
+      :file="filePreview.currentFile.value"
+      :title="filePreview.options.value.title"
+      :show-download="filePreview.options.value.showDownload"
+      :show-external-link="filePreview.options.value.showExternalLink"
+      :show-file-info="filePreview.options.value.showFileInfo"
+      :max-width="filePreview.options.value.maxWidth"
+      :max-height="filePreview.options.value.maxHeight"
+      @download="filePreview.handleDownload"
+      @external-link="filePreview.handleExternalLink"
+    />
   </div>
 </template>

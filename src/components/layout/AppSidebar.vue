@@ -7,6 +7,7 @@ import {
   HomeIcon,
   Image,
   ListTree,
+  MessageSquare,
   NewspaperIcon,
   Settings,
   Smartphone,
@@ -14,7 +15,6 @@ import {
   UserCheck,
   UserIcon,
   UserRound,
-  Users,
   VideoIcon,
 } from "lucide-vue-next";
 import { computed } from "vue";
@@ -127,11 +127,26 @@ const data = computed(() => ({
       isActive: routNameActive.value === "app.foto" || routNameActive.value === "app.foto.detail",
     },
     {
-      title: "Dokumen",
+      title: "JDIH",
       url: "/app/dokumen",
       name: "app.dokumen",
       icon: FileText,
       isActive: routNameActive.value === "app.dokumen" || routNameActive.value === "app.dokumen.detail",
+    },
+    {
+      title: "JDIH Kategori",
+      url: "/app/dokumen-kategori",
+      name: "app.dokumen-kategori",
+      icon: FileText,
+      isActive:
+        routNameActive.value === "app.dokumen-kategori" || routNameActive.value === "app.dokumen-kategori .detail",
+    },
+    {
+      title: "Pengaduan",
+      url: "/app/pengaduan",
+      name: "app.pengaduan",
+      icon: MessageSquare,
+      isActive: routNameActive.value === "app.pengaduan" || routNameActive.value === "app.pengaduan.detail",
     },
     {
       title: "Statik",
@@ -147,13 +162,13 @@ const data = computed(() => ({
       icon: Image,
       isActive: routNameActive.value === "app.infografis" || routNameActive.value === "app.infografis.detail",
     },
-    {
-      title: "Rapat",
-      url: "/app/rapat",
-      name: "app.rapat",
-      icon: Users,
-      isActive: routNameActive.value === "app.rapat" || routNameActive.value === "app.rapat.detail",
-    },
+    // {
+    //   title: "Rapat",
+    //   url: "/app/rapat",
+    //   name: "app.rapat",
+    //   icon: Users,
+    //   isActive: routNameActive.value === "app.rapat" || routNameActive.value === "app.rapat.detail",
+    // },
     {
       title: "Struktur",
       url: "/app/struktur",

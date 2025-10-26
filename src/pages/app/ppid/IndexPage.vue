@@ -29,6 +29,7 @@ const {
   handleSearch,
   handlePageChange,
   handleCustomFilter,
+  reset,
 } = useResourceList<PPID>((params) => getPPIDs(params), { perPage: 10, searchDebounce: 500 });
 
 const dialog = useDialog<PPID>();
@@ -44,10 +45,10 @@ const filterConfig: FilterConfig[] = [
     type: "select",
     placeholder: "Pilih kategori",
     options: [
-      { label: "Informasi Berkala", value: "informasi-berkala" },
-      { label: "Informasi Setiap Saat", value: "informasi-setiap-saat" },
-      { label: "Informasi Serta Merta", value: "informasi-serta-merta" },
-      { label: "Informasi Dikecualikan", value: "informasi-dikecualikan" },
+      { label: "Informasi Berkala", value: "Informasi Berkala" },
+      { label: "Informasi Setiap Saat", value: "Informasi Setiap Saat" },
+      { label: "Informasi Serta Merta", value: "Informasi Serta Merta" },
+      { label: "Informasi Dikecualikan", value: "Informasi Dikecualikan" },
     ],
   },
 ];
@@ -211,6 +212,7 @@ watch(
             @row-click="handleRowClick"
             @edit="handleEdit"
             @delete="handleDelete"
+            @reset-filter="reset"
           />
         </CardContent>
       </Card>

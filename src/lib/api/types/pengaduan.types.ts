@@ -38,7 +38,7 @@ export interface Pengaduan {
   aduan: string;
   deskripsi: string;
   kategoriAduan?: string;
-  status: 'belum' | 'diterima';
+  status: "belum" | "diterima";
   keterangan?: string;
   createdAt: string;
   updatedAt: string;
@@ -60,15 +60,15 @@ export interface PengaduanQueryParams {
   page?: number;
   limit?: number;
   q?: string;
-  status?: 'belum' | 'diterima';
+  status?: "belum" | "diterima";
   kategori?: string;
   tanggal_mulai?: string;
   tanggal_akhir?: string;
-  order?: 'asc' | 'desc';
+  order?: "asc" | "desc";
 }
 
 export interface UpdateStatusRequest {
-  status: 'belum' | 'diterima';
+  status: "belum" | "diterima";
   kategori_aduan?: string;
   keterangan?: string;
 }

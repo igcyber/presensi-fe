@@ -17,9 +17,6 @@ const { data: dashboardResponse, isLoading } = useFetch<ApiResponse<DashboardDat
   () => getDashboard(),
   {
     immediate: true,
-    onSuccess: (data) => {
-      console.log("Dashboard data loaded:", data);
-    },
   },
 );
 
@@ -51,7 +48,7 @@ const stats = computed(() => [
     color: "blue",
   },
   {
-    title: "Views Dokumen",
+    title: "Views JDIH",
     value: dashboardData.value.views.dokumen.toLocaleString("id-ID"),
     icon: FileText,
     color: "green",

@@ -46,11 +46,10 @@ onMounted(() => {
           <div class="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-yellow-100">
             <FileText class="h-8 w-8 text-yellow-600" />
           </div>
-          <h1 class="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl">
-            Pengaduan Masyarakat
-          </h1>
+          <h1 class="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl">Pengaduan Masyarakat</h1>
           <p class="mx-auto max-w-2xl text-lg text-gray-600">
-            Sampaikan keluhan, saran, atau laporan Anda kepada kami. Tim kami akan segera memproses pengaduan Anda dengan sebaik-baiknya.
+            Sampaikan keluhan, saran, atau laporan Anda kepada kami. Tim kami akan segera memproses pengaduan Anda
+            dengan sebaik-baiknya.
           </p>
         </div>
 

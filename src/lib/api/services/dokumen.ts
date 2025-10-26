@@ -11,6 +11,8 @@ import type {
   UpdateDokumenRequest,
 } from "@/lib/api/types/dokumen.types";
 
+import type { KategoriDokumen } from "../types/kategoriDokumen.types";
+
 const base = "/api/documents";
 
 export const dokumenService = createCrudService<Dokumen, Dokumen, CreateDokumenRequest, UpdateDokumenRequest>(base);
@@ -124,6 +126,23 @@ export const getDokumenPublic = async (
   params?: DokumenQueryParams,
 ): Promise<ApiResponse<DokumenListPublicResponse>> => {
   const { data } = await httpInstance.get<ApiResponse<DokumenListPublicResponse>>("/media/dokumen", { params });
+  return data;
+};
+
+/**
+ * Mendapatkan daftar dokumen berdasarkan kategori untuk public display
+ * @param kategoriId - ID kategori dokumen
+ * @param params - Parameter query untuk filtering dan pagination
+ * @returns Promise yang mengembalikan daftar dokumen berdasarkan kategori
+ * @endpoint GET /media/dokumen/kategori/{kategoriId}
+ */
+export const getDokumenByKategoriPublic = async (
+  kategoriId: number,
+  params?: DokumenQueryParams,
+): Promise<ApiResponse<{ dokumen: DokumenListPublicResponse; kategori: KategoriDokumen }>> => {
+  const { data } = await httpInstance.get<
+    ApiResponse<{ dokumen: DokumenListPublicResponse; kategori: KategoriDokumen }>
+  >(`/media/dokumen/kategori/${kategoriId}`, { params });
   return data;
 };
 
