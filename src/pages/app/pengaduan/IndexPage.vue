@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { Download, Eye, Settings } from "lucide-vue-next";
+import { Download } from "lucide-vue-next";
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 
-import PengaduanActionForm from "@/components/features/pengaduan/PengaduanActionForm.vue";
+import PengaduanDialog from "@/components/dialogs/PengaduanDialog.vue";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { type Column, DataTable, type FilterConfig } from "@/components/ui/datatable";
@@ -124,11 +124,12 @@ const handleRowClick = (item: Pengaduan): void => {
 };
 
 const handleUpdateStatus = (item: Pengaduan): void => {
-  dialog.openView(item);
+  dialog.openEdit(item);
 };
 
-const handleUpdateKategori = (item: Pengaduan): void => {
-  dialog.openView(item);
+const handlePengaduanDialogSuccess = (): void => {
+  dialog.closeDialog();
+  fetchData();
 };
 
 const handleExportExcel = async (): Promise<void> => {
@@ -155,11 +156,6 @@ const handleExportExcel = async (): Promise<void> => {
   } finally {
     isExporting.value = false;
   }
-};
-
-const handleActionSuccess = (): void => {
-  dialog.closeDialog();
-  fetchData();
 };
 
 // Watchers
@@ -216,21 +212,18 @@ watch(
             @custom-filter="handleCustomFilter"
             @row-click="handleRowClick"
             @edit="handleUpdateStatus"
-            @delete="handleUpdateKategori"
             @reset-filter="reset"
           />
         </CardContent>
       </Card>
 
-      <!-- Action Form Dialog -->
-      <div v-if="dialog.state.value.open && dialog.state.value.data">
-        <PengaduanActionForm
-          :pengaduan="dialog.state.value.data"
-          :action-type="'status'"
-          @success="handleActionSuccess"
-          @cancel="dialog.closeDialog"
-        />
-      </div>
+      <!-- Pengaduan Dialog -->
+      <PengaduanDialog
+        v-model:open="dialog.state.value.open"
+        mode="edit"
+        :pengaduan="dialog.state.value.data"
+        @success="handlePengaduanDialogSuccess"
+      />
     </div>
   </div>
 </template>

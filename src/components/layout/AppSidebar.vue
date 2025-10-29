@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {
+  BookOpen,
   ChartBar,
   ClipboardCheck,
   FileText,
@@ -219,6 +220,13 @@ const data = computed(() => ({
       icon: ClipboardCheck,
       isActive:
         routNameActive.value === "app.standar-pelayanan" || routNameActive.value === "app.standar-pelayanan.detail",
+    },
+    {
+      title: "Buku Tamu",
+      url: "/app/buku-tamu",
+      name: "app.buku-tamu",
+      icon: BookOpen,
+      isActive: routNameActive.value === "app.buku-tamu" || routNameActive.value === "app.buku-tamu.detail",
     },
     {
       title: "PPID",

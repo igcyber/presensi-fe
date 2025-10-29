@@ -56,18 +56,25 @@ export function useBreadcrumb() {
     "unit-kerja.opd.detail": "Detail OPD",
     "unit-kerja.perusahaan-daerah": "Perusahaan Daerah",
 
+    // JDIH
+    "dokumen.index": "JDIH",
+    "dokumen.kategori": "Kategori JDIH",
+
     // PPID
     "ppid.index": "PPID",
     "ppid.kategori": "PPID Kategori",
 
     // DPRD Kukar
-    "dprd-kukar.anggota-dewan": "Anggota Dewan",
     "dprd-kukar.dynamic": "DPRD Kukar",
+    "dprd-kukar.struktur-organisasi": "Struktur Organisasi",
 
     // Pelayanan Publik
-    "pelayanan-publik.maklumat": "Maklumat Pelayanan Publik",
     "pelayanan-publik.survey": "Survey Kepuasan Pelayanan Publik",
     "pelayanan-publik.standar": "Standar Pelayanan",
+
+    // Pengaduan Masyarakat
+    "pengaduan-masyarakat.pengaduan-langsung": "Pengaduan Langsung",
+    "pengaduan-masyarakat.pengaduan-langsung.detail": "Detail Pengaduan Langsung",
 
     // Aplikasi & Kontak
     "aplikasi-terkait.index": "Aplikasi Terkait",
@@ -155,18 +162,28 @@ export function useBreadcrumb() {
     "unit-kerja.opd.detail": ["Unit Kerja", "unit-kerja.opd"],
     "unit-kerja.perusahaan-daerah": ["Unit Kerja"],
 
+    // JDIH
+    "dokumen.index": ["JDIH"],
+    "dokumen.kategori": ["dokumen.index"],
+
     // PPID
     "ppid.index": [],
     "ppid.kategori": ["ppid.index"],
 
     // DPRD Kukar
-    "dprd-kukar.anggota-dewan": ["DPRD Kukar"],
+    "dprd-kukar.struktur-organisasi": ["DPRD Kukar"],
     "dprd-kukar.dynamic": ["DPRD Kukar"],
 
     // Pelayanan Publik
-    "pelayanan-publik.maklumat": ["Pelayanan Publik"],
     "pelayanan-publik.survey": ["Pelayanan Publik"],
     "pelayanan-publik.standar": ["Pelayanan Publik"],
+
+    // Pengaduan Masyarakat
+    "pengaduan-masyarakat.pengaduan-langsung": ["Pengaduan Masyarakat"],
+    "pengaduan-masyarakat.pengaduan-langsung.detail": [
+      "Pengaduan Masyarakat",
+      "pengaduan-masyarakat.pengaduan-langsung",
+    ],
 
     // Aplikasi & Kontak (no parent)
     "aplikasi-terkait.index": [],
@@ -296,7 +313,13 @@ export function useBreadcrumb() {
   function getCurrentRouteLabel(): string {
     const routeName = route.name as string;
 
+    // Handle jika ada context pemerintahan transparansi keuangan
     if (routeName === "pemerintahan.transparansi-keuangan-detail" && context.value) {
+      return `${context.value}`;
+    }
+
+    // Handle jika ada context buku tamu
+    if (routeName === "buku-tamu.fill" && context.value) {
       return `${context.value}`;
     }
 

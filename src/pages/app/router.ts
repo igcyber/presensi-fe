@@ -1,6 +1,7 @@
 import AuthLayout from "@/layouts/AuthLayout.vue";
 import aplikasiTerkaitRoute from "@/pages/app/aplikasi-terkait/route";
 import beritaRoute from "@/pages/app/berita/route";
+import bukuTamuRoute from "@/pages/app/buku-tamu/route";
 import bupatiRoute from "@/pages/app/bupati/route";
 import dashboardDataRoute from "@/pages/app/dashboard-data/route";
 import dashboardRoute from "@/pages/app/dashboard/route";
@@ -64,6 +65,7 @@ export default {
     ...ppidRoute,
     ...fotoRoute,
     ...rapatRoute,
+    ...bukuTamuRoute,
     ...strukturRoute,
     ...menuRoute,
     ...jabatanAnggotaRoute,

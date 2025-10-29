@@ -1031,6 +1031,421 @@ const deleteUser = async (user: User) => {
 
 ---
 
+## 📄 `useMetadata.ts` - Site Metadata Management
+
+**📖 Description**: Composable untuk mengelola metadata website termasuk SEO, Open Graph, dan informasi kontak. Menyediakan fungsi untuk load dan update metadata secara dinamis.
+
+**⚡ Usage Example**:
+
+```vue
+<template>
+  <div>
+    <div v-if="isLoading">Loading metadata...</div>
+    <div v-else-if="error">Error: {{ error }}</div>
+    <div v-else>
+      <h1>{{ siteMetadata?.website.name }}</h1>
+      <p>{{ siteMetadata?.website.description }}</p>
+
+      <!-- Contact Info -->
+      <div v-if="getContactInfo">
+        <p>Email: {{ getContactInfo.email }}</p>
+        <p>Phone: {{ getContactInfo.phone }}</p>
+        <p>Address: {{ getContactInfo.address }}</p>
+      </div>
+
+      <!-- Social Media -->
+      <div v-if="getSocialMedia">
+        <a v-if="getSocialMedia.facebook" :href="getSocialMedia.facebook">Facebook</a>
+        <a v-if="getSocialMedia.instagram" :href="getSocialMedia.instagram">Instagram</a>
+        <a v-if="getSocialMedia.youtube" :href="getSocialMedia.youtube">YouTube</a>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { onMounted, watch } from "vue";
+import { useRoute } from "vue-router";
+
+import { useMetadata } from "@/composables";
+
+const route = useRoute();
+
+const {
+  siteMetadata,
+  isLoading,
+  error,
+  loadMetadata,
+  updatePageMetadata,
+  getFullTitle,
+  getWebsiteUrl,
+  getContactInfo,
+  getSocialMedia,
+} = useMetadata();
+
+// Load metadata on mount
+onMounted(async () => {
+  await loadMetadata();
+});
+
+// Update page metadata when route changes
+watch(
+  () => route.meta.title,
+  (title) => {
+    if (title) {
+      updatePageMetadata({
+        title: getFullTitle(title as string),
+        description: siteMetadata.value?.seo.description,
+        url: `${getWebsiteUrl()}${route.path}`,
+      });
+    }
+  },
+  { immediate: true },
+);
+
+// Update metadata for specific page
+const updateDetailPageMeta = (detailTitle: string, detailDescription: string, imageUrl?: string) => {
+  updatePageMetadata({
+    title: getFullTitle(detailTitle),
+    description: detailDescription,
+    image: imageUrl,
+    url: `${getWebsiteUrl()}${route.path}`,
+  });
+};
+</script>
+```
+
+**🛠 Best Practices**:
+
+- Load metadata di root component atau layout
+- Update page metadata saat route berubah
+- Gunakan `getFullTitle()` untuk format title yang konsisten
+- Set Open Graph image untuk sharing di social media
+- Metadata di-cache setelah load pertama kali
+
+---
+
+## 📄 `usePengaduanLangsung.ts` - Pengaduan Form Management
+
+**📖 Description**: Composable untuk mengelola form pengaduan langsung dengan captcha verification dan rate limiting. Mencegah spam dengan cooldown 15 menit antar submission.
+
+**⚡ Usage Example**:
+
+```vue
+<template>
+  <div>
+    <!-- Captcha -->
+    <div class="captcha-section">
+      <label>Berapa hasil dari: {{ captchaQuestion }}?</label>
+      <input v-model="captchaInput" type="text" placeholder="Jawaban" />
+      <button @click="generateCaptcha">Refresh Captcha</button>
+    </div>
+
+    <!-- Form -->
+    <form @submit.prevent="handleSubmit">
+      <input v-model="formData.nama" placeholder="Nama" required />
+      <input v-model="formData.email" type="email" placeholder="Email" required />
+      <textarea v-model="formData.aduan" placeholder="Aduan" required></textarea>
+
+      <button type="submit" :disabled="!canSubmit || isSubmitting">
+        {{ isSubmitting ? "Mengirim..." : "Kirim Pengaduan" }}
+      </button>
+    </form>
+
+    <!-- Rate Limit Warning -->
+    <div v-if="!canSubmit" class="warning">
+      Anda baru saja mengirim pengaduan. Silakan tunggu {{ remainingTime }} menit lagi.
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { onMounted, ref } from "vue";
+import { toast } from "vue-sonner";
+
+import { usePengaduanLangsung } from "@/composables";
+
+const { isSubmitting, captchaQuestion, canSubmit, remainingTime, generateCaptcha, checkRateLimit, submitPengaduan } =
+  usePengaduanLangsung();
+
+const formData = ref({
+  nama: "",
+  nik: "",
+  alamat: "",
+  noHp: "",
+  email: "",
+  aduan: "",
+  deskripsi: "",
+});
+
+const captchaInput = ref("");
+
+onMounted(() => {
+  generateCaptcha();
+  checkRateLimit();
+});
+
+const handleSubmit = async () => {
+  // Validate captcha
+  const storedAnswer = localStorage.getItem("captcha_answer");
+  if (captchaInput.value !== storedAnswer) {
+    toast.error("Captcha tidak valid");
+    return;
+  }
+
+  if (!checkRateLimit()) {
+    toast.error(`Tunggu ${remainingTime.value} menit lagi`);
+    return;
+  }
+
+  try {
+    await submitPengaduan(formData.value);
+    toast.success("Pengaduan berhasil dikirim!");
+
+    // Reset form
+    formData.value = {
+      nama: "",
+      nik: "",
+      alamat: "",
+      noHp: "",
+      email: "",
+      aduan: "",
+      deskripsi: "",
+    };
+    captchaInput.value = "";
+    generateCaptcha();
+  } catch (error) {
+    toast.error("Gagal mengirim pengaduan");
+  }
+};
+</script>
+```
+
+**🛠 Best Practices**:
+
+- Generate captcha baru setiap kali form di-mount
+- Check rate limit sebelum submit
+- Validate captcha di client-side sebelum submit
+- Reset form setelah berhasil submit
+- Tampilkan remaining time untuk user experience yang lebih baik
+
+---
+
+## 📄 `usePengaduanSession.ts` - Pengaduan Cooldown Management
+
+**📖 Description**: Composable untuk mengelola cooldown session pengaduan dengan countdown timer. Menyimpan cooldown state di localStorage untuk persistensi antar page reload.
+
+**⚡ Usage Example**:
+
+```vue
+<template>
+  <div>
+    <!-- Cooldown Status -->
+    <div v-if="cooldownStatus.isOnCooldown" class="cooldown-warning">
+      <h3>Anda Sedang Dalam Masa Cooldown</h3>
+      <p>Waktu tersisa: {{ cooldownTimeFormatted }}</p>
+      <p>Anda dapat mengirim pengaduan lagi setelah cooldown selesai.</p>
+      <button @click="clearCooldown">Clear Cooldown (Dev Only)</button>
+    </div>
+
+    <!-- Form (disabled during cooldown) -->
+    <form v-else @submit.prevent="handleSubmit">
+      <input v-model="formData.nama" placeholder="Nama" required />
+      <textarea v-model="formData.aduan" placeholder="Aduan" required></textarea>
+      <button type="submit">Kirim Pengaduan</button>
+    </form>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from "vue";
+import { toast } from "vue-sonner";
+
+import { usePengaduanSession } from "@/composables";
+import { createPengaduanPublic } from "@/lib/api/services/pengaduan";
+
+const { cooldownStatus, cooldownTimeFormatted, setCooldown, checkCooldownStatus, clearCooldown } =
+  usePengaduanSession();
+
+const formData = ref({
+  nama: "",
+  nik: "",
+  alamat: "",
+  noHp: "",
+  email: "",
+  aduan: "",
+  deskripsi: "",
+});
+
+const handleSubmit = async () => {
+  if (cooldownStatus.value.isOnCooldown) {
+    toast.error("Anda masih dalam masa cooldown");
+    return;
+  }
+
+  try {
+    await createPengaduanPublic(formData.value);
+    toast.success("Pengaduan berhasil dikirim!");
+
+    // Set cooldown after successful submission
+    setCooldown();
+
+    // Reset form
+    formData.value = {
+      nama: "",
+      nik: "",
+      alamat: "",
+      noHp: "",
+      email: "",
+      aduan: "",
+      deskripsi: "",
+    };
+  } catch (error) {
+    toast.error("Gagal mengirim pengaduan");
+  }
+};
+</script>
+```
+
+**🛠 Best Practices**:
+
+- Cooldown otomatis di-check saat component mount
+- Countdown timer berjalan otomatis saat cooldown aktif
+- Cooldown tersimpan di localStorage untuk persistensi
+- Cleanup timer saat component unmount
+- Gunakan `cooldownTimeFormatted` untuk display yang user-friendly
+
+---
+
+## 📄 `useSurvei.ts` - Survey Form Management
+
+**📖 Description**: Composable lengkap untuk mengelola form survei kepuasan dengan validation, cooldown management, dan API integration. Mendukung multiple kuesioner dengan jawaban dinamis.
+
+**⚡ Usage Example**:
+
+```vue
+<template>
+  <div>
+    <!-- Cooldown Status -->
+    <div v-if="cooldownStatus.isOnCooldown" class="cooldown-info">
+      <p>Anda sudah mengisi survei. Tunggu {{ cooldownTimeFormatted }} untuk mengisi lagi.</p>
+    </div>
+
+    <!-- Survey Form -->
+    <form v-else @submit.prevent="handleSubmit">
+      <!-- Pilih Layanan -->
+      <div v-if="isLoading">Loading layanan...</div>
+      <select v-else v-model="selectedLayanan" required>
+        <option :value="null">Pilih Layanan</option>
+        <option v-for="layanan in layananList" :key="layanan.id" :value="layanan">
+          {{ layanan.nama }}
+        </option>
+      </select>
+
+      <!-- Data Responden -->
+      <div class="responden-section">
+        <h3>Data Responden</h3>
+        <input v-model="respondenData.nama" placeholder="Nama" required />
+        <input v-model="respondenData.hp" placeholder="No. HP" required />
+        <select v-model="respondenData.jenis_kelamin" required>
+          <option value="L">Laki-laki</option>
+          <option value="P">Perempuan</option>
+        </select>
+        <input v-model.number="respondenData.usia" type="number" placeholder="Usia" required />
+        <input v-model="respondenData.pendidikan" placeholder="Pendidikan" required />
+        <input v-model="respondenData.pekerjaan" placeholder="Pekerjaan" required />
+      </div>
+
+      <!-- Kuesioner -->
+      <div v-if="kuesionerList.length" class="kuesioner-section">
+        <h3>Kuesioner</h3>
+        <div v-for="kuesioner in kuesionerList" :key="kuesioner.id" class="question">
+          <p>{{ kuesioner.pertanyaan }}</p>
+          <div v-for="jawaban in kuesioner.jawaban" :key="jawaban.id">
+            <label>
+              <input
+                type="radio"
+                :name="`question-${kuesioner.id}`"
+                :value="jawaban.id"
+                :checked="getJawabanForPertanyaan(kuesioner.id) === jawaban.id"
+                @change="updateJawaban(kuesioner.id, jawaban.id)"
+              />
+              {{ jawaban.jawaban }}
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Masukkan/Saran -->
+      <textarea v-model="masukkan" placeholder="Masukkan atau saran (opsional)" rows="4"></textarea>
+
+      <!-- Submit Button -->
+      <button type="submit" :disabled="isSubmitting || cooldownStatus.isOnCooldown">
+        {{ isSubmitting ? "Mengirim..." : "Kirim Survei" }}
+      </button>
+    </form>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { onMounted } from "vue";
+import { toast } from "vue-sonner";
+
+import { useSurvei } from "@/composables";
+
+const {
+  layananList,
+  kuesionerList,
+  selectedLayanan,
+  isLoading,
+  isSubmitting,
+  respondenData,
+  jawabanSurvei,
+  masukkan,
+  cooldownStatus,
+  cooldownTimeFormatted,
+  fetchLayananList,
+  fetchKuesionerList,
+  checkCooldownStatus,
+  submitSurvei,
+  updateJawaban,
+  getJawabanForPertanyaan,
+  validateSubmitData,
+} = useSurvei();
+
+onMounted(async () => {
+  checkCooldownStatus();
+  await fetchLayananList();
+  await fetchKuesionerList();
+});
+
+const handleSubmit = async () => {
+  // Validate before submit
+  const validation = validateSubmitData();
+  if (!validation.isValid) {
+    toast.error("Data tidak valid", {
+      description: validation.errors.join(", "),
+    });
+    return;
+  }
+
+  await submitSurvei();
+};
+</script>
+```
+
+**🛠 Best Practices**:
+
+- Load layanan dan kuesioner saat component mount
+- Check cooldown status sebelum menampilkan form
+- Validate data sebelum submit menggunakan `validateSubmitData()`
+- Cooldown otomatis di-set setelah berhasil submit (30 menit)
+- Reset form otomatis setelah berhasil submit
+- Gunakan `updateJawaban()` untuk update jawaban per pertanyaan
+- Handle loading dan error states dengan baik
+
+---
+
 ## 🎯 Best Practices Umum
 
 ### 📝 Naming Convention

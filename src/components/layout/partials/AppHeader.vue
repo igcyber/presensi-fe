@@ -173,8 +173,8 @@ onUnmounted(() => {
           <!-- Logo -->
           <router-link to="/" class="flex items-center" :title="'Beranda'">
             <img
-              src="/assets/images/logos/logo-dprd.png"
-              alt="Logo"
+              src="/assets/images/logos/logo-sekretariat.png"
+              alt="Logo Sekretariat"
               class="h-8 w-auto sm:h-10 lg:h-11 xl:h-14"
               loading="lazy"
             />

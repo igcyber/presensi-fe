@@ -1,6 +1,6 @@
 import type { BaseEntity, PaginatedPayload } from "@/lib/api/core/apiResponse";
 
-import type { JabatanAnggota } from "./jabatanAnggota.types";
+import type { AnggotaFraksi, JabatanAnggota } from "./jabatanAnggota.types";
 import type { User } from "./user.types";
 
 /**
@@ -11,12 +11,14 @@ export interface Struktur extends BaseEntity {
   nama: string;
   slug: string;
   tentang: string;
+  tipe: string;
   strukturId: number | null;
   parent: Struktur | null;
   creator: User;
   updater: User | null;
   children: Struktur[];
   jabatanAnggota: JabatanAnggota[];
+  anggotaFraksi: AnggotaFraksi[];
 }
 
 /**

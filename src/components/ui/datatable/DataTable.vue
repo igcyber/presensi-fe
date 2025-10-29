@@ -63,6 +63,8 @@ export interface Props<T = unknown> {
   loading?: boolean;
   filters?: FilterConfig[];
   actions?: boolean;
+  actionEdit?: boolean;
+  actionDelete?: boolean;
 }
 
 // Props
@@ -73,6 +75,8 @@ const props = withDefaults(defineProps<Props<T>>(), {
   loading: false,
   filters: () => [],
   actions: true,
+  actionEdit: true,
+  actionDelete: true,
 });
 
 // Emits
@@ -449,11 +453,23 @@ const formatCellValue = (item: T, column: Column<T>) => {
             </TableCell>
             <TableCell v-if="actions" class="py-2 text-center">
               <div class="flex items-center justify-center gap-1 sm:gap-2">
-                <Button variant="secondary" size="sm" @click.stop="handleEdit(item)" class="px-2 sm:px-3">
+                <Button
+                  v-if="actionEdit"
+                  variant="secondary"
+                  size="sm"
+                  @click.stop="handleEdit(item)"
+                  class="px-2 sm:px-3"
+                >
                   <EditIcon class="h-4 w-4" />
                   <span class="hidden sm:inline">Edit</span>
                 </Button>
-                <Button variant="destructive" size="sm" @click.stop="handleDelete(item)" class="px-2 sm:px-3">
+                <Button
+                  v-if="actionDelete"
+                  variant="destructive"
+                  size="sm"
+                  @click.stop="handleDelete(item)"
+                  class="px-2 sm:px-3"
+                >
                   <TrashIcon class="h-4 w-4" />
                   <span class="hidden sm:inline">Hapus</span>
                 </Button>

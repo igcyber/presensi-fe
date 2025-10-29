@@ -28,3 +28,7 @@ export { default as JabatanAnggotaDialog } from "./JabatanAnggotaDialog.vue";
 export { default as PageDialog } from "./PageDialog.vue";
 export { default as TagDialog } from "./TagDialog.vue";
 export { default as StandarPelayananDialog } from "./StandarPelayananDialog.vue";
+export { default as BukuTamuDialog } from "./BukuTamuDialog.vue";
+export { default as ChangePasswordDialog } from "./ChangePasswordDialog.vue";
+export { default as KategoriDokumenDialog } from "./KategoriDokumenDialog.vue";
+export { default as PengaduanDialog } from "./PengaduanDialog.vue";

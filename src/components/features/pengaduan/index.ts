@@ -1,4 +1,4 @@
-export { default as PengaduanForm } from "./PengaduanForm.vue";
-export { default as PengaduanSessionStatus } from "./PengaduanSessionStatus.vue";
-export { default as PengaduanActionForm } from "./PengaduanActionForm.vue";
-export { default as KategoriSelect } from "./KategoriSelect.vue";
+export { default as PengaduanDetailView } from "./PengaduanDetailView.vue";
+export { default as PengaduanListCard } from "./PengaduanListCard.vue";
+export { default as PengaduanOfflineInfo } from "./PengaduanOfflineInfo.vue";
+export { default as PengaduanOnlineForm } from "./PengaduanOnlineForm.vue";

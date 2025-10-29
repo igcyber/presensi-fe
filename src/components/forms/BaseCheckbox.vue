@@ -22,6 +22,10 @@ const sizeClasses = {
   default: "h-4 w-4",
   lg: "h-5 w-5",
 };
+
+const handleChange = (event: boolean, onChange: (event: boolean) => void) => {
+  onChange(event);
+};
 </script>
 
 <template>
@@ -31,7 +35,7 @@ const sizeClasses = {
         <Checkbox
           :id="props.name"
           :checked="!!componentField.modelValue"
-          @update:checked="componentField.onChange"
+          @update:model-value="handleChange($event as boolean, componentField.onChange)"
           :disabled="props.disabled"
           :aria-invalid="!!errorMessage"
           :aria-describedby="props.description ? `${props.name}-description` : undefined"

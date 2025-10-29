@@ -2,7 +2,6 @@
 import { CheckCircle, Loader2, Send } from "lucide-vue-next";
 import { onMounted, ref } from "vue";
 import { toast } from "vue-sonner";
-import { z } from "zod";
 
 import BaseCheckbox from "@/components/forms/BaseCheckbox.vue";
 import BaseForm from "@/components/forms/BaseForm.vue";
@@ -18,12 +17,27 @@ const emit = defineEmits<{
   success: [];
 }>();
 
-// Composable
+// Composables
 const { isSubmitting, captchaQuestion, canSubmit, remainingTime, generateCaptcha, checkRateLimit, submitPengaduan } =
   usePengaduanLangsung();
 
 // Local state
 const isSuccess = ref(false);
+
+// Form initial values
+const initialValues = {
+  nama: "",
+  nik: "",
+  alamat: "",
+  noHp: "",
+  email: "",
+  aduan: "",
+  deskripsi: "",
+  isPublished: false,
+  // Form di frontend saja
+  captcha: "",
+  persetujuan: false,
+};
 
 // Methods
 const handleSubmit = async (values: any) => {
@@ -41,6 +55,7 @@ const handleSubmit = async (values: any) => {
       email: values.email,
       aduan: values.aduan,
       deskripsi: values.deskripsi,
+      isPublished: values.isPublished,
     });
 
     isSuccess.value = true;
@@ -80,22 +95,8 @@ onMounted(() => {
 
       <BaseForm
         v-slot="{ meta }"
-        :schema="
-          createPengaduanSchema.extend({
-            persetujuan: z.boolean().refine((val: boolean) => val === true, 'Persetujuan wajib dicentang'),
-          })
-        "
-        :initial-values="{
-          nama: '',
-          nik: '',
-          alamat: '',
-          noHp: '',
-          email: '',
-          aduan: '',
-          deskripsi: '',
-          captcha: '',
-          persetujuan: false,
-        }"
+        :schema="createPengaduanSchema"
+        :initial-values="initialValues"
         :on-submit="handleSubmit"
       >
         <div class="space-y-8">
@@ -178,8 +179,8 @@ onMounted(() => {
               <!-- Captcha -->
               <div class="rounded-lg border border-gray-200 p-4">
                 <label class="mb-2 block text-sm font-medium text-gray-700"> Verifikasi Keamanan </label>
-                <div class="flex items-center space-x-4">
-                  <div class="flex-1">
+                <div class="flex space-x-4">
+                  <div class="flex-1 items-center">
                     <BaseInput
                       name="captcha"
                       label="Captcha"
@@ -188,7 +189,9 @@ onMounted(() => {
                       customCss="border-yellow-600/50 focus-visible:border-yellow-600/50 focus-visible:ring-yellow-600/50"
                     />
                   </div>
-                  <Button type="button" @click="generateCaptcha" variant="outline" size="sm"> Refresh </Button>
+                  <div class="self-end">
+                    <Button type="button" @click="generateCaptcha" variant="outline" size="sm"> Refresh </Button>
+                  </div>
                 </div>
                 <p class="mt-2 text-xs text-gray-500">
                   Jawab pertanyaan matematika di atas untuk memverifikasi bahwa Anda bukan robot.
@@ -200,6 +203,15 @@ onMounted(() => {
                 <BaseCheckbox
                   name="persetujuan"
                   label="Saya bersedia dihubungi dan bertanggung jawab atas data yang telah disampaikan pada form"
+                  required
+                />
+              </div>
+
+              <!-- Publikasi -->
+              <div class="rounded-lg border border-gray-200 p-4">
+                <BaseCheckbox
+                  name="isPublished"
+                  label="Saya bersedia mempublikasikan pengaduan saya di website resmi Kota Samarinda"
                   required
                 />
               </div>

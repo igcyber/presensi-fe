@@ -22,6 +22,18 @@ export interface JabatanAnggota extends BaseEntity {
 }
 
 /**
+ * AnggotaFraksi entity interface
+ * Represents organizational member with fraksi relation
+ */
+export interface AnggotaFraksi {
+  id: number;
+  nama: string;
+  jabatan: string;
+  foto: string;
+  fotoUrl: string;
+}
+
+/**
  * JabatanAnggota list response interface
  * Represents paginated jabatan anggota data from API
  */

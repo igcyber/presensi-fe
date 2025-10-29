@@ -2,7 +2,6 @@ import type { ApiResponse } from "@/lib/api/core/apiResponse";
 import httpInstance from "@/lib/api/core/httpInstance";
 import type {
   CreatePengaduanRequest,
-  CreatePengaduanResponse,
   KategoriPengaduan,
   Pengaduan,
   PengaduanDetailResponse,
@@ -11,6 +10,156 @@ import type {
   UpdateKategoriRequest,
   UpdateStatusRequest,
 } from "@/lib/api/types/pengaduan.types";
+
+/**
+ * Mendapatkan daftar pengaduan dengan pagination dan filter (admin)
+ * @param params - Parameter query untuk filtering dan pagination
+ * @returns Promise yang mengembalikan daftar pengaduan dengan pagination
+ * @endpoint GET /api/pengaduan
+ * @example
+ * ```typescript
+ * const response = await getPengaduans({ page: 1, limit: 10, search: 'lampu jalan' });
+ * console.log(response.data.data); // Array of pengaduan
+ * console.log(response.data.meta.total); // Total count
+ * ```
+ */
+export const getPengaduans = async (params?: PengaduanQueryParams): Promise<ApiResponse<PengaduanListResponse>> => {
+  const { data } = await httpInstance.get<ApiResponse<PengaduanListResponse>>("/api/pengaduan", { params });
+  return data;
+};
+
+/**
+ * Mendapatkan pengaduan berdasarkan ID (admin)
+ * @param id - ID pengaduan
+ * @returns Promise yang mengembalikan data pengaduan
+ * @endpoint GET /api/pengaduan/{id}
+ * @example
+ * ```typescript
+ * const response = await getPengaduanById(123);
+ * console.log(response.data.nama);
+ * ```
+ */
+export const getPengaduanById = async (id: number): Promise<ApiResponse<PengaduanDetailResponse>> => {
+  const { data } = await httpInstance.get<ApiResponse<PengaduanDetailResponse>>(`/api/pengaduan/${id}`);
+  return data;
+};
+
+/**
+ * Update status pengaduan (admin)
+ * @param id - ID pengaduan
+ * @param payload - Data status yang akan diupdate
+ * @returns Promise yang mengembalikan data pengaduan yang diupdate
+ * @endpoint PUT /api/pengaduan/{id}/status
+ * @example
+ * ```typescript
+ * const response = await updatePengaduanStatus(123, {
+ *   status: 'diterima',
+ *   kategori_aduan: 'Infrastruktur',
+ *   keterangan: 'Diteruskan ke bidang terkait'
+ * });
+ * ```
+ */
+export const updatePengaduanStatus = async (
+  id: number,
+  payload: UpdateStatusRequest,
+): Promise<ApiResponse<Pengaduan>> => {
+  const { data } = await httpInstance.put<ApiResponse<Pengaduan>>(`/api/pengaduan/${id}/status`, payload);
+  return data;
+};
+
+/**
+ * Update kategori pengaduan (admin)
+ * @param id - ID pengaduan
+ * @param payload - Data kategori yang akan diupdate
+ * @returns Promise yang mengembalikan data pengaduan yang diupdate
+ * @endpoint PUT /api/pengaduan/{id}/kategori
+ * @example
+ * ```typescript
+ * const response = await updatePengaduanKategori(123, {
+ *   kategori_aduan: 'Pelayanan'
+ * });
+ * ```
+ */
+export const updatePengaduanKategori = async (
+  id: number,
+  payload: UpdateKategoriRequest,
+): Promise<ApiResponse<Pengaduan>> => {
+  const { data } = await httpInstance.put<ApiResponse<Pengaduan>>(`/api/pengaduan/${id}/kategori`, payload);
+  return data;
+};
+
+/**
+ * Mendapatkan daftar kategori pengaduan (admin)
+ * @returns Promise yang mengembalikan daftar kategori
+ * @endpoint GET /api/pengaduan/kategori
+ * @example
+ * ```typescript
+ * const response = await getKategoriPengaduan();
+ * console.log(response.data); // Array of kategori
+ * ```
+ */
+export const getKategoriPengaduan = async (): Promise<ApiResponse<KategoriPengaduan[]>> => {
+  const { data } = await httpInstance.get<ApiResponse<KategoriPengaduan[]>>("/api/pengaduan/kategori");
+  return data;
+};
+
+/**
+ * Export pengaduan ke Excel (admin)
+ * @param params - Parameter filter untuk export
+ * @returns Promise yang mengembalikan file Excel
+ * @endpoint GET /api/pengaduan/export
+ * @example
+ * ```typescript
+ * const response = await exportPengaduanExcel({
+ *   tanggal_mulai: '2025-01-01',
+ *   tanggal_akhir: '2025-12-31'
+ * });
+ * // File akan di-download otomatis
+ * ```
+ */
+export const exportPengaduanExcel = async (params?: PengaduanQueryParams): Promise<Blob> => {
+  const { data } = await httpInstance.get<ApiResponse<Blob>>("/api/pengaduan/export", {
+    params,
+    responseType: "blob",
+  });
+  return data.data;
+};
+
+// ==================== Public Api ====================
+/**
+ * Mendapatkan daftar pengaduan publik
+ * @param params - Parameter query untuk filtering dan pagination
+ * @returns Promise yang mengembalikan daftar pengaduan publik
+ * @endpoint GET /pengaduan-publik
+ * @example
+ * ```typescript
+ * const response = await getPengaduanPublic({ page: 1, limit: 10, search: 'lampu jalan' });
+ * console.log(response.data.data); // Array of pengaduan publik
+ * console.log(response.data.meta.total); // Total count
+ * ```
+ */
+export const getPengaduanPublic = async (
+  params?: PengaduanQueryParams,
+): Promise<ApiResponse<PengaduanListResponse>> => {
+  const { data } = await httpInstance.get<ApiResponse<PengaduanListResponse>>("/pengaduan-publik", { params });
+  return data;
+};
+
+/**
+ * Mendapatkan pengaduan publik berdasarkan ID
+ * @param id - ID pengaduan
+ * @returns Promise yang mengembalikan data pengaduan publik
+ * @endpoint GET /pengaduan-publik/{id}
+ * @example
+ * ```typescript
+ * const response = await getPengaduanPublicById(123);
+ * console.log(response.data.nama);
+ * ```
+ */
+export const getPengaduanPublicById = async (id: number): Promise<ApiResponse<PengaduanDetailResponse>> => {
+  const { data } = await httpInstance.get<ApiResponse<PengaduanDetailResponse>>(`/pengaduan-publik/${id}`);
+  return data;
+};
 
 /**
  * Membuat pengaduan baru (public endpoint)
@@ -31,117 +180,7 @@ import type {
  * console.log(response.data.success);
  * ```
  */
-export const createPengaduanPublic = async (
-  payload: CreatePengaduanRequest,
-): Promise<ApiResponse<CreatePengaduanResponse>> => {
-  const { data } = await httpInstance.post<ApiResponse<CreatePengaduanResponse>>("/pengaduan", payload);
+export const createPengaduanPublic = async (payload: CreatePengaduanRequest): Promise<ApiResponse<Pengaduan>> => {
+  const { data } = await httpInstance.post<ApiResponse<Pengaduan>>("/pengaduan", payload);
   return data;
-};
-
-// ==================== Admin API ====================
-
-/**
- * Mendapatkan daftar pengaduan dengan pagination dan filter (admin)
- * @param params - Parameter query untuk filtering dan pagination
- * @returns Promise yang mengembalikan daftar pengaduan dengan pagination
- * @endpoint GET /api/pengaduan
- * @example
- * ```typescript
- * const response = await getPengaduans({ page: 1, limit: 10, status: 'belum' });
- * console.log(response.data.data); // Array of pengaduan
- * console.log(response.data.meta.total); // Total count
- * ```
- */
-export const getPengaduans = (params?: PengaduanQueryParams): Promise<ApiResponse<PengaduanListResponse>> => {
-  return httpInstance.get<ApiResponse<PengaduanListResponse>>("/api/pengaduan", { params }).then((res) => res.data);
-};
-
-/**
- * Mendapatkan pengaduan berdasarkan ID (admin)
- * @param id - ID pengaduan
- * @returns Promise yang mengembalikan data pengaduan
- * @endpoint GET /api/pengaduan/{id}
- * @example
- * ```typescript
- * const response = await getPengaduanById(123);
- * console.log(response.data.nama);
- * ```
- */
-export const getPengaduanById = (id: number): Promise<ApiResponse<PengaduanDetailResponse>> => {
-  return httpInstance.get<ApiResponse<PengaduanDetailResponse>>(`/api/pengaduan/${id}`)
-    .then(res => res.data);
-};
-
-/**
- * Update status pengaduan (admin)
- * @param id - ID pengaduan
- * @param payload - Data status yang akan diupdate
- * @returns Promise yang mengembalikan data pengaduan yang diupdate
- * @endpoint PUT /api/pengaduan/{id}/status
- * @example
- * ```typescript
- * const response = await updatePengaduanStatus(123, {
- *   status: 'diterima',
- *   kategori_aduan: 'Infrastruktur',
- *   keterangan: 'Diteruskan ke bidang terkait'
- * });
- * ```
- */
-export const updatePengaduanStatus = (id: number, payload: UpdateStatusRequest): Promise<ApiResponse<Pengaduan>> => {
-  return httpInstance.put<ApiResponse<Pengaduan>>(`/api/pengaduan/${id}/status`, payload);
-};
-
-/**
- * Update kategori pengaduan (admin)
- * @param id - ID pengaduan
- * @param payload - Data kategori yang akan diupdate
- * @returns Promise yang mengembalikan data pengaduan yang diupdate
- * @endpoint PUT /api/pengaduan/{id}/kategori
- * @example
- * ```typescript
- * const response = await updatePengaduanKategori(123, {
- *   kategori_aduan: 'Pelayanan'
- * });
- * ```
- */
-export const updatePengaduanKategori = (
-  id: number,
-  payload: UpdateKategoriRequest,
-): Promise<ApiResponse<Pengaduan>> => {
-  return httpInstance.put<ApiResponse<Pengaduan>>(`/api/pengaduan/${id}/kategori`, payload);
-};
-
-/**
- * Mendapatkan daftar kategori pengaduan (admin)
- * @returns Promise yang mengembalikan daftar kategori
- * @endpoint GET /api/pengaduan/kategori
- * @example
- * ```typescript
- * const response = await getKategoriPengaduan();
- * console.log(response.data); // Array of kategori
- * ```
- */
-export const getKategoriPengaduan = (): Promise<ApiResponse<KategoriPengaduan[]>> => {
-  return httpInstance.get<ApiResponse<KategoriPengaduan[]>>("/api/pengaduan/kategori");
-};
-
-/**
- * Export pengaduan ke Excel (admin)
- * @param params - Parameter filter untuk export
- * @returns Promise yang mengembalikan file Excel
- * @endpoint GET /api/pengaduan/export
- * @example
- * ```typescript
- * const response = await exportPengaduanExcel({
- *   tanggal_mulai: '2025-01-01',
- *   tanggal_akhir: '2025-12-31'
- * });
- * // File akan di-download otomatis
- * ```
- */
-export const exportPengaduanExcel = (params?: PengaduanQueryParams): Promise<Blob> => {
-  return httpInstance.get("/api/pengaduan/export", {
-    params,
-    responseType: "blob",
-  });
 };
