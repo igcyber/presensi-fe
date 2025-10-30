@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { Trash2 } from "lucide-vue-next";
+import { CheckCircle, Trash2 } from "lucide-vue-next";
 import { computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 
 import BaseConfirmDialog from "@/components/dialogs/BaseConfirmDialog.vue";
-import BukuTamuDialog from "@/components/dialogs/BukuTamuDialog.vue";
 import BukuTamuDetailView from "@/components/features/bukuTamu/BukuTamuDetailView.vue";
 import { Button } from "@/components/ui/button";
 import ErrorState from "@/components/ui/error-state/ErrorState.vue";
@@ -13,7 +12,11 @@ import ErrorState from "@/components/ui/error-state/ErrorState.vue";
 import { useDialog } from "@/composables/useDialog";
 import { useFetch } from "@/composables/useFetch";
 import type { ApiResponse } from "@/lib/api/core";
-import { deleteBukuTamu, getBukuTamuById } from "@/lib/api/services/bukuTamu";
+import {
+  deleteBukuTamu,
+  getBukuTamuById,
+  toggleRegistered as toggleRegisteredService,
+} from "@/lib/api/services/bukuTamu";
 import type { BukuTamuDetailResponse } from "@/lib/api/types/bukuTamu.types";
 
 // Router dan route
@@ -27,8 +30,8 @@ const bukuTamuId = computed(() => {
 });
 
 // Composables
-const dialog = useDialog<BukuTamuDetailResponse>();
 const confirmDialog = useDialog<BukuTamuDetailResponse>();
+const toggleRegisteredDialog = useDialog<BukuTamuDetailResponse>();
 
 const { data, isLoading, isError, error, fetchData } = useFetch<
   ApiResponse<BukuTamuDetailResponse>,
@@ -50,6 +53,10 @@ const handleBack = () => {
 
 const handleDelete = (item: BukuTamuDetailResponse) => {
   confirmDialog.openView(item);
+};
+
+const handleToggleRegistered = (item: BukuTamuDetailResponse) => {
+  toggleRegisteredDialog.openView(item);
 };
 
 const confirmDelete = async () => {
@@ -74,9 +81,24 @@ const confirmDelete = async () => {
   }
 };
 
-const handleDialogSuccess = (): void => {
-  dialog.closeDialog();
-  fetchData();
+const toggleRegistered = async () => {
+  if (!toggleRegisteredDialog.state.value.data) return;
+
+  try {
+    toggleRegisteredDialog.setLoading(true);
+    const buku = toggleRegisteredDialog.state.value.data;
+    await toggleRegisteredService(buku.id);
+
+    toast.success("Berhasil mengubah status registered buku tamu");
+
+    toggleRegisteredDialog.closeDialog();
+    handleBack();
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : "Gagal mengubah status registered buku tamu";
+    toast.error("Gagal mengubah status registered buku tamu", { description: errorMessage });
+  } finally {
+    toggleRegisteredDialog.setLoading(false);
+  }
 };
 
 // Lifecycle hooks
@@ -107,19 +129,26 @@ onMounted(() => {
 
     <!-- Content -->
     <div v-else-if="data" class="py-6">
-      <BukuTamuDetailView :buku="data" :show-back-button="true" @back="handleBack" @delete="handleDelete">
-        <template #actions="{ onDelete }">
+      <BukuTamuDetailView
+        :buku="data"
+        :show-back-button="true"
+        @back="handleBack"
+        @delete="handleDelete"
+        @toggle-registered="handleToggleRegistered"
+      >
+        <template #actions="{ onDelete, onToggleRegistered }">
           <div class="flex flex-wrap gap-2">
             <Button variant="destructive" size="sm" @click="onDelete">
               <Trash2 class="mr-2 h-4 w-4" />
               Hapus
             </Button>
+            <Button variant="outline" size="sm" @click="onToggleRegistered">
+              <CheckCircle class="mr-2 h-4 w-4" />
+              Toggle Registered
+            </Button>
           </div>
         </template>
       </BukuTamuDetailView>
-
-      <!-- Dialogs -->
-      <BukuTamuDialog v-model:open="dialog.state.value.open" @success="handleDialogSuccess" />
 
       <BaseConfirmDialog
         v-model:open="confirmDialog.state.value.open"
@@ -129,6 +158,17 @@ onMounted(() => {
         variant="destructive"
         :loading="confirmDialog.state.value.loading"
         @confirm="confirmDelete"
+      />
+
+      <BaseConfirmDialog
+        v-model:open="toggleRegisteredDialog.state.value.open"
+        title="Toggle Registered"
+        :description="`Apakah Anda yakin ingin mengubah status registered buku tamu '${toggleRegisteredDialog.state.value.data?.judul}'?`"
+        confirm-text="Ubah"
+        cancel-text="Batal"
+        variant="default"
+        :loading="toggleRegisteredDialog.state.value.loading"
+        @confirm="toggleRegistered"
       />
     </div>
   </div>

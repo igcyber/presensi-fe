@@ -125,6 +125,38 @@ export const exportPengaduanExcel = async (params?: PengaduanQueryParams): Promi
   return data.data;
 };
 
+/**
+ * Mark pengaduan as selesai (admin)
+ * @param id - ID pengaduan
+ * @returns Promise yang mengembalikan data pengaduan yang diupdate
+ * @endpoint POST /api/pengaduan/{id}/mark-selesai
+ * @example
+ * ```typescript
+ * const response = await markSelesai(123);
+ * console.log(response.data.isSelesai); // true
+ * ```
+ */
+export const markSelesai = async (id: number): Promise<ApiResponse<Pengaduan>> => {
+  const { data } = await httpInstance.post<ApiResponse<Pengaduan>>(`/api/pengaduan/${id}/mark-selesai`);
+  return data;
+};
+
+/**
+ * Toggle publish DPRD status (admin)
+ * @param id - ID pengaduan
+ * @returns Promise yang mengembalikan data pengaduan yang diupdate
+ * @endpoint POST /api/pengaduan/{id}/toggle-dprd
+ * @example
+ * ```typescript
+ * const response = await toggleDprd(123);
+ * console.log(response.data.isPublicDprd); // true/false
+ * ```
+ */
+export const toggleDprd = async (id: number): Promise<ApiResponse<Pengaduan>> => {
+  const { data } = await httpInstance.post<ApiResponse<Pengaduan>>(`/api/pengaduan/${id}/toggle-dprd`);
+  return data;
+};
+
 // ==================== Public Api ====================
 /**
  * Mendapatkan daftar pengaduan publik

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ArrowLeft, Download, FileText, Maximize2 } from "lucide-vue-next";
+import { ArrowLeft, Copy, Download, FileText, Maximize2 } from "lucide-vue-next";
+import { toast } from "vue-sonner";
 
 import FilePreviewDialog from "@/components/dialogs/FilePreviewDialog.vue";
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,7 @@ interface Props {
 interface Emits {
   (e: "back"): void;
   (e: "delete", buku: BukuTamuDetailResponse): void;
+  (e: "toggleRegistered", buku: BukuTamuDetailResponse): void;
 }
 
 // Props
@@ -38,6 +40,10 @@ const handleBack = () => emit("back");
 
 const handleDelete = () => emit("delete", props.buku);
 
+const handleToggleRegistered = () => {
+  emit("toggleRegistered", props.buku);
+};
+
 const handlePreviewFullscreen = () => {
   if (props.buku.fileUrl) {
     filePreview.previewPDF(props.buku.fileUrl, props.buku.nama, {
@@ -50,6 +56,15 @@ const handlePreviewFullscreen = () => {
 const handleFileDownload = () => {
   if (props.buku.fileUrl) {
     filePreview.handleDownload({ url: props.buku.fileUrl, name: props.buku.nama });
+  }
+};
+
+const handleCopyLink = () => {
+  if (props.buku.link) {
+    navigator.clipboard.writeText(window.location.origin + props.buku.link);
+    toast.success("Link berhasil disalin", {
+      description: "Link berhasil disalin ke clipboard",
+    });
   }
 };
 </script>
@@ -73,7 +88,7 @@ const handleFileDownload = () => {
 
         <!-- Actions Slot -->
         <div class="flex flex-wrap gap-2">
-          <slot name="actions" :buku="buku" :on-delete="handleDelete">
+          <slot name="actions" :buku="buku" :on-delete="handleDelete" :on-toggle-registered="handleToggleRegistered">
             <Button variant="destructive" size="sm" @click="handleDelete"> Hapus </Button>
           </slot>
         </div>
@@ -126,7 +141,13 @@ const handleFileDownload = () => {
             <div class="text-muted-foreground text-sm font-medium">Link Publik</div>
             <div>
               <template v-if="buku.link">
-                <code class="bg-muted rounded px-2 py-1 text-xs">{{ buku.link }}</code>
+                <div class="flex items-center gap-2">
+                  <code class="bg-muted flex-1 rounded px-2 py-1 text-xs">{{ buku.link }}</code>
+                  <Button variant="outline" size="sm" @click="handleCopyLink" class="gap-1">
+                    <Copy class="h-3 w-3" />
+                    Copy
+                  </Button>
+                </div>
               </template>
               <template v-else>-</template>
             </div>

@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 interface Props {
   name: string;
   label: string;
-  type?: "text" | "email" | "password" | "number" | "tel" | "url" | "search";
+  type?: "text" | "email" | "password" | "number" | "tel" | "url" | "search" | "date";
   placeholder?: string;
   required?: boolean;
   disabled?: boolean;
@@ -51,6 +51,8 @@ const autocompleteValue = computed(() => {
       return "tel";
     case "url":
       return "url";
+    case "date":
+      return "date";
     default:
       return "on";
   }

@@ -1,5 +1,7 @@
 import type { BaseEntity, PaginatedPayload } from "@/lib/api/core/apiResponse";
 
+import type { TindakLanjut } from "./tindakLanjut.types";
+
 /**
  * Pengaduan entity interface
  * Represents a complaint/pengaduan in the system
@@ -16,6 +18,10 @@ export interface Pengaduan extends BaseEntity {
   status: "belum" | "diterima" | "selesai";
   keterangan?: string;
   isPublished?: number;
+  isSelesai?: number | boolean;
+  isPublic?: number | boolean;
+  isPublicDprd?: number | boolean;
+  tindakLanjuts?: TindakLanjut[];
 }
 
 /**

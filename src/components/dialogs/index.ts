@@ -32,3 +32,4 @@ export { default as BukuTamuDialog } from "./BukuTamuDialog.vue";
 export { default as ChangePasswordDialog } from "./ChangePasswordDialog.vue";
 export { default as KategoriDokumenDialog } from "./KategoriDokumenDialog.vue";
 export { default as PengaduanDialog } from "./PengaduanDialog.vue";
+export { default as TindakLanjutDialog } from "./TindakLanjutDialog.vue";

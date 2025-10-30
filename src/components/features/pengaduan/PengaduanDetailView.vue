@@ -10,6 +10,8 @@ import { Separator } from "@/components/ui/separator";
 import { useFormatters } from "@/composables/useFormatters";
 import type { Pengaduan } from "@/lib/api/types/pengaduan.types";
 
+import TindakLanjutList from "./TindakLanjutList.vue";
+
 interface Props {
   pengaduan: Pengaduan;
   showBackButton?: boolean;
@@ -19,6 +21,7 @@ interface Props {
 interface Emits {
   (e: "back"): void;
   (e: "edit", pengaduan: Pengaduan): void;
+  (e: "refresh"): void;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -181,6 +184,9 @@ const handleEdit = () => {
         </div>
       </CardContent>
     </Card>
+
+    <!-- Tindak Lanjut Section -->
+    <TindakLanjutList :pengaduan="pengaduan" :loading="loading" @refresh="$emit('refresh')" />
 
     <!-- Footer Information -->
     <Card class="bg-muted/50">

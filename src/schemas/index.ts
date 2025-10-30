@@ -15,6 +15,7 @@ export * from "./menuSchema";
 export * from "./opdSchema";
 export * from "./pageSchema";
 export * from "./pengaduanSchema";
+export * from "./tindakLanjutSchema";
 export * from "./perusdaSchema";
 export * from "./portalSchema";
 export * from "./ppidSchema";

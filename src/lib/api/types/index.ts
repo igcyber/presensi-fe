@@ -19,6 +19,7 @@ export type * from "./page.types";
 export type * from "./pemerintahan.types";
 export type * from "./pengaduan.types";
 export type * from "./perusda.types";
+export type * from "./tindakLanjut.types";
 export type * from "./portal.types";
 export type * from "./ppid.types";
 export type * from "./prestasi.types";

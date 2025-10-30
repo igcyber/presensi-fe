@@ -15,6 +15,7 @@ import { createBukuTamuPublicSchema } from "@/schemas/bukuTamuSchema";
 // Props
 interface Props {
   bukuTamuId: number;
+  token: string;
 }
 
 const props = defineProps<Props>();
@@ -42,6 +43,7 @@ const initialValues = {
 // Methods
 const handleSubmit = async (values: any) => {
   isSubmitting.value = true;
+  console.log(values);
 
   try {
     // Convert to FormData for file upload support
@@ -55,7 +57,7 @@ const handleSubmit = async (values: any) => {
     if (values.perihal) formData.append("perihal", values.perihal);
     if (values.dokumen) formData.append("dokumen", values.dokumen);
 
-    await createBukuTamuPublic(props.bukuTamuId, formData as any);
+    await createBukuTamuPublic(props.bukuTamuId, formData as any, props.token);
 
     isSuccess.value = true;
     toast.success("Buku tamu berhasil diisi!");

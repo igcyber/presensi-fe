@@ -126,7 +126,7 @@ onBeforeUnmount(() => {
           </div>
 
           <!-- Form -->
-          <BukuTamuForm :buku-tamu-id="bukuTamuId" @success="handleSuccess" />
+          <BukuTamuForm :buku-tamu-id="bukuTamuId" @success="handleSuccess" :token="token" />
         </div>
       </div>
     </main>

@@ -18,6 +18,7 @@ export * from "./opd";
 export * from "./page";
 export * from "./pemerintahan";
 export * from "./pengaduan";
+export * from "./tindakLanjut";
 export * from "./perusda";
 export * from "./portal";
 export * from "./ppid";

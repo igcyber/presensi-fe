@@ -75,6 +75,22 @@ export const deleteBukuTamu = async (id: number): Promise<ApiResponse<{ success:
   return data;
 };
 
+/**
+ * Mengubah status registered buku tamu berdasarkan ID
+ * @param id - ID dari buku tamu yang ingin diubah status registered
+ * @returns Promise yang mengembalikan hasil pengubahan status registered buku tamu
+ * @endpoint POST /api/buku-tamu/{id}/toggle
+ * @example
+ * ```typescript
+ * const response = await toggleRegistered(1);
+ * console.log(response.data); // { success: true }
+ * ```
+ */
+export const toggleRegistered = async (id: number): Promise<ApiResponse<BukuTamuDetailResponse>> => {
+  const { data } = await httpInstance.post<ApiResponse<BukuTamuDetailResponse>>(`${BASE_URL}/${id}/toggle`);
+  return data;
+};
+
 // ==================== Public Api ====================
 /**
  * Mendapatkan buku tamu berdasarkan ID dan slug untuk public display
@@ -106,8 +122,9 @@ export const getBukuTamuByIdPublic = async (
  * Membuat buku tamu baru untuk public display
  * @param id - ID dari buku tamu yang ingin diisi
  * @param payload - Data untuk mengisi buku tamu
+ * @param token - Token dari buku tamu yang ingin diisi
  * @returns Promise yang mengembalikan buku tamu yang telah diisi
- * @endpoint POST /buku-tamu/{id}/fill
+ * @endpoint POST /buku-tamu/{id}/fill?token={token}
  * @example
  * ```typescript
  * const response = await createBukuTamuPublic({ nama: 'John Doe', nohp: '1234567890', asal: 'Jakarta', tujuan: 'Bandung', jumlah_tamu: 2, perihal: 'Perjalanan bisnis' });
@@ -117,7 +134,15 @@ export const getBukuTamuByIdPublic = async (
 export const createBukuTamuPublic = async (
   id: number,
   payload: CreateBukuTamuPublicRequest,
+  token: string,
 ): Promise<ApiResponse<BukuTamuDetailResponse>> => {
-  const { data } = await httpInstance.post<ApiResponse<BukuTamuDetailResponse>>(`/buku-tamu/${id}/fill`, payload);
+  const { data } = await httpInstance.post<ApiResponse<BukuTamuDetailResponse>>(`/buku-tamu/${id}/fill`, payload, {
+    params: {
+      token,
+    },
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
   return data;
 };
