@@ -12,7 +12,13 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const { date, slugify, truncate } = useFormatters();
+const { date, slugify } = useFormatters();
+
+// Helpers
+const stripHtml = (html: string | null | undefined): string => {
+  if (!html) return "";
+  return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+};
 
 // Computed properties untuk memisahkan berita terbaru dan terpopuler
 const beritaTerbaru = computed(() => props.news);
@@ -132,7 +138,9 @@ const beritaTerpopuler = computed(() => [...props.news].sort((a, b) => b.views -
               </RouterLink>
 
               <!-- Content Preview -->
-              <div class="mb-3 line-clamp-3 text-xs text-gray-600" v-html="truncate(berita.isi, 150)"></div>
+              <div class="mb-3 line-clamp-3 text-xs text-gray-600 leading-relaxed">
+                {{ stripHtml(berita.isi) }}
+              </div>
 
               <!-- Meta Info -->
               <div class="flex items-center justify-between text-xs text-gray-500">

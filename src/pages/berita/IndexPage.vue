@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { AlertCircle, ArrowRight, Calendar, Newspaper, RefreshCw, Search, X } from "lucide-vue-next";
 import { computed, onMounted } from "vue";
+import { ref } from "vue";
 import { watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
@@ -22,6 +23,31 @@ const keyword = computed(() => (route.query.keyword as string) ?? "");
 
 const { date, slugify } = useFormatters();
 const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
+
+// Helpers
+const stripHtml = (html: string | null | undefined): string => {
+  if (!html) return "";
+  // Hilangkan seluruh tag HTML dan rapikan spasi
+  return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+};
+
+// Search state & handlers
+const searchTerm = ref<string>(keyword.value);
+
+const onSearch = async () => {
+  const term = searchTerm.value?.trim() || "";
+  currentPage.value = 1;
+  await router.push({
+    name: "media.berita",
+    query: term ? { keyword: term } : {},
+  });
+};
+
+const onResetSearch = async () => {
+  searchTerm.value = "";
+  currentPage.value = 1;
+  await router.push({ name: "media.berita" });
+};
 
 // Fetch dokumen data
 const { data, isLoading, error, isError, fetchData } = useFetch<
@@ -85,28 +111,72 @@ onMounted(async () => {
 
     <!-- Main Content -->
     <main class="py-12">
-      <div v-if="keyword" class="mx-auto mb-8 max-w-2xl">
-        <div class="rounded border border-yellow-600 bg-yellow-600/10 p-8 text-center">
-          <Search class="mx-auto mb-4 h-10 w-10 text-yellow-600" />
-          <h4 class="mb-2 text-xl font-semibold text-yellow-600">Pencarian</h4>
-          <p class="mb-6 text-yellow-600">
-            {{
-              keyword
-                ? `Menampilkan hasil pencarian untuk "${keyword}" dengan total ${data?.data.length} berita.`
-                : "Maaf, belum ada berita yang tersedia saat ini."
-            }}
-          </p>
-          <button
-            @click="router.push({ name: 'media.berita' })"
-            class="inline-flex items-center rounded-lg bg-yellow-600 px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-yellow-600/90"
-          >
-            <X class="mr-2 h-4 w-4" />
-            Reset Pencarian
-          </button>
-        </div>
-      </div>
 
       <div class="container">
+        <!-- Search Card -->
+        <div class="mb-6">
+          <div class="rounded-lg border border-gray-200 bg-white shadow-sm">
+            <div class="flex items-center gap-3 border-b border-gray-100 px-4 py-3">
+              <div class="flex h-8 w-8 items-center justify-center rounded-md bg-yellow-50">
+                <Search class="h-4 w-4 text-yellow-700" />
+              </div>
+              <div class="min-w-0">
+                <h3 class="truncate text-sm font-semibold text-gray-900">Pencarian Berita</h3>
+                <p class="truncate text-xs text-gray-500">Cari berdasarkan judul atau isi berita</p>
+              </div>
+            </div>
+            <div class="p-4">
+              <form @submit.prevent="onSearch" class="flex items-center gap-2">
+                <div class="relative flex-1">
+                  <Search class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                  <input
+                    v-model="searchTerm"
+                    type="text"
+                    placeholder="Cari berita..."
+                    class="w-full rounded-md border border-gray-200 bg-gray-50 py-2.5 pl-9 pr-10 text-sm placeholder:text-gray-400 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-yellow-600/60"
+                  />
+                  <button
+                    v-if="searchTerm"
+                    type="button"
+                    @click="onResetSearch"
+                    class="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+                    aria-label="Reset pencarian"
+                  >
+                    <X class="h-4 w-4" />
+                  </button>
+                </div>
+                <button
+                  type="submit"
+                  class="inline-flex items-center rounded-md bg-yellow-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-yellow-600/90"
+                >
+                  <Search class="mr-2 h-4 w-4" />
+                  Cari
+                </button>
+              </form>
+              <p class="mt-2 text-xs text-gray-500">Tekan Enter atau klik Cari untuk memulai pencarian.</p>
+            </div>
+          </div>
+        </div>
+        <!-- Compact Search Result Bar -->
+        <div
+          v-if="keyword"
+          class="mb-6 flex items-center justify-between rounded border border-yellow-200 bg-yellow-50 px-4 py-3"
+        >
+          <div class="flex items-center gap-2 text-sm text-yellow-800">
+            <Search class="h-4 w-4 text-yellow-600" />
+            <span>
+              Menampilkan hasil untuk "{{ keyword }}" — {{ data?.data.length || 0 }} berita
+            </span>
+          </div>
+          <button
+            type="button"
+            @click="onResetSearch"
+            class="inline-flex items-center rounded border border-yellow-300 px-3 py-1.5 text-xs font-medium text-yellow-700 transition-colors hover:bg-yellow-100"
+          >
+            <X class="mr-1.5 h-3.5 w-3.5" />
+            Reset
+          </button>
+        </div>
         <!-- Loading State -->
         <div v-if="isLoading" class="flex items-center justify-center py-20">
           <div class="text-center">
@@ -191,7 +261,7 @@ onMounted(async () => {
 
                   <!-- Excerpt -->
                   <div
-                    class="mb-4 text-sm text-gray-600"
+                    class="mb-4 text-sm text-gray-600 leading-relaxed"
                     style="
                       display: -webkit-box;
                       -webkit-line-clamp: 3;
@@ -199,8 +269,9 @@ onMounted(async () => {
                       -webkit-box-orient: vertical;
                       overflow: hidden;
                     "
-                    v-html="news.isi.split(' ').slice(0, 15).join(' ') + '...'"
-                  ></div>
+                  >
+                    {{ stripHtml(news.isi) }}
+                  </div>
 
                   <!-- Read More Button -->
                   <RouterLink
