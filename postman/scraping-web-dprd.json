@@ -1,0 +1,95 @@
+{
+  "info": {
+    "name": "Scraping Web DPRD",
+    "_postman_id": "b8c9a3c2-8d2e-4f6a-9f7b-2b3b7f2b8c9a",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "http://localhost:3333"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "taskId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Links cepat (sync)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{BASE_URL}}/api/scraping/warta?mode=links"
+        }
+      }
+    },
+    {
+      "name": "Mulai background job",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{BASE_URL}}/api/scraping/warta/start"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "try {",
+              "  var json = pm.response.json();",
+              "  if (json && json.taskId) { pm.environment.set('taskId', json.taskId); }",
+              "} catch (e) {}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cek status job",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{BASE_URL}}/api/scraping/warta/status/{{taskId}}"
+        }
+      }
+    },
+    {
+      "name": "Ambil hasil job",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{BASE_URL}}/api/scraping/warta/result/{{taskId}}"
+        }
+      }
+    },
+    {
+      "name": "Commit hasil jadi Berita (auth)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tag_id\": 1,\n  \"data\": [\n    {\n      \"title\": \"Judul Artikel\",\n      \"content\": \"<div class=\\\"blog-full-width mb-5\\\">...</div>\",\n      \"published_at\": \"Rabu, 30 Oktober 2024\",\n      \"url\": \"https://www.dprdkutaikartanegara.go.id/bacawarta.php?id=3514\"\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/api/scraping/warta/commit"
+        }
+      }
+    }
+  ]
+}
