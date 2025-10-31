@@ -10,7 +10,7 @@ const keyword = ref<string>("");
 
 function submitSearch() {
   const query = keyword.value ? { keyword: keyword.value } : {};
-  router.push({ path: "/berita", query });
+  router.push({ path: "/pelayanan-publik/standar", query });
 
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -37,7 +37,7 @@ function submitSearch() {
               v-model="keyword"
               type="text"
               name="keyword"
-              placeholder="Apa yang ingin anda cari?"
+              placeholder="Cari pelayanan kami disini ..."
               class="flex-1 rounded-md border-0 bg-white px-6 py-4 text-gray-900 placeholder-gray-500 shadow-lg focus:ring-2 focus:ring-white focus:outline-none"
             />
             <button
