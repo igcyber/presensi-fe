@@ -95,6 +95,7 @@ export interface BeritaQueryParams {
   limit?: number;
   search?: string;
   keyword?: string; // public
+  tag?: string; // public - filter by tag name
   date?: string;
   sort_by?: "judul" | "createdAt" | "updatedAt";
   sort_order?: "asc" | "desc";

@@ -20,6 +20,7 @@ const router = useRouter();
 
 // Computed
 const keyword = computed(() => (route.query.keyword as string) ?? "");
+const tag = computed(() => (route.query.tag as string) ?? "");
 
 const { date, slugify } = useFormatters();
 const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = usePagination();
@@ -37,26 +38,75 @@ const searchTerm = ref<string>(keyword.value);
 const onSearch = async () => {
   const term = searchTerm.value?.trim() || "";
   currentPage.value = 1;
+  const query: Record<string, string> = {};
+  if (term) {
+    query.keyword = term;
+  }
+  // Keep tag if exists when searching
+  if (tag.value) {
+    query.tag = tag.value;
+  }
   await router.push({
     name: "media.berita",
-    query: term ? { keyword: term } : {},
+    query,
   });
 };
 
 const onResetSearch = async () => {
   searchTerm.value = "";
   currentPage.value = 1;
+  const query: Record<string, string> = {};
+  // Keep tag if exists when resetting search
+  if (tag.value) {
+    query.tag = tag.value;
+  }
+  await router.push({
+    name: "media.berita",
+    query,
+  });
+};
+
+const onResetTag = async () => {
+  currentPage.value = 1;
+  const query: Record<string, string> = {};
+  // Keep keyword if exists when resetting tag
+  if (keyword.value) {
+    query.keyword = keyword.value;
+  }
+  await router.push({
+    name: "media.berita",
+    query,
+  });
+};
+
+const onResetAll = async () => {
+  searchTerm.value = "";
+  currentPage.value = 1;
   await router.push({ name: "media.berita" });
 };
 
-// Fetch dokumen data
+// Fetch berita data
 const { data, isLoading, error, isError, fetchData } = useFetch<
   ApiResponse<BeritaListPublicResponse>,
   BeritaListPublicResponse
->(() => getBeritaPublic({ page: currentPage.value, keyword: keyword.value }), {
-  immediate: false,
-  extractData: (response) => response.data,
-});
+>(
+  () => {
+    const params: { page: number; keyword?: string; tag?: string } = {
+      page: currentPage.value,
+    };
+    if (keyword.value) {
+      params.keyword = keyword.value;
+    }
+    if (tag.value) {
+      params.tag = tag.value;
+    }
+    return getBeritaPublic(params);
+  },
+  {
+    immediate: false,
+    extractData: (response) => response.data,
+  }
+);
 
 const prevPage = () => {
   if (currentPage.value > 1) {
@@ -81,7 +131,12 @@ watch(currentPage, () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
-watch(keyword, async () => {
+// Sync searchTerm with keyword from URL
+watch(keyword, (newKeyword) => {
+  searchTerm.value = newKeyword;
+});
+
+watch([keyword, tag], async () => {
   await fetchData();
 
   setPagination({
@@ -157,25 +212,69 @@ onMounted(async () => {
             </div>
           </div>
         </div>
-        <!-- Compact Search Result Bar -->
-        <div
-          v-if="keyword"
-          class="mb-6 flex items-center justify-between rounded border border-yellow-200 bg-yellow-50 px-4 py-3"
-        >
-          <div class="flex items-center gap-2 text-sm text-yellow-800">
-            <Search class="h-4 w-4 text-yellow-600" />
-            <span>
-              Menampilkan hasil untuk "{{ keyword }}" — {{ data?.data.length || 0 }} berita
-            </span>
-          </div>
-          <button
-            type="button"
-            @click="onResetSearch"
-            class="inline-flex items-center rounded border border-yellow-300 px-3 py-1.5 text-xs font-medium text-yellow-700 transition-colors hover:bg-yellow-100"
+        <!-- Active Filters Bar -->
+        <div v-if="keyword || tag" class="mb-6 space-y-2">
+          <!-- Search Filter -->
+          <div
+            v-if="keyword"
+            class="flex items-center justify-between rounded border border-yellow-200 bg-yellow-50 px-4 py-3"
           >
-            <X class="mr-1.5 h-3.5 w-3.5" />
-            Reset
-          </button>
+            <div class="flex items-center gap-2 text-sm text-yellow-800">
+              <Search class="h-4 w-4 text-yellow-600" />
+              <span>
+                Menampilkan hasil untuk "{{ keyword }}"
+                <span v-if="tag"> + tag "{{ tag }}"</span>
+                — {{ data?.data.length || 0 }} berita
+              </span>
+            </div>
+            <button
+              type="button"
+              @click="onResetSearch"
+              class="inline-flex items-center rounded border border-yellow-300 px-3 py-1.5 text-xs font-medium text-yellow-700 transition-colors hover:bg-yellow-100"
+            >
+              <X class="mr-1.5 h-3.5 w-3.5" />
+              Reset Pencarian
+            </button>
+          </div>
+
+          <!-- Tag Filter -->
+          <div
+            v-if="tag"
+            class="flex items-center justify-between rounded border border-blue-200 bg-blue-50 px-4 py-3"
+          >
+            <div class="flex items-center gap-2 text-sm text-blue-800">
+              <div class="flex h-5 w-5 items-center justify-center rounded bg-blue-600 text-white">
+                <span class="text-xs font-semibold">#</span>
+              </div>
+              <span>
+                Filter tag: <strong>"{{ tag }}"</strong>
+                <span v-if="keyword"> (dengan pencarian "{{ keyword }}")</span>
+              </span>
+            </div>
+            <button
+              type="button"
+              @click="onResetTag"
+              class="inline-flex items-center rounded border border-blue-300 px-3 py-1.5 text-xs font-medium text-blue-700 transition-colors hover:bg-blue-100"
+            >
+              <X class="mr-1.5 h-3.5 w-3.5" />
+              Reset Tag
+            </button>
+          </div>
+
+          <!-- Reset All Button (shown when both filters active) -->
+          <div
+            v-if="keyword && tag"
+            class="flex justify-end"
+          >
+            <button
+              type="button"
+              @click="onResetAll"
+              class="inline-flex items-center rounded border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50"
+            >
+              <X class="mr-1.5 h-3.5 w-3.5" />
+              Reset Semua Filter
+            </button>
+          </div>
         </div>
         <!-- Loading State -->
         <div v-if="isLoading" class="flex items-center justify-center py-20">
