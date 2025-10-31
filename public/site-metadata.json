@@ -1,9 +1,9 @@
 {
   "website": {
-    "name": "Sekretariat DPRD Kutai Kartanegara",
-    "shortName": "DPRD Kukar",
-    "description": "Website resmi DPRD Kabupaten Kutai Kartanegara",
-    "url": "https://dprd.rizkipadhil.my.id",
+    "name": "Sistem Informasi Pelayanan Sekretariat Unggul Terpadu Sekretariat DPRD Kab. Kutai Kartanegara",
+    "shortName": "SiPesut",
+    "description": "Sistem informasi pelayanan publik yang terpadu untuk memfasilitasi layanan Sekretariat DPRD Kabupaten Kutai Kartanegara dengan standar pelayanan yang unggul dan transparan",
+    "url": "https://sipesut-setdprd.kukarkab.go.id",
     "locale": "id_ID",
     "themeColor": "#1e40af"
   },
@@ -19,16 +19,31 @@
     }
   },
   "seo": {
-    "title": "Sekretariat DPRD Kutai Kartanegara - Portal Resmi",
-    "description": "Website resmi DPRD Kabupaten Kutai Kartanegara",
-    "keywords": ["dprd", "kutai kartanegara", "kukar", "pemerintahan"],
-    "author": "Sekretariat DPRD Kutai Kartanegara",
+    "title": "SiPesut - Sistem Informasi Pelayanan Sekretariat Unggul Terpadu DPRD Kutai Kartanegara",
+    "description": "Sistem informasi pelayanan publik yang terpadu untuk memfasilitasi layanan Sekretariat DPRD Kabupaten Kutai Kartanegara dengan standar pelayanan yang unggul dan transparan",
+    "keywords": [
+      "SIPesut",
+      "Sistem Informasi Pelayanan Sekretariat",
+      "DPRD Kutai Kartanegara",
+      "Kukar",
+      "standar pelayanan",
+      "pelayanan publik",
+      "Sekretariat DPRD",
+      "sistem informasi terpadu",
+      "layanan digital",
+      "transparansi publik",
+      "Sekretariat DPRD Kukar",
+      "layanan Sekretariat",
+      "informasi DPRD",
+      "portal DPRD Kutai Kartanegara"
+    ],
+    "author": "Sekretariat DPRD Kabupaten Kutai Kartanegara",
     "robots": "index, follow"
   },
   "openGraph": {
-    "title": "Sekretariat DPRD Kutai Kartanegara",
-    "description": "Website resmi DPRD Kabupaten Kutai Kartanegara",
-    "image": "/assets/images/og-image.png",
+    "title": "SiPesut - Sistem Informasi Pelayanan Sekretariat Unggul Terpadu DPRD Kutai Kartanegara",
+    "description": "Sistem informasi pelayanan publik yang terpadu untuk memfasilitasi layanan Sekretariat DPRD Kabupaten Kutai Kartanegara dengan standar pelayanan yang unggul dan transparan",
+    "image": "/assets/images/logos/logo-kukar.png",
     "imageWidth": "1200",
     "imageHeight": "630",
     "type": "website"

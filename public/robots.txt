@@ -1,3 +1,24 @@
 User-agent: *
 Allow: /
-Sitemap: https://dprd.rizkipadhil.my.id/sitemap.xml
+
+# Block admin and authenticated routes
+Disallow: /app/
+Disallow: /login
+
+# Allow public routes
+Allow: /beranda
+Allow: /berita
+Allow: /dokumen
+Allow: /media
+Allow: /pemerintahan
+Allow: /pelayanan-publik
+Allow: /pengaduan-masyarakat
+Allow: /ppid
+Allow: /portal
+Allow: /selayang-pandang
+Allow: /unit-kerja
+Allow: /kontak-kami
+Allow: /buku-tamu
+Allow: /aplikasi-terkait
+
+Sitemap: https://sipesut-setdprd.kukarkab.go.id/sitemap.xml

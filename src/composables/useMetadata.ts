@@ -103,12 +103,26 @@ export function useMetadata() {
     }
   };
 
+  const updateCanonicalUrl = (url: string): void => {
+    if (typeof document !== "undefined") {
+      let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement;
+      if (!canonical) {
+        canonical = document.createElement("link");
+        canonical.setAttribute("rel", "canonical");
+        document.head.appendChild(canonical);
+      }
+      canonical.setAttribute("href", url);
+    }
+  };
+
   const updatePageMetadata = (metadata: {
     title?: string;
     description?: string;
     image?: string;
     url?: string;
     keywords?: string[];
+    canonical?: string;
+    robots?: string;
   }): void => {
     if (metadata.title) {
       updatePageTitle(metadata.title);
@@ -123,22 +137,95 @@ export function useMetadata() {
     }
 
     if (metadata.image) {
-      updateOpenGraphTag("og:image", metadata.image);
-      updateTwitterTag("twitter:image", metadata.image);
+      const fullImageUrl = metadata.image.startsWith("http")
+        ? metadata.image
+        : `${getWebsiteUrl()}${metadata.image.startsWith("/") ? "" : "/"}${metadata.image}`;
+      updateOpenGraphTag("og:image", fullImageUrl);
+      updateTwitterTag("twitter:image", fullImageUrl);
     }
 
     if (metadata.url) {
-      updateOpenGraphTag("og:url", metadata.url);
+      const fullUrl = metadata.url.startsWith("http") ? metadata.url : `${getWebsiteUrl()}${metadata.url}`;
+      updateOpenGraphTag("og:url", fullUrl);
+    }
+
+    if (metadata.canonical) {
+      const canonicalUrl = metadata.canonical.startsWith("http")
+        ? metadata.canonical
+        : `${getWebsiteUrl()}${metadata.canonical.startsWith("/") ? "" : "/"}${metadata.canonical}`;
+      updateCanonicalUrl(canonicalUrl);
     }
 
     if (metadata.keywords && Array.isArray(metadata.keywords)) {
       if (typeof document !== "undefined") {
-        const metaKeywords = document.querySelector('meta[name="keywords"]');
-        if (metaKeywords) {
-          metaKeywords.setAttribute("content", metadata.keywords.join(", "));
+        let metaKeywords = document.querySelector('meta[name="keywords"]') as HTMLMetaElement;
+        if (!metaKeywords) {
+          metaKeywords = document.createElement("meta");
+          metaKeywords.setAttribute("name", "keywords");
+          document.head.appendChild(metaKeywords);
         }
+        metaKeywords.setAttribute("content", metadata.keywords.join(", "));
       }
     }
+
+    if (metadata.robots) {
+      if (typeof document !== "undefined") {
+        let metaRobots = document.querySelector('meta[name="robots"]') as HTMLMetaElement;
+        if (!metaRobots) {
+          metaRobots = document.createElement("meta");
+          metaRobots.setAttribute("name", "robots");
+          document.head.appendChild(metaRobots);
+        }
+        metaRobots.setAttribute("content", metadata.robots);
+      }
+    }
+  };
+
+  const injectStructuredData = (structuredData: Record<string, any>): void => {
+    if (typeof document === "undefined") return;
+
+    // Remove existing structured data with same type if any
+    const existingScript = document.querySelector(
+      `script[type="application/ld+json"][data-jsonld-type="${structuredData["@type"]}"]`
+    );
+    if (existingScript) {
+      existingScript.remove();
+    }
+
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.setAttribute("data-jsonld-type", structuredData["@type"] || "Organization");
+    script.textContent = JSON.stringify(structuredData);
+    document.head.appendChild(script);
+  };
+
+  const getOrganizationStructuredData = () => {
+    if (!siteMetadata.value) return null;
+
+    return {
+      "@context": "https://schema.org",
+      "@type": "GovernmentOrganization",
+      name: siteMetadata.value.website.name,
+      alternateName: siteMetadata.value.website.shortName,
+      description: siteMetadata.value.website.description,
+      url: siteMetadata.value.website.url,
+      logo: `${siteMetadata.value.website.url}${siteMetadata.value.openGraph.image}`,
+      contactPoint: {
+        "@type": "ContactPoint",
+        email: siteMetadata.value.contact.email,
+        telephone: siteMetadata.value.contact.phone,
+        contactType: "Customer Service",
+        areaServed: "ID",
+        availableLanguage: ["Indonesian", "Bahasa Indonesia"],
+      },
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Kutai Kartanegara",
+        addressRegion: "Kalimantan Timur",
+        addressCountry: "ID",
+      },
+      sameAs: Object.values(siteMetadata.value.contact.socialMedia).filter(Boolean),
+    };
   };
 
   const getFullTitle = (pageTitle?: string): string => {
@@ -178,6 +265,9 @@ export function useMetadata() {
     updatePageMetadata,
     updatePageTitle,
     updatePageDescription,
+    updateCanonicalUrl,
+    injectStructuredData,
+    getOrganizationStructuredData,
 
     // Getters
     getFullTitle,

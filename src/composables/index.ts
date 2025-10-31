@@ -10,3 +10,4 @@ export * from "./usePagination";
 export * from "./usePaginationApp";
 export * from "./usePortal";
 export * from "./useResourceList";
+export * from "./useSEO";

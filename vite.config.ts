@@ -40,7 +40,8 @@ export default defineConfig({
     allowedHosts: [
       "dev-pelayanan-dprd.kukarkab.go.id",
       "pelayanan-dprd.kukarkab.go.id",
-      "dprd.rizkipadhil.my.id"
+      "dprd.rizkipadhil.my.id",
+      "sipesut-setdprd.kukarkab.go.id"
     ],
   },
   resolve: {

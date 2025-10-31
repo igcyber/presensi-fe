@@ -1,5 +1,5 @@
 {
-  "name": "portal-kukarkab",
+  "name": "portal-sekretariat-dprd-kukar",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -12,10 +12,11 @@
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "test:unit": "vitest",
-    "build-only": "vite build",
+    "build-only": "npm run generate:sitemap && vite build",
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "generate:sitemap": "node --loader jiti scripts/generate-sitemap.ts"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.12",
