@@ -42,12 +42,14 @@ defineProps<Props>();
               <div
                 v-for="(emergency, idx) in emergencies"
                 :key="idx"
-                class="flex items-center justify-center sm:justify-start"
+                class="flex w-full items-center rounded-lg px-4 py-3 sm:justify-start"
               >
-                <div class="mr-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/20 sm:h-12 sm:w-12">
+                <div
+                  class="mr-3 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/20 sm:h-12 sm:w-12"
+                >
                   <DynamicIcon :name="`bx-${emergency.icon}`" icon-class="h-4 w-4 sm:h-5 sm:w-5" />
                 </div>
-                <div class="text-center sm:text-left">
+                <div class="flex-1 text-center sm:text-left">
                   <p class="text-sm font-semibold sm:text-base lg:text-sm xl:text-base">{{ emergency.nama }}</p>
                   <p class="text-xs text-red-100 sm:text-sm lg:text-xs xl:text-sm">{{ emergency.isi }}</p>
                 </div>

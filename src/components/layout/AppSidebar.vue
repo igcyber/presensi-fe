@@ -11,7 +11,7 @@ import {
   MessageSquare,
   NewspaperIcon,
   Settings,
-  Smartphone,
+  // Smartphone,
   Tag,
   UserCheck,
   UserIcon,
@@ -22,7 +22,7 @@ import { computed } from "vue";
 import { useRoute } from "vue-router";
 
 import NavDashboard from "@/components/navigation/NavDashboard.vue";
-import NavMaster from "@/components/navigation/NavMaster.vue";
+import NavGroup from "@/components/navigation/NavGroup.vue";
 import NavUser from "@/components/navigation/NavUser.vue";
 import TeamSwitcher from "@/components/navigation/TeamSwitcher.vue";
 import type { SidebarProps } from "@/components/ui/sidebar";
@@ -75,7 +75,7 @@ const data = computed(() => ({
       isActive: routNameActive.value === "app.dashboard-data",
     },
   ],
-  navMaster: [
+  navUserAccess: [
     {
       title: "Users",
       url: "/app/users",
@@ -99,6 +99,8 @@ const data = computed(() => ({
         },
       ],
     },
+  ],
+  navMediaKonten: [
     {
       title: "Tags",
       url: "/app/tags",
@@ -128,6 +130,15 @@ const data = computed(() => ({
       isActive: routNameActive.value === "app.foto" || routNameActive.value === "app.foto.detail",
     },
     {
+      title: "Infografis",
+      url: "/app/infografis",
+      name: "app.infografis",
+      icon: Image,
+      isActive: routNameActive.value === "app.infografis" || routNameActive.value === "app.infografis.detail",
+    },
+  ],
+  navDokumenPeraturan: [
+    {
       title: "JDIH",
       url: "/app/dokumen",
       name: "app.dokumen",
@@ -142,6 +153,8 @@ const data = computed(() => ({
       isActive:
         routNameActive.value === "app.dokumen-kategori" || routNameActive.value === "app.dokumen-kategori .detail",
     },
+  ],
+  navPelayananPublik: [
     {
       title: "Pengaduan",
       url: "/app/pengaduan",
@@ -150,40 +163,14 @@ const data = computed(() => ({
       isActive: routNameActive.value === "app.pengaduan" || routNameActive.value === "app.pengaduan.detail",
     },
     {
-      title: "Statik",
-      url: "/app/statik",
-      name: "app.statik",
-      icon: Settings,
-      isActive: routNameActive.value === "app.statik" || routNameActive.value === "app.statik.detail",
+      title: "Buku Tamu",
+      url: "/app/buku-tamu",
+      name: "app.buku-tamu",
+      icon: BookOpen,
+      isActive: routNameActive.value === "app.buku-tamu" || routNameActive.value === "app.buku-tamu.detail",
     },
-    {
-      title: "Infografis",
-      url: "/app/infografis",
-      name: "app.infografis",
-      icon: Image,
-      isActive: routNameActive.value === "app.infografis" || routNameActive.value === "app.infografis.detail",
-    },
-    // {
-    //   title: "Rapat",
-    //   url: "/app/rapat",
-    //   name: "app.rapat",
-    //   icon: Users,
-    //   isActive: routNameActive.value === "app.rapat" || routNameActive.value === "app.rapat.detail",
-    // },
-    {
-      title: "Struktur",
-      url: "/app/struktur",
-      name: "app.struktur",
-      icon: FolderTree,
-      isActive: routNameActive.value === "app.struktur" || routNameActive.value === "app.struktur.detail",
-    },
-    {
-      title: "Jabatan Anggota",
-      url: "/app/jabatan-anggota",
-      name: "app.jabatan-anggota",
-      icon: UserCheck,
-      isActive: routNameActive.value === "app.jabatan-anggota" || routNameActive.value === "app.jabatan-anggota.detail",
-    },
+  ],
+  navSistemKonfigurasi: [
     {
       title: "Menu",
       url: "/app/menu",
@@ -199,13 +186,30 @@ const data = computed(() => ({
       isActive: routNameActive.value === "app.pages" || routNameActive.value === "app.pages.detail",
     },
     {
-      title: "Aplikasi Terkait",
-      url: "/app/aplikasi-terkait",
-      name: "app.aplikasi-terkait",
-      icon: Smartphone,
-      isActive:
-        routNameActive.value === "app.aplikasi-terkait" || routNameActive.value === "app.aplikasi-terkait.detail",
+      title: "Statik",
+      url: "/app/statik",
+      name: "app.statik",
+      icon: Settings,
+      isActive: routNameActive.value === "app.statik" || routNameActive.value === "app.statik.detail",
     },
+  ],
+  navOrganisasi: [
+    {
+      title: "Struktur",
+      url: "/app/struktur",
+      name: "app.struktur",
+      icon: FolderTree,
+      isActive: routNameActive.value === "app.struktur" || routNameActive.value === "app.struktur.detail",
+    },
+    {
+      title: "Jabatan Anggota",
+      url: "/app/jabatan-anggota",
+      name: "app.jabatan-anggota",
+      icon: UserCheck,
+      isActive: routNameActive.value === "app.jabatan-anggota" || routNameActive.value === "app.jabatan-anggota.detail",
+    },
+  ],
+  navEvaluasiStandar: [
     {
       title: "Survei Kepuasan",
       url: "/app/survei-kepuasan",
@@ -221,13 +225,8 @@ const data = computed(() => ({
       isActive:
         routNameActive.value === "app.standar-pelayanan" || routNameActive.value === "app.standar-pelayanan.detail",
     },
-    {
-      title: "Buku Tamu",
-      url: "/app/buku-tamu",
-      name: "app.buku-tamu",
-      icon: BookOpen,
-      isActive: routNameActive.value === "app.buku-tamu" || routNameActive.value === "app.buku-tamu.detail",
-    },
+  ],
+  navInformasiPublik: [
     {
       title: "PPID",
       url: "/app/ppid",
@@ -236,6 +235,21 @@ const data = computed(() => ({
       isActive: routNameActive.value === "app.ppid" || routNameActive.value === "app.ppid.detail",
     },
 
+    // {
+    //   title: "Rapat",
+    //   url: "/app/rapat",
+    //   name: "app.rapat",
+    //   icon: Users,
+    //   isActive: routNameActive.value === "app.rapat" || routNameActive.value === "app.rapat.detail",
+    // },
+    // {
+    //   title: "Aplikasi Terkait",
+    //   url: "/app/aplikasi-terkait",
+    //   name: "app.aplikasi-terkait",
+    //   icon: Smartphone,
+    //   isActive:
+    //     routNameActive.value === "app.aplikasi-terkait" || routNameActive.value === "app.aplikasi-terkait.detail",
+    // },
     // {
     //   title: "Majalah",
     //   url: "/app/majalah",
@@ -310,7 +324,14 @@ const data = computed(() => ({
     </SidebarHeader>
     <SidebarContent>
       <NavDashboard :items="data.navDashboard" />
-      <NavMaster :items="data.navMaster" />
+      <NavGroup label="User & Access Management" :items="data.navUserAccess" />
+      <NavGroup label="Media & Konten" :items="data.navMediaKonten" />
+      <NavGroup label="Dokumen & Peraturan" :items="data.navDokumenPeraturan" />
+      <NavGroup label="Pelayanan Publik" :items="data.navPelayananPublik" />
+      <NavGroup label="Organisasi" :items="data.navOrganisasi" />
+      <NavGroup label="Sistem & Konfigurasi" :items="data.navSistemKonfigurasi" />
+      <NavGroup label="Evaluasi & Standar" :items="data.navEvaluasiStandar" />
+      <NavGroup label="Informasi Publik" :items="data.navInformasiPublik" />
     </SidebarContent>
     <SidebarFooter>
       <NavUser :user="userData" />

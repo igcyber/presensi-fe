@@ -86,6 +86,14 @@ export interface AplikasiTerkaitItem extends BaseEntity {
 }
 
 /**
+ * Standar Pelayanan item interface
+ */
+export interface StandarPelayananItem extends BaseEntity {
+  nama: string;
+  deskripsi: string;
+}
+
+/**
  * Homepage data interface
  */
 export interface BerandaData {
@@ -97,4 +105,5 @@ export interface BerandaData {
   sistems: SistemItem[];
   opds: OpdItem[];
   aplikasiTerkait: AplikasiTerkaitItem[];
+  standarPelayanan: StandarPelayananItem[];
 }

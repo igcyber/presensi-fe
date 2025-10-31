@@ -156,6 +156,8 @@ export function useFilePreview() {
       console.error("Error downloading file:", error);
       // Fallback: open in new tab
       window.open(file.url, "_blank");
+    } finally {
+      URL.revokeObjectURL(file.url);
     }
   };
 

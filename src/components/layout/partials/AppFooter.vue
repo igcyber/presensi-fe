@@ -6,7 +6,7 @@ import { computed } from "vue";
 import { useAppData } from "@/composables/useAppData";
 
 // Get data from composable
-const { footerInfo, relatedLinks, profileLinks } = useAppData();
+const { footerInfo, profileLinks } = useAppData();
 
 // Computed properties
 const currentYear = computed(() => new Date().getFullYear());
@@ -16,7 +16,15 @@ const hasFooterInfo = computed(() => {
 });
 
 const hasProfileLinks = computed(() => profileLinks.value && profileLinks.value.length > 0);
-const hasRelatedLinks = computed(() => relatedLinks.value && relatedLinks.value.length > 0);
+// const hasRelatedLinks = computed(() => relatedLinks.value && relatedLinks.value.length > 0);
+
+// Google Maps embed URL (menggunakan format search tanpa API key)
+const mapsEmbedUrl = computed(() => {
+  const alamat = footerInfo.value.alamat || "Jl. Wolter Monginsidi No.1 Tenggarong 75511 Kutai Kartanegara Kaltim";
+  const encodedAddress = encodeURIComponent(alamat);
+  // Format embed Google Maps dengan search query (tidak perlu API key)
+  return `https://www.google.com/maps?q=${encodedAddress}&output=embed&zoom=15`;
+});
 </script>
 
 <template>
@@ -115,25 +123,46 @@ const hasRelatedLinks = computed(() => relatedLinks.value && relatedLinks.value.
           </nav>
         </div>
 
-        <!-- Related Links -->
-        <div v-if="hasRelatedLinks" class="lg:col-span-1">
-          <h3 class="mb-4 text-lg font-bold text-white sm:mb-6 sm:text-xl">Link Terkait</h3>
-          <nav class="space-y-2.5 sm:space-y-3" aria-label="Link terkait">
-            <a
-              v-for="link in relatedLinks"
-              :key="link.id"
-              :href="link.website"
-              class="group flex items-center gap-2 text-sm text-gray-300 transition-all duration-200 hover:text-yellow-300 sm:text-base"
-              target="_blank"
-              rel="noopener noreferrer"
-              :title="link.nama"
-            >
-              <ChevronRight
-                class="h-4 w-4 flex-shrink-0 text-yellow-600 opacity-0 transition-all duration-200 group-hover:translate-x-1 group-hover:opacity-100"
-              />
-              <span>{{ link.nama }}</span>
-            </a>
-          </nav>
+        <!-- Map & Related Links -->
+        <div class="lg:col-span-1">
+          <!-- Google Maps -->
+          <div v-if="footerInfo.alamat" class="mb-6 sm:mb-8">
+            <h3 class="mb-4 text-lg font-bold text-white sm:mb-6 sm:text-xl">Lokasi</h3>
+            <div class="overflow-hidden rounded-lg border border-white/10">
+              <div class="aspect-[4/3] w-full sm:aspect-video">
+                <iframe
+                  :src="mapsEmbedUrl"
+                  class="h-full w-full"
+                  style="border: 0"
+                  allowfullscreen
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"
+                  title="Lokasi DPRD Kukar"
+                ></iframe>
+              </div>
+            </div>
+          </div>
+
+          <!-- Related Links -->
+          <!-- <div v-if="hasRelatedLinks">
+            <h3 class="mb-4 text-lg font-bold text-white sm:mb-6 sm:text-xl">Link Terkait</h3>
+            <nav class="space-y-2.5 sm:space-y-3" aria-label="Link terkait">
+              <a
+                v-for="link in relatedLinks"
+                :key="link.id"
+                :href="link.website"
+                class="group flex items-center gap-2 text-sm text-gray-300 transition-all duration-200 hover:text-yellow-300 sm:text-base"
+                target="_blank"
+                rel="noopener noreferrer"
+                :title="link.nama"
+              >
+                <ChevronRight
+                  class="h-4 w-4 flex-shrink-0 text-yellow-600 opacity-0 transition-all duration-200 group-hover:translate-x-1 group-hover:opacity-100"
+                />
+                <span>{{ link.nama }}</span>
+              </a>
+            </nav>
+          </div> -->
         </div>
       </div>
     </div>

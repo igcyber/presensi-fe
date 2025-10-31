@@ -118,11 +118,11 @@ export const getKategoriPengaduan = async (): Promise<ApiResponse<KategoriPengad
  * ```
  */
 export const exportPengaduanExcel = async (params?: PengaduanQueryParams): Promise<Blob> => {
-  const { data } = await httpInstance.get<ApiResponse<Blob>>("/api/pengaduan/export", {
+  const { data } = await httpInstance.get<Blob>("/api/pengaduan/export-excel", {
     params,
     responseType: "blob",
   });
-  return data.data;
+  return data;
 };
 
 /**

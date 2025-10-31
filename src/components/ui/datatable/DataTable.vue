@@ -310,21 +310,26 @@ const formatCellValue = (item: T, column: Column<T>) => {
               </Popover>
             </div>
           </template>
+        </div>
 
-          <!-- Action Buttons -->
-          <div class="flex flex-col gap-1.5 sm:col-span-2 lg:col-span-1">
-            <Label for="action" class="text-sm font-medium opacity-0">Action</Label>
-            <div class="flex w-full gap-2">
-              <Button variant="default" class="flex-1" @click="applyFilters" id="action">
-                <Filter class="mr-2 h-4 w-4" />
+        <!-- Action Buttons -->
+        <div class="mt-6">
+          <div class="flex w-full flex-col items-stretch justify-between gap-3 sm:flex-row sm:items-center">
+            <div class="flex flex-wrap items-center gap-2">
+              <Button variant="default" @click="applyFilters" id="action" class="flex-shrink-0">
+                <Filter class="mr-2 size-4" />
                 <span class="hidden sm:inline">Terapkan Filter</span>
                 <span class="sm:hidden">Filter</span>
               </Button>
-              <Button variant="outline" class="flex-1" @click="resetFilters">
-                <RotateCcw class="mr-2 h-4 w-4" />
-                <span class="hidden sm:inline">Reset</span>
+              <Button variant="outline" @click="resetFilters" class="flex-shrink-0">
+                <RotateCcw class="mr-2 size-4" />
+                <span class="hidden sm:inline">Reset Filter</span>
                 <span class="sm:hidden">Reset</span>
               </Button>
+            </div>
+
+            <div class="flex-shrink-0">
+              <slot name="actionButtons" />
             </div>
           </div>
         </div>

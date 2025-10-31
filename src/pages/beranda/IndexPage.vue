@@ -2,7 +2,7 @@
 import { onMounted, ref } from "vue";
 
 import {
-  AplikasiTerkaitSection,
+  // AplikasiTerkaitSection,
   // ElectionInfoSection,
   EmergencySection,
   FeaturesSection,
@@ -13,6 +13,7 @@ import {
   // ServicesSection,
   VideoSection,
 } from "@/components/features/beranda";
+import StandarPelayananSection from "@/components/features/beranda/StandarPelayananSection.vue";
 import VideoModal from "@/components/modals/VideoModal.vue";
 
 import { getBeranda } from "@/lib/api/services/beranda";
@@ -24,6 +25,7 @@ import {
   type NewsItem,
   type OpdItem,
   type SistemItem,
+  type StandarPelayananItem,
   type VideoItem,
 } from "@/lib/api/types/beranda.types";
 
@@ -37,6 +39,7 @@ const layanans = ref<LayananItem[]>([]);
 const sistems = ref<SistemItem[]>([]);
 const opds = ref<OpdItem[]>([]);
 const aplikasiTerkait = ref<AplikasiTerkaitItem[]>([]);
+const standarPelayanan = ref<StandarPelayananItem[]>([]);
 
 // Video Modal (Bootstrap 4)
 const videoModalRef = ref<InstanceType<typeof VideoModal> | null>(null);
@@ -60,6 +63,7 @@ const fetchBeranda = async () => {
     sistems.value = responseData.sistems;
     opds.value = responseData.opds;
     aplikasiTerkait.value = responseData.aplikasiTerkait;
+    standarPelayanan.value = responseData.standarPelayanan;
   } catch (error) {
     console.error("Error fetching beranda:", error);
   } finally {
@@ -113,7 +117,10 @@ onMounted(async () => {
       <!-- <ServicesSection :layanans="layanans" :sistems="sistems" /> -->
 
       <!-- Aplikasi Terkait Section -->
-      <AplikasiTerkaitSection :aplikasi-terkait="aplikasiTerkait" />
+      <!-- <AplikasiTerkaitSection :aplikasi-terkait="aplikasiTerkait" /> -->
+
+      <!-- Standar Pelayanan Section -->
+      <StandarPelayananSection :standar-pelayanan="standarPelayanan" />
 
       <!-- OPD Section -->
       <!-- <OpdSection :opds="opds" /> -->

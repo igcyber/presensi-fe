@@ -11,6 +11,7 @@ import { type Column, DataTable, type FilterConfig } from "@/components/ui/datat
 import ErrorState from "@/components/ui/error-state/ErrorState.vue";
 
 import { useDialog } from "@/composables/useDialog";
+import { useFilePreview } from "@/composables/useFilePreview";
 import { useResourceList } from "@/composables/useResourceList";
 import { exportPengaduanExcel, getPengaduans } from "@/lib/api/services/pengaduan";
 import type { Pengaduan } from "@/lib/api/types/pengaduan.types";
@@ -32,6 +33,7 @@ const {
 
 const dialog = useDialog<Pengaduan>();
 const router = useRouter();
+const filePreview = useFilePreview();
 
 // State
 const isExporting = ref(false);
@@ -135,22 +137,18 @@ const handlePengaduanDialogSuccess = (): void => {
 const handleExportExcel = async (): Promise<void> => {
   try {
     isExporting.value = true;
-    const blob = await exportPengaduanExcel(query.value);
+    const blob = await exportPengaduanExcel();
 
-    // Create download link
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `Data Pengaduan ${new Date().toISOString().split("T")[0]}.xlsx`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
+    filePreview.handleDownload({
+      url: URL.createObjectURL(blob),
+      name: `Data Pengaduan ${new Date().toISOString().split("T")[0]}.xlsx`,
+    });
 
     toast.success("Export berhasil", {
       description: "File Excel telah berhasil diunduh",
     });
   } catch (error: unknown) {
+    console.error(error);
     const errorMessage = error instanceof Error ? error.message : "Gagal export data";
     toast.error("Gagal export data", { description: errorMessage });
   } finally {
@@ -176,13 +174,6 @@ watch(
         <div class="space-y-1">
           <h1 class="text-3xl font-bold tracking-tight">Pengaduan Masyarakat</h1>
           <p class="text-muted-foreground">Kelola pengaduan masyarakat dengan fitur pencarian, filter, dan aksi</p>
-        </div>
-        <div class="flex gap-2">
-          <Button @click="handleExportExcel" :disabled="isExporting" variant="outline" class="flex items-center gap-2">
-            <Download v-if="!isExporting" class="h-4 w-4" />
-            <div v-else class="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
-            {{ isExporting ? "Exporting..." : "Export Excel" }}
-          </Button>
         </div>
       </div>
 
@@ -213,7 +204,14 @@ watch(
             @row-click="handleRowClick"
             @edit="handleUpdateStatus"
             @reset-filter="reset"
-          />
+          >
+            <template #actionButtons>
+              <Button variant="outline" @click="handleExportExcel" :disabled="isExporting">
+                <Download class="h-4 w-4" />
+                {{ isExporting ? "Exporting..." : "Export Pengaduan" }}
+              </Button>
+            </template>
+          </DataTable>
         </CardContent>
       </Card>
 
