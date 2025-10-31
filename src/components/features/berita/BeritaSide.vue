@@ -208,7 +208,7 @@ onMounted(async () => {
           <router-link
             v-for="tag in tags"
             :key="tag.id"
-            :to="{ path: '/berita', query: { tag: tag.namaTag } }"
+            :to="{ path: '/media/berita', query: { tag: tag.namaTag } }"
             class="flex items-center justify-between border-b border-gray-100 pb-3 transition-colors hover:text-yellow-600"
           >
             <div class="flex items-center gap-2">
