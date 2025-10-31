@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { PlusIcon } from "lucide-vue-next";
-import { watch } from "vue";
+import { PlusIcon, Play } from "lucide-vue-next";
+import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 
 import BaseConfirmDialog from "@/components/dialogs/BaseConfirmDialog.vue";
 import BeritaDialog from "@/components/dialogs/BeritaDialog.vue";
+import ScrapingDialog from "@/components/dialogs/ScrapingDialog.vue";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { type Column, DataTable, type FilterConfig } from "@/components/ui/datatable";
@@ -34,6 +35,7 @@ const {
 const dialog = useDialog<Berita>();
 const confirmDialog = useDialog<Berita>();
 const router = useRouter();
+const scrapingOpen = ref(false);
 
 // Filter configuration
 const filterConfig: FilterConfig[] = [
@@ -147,10 +149,16 @@ watch(
           <h1 class="text-3xl font-bold tracking-tight">Berita</h1>
           <p class="text-muted-foreground">Daftar berita dengan fitur pencarian, pengurutan, dan paginasi</p>
         </div>
-        <Button @click="openCreateDialog" class="flex items-center gap-2 self-start sm:self-auto">
-          <PlusIcon class="h-4 w-4" />
-          Tambah Baru
-        </Button>
+        <div class="flex items-center gap-2 self-start sm:self-auto">
+          <Button variant="secondary" @click="() => (scrapingOpen = true)" class="flex items-center gap-2">
+            <Play class="h-4 w-4" />
+            Tarik Berita
+          </Button>
+          <Button @click="openCreateDialog" class="flex items-center gap-2">
+            <PlusIcon class="h-4 w-4" />
+            Tambah Baru
+          </Button>
+        </div>
       </div>
 
       <Card>
@@ -204,6 +212,9 @@ watch(
         :loading="confirmDialog.state.value.loading"
         @confirm="confirmDelete"
       />
+
+      <!-- Scraping Dialog -->
+      <ScrapingDialog v-model:open="scrapingOpen" widthClass="sm:max-w-[1000px]" @success="fetchData" />
     </div>
   </div>
 </template>
