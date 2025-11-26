@@ -11,11 +11,11 @@ import {
   MessageSquare,
   NewspaperIcon,
   Settings,
+  Shield,
   // Smartphone,
   Tag,
   UserCheck,
   UserIcon,
-  UserRound,
   VideoIcon,
 } from "lucide-vue-next";
 import { computed } from "vue";
@@ -85,19 +85,10 @@ const data = computed(() => ({
     },
     {
       title: "Roles",
-      url: "#",
-      icon: UserRound,
-      isActive: routNameActive.value === "roles.index",
-      items: [
-        {
-          title: "Superadmin",
-          url: "#",
-        },
-        {
-          title: "Admin",
-          url: "#",
-        },
-      ],
+      url: "/app/roles",
+      name: "app.role",
+      icon: Shield,
+      isActive: routNameActive.value === "app.role" || routNameActive.value === "app.role.detail",
     },
   ],
   navMediaKonten: [

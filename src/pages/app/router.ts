@@ -29,6 +29,7 @@ import statikRoute from "@/pages/app/statik/route";
 import strukturRoute from "@/pages/app/struktur/route";
 import surveiKepuasanRoute from "@/pages/app/survei-kepuasan/route";
 import tagsRoute from "@/pages/app/tags/route";
+import roleRoute from "@/pages/app/role/route";
 import userRoute from "@/pages/app/user/route";
 import videoRoute from "@/pages/app/video/route";
 
@@ -44,6 +45,7 @@ export default {
     ...dashboardDataRoute,
     ...profileRoute,
     ...userRoute,
+    ...roleRoute,
     ...beritaRoute,
     ...videoRoute,
     ...majalahRoute,
