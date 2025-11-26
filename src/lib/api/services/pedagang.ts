@@ -1,9 +1,12 @@
 import type { ApiResponse, SearchParams } from "@/lib/api/core/apiResponse";
+import { httpInstance } from "@/lib/api/core";
 import { createCrudService } from "@/lib/api/factories/crudServiceFactory";
 import type {
+  CreatePedagangKiosRequest,
   CreatePedagangRequest,
   Pedagang,
   PedagangDetail,
+  PedagangKios,
   PedagangListResponse,
   PedagangQueryParams,
   UpdatePedagangRequest,
@@ -124,4 +127,80 @@ export const updatePedagang = (id: number, payload: UpdatePedagangRequest): Prom
  * ```
  */
 export const deletePedagang = (id: number): Promise<ApiResponse<null>> => pedagangService.remove(id);
+
+/**
+ * Mendapatkan daftar kios yang ditetapkan ke pedagang
+ * @param pedagangId - ID pedagang
+ * @returns Promise yang mengembalikan daftar kios yang ditetapkan
+ * @endpoint GET /api/pedagang/{pedagangId}/kios
+ * @example
+ * ```typescript
+ * const response = await getPedagangKios(1);
+ * console.log(response.data); // Array of PedagangKios
+ * ```
+ */
+export const getPedagangKios = (pedagangId: number): Promise<ApiResponse<PedagangKios[]>> => {
+  return httpInstance.get(`/api/pedagang/${pedagangId}/kios`).then((response) => response.data);
+};
+
+/**
+ * Menetapkan kios ke pedagang
+ * @param pedagangId - ID pedagang
+ * @param payload - Data untuk menetapkan kios
+ * @returns Promise yang mengembalikan data penetapan kios
+ * @endpoint POST /api/pedagang/{pedagangId}/kios
+ * @example
+ * ```typescript
+ * const response = await createPedagangKios(1, {
+ *   kiosId: 1,
+ *   isActive: true
+ * });
+ * console.log(response.data);
+ * ```
+ */
+export const createPedagangKios = (
+  pedagangId: number,
+  payload: CreatePedagangKiosRequest,
+): Promise<ApiResponse<PedagangKios>> => {
+  return httpInstance.post(`/api/pedagang/${pedagangId}/kios`, payload).then((response) => response.data);
+};
+
+/**
+ * Memperbarui status penetapan kios ke pedagang
+ * @param pedagangId - ID pedagang
+ * @param kiosId - ID kios (bukan ID relasi)
+ * @param payload - Data untuk memperbarui penetapan kios
+ * @returns Promise yang mengembalikan data penetapan kios yang diperbarui
+ * @endpoint PUT /api/pedagang/{pedagangId}/kios/{kiosId}
+ * @example
+ * ```typescript
+ * const response = await updatePedagangKios(1, 1, {
+ *   isActive: false
+ * });
+ * console.log(response.data);
+ * ```
+ */
+export const updatePedagangKios = (
+  pedagangId: number,
+  kiosId: number,
+  payload: { isActive: boolean },
+): Promise<ApiResponse<PedagangKios>> => {
+  return httpInstance.put(`/api/pedagang/${pedagangId}/kios/${kiosId}`, payload).then((response) => response.data);
+};
+
+/**
+ * Menghapus penetapan kios dari pedagang
+ * @param pedagangId - ID pedagang
+ * @param kiosId - ID kios (bukan ID relasi)
+ * @returns Promise yang mengembalikan null jika berhasil
+ * @endpoint DELETE /api/pedagang/{pedagangId}/kios/{kiosId}
+ * @example
+ * ```typescript
+ * await deletePedagangKios(1, 1);
+ * console.log('Penetapan kios berhasil dihapus');
+ * ```
+ */
+export const deletePedagangKios = (pedagangId: number, kiosId: number): Promise<ApiResponse<null>> => {
+  return httpInstance.delete(`/api/pedagang/${pedagangId}/kios/${kiosId}`).then((response) => response.data);
+};
 

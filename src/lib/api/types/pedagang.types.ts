@@ -63,3 +63,38 @@ export interface PedagangQueryParams {
   sort_order?: "asc" | "desc";
 }
 
+/**
+ * Pedagang Kios entity interface
+ * Represents the relationship between pedagang and kios
+ */
+export interface PedagangKios {
+  id: number;
+  pedagangId: number;
+  kiosId: number;
+  isActive: boolean;
+  kios?: {
+    id: number;
+    kode: string;
+    jenisUsahaId: number;
+    pasarId: number;
+    jenisUsaha?: {
+      id: number;
+      nama: string;
+    };
+    pasar?: {
+      id: number;
+      nama: string;
+    };
+  };
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+/**
+ * Create pedagang kios request payload
+ */
+export interface CreatePedagangKiosRequest {
+  kiosId: number;
+  isActive: boolean;
+}
+

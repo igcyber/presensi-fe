@@ -1,22 +1,28 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { ArrowLeft, Calendar, CalendarClock, MapPin, User, Hash, FileText } from "lucide-vue-next";
+import { ArrowLeft, Calendar, CalendarClock, MapPin, User, Hash, FileText, Store, Plus, Power, Trash2 } from "lucide-vue-next";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { useFormatters } from "@/composables/useFormatters";
-import type { PedagangDetail } from "@/lib/api/types/pedagang.types";
+import type { PedagangDetail, PedagangKios } from "@/lib/api/types/pedagang.types";
 
 interface Props {
   pedagang: PedagangDetail;
   showBackButton?: boolean;
+  pedagangKios?: PedagangKios[];
+  isLoadingKios?: boolean;
 }
 
 interface Emits {
   (e: "back"): void;
   (e: "edit", pedagang: PedagangDetail): void;
   (e: "delete", pedagang: PedagangDetail): void;
+  (e: "add-kios"): void;
+  (e: "toggle-active", pedagangKios: PedagangKios): void;
+  (e: "delete-kios", pedagangKios: PedagangKios): void;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -162,6 +168,97 @@ const handleDelete = () => {
                 <p class="text-sm font-medium text-gray-500">Terakhir Diupdate</p>
                 <p class="font-medium">{{ pedagang.updatedAt ? date(pedagang.updatedAt) : "-" }}</p>
               </div>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+
+    <!-- Kios Section -->
+    <Card>
+      <CardHeader>
+        <div class="flex items-center justify-between">
+          <div>
+            <CardTitle>Kios yang Ditetapkan</CardTitle>
+            <CardDescription>Daftar kios yang ditetapkan untuk pedagang ini</CardDescription>
+          </div>
+          <Button size="sm" @click="$emit('add-kios')" class="flex items-center gap-2">
+            <Plus class="h-4 w-4" />
+            Tambah Kios
+          </Button>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <!-- Loading State -->
+        <div v-if="isLoadingKios" class="flex items-center justify-center py-8">
+          <div class="flex items-center gap-2">
+            <div class="border-primary h-6 w-6 animate-spin rounded-full border-2 border-t-transparent"></div>
+            <span class="text-muted-foreground">Memuat data kios...</span>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div v-else-if="!pedagangKios || pedagangKios.length === 0" class="flex flex-col items-center justify-center py-8 text-center">
+          <Store class="h-12 w-12 text-gray-400 mb-4" />
+          <p class="text-muted-foreground mb-2">Belum ada kios yang ditetapkan</p>
+          <p class="text-sm text-muted-foreground">Klik tombol "Tambah Kios" untuk menetapkan kios ke pedagang ini</p>
+        </div>
+
+        <!-- Kios List -->
+        <div v-else class="space-y-3">
+          <div
+            v-for="pedagangKiosItem in pedagangKios"
+            :key="pedagangKiosItem.id"
+            class="flex items-center justify-between rounded-lg border p-4 hover:bg-accent/50 transition-colors"
+          >
+            <div class="flex items-center gap-4 flex-1">
+              <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+                <Store class="h-5 w-5 text-primary" />
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-1">
+                  <p class="font-semibold">{{ pedagangKiosItem.kios?.kode || "Kios #" + pedagangKiosItem.kiosId }}</p>
+                  <Badge
+                    :class="
+                      pedagangKiosItem.isActive
+                        ? 'bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800'
+                        : 'bg-red-50 text-red-600 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800'
+                    "
+                    variant="outline"
+                  >
+                    {{ pedagangKiosItem.isActive ? "Aktif" : "Tidak Aktif" }}
+                  </Badge>
+                </div>
+                <div class="text-sm text-muted-foreground">
+                  <span v-if="pedagangKiosItem.kios?.jenisUsaha">
+                    {{ pedagangKiosItem.kios.jenisUsaha.nama }}
+                  </span>
+                  <span v-if="pedagangKiosItem.kios?.pasar">
+                    <span v-if="pedagangKiosItem.kios?.jenisUsaha"> - </span>
+                    {{ pedagangKiosItem.kios.pasar.nama }}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                @click="$emit('toggle-active', pedagangKiosItem)"
+                class="flex items-center gap-2"
+              >
+                <Power class="h-4 w-4" />
+                {{ pedagangKiosItem.isActive ? "Nonaktifkan" : "Aktifkan" }}
+              </Button>
+              <Button
+                variant="destructive"
+                size="sm"
+                @click="$emit('delete-kios', pedagangKiosItem)"
+                class="flex items-center gap-2"
+              >
+                <Trash2 class="h-4 w-4" />
+                Hapus
+              </Button>
             </div>
           </div>
         </div>
