@@ -16,6 +16,7 @@ import majalahRoute from "@/pages/app/majalah/route";
 import menuRoute from "@/pages/app/menu/route";
 import opdRoute from "@/pages/app/opd/route";
 import pagesRoute from "@/pages/app/pages/route";
+import pasarRoute from "@/pages/app/pasar/route";
 import pedagangRoute from "@/pages/app/pedagang/route";
 import pengaduanRoute from "@/pages/app/pengaduan/route";
 import perusdaRoute from "@/pages/app/perusda/route";
@@ -48,6 +49,7 @@ export default {
     ...userRoute,
     ...roleRoute,
     ...pedagangRoute,
+    ...pasarRoute,
     ...beritaRoute,
     ...videoRoute,
     ...majalahRoute,

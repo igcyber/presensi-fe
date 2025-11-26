@@ -3,7 +3,7 @@ import PedagangPage from "./IndexPage.vue";
 
 export default [
   {
-    path: "pedagangs",
+    path: "pedagang",
     name: "app.pedagang",
     component: PedagangPage,
     meta: {
@@ -12,7 +12,7 @@ export default [
     },
   },
   {
-    path: "pedagangs/:id",
+    path: "pedagang/:id",
     name: "app.pedagang.detail",
     component: PedagangDetailPage,
     meta: {

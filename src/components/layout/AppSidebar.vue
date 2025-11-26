@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {
   BookOpen,
+  Building2,
   ChartBar,
   ClipboardCheck,
   FileText,
@@ -94,8 +95,15 @@ const data = computed(() => ({
   ],
   navKiosManagement: [
     {
+      title: "Pasar",
+      url: "/app/kios",
+      name: "app.pasar",
+      icon: Building2,
+      isActive: routNameActive.value === "app.pasar" || routNameActive.value === "app.pasar.detail",
+    },
+    {
       title: "Pedagang",
-      url: "/app/pedagangs",
+      url: "/app/pedagang",
       name: "app.pedagang",
       icon: Store,
       isActive: routNameActive.value === "app.pedagang" || routNameActive.value === "app.pedagang.detail",

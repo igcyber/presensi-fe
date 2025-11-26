@@ -16,6 +16,7 @@ export type * from "./majalah.types";
 export type * from "./menu.types";
 export type * from "./opd.types";
 export type * from "./page.types";
+export type * from "./pasar.types";
 export type * from "./pedagang.types";
 export type * from "./pemerintahan.types";
 export type * from "./pengaduan.types";

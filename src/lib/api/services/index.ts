@@ -16,6 +16,7 @@ export * from "./majalah";
 export * from "./menu";
 export * from "./opd";
 export * from "./page";
+export * from "./pasar";
 export * from "./pedagang";
 export * from "./pemerintahan";
 export * from "./pengaduan";
