@@ -52,7 +52,6 @@ const handleUpdateModelValue = (v: DateValue | undefined, onChange: (v: any) => 
     <FormItem class="flex flex-col">
       <FormLabel>{{ label }}</FormLabel>
 
-      {{ meta.valid }}
       <Popover>
         <PopoverTrigger as-child class="!w-full">
           <FormControl>
@@ -60,7 +59,7 @@ const handleUpdateModelValue = (v: DateValue | undefined, onChange: (v: any) => 
               variant="outline"
               :class="
                 cn(
-                  'w-[240px] border ps-3 text-start font-normal',
+                  'w-full border ps-3 text-start font-normal',
                   errorMessage &&
                     '!border-destructive !ring-destructive focus-visible:ring-destructive hover:!border-destructive !text-white',
                   !errorMessage && '!border-primary',

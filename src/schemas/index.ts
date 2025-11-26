@@ -14,6 +14,7 @@ export * from "./majalahSchema";
 export * from "./menuSchema";
 export * from "./opdSchema";
 export * from "./pageSchema";
+export * from "./pedagangSchema";
 export * from "./pengaduanSchema";
 export * from "./tindakLanjutSchema";
 export * from "./perusdaSchema";
