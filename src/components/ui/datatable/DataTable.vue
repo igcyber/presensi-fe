@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T">
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, EditIcon, Eye, Filter, RotateCcw, Search, TrashIcon } from "lucide-vue-next";
+import { Calendar as CalendarIcon, EditIcon, Eye, Filter, RotateCcw, Search, Shield, TrashIcon } from "lucide-vue-next";
 import { computed, ref } from "vue";
 
 import FilePreviewDialog from "@/components/dialogs/FilePreviewDialog.vue";
@@ -65,6 +65,7 @@ export interface Props<T = unknown> {
   actions?: boolean;
   actionEdit?: boolean;
   actionDelete?: boolean;
+  actionManageRoles?: boolean;
 }
 
 // Props
@@ -77,6 +78,7 @@ const props = withDefaults(defineProps<Props<T>>(), {
   actions: true,
   actionEdit: true,
   actionDelete: true,
+  actionManageRoles: false,
 });
 
 // Emits
@@ -84,6 +86,7 @@ const emit = defineEmits<{
   rowClick: [item: T];
   edit: [item: T];
   delete: [item: T];
+  manageRoles?: [item: T];
   pageChange: [page: number];
   search: [search: string];
   customFilter: [filters: Array<Record<string, any>>];
@@ -134,6 +137,10 @@ const handleEdit = (item: T) => {
 
 const handleDelete = (item: T) => {
   emit("delete", item);
+};
+
+const handleManageRoles = (item: T) => {
+  emit("manageRoles", item);
 };
 
 const handlePreview = (item: T, column: Column<T>) => {
@@ -460,6 +467,16 @@ const formatCellValue = (item: T, column: Column<T>) => {
             </TableCell>
             <TableCell v-if="actions" class="py-2 text-center">
               <div class="flex items-center justify-center gap-1 sm:gap-2">
+                <Button
+                  v-if="actionManageRoles"
+                  variant="outline"
+                  size="sm"
+                  @click.stop="handleManageRoles(item)"
+                  class="border-gray-300 px-2 sm:px-3 dark:border-gray-600"
+                >
+                  <Shield class="h-4 w-4" />
+                  <span class="hidden sm:inline">Role</span>
+                </Button>
                 <Button
                   v-if="actionEdit"
                   variant="default"

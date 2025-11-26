@@ -6,6 +6,7 @@ import { toast } from "vue-sonner";
 
 import BaseConfirmDialog from "@/components/dialogs/BaseConfirmDialog.vue";
 import UserDialog from "@/components/dialogs/UserDialog.vue";
+import UserRolesDialog from "@/components/dialogs/UserRolesDialog.vue";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { type Column, DataTable } from "@/components/ui/datatable";
@@ -27,6 +28,7 @@ const { items, isLoading, isError, error, pagination, query, fetchData, handleSe
 
 const dialog = useDialog<User>();
 const confirmDialog = useDialog<User>();
+const rolesDialog = ref({ open: false, user: null as User | null });
 
 const { capitalize } = useFormatters();
 
@@ -103,6 +105,10 @@ const handleDelete = (item: User): void => {
   confirmDialog.openView(item);
 };
 
+const handleManageRoles = (item: User): void => {
+  rolesDialog.value = { open: true, user: item };
+};
+
 const confirmDelete = async (): Promise<void> => {
   if (!confirmDialog.state.value.data) return;
 
@@ -129,6 +135,11 @@ const confirmDelete = async (): Promise<void> => {
 
 const handleUserDialogSuccess = (): void => {
   dialog.closeDialog();
+  fetchData();
+};
+
+const handleRolesDialogSuccess = (): void => {
+  rolesDialog.value.open = false;
   fetchData();
 };
 
@@ -182,11 +193,13 @@ onMounted(() => {
             :total-data="pagination.total"
             :total-pages="pagination.last_page"
             :loading="isLoading"
+            :action-manage-roles="true"
             @page-change="handlePageChange"
             @search="handleSearch"
             @row-click="handleRowClick"
             @edit="handleEdit"
             @delete="handleDelete"
+            @manage-roles="handleManageRoles"
           />
         </CardContent>
       </Card>
@@ -209,6 +222,14 @@ onMounted(() => {
         variant="destructive"
         :loading="confirmDialog.state.value.loading"
         @confirm="confirmDelete"
+      />
+
+      <!-- Manage Roles Dialog -->
+      <UserRolesDialog
+        v-model:open="rolesDialog.open"
+        :user="rolesDialog.user"
+        :role-options="roleOptions"
+        @success="handleRolesDialogSuccess"
       />
     </div>
   </div>
