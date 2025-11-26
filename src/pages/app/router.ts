@@ -11,6 +11,7 @@ import fotoRoute from "@/pages/app/foto/route";
 import infografisRoute from "@/pages/app/infografis/route";
 import jabatanAnggotaRoute from "@/pages/app/jabatan-anggota/route";
 import jenisUsahaRoute from "@/pages/app/jenis-usaha/route";
+import kiosRoute from "@/pages/app/kios/route";
 import kontenRoute from "@/pages/app/konten/route";
 import layananRoute from "@/pages/app/layanan/route";
 import majalahRoute from "@/pages/app/majalah/route";
@@ -52,6 +53,7 @@ export default {
     ...pedagangRoute,
     ...pasarRoute,
     ...jenisUsahaRoute,
+    ...kiosRoute,
     ...beritaRoute,
     ...videoRoute,
     ...majalahRoute,

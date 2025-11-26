@@ -8,6 +8,7 @@ export * from "./fotoSchema";
 export * from "./infografisSchema";
 export * from "./jabatanAnggotaSchema";
 export * from "./kategoriDokumenSchema";
+export * from "./kiosSchema";
 export * from "./kontenSchema";
 export * from "./layananSchema";
 export * from "./majalahSchema";

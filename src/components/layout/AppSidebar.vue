@@ -6,6 +6,7 @@ import {
   ClipboardCheck,
   FileText,
   FolderTree,
+  Grid3x3,
   HomeIcon,
   Image,
   ListTree,
@@ -96,7 +97,7 @@ const data = computed(() => ({
   navKiosManagement: [
     {
       title: "Pasar",
-      url: "/app/kios",
+      url: "/app/pasar",
       name: "app.pasar",
       icon: Building2,
       isActive: routNameActive.value === "app.pasar" || routNameActive.value === "app.pasar.detail",
@@ -107,6 +108,13 @@ const data = computed(() => ({
       name: "app.jenis-usaha",
       icon: Tag,
       isActive: routNameActive.value === "app.jenis-usaha" || routNameActive.value === "app.jenis-usaha.detail",
+    },
+    {
+      title: "Kios",
+      url: "/app/kios",
+      name: "app.kios",
+      icon: Grid3x3,
+      isActive: routNameActive.value === "app.kios" || routNameActive.value === "app.kios.detail",
     },
     {
       title: "Pedagang",

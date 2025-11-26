@@ -37,6 +37,10 @@ interface Props {
   customCss?: string;
 }
 
+interface Emits {
+  (e: "update:model-value", value: string | number | (string | number)[] | null): void;
+}
+
 // Props dengan default values
 const props = withDefaults(defineProps<Props>(), {
   valueAsNumber: false,
@@ -49,6 +53,9 @@ const props = withDefaults(defineProps<Props>(), {
   emptyText: "Tidak ada data",
   minSearchLength: 1,
 });
+
+// Emits
+const emit = defineEmits<Emits>();
 
 // Reactive state
 const searchQuery = ref("");
@@ -87,7 +94,15 @@ const normalizedOptions = computed(() => {
 
 const currentOptions = computed(() => {
   if (props.remote) {
-    return remoteOptions.value;
+    // Merge remoteOptions with props.options to ensure selected value is always visible
+    const merged = [...normalizedOptions.value];
+    remoteOptions.value.forEach((remoteOption) => {
+      const exists = merged.some((opt) => opt.value === remoteOption.value);
+      if (!exists) {
+        merged.push(remoteOption);
+      }
+    });
+    return merged;
   }
   return normalizedOptions.value;
 });
@@ -150,18 +165,26 @@ const debouncedSearch = useDebounceFn(async (query: string) => {
 
 // Event handlers
 const handleChange = (val: AcceptableValue, onChange: (val: any) => void) => {
+  let result: any;
+
   if (props.multiple) {
     const arr = Array.isArray(val) ? val : [];
-    const result = props.valueAsNumber ? arr.map(Number) : arr;
+    result = props.valueAsNumber ? arr.map(Number) : arr;
     onChange(result.length > 0 ? result : null);
   } else {
     const stringValue = val as string | undefined;
     if (!stringValue) {
+      result = null;
       onChange(null);
+      emit("update:model-value", null);
       return;
     }
-    onChange(props.valueAsNumber ? Number(stringValue) : stringValue);
+    result = props.valueAsNumber ? Number(stringValue) : stringValue;
+    onChange(result);
   }
+
+  // Emit the change event
+  emit("update:model-value", result);
 };
 
 const handleSearchInput = (event: Event) => {

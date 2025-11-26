@@ -3,7 +3,7 @@ import PasarPage from "./IndexPage.vue";
 
 export default [
   {
-    path: "kios",
+    path: "pasar",
     name: "app.pasar",
     component: PasarPage,
     meta: {
@@ -12,7 +12,7 @@ export default [
     },
   },
   {
-    path: "kios/:id",
+    path: "pasar/:id",
     name: "app.pasar.detail",
     component: PasarDetailPage,
     meta: {

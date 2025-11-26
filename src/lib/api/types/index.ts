@@ -10,6 +10,7 @@ export type * from "./foto.types";
 export type * from "./infografis.types";
 export type * from "./jabatanAnggota.types";
 export type * from "./kategoriDokumen.types";
+export type * from "./kios.types";
 export type * from "./konten.types";
 export type * from "./layanan.types";
 export type * from "./majalah.types";

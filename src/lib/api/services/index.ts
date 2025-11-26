@@ -10,6 +10,7 @@ export * from "./foto";
 export * from "./infografis";
 export * from "./jabatanAnggota";
 export * from "./kategoriDokumen";
+export * from "./kios";
 export * from "./konten";
 export * from "./layanan";
 export * from "./majalah";
