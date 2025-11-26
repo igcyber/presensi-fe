@@ -93,6 +93,10 @@ const computedDesc = computed(
 
 const isView = computed(() => props.mode === "view");
 
+const formKey = computed(() => {
+  return JSON.stringify(props.initialValues ?? {}) + props.mode;
+});
+
 // Methods
 function close() {
   emit("update:open", false);
@@ -149,6 +153,7 @@ watch(
 
       <div class="flex-1 overflow-y-auto px-6">
         <BaseForm
+          :key="formKey"
           :schema="schema"
           :initial-values="initialValues ?? {}"
           :on-submit="handleSubmit"

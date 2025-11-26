@@ -87,10 +87,11 @@ async function onSubmit(values: any) {
               <!-- Color Picker dengan styling modern -->
               <input
                 v-bind="componentField"
+                :value="componentField.modelValue || '#000000'"
                 type="color"
                 class="color-picker-custom h-9 w-16 cursor-pointer rounded-md border-0 p-0 transition-all hover:shadow-md focus-visible:ring-0"
                 :style="{
-                  backgroundColor: componentField.modelValue,
+                  backgroundColor: componentField.modelValue || '#000000',
                 }"
               />
 
