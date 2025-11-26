@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T">
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, EditIcon, Eye, Filter, RotateCcw, TrashIcon } from "lucide-vue-next";
+import { Calendar as CalendarIcon, EditIcon, Eye, Filter, RotateCcw, Search, TrashIcon } from "lucide-vue-next";
 import { computed, ref } from "vue";
 
 import FilePreviewDialog from "@/components/dialogs/FilePreviewDialog.vue";
@@ -249,18 +249,20 @@ const formatCellValue = (item: T, column: Column<T>) => {
 </script>
 
 <template>
-  <div class="space-y-4 p-2">
+  <div class="space-y-4">
     <!-- Search and Filters Container -->
-    <div class="w-full space-y-4">
+    <div class="w-full space-y-4 mb-6">
       <!-- Search -->
-      <div v-if="searchable" class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div class="flex flex-col gap-1.5 sm:col-span-2 lg:col-span-1">
-          <Label for="searchKeyword" class="text-sm font-medium"></Label>
+      <div v-if="searchable" class="w-full">
+        <div class="relative">
+          <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+            <Search class="h-5 w-5 text-muted-foreground" />
+          </div>
           <Input
             v-model="searchQuery"
             placeholder="Cari data..."
             id="searchKeyword"
-            class="w-full"
+            class="w-full pl-10 pr-4 transition-all duration-200 focus:ring-2 focus:ring-primary/20 focus:border-primary"
             @input="handleSearch"
           />
         </div>
