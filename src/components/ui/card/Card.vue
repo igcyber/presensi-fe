@@ -61,24 +61,18 @@ onUnmounted(() => {
 });
 
 const shadowStyle = computed(() => {
-  // Warna furry purple untuk shadow (mengikuti warna card)
-  // Menggunakan warna ungu yang lembut: rgb(168, 85, 247) - purple-500 atau variasi yang lebih lembut
-  const purpleColor = {
-    r: 168, // purple-500
-    g: 85,
-    b: 247,
-  };
+  // Deteksi dark mode
+  const isDark = document.documentElement.classList.contains('dark');
 
-  // Variasi warna ungu yang lebih lembut untuk ambient shadow
-  const purpleLight = {
-    r: 192, // purple-400
-    g: 132,
-    b: 252,
-  };
+  // Warna shadow: hitam untuk light mode, putih untuk dark mode
+  const shadowColor = isDark
+    ? { r: 255, g: 255, b: 255 } // putih untuk dark mode
+    : { r: 0, g: 0, b: 0 }; // hitam untuk light mode
 
   if (!cardRef.value || cardWidth.value <= 0 || cardHeight.value <= 0) {
+    const defaultOpacity = isDark ? 0.15 : 0.1;
     return {
-      boxShadow: `0 0 20px 5px rgba(${purpleLight.r}, ${purpleLight.g}, ${purpleLight.b}, 0.08), 0 0 10px -2px rgba(${purpleColor.r}, ${purpleColor.g}, ${purpleColor.b}, 0.12)`,
+      boxShadow: `0 0 20px 5px rgba(${shadowColor.r}, ${shadowColor.g}, ${shadowColor.b}, ${defaultOpacity}), 0 0 10px -2px rgba(${shadowColor.r}, ${shadowColor.g}, ${shadowColor.b}, ${defaultOpacity * 1.2})`,
     };
   }
 
@@ -87,8 +81,9 @@ const shadowStyle = computed(() => {
 
   // Pastikan tidak ada pembagian nol
   if (centerX === 0 || centerY === 0) {
+    const defaultOpacity = isDark ? 0.15 : 0.1;
     return {
-      boxShadow: `0 0 20px 5px rgba(${purpleLight.r}, ${purpleLight.g}, ${purpleLight.b}, 0.08), 0 0 10px -2px rgba(${purpleColor.r}, ${purpleColor.g}, ${purpleColor.b}, 0.12)`,
+      boxShadow: `0 0 20px 5px rgba(${shadowColor.r}, ${shadowColor.g}, ${shadowColor.b}, ${defaultOpacity}), 0 0 10px -2px rgba(${shadowColor.r}, ${shadowColor.g}, ${shadowColor.b}, ${defaultOpacity * 1.2})`,
     };
   }
 
@@ -103,21 +98,25 @@ const shadowStyle = computed(() => {
   const shadowX = offsetX * 24 * intensity;
   const shadowY = offsetY * 24 * intensity;
 
-  // Ambient shadow dengan warna furry purple - lebih besar dan lebih blur untuk efek ambient
+  // Ambient shadow - lebih besar dan lebih blur untuk efek ambient
   const ambientBlur = 50 * intensity;
   const ambientSpread = 12 * intensity;
-  // Opacity untuk ambient shadow (lebih lembut)
-  const ambientOpacity = isHovered.value ? 0.15 : 0.1;
+  // Opacity untuk ambient shadow (lebih lembut) - lebih tinggi untuk dark mode
+  const ambientOpacity = isHovered.value
+    ? (isDark ? 0.2 : 0.15)
+    : (isDark ? 0.12 : 0.08);
 
-  // Directional shadow yang mengikuti cursor dengan warna furry purple
+  // Directional shadow yang mengikuti cursor
   const directionalBlur = 25 * intensity;
   const directionalSpread = -8;
-  // Opacity untuk directional shadow (lebih jelas)
-  const directionalOpacity = isHovered.value ? 0.25 : 0.15;
+  // Opacity untuk directional shadow (lebih jelas) - lebih tinggi untuk dark mode
+  const directionalOpacity = isHovered.value
+    ? (isDark ? 0.3 : 0.2)
+    : (isDark ? 0.18 : 0.12);
 
-  // Multiple shadows: ambient shadow (global) dengan warna ungu lembut + directional shadow (mengikuti cursor) dengan warna ungu
-  const ambientShadow = `0 0 ${ambientBlur}px ${ambientSpread}px rgba(${purpleLight.r}, ${purpleLight.g}, ${purpleLight.b}, ${ambientOpacity})`;
-  const directionalShadow = `${shadowX}px ${shadowY}px ${directionalBlur}px ${directionalSpread}px rgba(${purpleColor.r}, ${purpleColor.g}, ${purpleColor.b}, ${directionalOpacity})`;
+  // Multiple shadows: ambient shadow (global) + directional shadow (mengikuti cursor)
+  const ambientShadow = `0 0 ${ambientBlur}px ${ambientSpread}px rgba(${shadowColor.r}, ${shadowColor.g}, ${shadowColor.b}, ${ambientOpacity})`;
+  const directionalShadow = `${shadowX}px ${shadowY}px ${directionalBlur}px ${directionalSpread}px rgba(${shadowColor.r}, ${shadowColor.g}, ${shadowColor.b}, ${directionalOpacity})`;
 
   return {
     boxShadow: `${ambientShadow}, ${directionalShadow}`,

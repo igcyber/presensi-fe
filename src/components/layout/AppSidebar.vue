@@ -54,9 +54,9 @@ const userData = computed(() => {
 // Computed data untuk navigation dengan active state
 const data = computed(() => ({
   teams: {
-    name: "DPRD",
+    name: "KIOS",
     logo: HomeIcon,
-    plan: "DPRD Beranda",
+    plan: "DISPERINDAG KIOS Management",
     url: "/",
   },
   navDashboard: [

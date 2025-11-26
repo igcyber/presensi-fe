@@ -460,7 +460,7 @@ const formatCellValue = (item: T, column: Column<T>) => {
               <div class="flex items-center justify-center gap-1 sm:gap-2">
                 <Button
                   v-if="actionEdit"
-                  variant="secondary"
+                  variant="default"
                   size="sm"
                   @click.stop="handleEdit(item)"
                   class="px-2 sm:px-3"
