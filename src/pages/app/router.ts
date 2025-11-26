@@ -10,6 +10,7 @@ import dokumenRoute from "@/pages/app/dokumen/route";
 import fotoRoute from "@/pages/app/foto/route";
 import infografisRoute from "@/pages/app/infografis/route";
 import jabatanAnggotaRoute from "@/pages/app/jabatan-anggota/route";
+import jenisUsahaRoute from "@/pages/app/jenis-usaha/route";
 import kontenRoute from "@/pages/app/konten/route";
 import layananRoute from "@/pages/app/layanan/route";
 import majalahRoute from "@/pages/app/majalah/route";
@@ -50,6 +51,7 @@ export default {
     ...roleRoute,
     ...pedagangRoute,
     ...pasarRoute,
+    ...jenisUsahaRoute,
     ...beritaRoute,
     ...videoRoute,
     ...majalahRoute,

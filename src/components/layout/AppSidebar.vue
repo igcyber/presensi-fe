@@ -102,6 +102,13 @@ const data = computed(() => ({
       isActive: routNameActive.value === "app.pasar" || routNameActive.value === "app.pasar.detail",
     },
     {
+      title: "Jenis Usaha",
+      url: "/app/jenis-usaha",
+      name: "app.jenis-usaha",
+      icon: Tag,
+      isActive: routNameActive.value === "app.jenis-usaha" || routNameActive.value === "app.jenis-usaha.detail",
+    },
+    {
       title: "Pedagang",
       url: "/app/pedagang",
       name: "app.pedagang",
