@@ -530,6 +530,7 @@ const formatCellValue = (item: T, column: Column<T>) => {
             :value="item.value"
             :is-active="item.value === page"
             class="h-8 w-8 text-xs sm:h-10 sm:w-10 sm:text-sm"
+            :class="item.value === page ? '!bg-green-800 text-white' : ''"
           >
             {{ item.value }}
           </PaginationItem>
