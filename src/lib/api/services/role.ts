@@ -33,19 +33,19 @@ export const getRoles = (params?: SearchParams | RoleQueryParams): Promise<ApiRe
     queryParams.search = params.search;
 
     // Convert limit to perPage for API
-    if ('limit' in params && params.limit) {
+    if ("limit" in params && params.limit) {
       queryParams.perPage = params.limit;
-    } else if ('perPage' in params && params.perPage) {
+    } else if ("perPage" in params && params.perPage) {
       queryParams.perPage = params.perPage;
-    } else if ('per_page' in params && params.per_page) {
+    } else if ("per_page" in params && params.per_page) {
       queryParams.perPage = params.per_page;
     }
 
     // Handle sort
     if (params.sort) {
-      const [field, order] = params.sort.split(':');
+      const [field, order] = params.sort.split(":");
       queryParams.sort_by = field;
-      queryParams.sort_order = order || 'asc';
+      queryParams.sort_order = order || "asc";
     }
   }
 

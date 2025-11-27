@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import { ArrowLeft, Building2, Calendar, CalendarClock, Tag } from "lucide-vue-next";
 import { computed } from "vue";
-import { ArrowLeft, Calendar, CalendarClock, Building2, Tag } from "lucide-vue-next";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -55,8 +55,8 @@ const handleDelete = () => {
     <Card>
       <CardHeader>
         <div class="flex items-start gap-4">
-          <div class="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-            <Building2 class="h-8 w-8 text-primary" />
+          <div class="bg-primary/10 flex h-16 w-16 items-center justify-center rounded-full">
+            <Building2 class="text-primary h-8 w-8" />
           </div>
           <div class="flex-1">
             <CardTitle class="mb-2">Kios {{ kios.kode }}</CardTitle>
@@ -139,4 +139,3 @@ const handleDelete = () => {
     </Card>
   </div>
 </template>
-

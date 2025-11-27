@@ -48,4 +48,3 @@ export interface PasarQueryParams {
   sort_by?: "nama" | "jenisPasar" | "createdAt" | "updatedAt";
   sort_order?: "asc" | "desc";
 }
-

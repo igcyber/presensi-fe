@@ -5,6 +5,7 @@ import { RouterView } from "vue-router";
 import "vue-sonner/style.css";
 
 import { Toaster } from "@/components/ui/sonner";
+
 import { useMetadata } from "@/composables/useMetadata";
 import { useSEO } from "@/composables/useSEO";
 

@@ -1,20 +1,25 @@
 <script setup lang="ts">
+import { CheckSquare, Loader2, Play, RotateCcw, Send, Square } from "lucide-vue-next";
 import { computed, onBeforeUnmount, ref, watch } from "vue";
-import { z } from "zod";
 import { toast } from "vue-sonner";
-import { Play, Loader2, Send, RotateCcw, CheckSquare, Square } from "lucide-vue-next";
+import { z } from "zod";
 
 import BaseFormDialog from "@/components/dialogs/BaseFormDialog.vue";
+import BaseSelect from "@/components/forms/BaseSelect.vue";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import BaseSelect from "@/components/forms/BaseSelect.vue";
 // remove checkbox; use Button toggles instead
 import { Separator } from "@/components/ui/separator";
 
-import { getTags } from "@/lib/api/services/tag";
-import { commitScrapingResult, getScrapingResult, getScrapingStatus, startScrapingWarta } from "@/lib/api/services/scraping";
-import type { Tag } from "@/lib/api/types/tag.types";
+import {
+  commitScrapingResult,
+  getScrapingResult,
+  getScrapingStatus,
+  startScrapingWarta,
+} from "@/lib/api/services/scraping";
 import type { ScrapedItem } from "@/lib/api/services/scraping";
+import { getTags } from "@/lib/api/services/tag";
+import type { Tag } from "@/lib/api/types/tag.types";
 
 interface Props {
   open: boolean;
@@ -164,7 +169,11 @@ async function commitSelected() {
   }
   try {
     isCommitting.value = true;
-    console.log("[ScrapingDialog] commitSelected start", { tagId: selectedTagIdString.value, selectedCount: selected.length, selected });
+    console.log("[ScrapingDialog] commitSelected start", {
+      tagId: selectedTagIdString.value,
+      selectedCount: selected.length,
+      selected,
+    });
     const res = await commitScrapingResult({ tag_id: Number(selectedTagIdString.value), data: selected });
     const createdCount = Array.isArray(res?.created) ? res.created.length : selected.length;
     const committedUrls = new Set(selected.map((s) => s.url));
@@ -215,7 +224,12 @@ const onSubmit = () => {};
 function onToggle(url: string, nextChecked: boolean) {
   if (committedUrlSet.value.has(url)) return;
   const currentlyChecked = !!checkedMap.value[url];
-  console.log("[ScrapingDialog] onToggle", { url, nextChecked, currentlyChecked, selectedCount: selectedUrlSet.value.size });
+  console.log("[ScrapingDialog] onToggle", {
+    url,
+    nextChecked,
+    currentlyChecked,
+    selectedCount: selectedUrlSet.value.size,
+  });
   if (nextChecked && !currentlyChecked) {
     if (selectedUrlSet.value.size >= MAX_PER_BATCH) {
       // revert
@@ -233,16 +247,23 @@ function onToggle(url: string, nextChecked: boolean) {
     next.delete(url);
     selectedUrlSet.value = next;
   }
-  console.log("[ScrapingDialog] selection changed", { selectedCount: selectedUrlSet.value.size, selected: Array.from(selectedUrlSet.value) });
+  console.log("[ScrapingDialog] selection changed", {
+    selectedCount: selectedUrlSet.value.size,
+    selected: Array.from(selectedUrlSet.value),
+  });
 }
 
 watch(selectedUrlSet, (v) => {
   console.log("[ScrapingDialog] selectedUrlSet watch", { size: v.size, selected: Array.from(v) });
 });
-watch(checkedMap, (m) => {
-  const selected = Object.keys(m).filter((k) => m[k]);
-  console.log("[ScrapingDialog] checkedMap watch", { selectedCount: selected.length, selected });
-}, { deep: true });
+watch(
+  checkedMap,
+  (m) => {
+    const selected = Object.keys(m).filter((k) => m[k]);
+    console.log("[ScrapingDialog] checkedMap watch", { selectedCount: selected.length, selected });
+  },
+  { deep: true },
+);
 </script>
 
 <template>
@@ -264,12 +285,12 @@ watch(checkedMap, (m) => {
         </CardHeader>
         <CardContent>
           <!-- Step Controls -->
-          <div class="flex items-center gap-2 text-sm text-muted-foreground">
-            <span :class="step >= 1 ? 'font-medium text-foreground' : ''">1. Mulai</span>
+          <div class="text-muted-foreground flex items-center gap-2 text-sm">
+            <span :class="step >= 1 ? 'text-foreground font-medium' : ''">1. Mulai</span>
             <Separator orientation="vertical" class="h-4" />
-            <span :class="step >= 2 ? 'font-medium text-foreground' : ''">2. Progres</span>
+            <span :class="step >= 2 ? 'text-foreground font-medium' : ''">2. Progres</span>
             <Separator orientation="vertical" class="h-4" />
-            <span :class="step >= 3 ? 'font-medium text-foreground' : ''">3. Hasil & Commit</span>
+            <span :class="step >= 3 ? 'text-foreground font-medium' : ''">3. Hasil & Commit</span>
           </div>
 
           <!-- Step 1: Start -->
@@ -283,32 +304,52 @@ watch(checkedMap, (m) => {
 
           <!-- Step 2: Progress -->
           <div v-else-if="step === 2" class="mt-4 space-y-4">
-            <div class="text-sm">Task ID: <span class="font-mono">{{ taskId }}</span></div>
+            <div class="text-sm">
+              Task ID: <span class="font-mono">{{ taskId }}</span>
+            </div>
             <div class="flex items-center gap-2 text-sm">
               <span class="text-muted-foreground">Status:</span>
               <span class="font-medium capitalize">{{ status }}</span>
             </div>
             <div>
-              <div class="h-2 w-full rounded bg-secondary">
-                <div
-                  class="h-2 rounded bg-primary transition-all"
-                  :style="{ width: `${progress ?? 0}%` }"
-                />
+              <div class="bg-secondary h-2 w-full rounded">
+                <div class="bg-primary h-2 rounded transition-all" :style="{ width: `${progress ?? 0}%` }" />
               </div>
-              <div class="mt-2 text-xs text-muted-foreground">{{ Math.round(progress ?? 0) }}%</div>
+              <div class="text-muted-foreground mt-2 text-xs">{{ Math.round(progress ?? 0) }}%</div>
             </div>
             <div class="flex gap-2">
-              <Button type="button" variant="outline" @click="() => { stopPolling(); beginPolling(); }" :disabled="status==='done' || status==='failed'">
+              <Button
+                type="button"
+                variant="outline"
+                @click="
+                  () => {
+                    stopPolling();
+                    beginPolling();
+                  }
+                "
+                :disabled="status === 'done' || status === 'failed'"
+              >
                 Refresh Status
               </Button>
-              <Button type="button" variant="ghost" @click="() => { stopPolling(); status='failed' }" class="hidden">Stop</Button>
+              <Button
+                type="button"
+                variant="ghost"
+                @click="
+                  () => {
+                    stopPolling();
+                    status = 'failed';
+                  }
+                "
+                class="hidden"
+                >Stop</Button
+              >
             </div>
           </div>
 
           <!-- Step 3: Results & Commit -->
           <div v-else class="mt-4 space-y-4">
             <div class="flex items-center justify-between">
-              <div class="text-xs text-muted-foreground">Maksimal {{ MAX_PER_BATCH }} item per kirim.</div>
+              <div class="text-muted-foreground text-xs">Maksimal {{ MAX_PER_BATCH }} item per kirim.</div>
               <div class="w-72">
                 <BaseSelect
                   name="tagId"
@@ -331,29 +372,56 @@ watch(checkedMap, (m) => {
                     size="icon"
                     variant="outline"
                     :aria-pressed="!!checkedMap[item.url]"
-                    :disabled="committedUrlSet.has(item.url) || (!checkedMap[item.url] && selectedCount >= MAX_PER_BATCH)"
-                    @click="() => { const next = !checkedMap[item.url]; console.log('[ScrapingDialog] toggle click', { url: item.url, next }); onToggle(item.url, next); }"
+                    :disabled="
+                      committedUrlSet.has(item.url) || (!checkedMap[item.url] && selectedCount >= MAX_PER_BATCH)
+                    "
+                    @click="
+                      () => {
+                        const next = !checkedMap[item.url];
+                        console.log('[ScrapingDialog] toggle click', { url: item.url, next });
+                        onToggle(item.url, next);
+                      }
+                    "
                   >
-                    <CheckSquare v-if="checkedMap[item.url]" class="h-4 w-4 text-primary" />
+                    <CheckSquare v-if="checkedMap[item.url]" class="text-primary h-4 w-4" />
                     <Square v-else class="h-4 w-4" />
                   </Button>
                   <div class="space-y-1">
-                    <div class="font-medium leading-5">{{ item.title }}</div>
-                    <div class="text-xs text-muted-foreground">{{ item.published_at || '-' }}</div>
-                    <a :href="item.url" target="_blank" class="text-xs text-primary underline">{{ item.url }}</a>
-                    <div v-if="committedUrlSet.has(item.url)" class="text-[10px] font-medium text-muted-foreground">Sudah dikirim</div>
+                    <div class="leading-5 font-medium">{{ item.title }}</div>
+                    <div class="text-muted-foreground text-xs">{{ item.published_at || "-" }}</div>
+                    <a :href="item.url" target="_blank" class="text-primary text-xs underline">{{ item.url }}</a>
+                    <div v-if="committedUrlSet.has(item.url)" class="text-muted-foreground text-[10px] font-medium">
+                      Sudah dikirim
+                    </div>
                   </div>
                 </div>
-                <div v-if="results.length === 0" class="p-6 text-center text-sm text-muted-foreground">Tidak ada hasil.</div>
+                <div v-if="results.length === 0" class="text-muted-foreground p-6 text-center text-sm">
+                  Tidak ada hasil.
+                </div>
               </div>
             </div>
 
             <div class="flex items-center justify-between">
-              <Button type="button" variant="outline" class="inline-flex items-center gap-2" @click="() => { step = 1; resetState(); }">
+              <Button
+                type="button"
+                variant="outline"
+                class="inline-flex items-center gap-2"
+                @click="
+                  () => {
+                    step = 1;
+                    resetState();
+                  }
+                "
+              >
                 <RotateCcw class="h-4 w-4" />
                 Ulangi Tarik
               </Button>
-              <Button type="button" :disabled="isCommitting || !selectedTagIdString || selectedCount === 0" class="inline-flex items-center gap-2" @click="commitSelected">
+              <Button
+                type="button"
+                :disabled="isCommitting || !selectedTagIdString || selectedCount === 0"
+                class="inline-flex items-center gap-2"
+                @click="commitSelected"
+              >
                 <Loader2 v-if="isCommitting" class="h-4 w-4 animate-spin" />
                 <Send v-else class="h-4 w-4" />
                 Commit yang dipilih ({{ selectedCount }})

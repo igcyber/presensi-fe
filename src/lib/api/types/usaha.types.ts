@@ -48,4 +48,3 @@ export interface JenisUsahaQueryParams {
   sort_by?: "nama" | "warna" | "createdAt" | "updatedAt";
   sort_order?: "asc" | "desc";
 }
-

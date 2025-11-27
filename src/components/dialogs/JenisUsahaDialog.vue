@@ -96,9 +96,9 @@ async function onSubmit(values: any) {
               />
 
               <!-- Hex Input -->
-              <div class="flex-1 relative">
+              <div class="relative flex-1">
                 <div
-                  class="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-mono text-sm pointer-events-none"
+                  class="text-muted-foreground pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 font-mono text-sm"
                 >
                   #
                 </div>
@@ -116,7 +116,7 @@ async function onSubmit(values: any) {
           </FormControl>
           <FormDescription class="flex items-center gap-2">
             <span>Pilih warna untuk jenis usaha</span>
-            <span class="text-xs font-mono text-muted-foreground">(Format: #RRGGBB)</span>
+            <span class="text-muted-foreground font-mono text-xs">(Format: #RRGGBB)</span>
           </FormDescription>
           <FormMessage />
         </FormItem>
@@ -150,4 +150,3 @@ async function onSubmit(values: any) {
   border-radius: 0.5rem;
 }
 </style>
-

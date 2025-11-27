@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import { ArrowLeft, Calendar, CalendarClock, Palette, Tag } from "lucide-vue-next";
 import { computed } from "vue";
-import { ArrowLeft, Calendar, CalendarClock, Tag, Palette } from "lucide-vue-next";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -95,10 +95,7 @@ const handleDelete = () => {
                 <div class="flex-1">
                   <p class="text-sm font-medium text-gray-500">Warna</p>
                   <div class="flex items-center gap-2">
-                    <div
-                      class="h-6 w-6 rounded border"
-                      :style="{ backgroundColor: jenisUsaha.warna }"
-                    ></div>
+                    <div class="h-6 w-6 rounded border" :style="{ backgroundColor: jenisUsaha.warna }"></div>
                     <p class="font-medium">{{ jenisUsaha.warna }}</p>
                   </div>
                 </div>
@@ -132,4 +129,3 @@ const handleDelete = () => {
     </Card>
   </div>
 </template>
-

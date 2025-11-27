@@ -37,4 +37,3 @@ export const jenisUsahaQuerySchema = z.object({
 export type CreateJenisUsahaFormData = z.infer<typeof createJenisUsahaSchema>;
 export type UpdateJenisUsahaFormData = z.infer<typeof updateJenisUsahaSchema>;
 export type JenisUsahaQueryFormData = z.infer<typeof jenisUsahaQuerySchema>;
-

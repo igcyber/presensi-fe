@@ -106,10 +106,7 @@ export const deleteUser = (id: number): Promise<ApiResponse<null>> => userServic
  * console.log(response.data.roles);
  * ```
  */
-export const addUserRoles = async (
-  userId: number,
-  payload: AddUserRolesRequest,
-): Promise<ApiResponse<User>> => {
+export const addUserRoles = async (userId: number, payload: AddUserRolesRequest): Promise<ApiResponse<User>> => {
   const { data } = await httpInstance.post<ApiResponse<User>>(`${base}/${userId}/roles`, payload);
   return data;
 };
@@ -126,10 +123,7 @@ export const addUserRoles = async (
  * console.log(response.data.roles);
  * ```
  */
-export const updateUserRoles = async (
-  userId: number,
-  payload: UpdateUserRolesRequest,
-): Promise<ApiResponse<User>> => {
+export const updateUserRoles = async (userId: number, payload: UpdateUserRolesRequest): Promise<ApiResponse<User>> => {
   const { data } = await httpInstance.put<ApiResponse<User>>(`${base}/${userId}/roles`, payload);
   return data;
 };

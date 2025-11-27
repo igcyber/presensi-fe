@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PlusIcon, Play } from "lucide-vue-next";
+import { Play, PlusIcon } from "lucide-vue-next";
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";

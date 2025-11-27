@@ -1,25 +1,25 @@
 <script setup lang="ts">
 import {
-  BookOpen,
+  // BookOpen,
   Building2,
   ChartBar,
-  ClipboardCheck,
-  FileText,
-  FolderTree,
+  // ClipboardCheck,
+  // FileText,
+  // FolderTree,
   Grid3x3,
   HomeIcon,
-  Image,
-  ListTree,
-  MessageSquare,
-  NewspaperIcon,
-  Settings,
+  // Image,
+  // ListTree,
+  // MessageSquare,
+  // NewspaperIcon,
+  // Settings,
   Shield,
   Store,
   // Smartphone,
   Tag,
-  UserCheck,
+  // UserCheck,
   UserIcon,
-  VideoIcon,
+  // VideoIcon,
 } from "lucide-vue-next";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
@@ -195,27 +195,27 @@ const data = computed(() => ({
   //   },
   // ],
   navSistemKonfigurasi: [
-    {
-      title: "Menu",
-      url: "/app/menu",
-      name: "app.menu",
-      icon: ListTree,
-      isActive: routNameActive.value === "app.menu" || routNameActive.value === "app.menu.detail",
-    },
-    {
-      title: "Pages",
-      url: "/app/pages",
-      name: "app.pages",
-      icon: FileText,
-      isActive: routNameActive.value === "app.pages" || routNameActive.value === "app.pages.detail",
-    },
-    {
-      title: "Statik",
-      url: "/app/statik",
-      name: "app.statik",
-      icon: Settings,
-      isActive: routNameActive.value === "app.statik" || routNameActive.value === "app.statik.detail",
-    },
+    // {
+    //   title: "Menu",
+    //   url: "/app/menu",
+    //   name: "app.menu",
+    //   icon: ListTree,
+    //   isActive: routNameActive.value === "app.menu" || routNameActive.value === "app.menu.detail",
+    // },
+    // {
+    //   title: "Pages",
+    //   url: "/app/pages",
+    //   name: "app.pages",
+    //   icon: FileText,
+    //   isActive: routNameActive.value === "app.pages" || routNameActive.value === "app.pages.detail",
+    // },
+    // {
+    //   title: "Statik",
+    //   url: "/app/statik",
+    //   name: "app.statik",
+    //   icon: Settings,
+    //   isActive: routNameActive.value === "app.statik" || routNameActive.value === "app.statik.detail",
+    // },
   ],
   // navOrganisasi: [
   //   {
@@ -350,7 +350,7 @@ const data = computed(() => ({
       <NavDashboard :items="data.navDashboard" />
       <NavGroup label="User & Access Management" :items="data.navUserAccess" />
       <NavGroup label="Kios Management" :items="data.navKiosManagement" />
-      <NavGroup label="Sistem & Konfigurasi" :items="data.navSistemKonfigurasi" />
+      <!-- <NavGroup label="Sistem & Konfigurasi" :items="data.navSistemKonfigurasi" /> -->
       <!-- <NavGroup label="Media & Konten" :items="data.navMediaKonten" /> -->
       <!-- <NavGroup label="Dokumen & Peraturan" :items="data.navDokumenPeraturan" /> -->
       <!-- <NavGroup label="Pelayanan Publik" :items="data.navPelayananPublik" /> -->

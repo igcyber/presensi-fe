@@ -120,4 +120,3 @@ export const updateKios = (id: number, payload: UpdateKiosRequest): Promise<ApiR
  * ```
  */
 export const deleteKios = (id: number): Promise<ApiResponse<null>> => kiosService.remove(id);
-

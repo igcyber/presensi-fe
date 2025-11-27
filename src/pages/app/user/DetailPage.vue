@@ -176,11 +176,6 @@ onMounted(() => {
     />
 
     <!-- Manage Roles Dialog -->
-    <UserRolesDialog
-      v-model:open="rolesDialog.open"
-      :user="data"
-      :role-options="roleOptions"
-      @success="fetchData"
-    />
+    <UserRolesDialog v-model:open="rolesDialog.open" :user="data" :role-options="roleOptions" @success="fetchData" />
   </div>
 </template>

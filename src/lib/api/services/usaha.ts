@@ -11,9 +11,12 @@ import type {
 
 const base = "/api/usaha";
 
-export const usahaService = createCrudService<JenisUsaha, JenisUsahaDetail, CreateJenisUsahaRequest, UpdateJenisUsahaRequest>(
-  base,
-);
+export const usahaService = createCrudService<
+  JenisUsaha,
+  JenisUsahaDetail,
+  CreateJenisUsahaRequest,
+  UpdateJenisUsahaRequest
+>(base);
 
 /**
  * Mendapatkan daftar jenis usaha dengan pagination
@@ -27,7 +30,9 @@ export const usahaService = createCrudService<JenisUsaha, JenisUsahaDetail, Crea
  * console.log(response.data.meta.total); // Total count
  * ```
  */
-export const getJenisUsahas = (params?: SearchParams | JenisUsahaQueryParams): Promise<ApiResponse<JenisUsahaListResponse>> => {
+export const getJenisUsahas = (
+  params?: SearchParams | JenisUsahaQueryParams,
+): Promise<ApiResponse<JenisUsahaListResponse>> => {
   // Convert SearchParams (limit) to JenisUsahaQueryParams (perPage)
   const queryParams: Record<string, any> = {};
 
@@ -105,8 +110,10 @@ export const createJenisUsaha = (payload: CreateJenisUsahaRequest) => usahaServi
  * console.log(response.data.nama);
  * ```
  */
-export const updateJenisUsaha = (id: number, payload: UpdateJenisUsahaRequest): Promise<ApiResponse<JenisUsahaDetail>> =>
-  usahaService.update(id, payload);
+export const updateJenisUsaha = (
+  id: number,
+  payload: UpdateJenisUsahaRequest,
+): Promise<ApiResponse<JenisUsahaDetail>> => usahaService.update(id, payload);
 
 /**
  * Menghapus jenis usaha
@@ -120,4 +127,3 @@ export const updateJenisUsaha = (id: number, payload: UpdateJenisUsahaRequest): 
  * ```
  */
 export const deleteJenisUsaha = (id: number): Promise<ApiResponse<null>> => usahaService.remove(id);
-

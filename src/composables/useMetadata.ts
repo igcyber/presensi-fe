@@ -186,7 +186,7 @@ export function useMetadata() {
 
     // Remove existing structured data with same type if any
     const existingScript = document.querySelector(
-      `script[type="application/ld+json"][data-jsonld-type="${structuredData["@type"]}"]`
+      `script[type="application/ld+json"][data-jsonld-type="${structuredData["@type"]}"]`,
     );
     if (existingScript) {
       existingScript.remove();

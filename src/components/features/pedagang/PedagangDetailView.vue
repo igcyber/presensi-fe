@@ -1,6 +1,18 @@
 <script setup lang="ts">
+import {
+  ArrowLeft,
+  Calendar,
+  CalendarClock,
+  FileText,
+  Hash,
+  MapPin,
+  Plus,
+  Power,
+  Store,
+  Trash2,
+  User,
+} from "lucide-vue-next";
 import { computed } from "vue";
-import { ArrowLeft, Calendar, CalendarClock, MapPin, User, Hash, FileText, Store, Plus, Power, Trash2 } from "lucide-vue-next";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -140,7 +152,7 @@ const handleDelete = () => {
               </div>
 
               <div class="flex items-start gap-3 rounded-lg border p-3">
-                <MapPin class="h-4 w-4 text-gray-400 mt-1" />
+                <MapPin class="mt-1 h-4 w-4 text-gray-400" />
                 <div class="flex-1">
                   <p class="text-sm font-medium text-gray-500">Alamat</p>
                   <p class="font-medium">{{ pedagang.alamat }}</p>
@@ -198,10 +210,13 @@ const handleDelete = () => {
         </div>
 
         <!-- Empty State -->
-        <div v-else-if="!pedagangKios || pedagangKios.length === 0" class="flex flex-col items-center justify-center py-8 text-center">
-          <Store class="h-12 w-12 text-gray-400 mb-4" />
+        <div
+          v-else-if="!pedagangKios || pedagangKios.length === 0"
+          class="flex flex-col items-center justify-center py-8 text-center"
+        >
+          <Store class="mb-4 h-12 w-12 text-gray-400" />
           <p class="text-muted-foreground mb-2">Belum ada kios yang ditetapkan</p>
-          <p class="text-sm text-muted-foreground">Klik tombol "Tambah Kios" untuk menetapkan kios ke pedagang ini</p>
+          <p class="text-muted-foreground text-sm">Klik tombol "Tambah Kios" untuk menetapkan kios ke pedagang ini</p>
         </div>
 
         <!-- Kios List -->
@@ -209,27 +224,27 @@ const handleDelete = () => {
           <div
             v-for="pedagangKiosItem in pedagangKios"
             :key="pedagangKiosItem.id"
-            class="flex items-center justify-between rounded-lg border p-4 hover:bg-accent/50 transition-colors"
+            class="hover:bg-accent/50 flex items-center justify-between rounded-lg border p-4 transition-colors"
           >
-            <div class="flex items-center gap-4 flex-1">
-              <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-                <Store class="h-5 w-5 text-primary" />
+            <div class="flex flex-1 items-center gap-4">
+              <div class="bg-primary/10 flex h-10 w-10 items-center justify-center rounded-full">
+                <Store class="text-primary h-5 w-5" />
               </div>
               <div class="flex-1">
-                <div class="flex items-center gap-2 mb-1">
+                <div class="mb-1 flex items-center gap-2">
                   <p class="font-semibold">{{ pedagangKiosItem.kios?.kode || "Kios #" + pedagangKiosItem.kiosId }}</p>
                   <Badge
                     :class="
                       pedagangKiosItem.isActive
-                        ? 'bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800'
-                        : 'bg-red-50 text-red-600 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800'
+                        ? 'border-blue-200 bg-blue-50 text-blue-600 dark:border-blue-800 dark:bg-blue-900/20 dark:text-blue-400'
+                        : 'border-red-200 bg-red-50 text-red-600 dark:border-red-800 dark:bg-red-900/20 dark:text-red-400'
                     "
                     variant="outline"
                   >
                     {{ pedagangKiosItem.isActive ? "Aktif" : "Tidak Aktif" }}
                   </Badge>
                 </div>
-                <div class="text-sm text-muted-foreground">
+                <div class="text-muted-foreground text-sm">
                   <span v-if="pedagangKiosItem.kios?.jenisUsaha">
                     {{ pedagangKiosItem.kios.jenisUsaha.nama }}
                   </span>
@@ -266,4 +281,3 @@ const handleDelete = () => {
     </Card>
   </div>
 </template>
-

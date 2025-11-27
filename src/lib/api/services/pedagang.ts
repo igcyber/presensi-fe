@@ -1,5 +1,5 @@
-import type { ApiResponse, SearchParams } from "@/lib/api/core/apiResponse";
 import { httpInstance } from "@/lib/api/core";
+import type { ApiResponse, SearchParams } from "@/lib/api/core/apiResponse";
 import { createCrudService } from "@/lib/api/factories/crudServiceFactory";
 import type {
   CreatePedagangKiosRequest,
@@ -14,9 +14,12 @@ import type {
 
 const base = "/api/pedagang";
 
-export const pedagangService = createCrudService<Pedagang, PedagangDetail, CreatePedagangRequest, UpdatePedagangRequest>(
-  base,
-);
+export const pedagangService = createCrudService<
+  Pedagang,
+  PedagangDetail,
+  CreatePedagangRequest,
+  UpdatePedagangRequest
+>(base);
 
 /**
  * Mendapatkan daftar pedagang dengan pagination
@@ -30,7 +33,9 @@ export const pedagangService = createCrudService<Pedagang, PedagangDetail, Creat
  * console.log(response.data.meta.total); // Total count
  * ```
  */
-export const getPedagangs = (params?: SearchParams | PedagangQueryParams): Promise<ApiResponse<PedagangListResponse>> => {
+export const getPedagangs = (
+  params?: SearchParams | PedagangQueryParams,
+): Promise<ApiResponse<PedagangListResponse>> => {
   // Convert SearchParams (limit) to PedagangQueryParams (perPage)
   const queryParams: Record<string, any> = {};
 
@@ -203,4 +208,3 @@ export const updatePedagangKios = (
 export const deletePedagangKios = (pedagangId: number, kiosId: number): Promise<ApiResponse<null>> => {
   return httpInstance.delete(`/api/pedagang/${pedagangId}/kios/${kiosId}`).then((response) => response.data);
 };
-

@@ -19,8 +19,10 @@ import type { Role } from "@/lib/api/types/role.types";
 // Composables
 const router = useRouter();
 
-const { items, isLoading, isError, error, pagination, query, fetchData, handlePageChange } =
-  useResourceList<Role>((params) => getRoles(params), { perPage: 10 });
+const { items, isLoading, isError, error, pagination, query, fetchData, handlePageChange } = useResourceList<Role>(
+  (params) => getRoles(params),
+  { perPage: 10 },
+);
 
 const dialog = useDialog<Role>();
 const confirmDialog = useDialog<Role>();

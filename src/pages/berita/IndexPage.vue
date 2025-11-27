@@ -29,7 +29,10 @@ const { currentPage, totalPages, itemsPerPage, totalItems, setPagination } = use
 const stripHtml = (html: string | null | undefined): string => {
   if (!html) return "";
   // Hilangkan seluruh tag HTML dan rapikan spasi
-  return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  return html
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 };
 
 // Search state & handlers
@@ -105,7 +108,7 @@ const { data, isLoading, error, isError, fetchData } = useFetch<
   {
     immediate: false,
     extractData: (response) => response.data,
-  }
+  },
 );
 
 const prevPage = () => {
@@ -166,7 +169,6 @@ onMounted(async () => {
 
     <!-- Main Content -->
     <main class="py-12">
-
       <div class="container">
         <!-- Search Card -->
         <div class="mb-6">
@@ -183,18 +185,18 @@ onMounted(async () => {
             <div class="p-4">
               <form @submit.prevent="onSearch" class="flex items-center gap-2">
                 <div class="relative flex-1">
-                  <Search class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                  <Search class="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-400" />
                   <input
                     v-model="searchTerm"
                     type="text"
                     placeholder="Cari berita..."
-                    class="w-full rounded-md border border-gray-200 bg-gray-50 py-2.5 pl-9 pr-10 text-sm placeholder:text-gray-400 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-yellow-600/60"
+                    class="w-full rounded-md border border-gray-200 bg-gray-50 py-2.5 pr-10 pl-9 text-sm placeholder:text-gray-400 focus:border-transparent focus:ring-2 focus:ring-yellow-600/60 focus:outline-none"
                   />
                   <button
                     v-if="searchTerm"
                     type="button"
                     @click="onResetSearch"
-                    class="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+                    class="absolute top-1/2 right-2 -translate-y-1/2 rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
                     aria-label="Reset pencarian"
                   >
                     <X class="h-4 w-4" />
@@ -238,10 +240,7 @@ onMounted(async () => {
           </div>
 
           <!-- Tag Filter -->
-          <div
-            v-if="tag"
-            class="flex items-center justify-between rounded border border-blue-200 bg-blue-50 px-4 py-3"
-          >
+          <div v-if="tag" class="flex items-center justify-between rounded border border-blue-200 bg-blue-50 px-4 py-3">
             <div class="flex items-center gap-2 text-sm text-blue-800">
               <div class="flex h-5 w-5 items-center justify-center rounded bg-blue-600 text-white">
                 <span class="text-xs font-semibold">#</span>
@@ -262,10 +261,7 @@ onMounted(async () => {
           </div>
 
           <!-- Reset All Button (shown when both filters active) -->
-          <div
-            v-if="keyword && tag"
-            class="flex justify-end"
-          >
+          <div v-if="keyword && tag" class="flex justify-end">
             <button
               type="button"
               @click="onResetAll"
@@ -360,7 +356,7 @@ onMounted(async () => {
 
                   <!-- Excerpt -->
                   <div
-                    class="mb-4 text-sm text-gray-600 leading-relaxed"
+                    class="mb-4 text-sm leading-relaxed text-gray-600"
                     style="
                       display: -webkit-box;
                       -webkit-line-clamp: 3;

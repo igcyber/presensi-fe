@@ -7,8 +7,8 @@ import BaseInput from "@/components/forms/BaseInput.vue";
 import BaseSelect, { type SelectOption } from "@/components/forms/BaseSelect.vue";
 
 import { createKios, updateKios } from "@/lib/api/services/kios";
-import { getJenisUsahas } from "@/lib/api/services/usaha";
 import { getPasars } from "@/lib/api/services/pasar";
+import { getJenisUsahas } from "@/lib/api/services/usaha";
 import type { Kios } from "@/lib/api/types/kios.types";
 import { createKiosSchema, updateKiosSchema } from "@/schemas/kiosSchema";
 
@@ -308,7 +308,10 @@ async function onSubmit(values: any) {
         :value-as-number="true"
         :min-search-length="0"
         required
-        @update:model-value="(val: string | number | (string | number)[] | null) => updateSelectedJenisUsaha(Array.isArray(val) ? null : (val as number | null))"
+        @update:model-value="
+          (val: string | number | (string | number)[] | null) =>
+            updateSelectedJenisUsaha(Array.isArray(val) ? null : (val as number | null))
+        "
       />
 
       <BaseSelect
@@ -325,9 +328,11 @@ async function onSubmit(values: any) {
         :value-as-number="true"
         :min-search-length="0"
         required
-        @update:model-value="(val: string | number | (string | number)[] | null) => updateSelectedPasar(Array.isArray(val) ? null : (val as number | null))"
+        @update:model-value="
+          (val: string | number | (string | number)[] | null) =>
+            updateSelectedPasar(Array.isArray(val) ? null : (val as number | null))
+        "
       />
     </div>
   </BaseFormDialog>
 </template>
-

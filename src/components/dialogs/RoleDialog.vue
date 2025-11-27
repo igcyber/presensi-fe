@@ -28,9 +28,7 @@ const props = withDefaults(defineProps<Props>(), { role: null });
 const emit = defineEmits<Emits>();
 
 // Computed properties
-const initialValues = computed(() =>
-  props.mode === "create" ? { name: "" } : { name: props.role?.name ?? "" },
-);
+const initialValues = computed(() => (props.mode === "create" ? { name: "" } : { name: props.role?.name ?? "" }));
 
 const schema = computed(() => (props.mode === "create" ? createRoleSchema : updateRoleSchema));
 
@@ -68,4 +66,3 @@ async function onSubmit(values: any) {
     </div>
   </BaseFormDialog>
 </template>
-

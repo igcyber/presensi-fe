@@ -1,5 +1,6 @@
 import { watch } from "vue";
 import { useRoute } from "vue-router";
+
 import { useMetadata } from "./useMetadata";
 
 /**
@@ -8,21 +9,30 @@ import { useMetadata } from "./useMetadata";
  */
 export function useSEO() {
   const route = useRoute();
-  const { loadMetadata, updatePageMetadata, getFullTitle, getWebsiteUrl, injectStructuredData, getOrganizationStructuredData } = useMetadata();
+  const {
+    loadMetadata,
+    updatePageMetadata,
+    getFullTitle,
+    getWebsiteUrl,
+    injectStructuredData,
+    getOrganizationStructuredData,
+  } = useMetadata();
 
   const updateSEOFromRoute = async () => {
     // Load metadata jika belum loaded
     await loadMetadata();
 
     // Get route metadata
-    const routeMeta = route.meta as {
-      title?: string;
-      description?: string;
-      keywords?: string[];
-      image?: string;
-      robots?: string;
-      noindex?: boolean;
-    } | undefined;
+    const routeMeta = route.meta as
+      | {
+          title?: string;
+          description?: string;
+          keywords?: string[];
+          image?: string;
+          robots?: string;
+          noindex?: boolean;
+        }
+      | undefined;
 
     // Get full title
     const fullTitle = routeMeta?.title ? getFullTitle(routeMeta.title) : getFullTitle();
@@ -71,7 +81,7 @@ export function useSEO() {
     () => {
       updateSEOFromRoute();
     },
-    { immediate: true }
+    { immediate: true },
   );
 
   return {

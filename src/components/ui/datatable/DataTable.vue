@@ -258,18 +258,18 @@ const formatCellValue = (item: T, column: Column<T>) => {
 <template>
   <div class="space-y-4">
     <!-- Search and Filters Container -->
-    <div class="w-full space-y-4 mb-6">
+    <div class="mb-6 w-full space-y-4">
       <!-- Search -->
       <div v-if="searchable" class="w-full">
         <div class="relative">
           <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <Search class="h-5 w-5 text-muted-foreground" />
+            <Search class="text-muted-foreground h-5 w-5" />
           </div>
           <Input
             v-model="searchQuery"
             placeholder="Cari data..."
             id="searchKeyword"
-            class="w-full pl-10 pr-4 transition-all duration-200 focus:ring-2 focus:ring-primary/20 focus:border-primary"
+            class="focus:ring-primary/20 focus:border-primary w-full pr-4 pl-10 transition-all duration-200 focus:ring-2"
             @input="handleSearch"
           />
         </div>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
+import { computed, nextTick, onMounted, onUnmounted, ref } from "vue";
 import type { HTMLAttributes } from "vue";
 
 import { cn } from "@/lib/utils";
@@ -62,7 +62,7 @@ onUnmounted(() => {
 
 const shadowStyle = computed(() => {
   // Deteksi dark mode
-  const isDark = document.documentElement.classList.contains('dark');
+  const isDark = document.documentElement.classList.contains("dark");
 
   // Warna shadow: hitam untuk light mode, putih untuk dark mode
   const shadowColor = isDark
@@ -102,17 +102,13 @@ const shadowStyle = computed(() => {
   const ambientBlur = 50 * intensity;
   const ambientSpread = 12 * intensity;
   // Opacity untuk ambient shadow (lebih lembut) - lebih tinggi untuk dark mode
-  const ambientOpacity = isHovered.value
-    ? (isDark ? 0.2 : 0.15)
-    : (isDark ? 0.12 : 0.08);
+  const ambientOpacity = isHovered.value ? (isDark ? 0.2 : 0.15) : isDark ? 0.12 : 0.08;
 
   // Directional shadow yang mengikuti cursor
   const directionalBlur = 25 * intensity;
   const directionalSpread = -8;
   // Opacity untuk directional shadow (lebih jelas) - lebih tinggi untuk dark mode
-  const directionalOpacity = isHovered.value
-    ? (isDark ? 0.3 : 0.2)
-    : (isDark ? 0.18 : 0.12);
+  const directionalOpacity = isHovered.value ? (isDark ? 0.3 : 0.2) : isDark ? 0.18 : 0.12;
 
   // Multiple shadows: ambient shadow (global) + directional shadow (mengikuti cursor)
   const ambientShadow = `0 0 ${ambientBlur}px ${ambientSpread}px rgba(${shadowColor.r}, ${shadowColor.g}, ${shadowColor.b}, ${ambientOpacity})`;

@@ -8,4 +8,3 @@ export const createPedagangKiosSchema = z.object({
 
 // Types dari schema
 export type CreatePedagangKiosFormData = z.infer<typeof createPedagangKiosSchema>;
-

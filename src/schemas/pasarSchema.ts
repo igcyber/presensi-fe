@@ -31,4 +31,3 @@ export const pasarQuerySchema = z.object({
 export type CreatePasarFormData = z.infer<typeof createPasarSchema>;
 export type UpdatePasarFormData = z.infer<typeof updatePasarSchema>;
 export type PasarQueryFormData = z.infer<typeof pasarQuerySchema>;
-

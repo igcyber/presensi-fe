@@ -122,4 +122,3 @@ const handleDelete = () => {
     </Card>
   </div>
 </template>
-

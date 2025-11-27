@@ -118,4 +118,3 @@ export const updatePasar = (id: number, payload: UpdatePasarRequest): Promise<Ap
  * ```
  */
 export const deletePasar = (id: number): Promise<ApiResponse<null>> => pasarService.remove(id);
-

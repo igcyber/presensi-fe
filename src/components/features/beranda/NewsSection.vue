@@ -17,7 +17,10 @@ const { date, slugify } = useFormatters();
 // Helpers
 const stripHtml = (html: string | null | undefined): string => {
   if (!html) return "";
-  return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  return html
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 };
 
 // Computed properties untuk memisahkan berita terbaru dan terpopuler
@@ -138,7 +141,7 @@ const beritaTerpopuler = computed(() => [...props.news].sort((a, b) => b.views -
               </RouterLink>
 
               <!-- Content Preview -->
-              <div class="mb-3 line-clamp-3 text-xs text-gray-600 leading-relaxed">
+              <div class="mb-3 line-clamp-3 text-xs leading-relaxed text-gray-600">
                 {{ stripHtml(berita.isi) }}
               </div>
 

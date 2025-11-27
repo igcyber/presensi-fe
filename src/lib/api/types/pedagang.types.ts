@@ -97,4 +97,3 @@ export interface CreatePedagangKiosRequest {
   kiosId: number;
   isActive: boolean;
 }
-

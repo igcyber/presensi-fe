@@ -15,9 +15,20 @@ export const createPedagangSchema = z.object({
     .min(16, "No. KK harus 16 digit")
     .max(16, "No. KK harus 16 digit")
     .regex(/^\d+$/, "No. KK hanya boleh mengandung angka"),
-  tempatLahir: z.string().min(1, "Tempat lahir wajib diisi").min(2, "Tempat lahir minimal 2 karakter").max(100, "Tempat lahir maksimal 100 karakter"),
-  tanggalLahir: z.string().min(1, "Tanggal lahir wajib diisi").regex(/^\d{4}-\d{2}-\d{2}$/, "Format tanggal harus YYYY-MM-DD"),
-  alamat: z.string().min(1, "Alamat wajib diisi").min(5, "Alamat minimal 5 karakter").max(500, "Alamat maksimal 500 karakter"),
+  tempatLahir: z
+    .string()
+    .min(1, "Tempat lahir wajib diisi")
+    .min(2, "Tempat lahir minimal 2 karakter")
+    .max(100, "Tempat lahir maksimal 100 karakter"),
+  tanggalLahir: z
+    .string()
+    .min(1, "Tanggal lahir wajib diisi")
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Format tanggal harus YYYY-MM-DD"),
+  alamat: z
+    .string()
+    .min(1, "Alamat wajib diisi")
+    .min(5, "Alamat minimal 5 karakter")
+    .max(500, "Alamat maksimal 500 karakter"),
 });
 
 // Schema untuk update pedagang
@@ -35,8 +46,15 @@ export const updatePedagangSchema = z.object({
     .max(16, "No. KK harus 16 digit")
     .regex(/^\d+$/, "No. KK hanya boleh mengandung angka")
     .optional(),
-  tempatLahir: z.string().min(2, "Tempat lahir minimal 2 karakter").max(100, "Tempat lahir maksimal 100 karakter").optional(),
-  tanggalLahir: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Format tanggal harus YYYY-MM-DD").optional(),
+  tempatLahir: z
+    .string()
+    .min(2, "Tempat lahir minimal 2 karakter")
+    .max(100, "Tempat lahir maksimal 100 karakter")
+    .optional(),
+  tanggalLahir: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Format tanggal harus YYYY-MM-DD")
+    .optional(),
   alamat: z.string().min(5, "Alamat minimal 5 karakter").max(500, "Alamat maksimal 500 karakter").optional(),
 });
 
@@ -59,4 +77,3 @@ export const pedagangQuerySchema = z.object({
 export type CreatePedagangFormData = z.infer<typeof createPedagangSchema>;
 export type UpdatePedagangFormData = z.infer<typeof updatePedagangSchema>;
 export type PedagangQueryFormData = z.infer<typeof pedagangQuerySchema>;
-

@@ -157,15 +157,13 @@ watch(
         :value-as-number="true"
         :min-search-length="0"
         required
-        @update:model-value="(val: string | number | (string | number)[] | null) => updateSelectedKios(Array.isArray(val) ? null : (val as number | null))"
+        @update:model-value="
+          (val: string | number | (string | number)[] | null) =>
+            updateSelectedKios(Array.isArray(val) ? null : (val as number | null))
+        "
       />
 
-      <BaseCheckbox
-        name="isActive"
-        label="Aktif"
-        description="Centang untuk mengaktifkan penetapan kios ini"
-      />
+      <BaseCheckbox name="isActive" label="Aktif" description="Centang untuk mengaktifkan penetapan kios ini" />
     </div>
   </BaseFormDialog>
 </template>
-

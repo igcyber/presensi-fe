@@ -37,7 +37,7 @@ const columns: Column<Kios>[] = [
       if (item.jenisUsaha) {
         return `
           <div class="flex items-center gap-2">
-            <div class="h-4 w-4 rounded border" style="background-color: ${item.jenisUsaha.warna || '#ccc'}; min-width: 16px;"></div>
+            <div class="h-4 w-4 rounded border" style="background-color: ${item.jenisUsaha.warna || "#ccc"}; min-width: 16px;"></div>
             <span>${item.jenisUsaha.nama}</span>
           </div>
         `;

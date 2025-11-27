@@ -33,4 +33,3 @@ export const kiosQuerySchema = z.object({
 export type CreateKiosFormData = z.infer<typeof createKiosSchema>;
 export type UpdateKiosFormData = z.infer<typeof updateKiosSchema>;
 export type KiosQueryFormData = z.infer<typeof kiosQuerySchema>;
-

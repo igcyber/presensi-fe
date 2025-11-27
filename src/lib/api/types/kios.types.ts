@@ -1,6 +1,7 @@
 import type { BaseEntity, PaginatedPayload } from "@/lib/api/core/apiResponse";
-import type { JenisUsaha } from "./usaha.types";
+
 import type { Pasar } from "./pasar.types";
+import type { JenisUsaha } from "./usaha.types";
 
 /**
  * Kios entity interface
@@ -55,4 +56,3 @@ export interface KiosQueryParams {
   sort_by?: "kode" | "jenisUsahaId" | "pasarId" | "createdAt" | "updatedAt";
   sort_order?: "asc" | "desc";
 }
-
