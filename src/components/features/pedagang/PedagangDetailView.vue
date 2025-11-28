@@ -128,6 +128,26 @@ const handleDelete = () => {
                   <p class="font-medium">{{ pedagang.noKk }}</p>
                 </div>
               </div>
+
+              <div class="flex items-center gap-3 rounded-lg border p-3">
+                <Store class="h-4 w-4 text-gray-400" />
+                <div class="flex-1">
+                  <p class="text-sm font-medium text-gray-500">Jenis Usaha</p>
+                  <p v-if="pedagang.jenisUsaha" class="font-medium">
+                    <Badge
+                      class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
+                      :style="{
+                        backgroundColor: (pedagang.jenisUsaha.warna || '#6B7280') + '20',
+                        color: pedagang.jenisUsaha.warna || '#6B7280',
+                        border: `1px solid ${(pedagang.jenisUsaha.warna || '#6B7280')}40`,
+                      }"
+                    >
+                      {{ pedagang.jenisUsaha.nama }}
+                    </Badge>
+                  </p>
+                  <p v-else class="font-medium text-muted-foreground">-</p>
+                </div>
+              </div>
             </div>
           </div>
 

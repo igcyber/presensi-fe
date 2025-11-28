@@ -37,6 +37,18 @@ const columns: Column<Pedagang>[] = [
     searchable: true,
   },
   {
+    key: "jenisUsaha",
+    label: "Jenis Usaha",
+    sortable: false,
+    width: "150px",
+    htmlContent: true,
+    render: (item: Pedagang): string => {
+      if (!item.jenisUsaha?.nama) return "-";
+      const warna = item.jenisUsaha.warna || "#6B7280";
+      return `<span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium" style="background-color: ${warna}20; color: ${warna}; border: 1px solid ${warna}40;">${item.jenisUsaha.nama}</span>`;
+    },
+  },
+  {
     key: "nik",
     label: "NIK",
     sortable: true,
@@ -70,12 +82,15 @@ const columns: Column<Pedagang>[] = [
     sortable: false,
     searchable: true,
   },
-  // {
-  //   key: "createdAt",
-  //   label: "Dibuat",
-  //   sortable: true,
-  //   width: "150px",
-  // },
+  {
+    key: "createdAt",
+    label: "Tanggal Buat",
+    sortable: true,
+    width: "150px",
+    render: (item: Pedagang): string => {
+      return item.createdAt ? date(item.createdAt) : "-";
+    },
+  },
 ];
 
 // Methods

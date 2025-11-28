@@ -1,16 +1,30 @@
 import type { BaseEntity, PaginatedPayload } from "@/lib/api/core/apiResponse";
 
 /**
+ * Jenis Usaha entity interface
+ */
+export interface JenisUsaha {
+  id: number;
+  nama: string;
+  warna: string;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string | null;
+}
+
+/**
  * Pedagang entity interface
  * Represents a pedagang (trader) in the system
  */
 export interface Pedagang extends BaseEntity {
   nama: string;
+  usahaId?: number | null;
   nik: string;
   noKk: string;
   tempatLahir: string;
   tanggalLahir: string;
   alamat: string;
+  jenisUsaha?: JenisUsaha;
 }
 
 /**
@@ -32,6 +46,7 @@ export type PedagangListResponse = PaginatedPayload<Pedagang>;
  */
 export interface CreatePedagangRequest {
   nama: string;
+  usahaId?: number | null;
   nik: string;
   noKk: string;
   tempatLahir: string;
@@ -44,6 +59,7 @@ export interface CreatePedagangRequest {
  */
 export interface UpdatePedagangRequest {
   nama?: string;
+  usahaId?: number | null;
   nik?: string;
   noKk?: string;
   tempatLahir?: string;

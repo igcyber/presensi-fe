@@ -3,6 +3,17 @@ import { z } from "zod";
 // Schema untuk create pedagang
 export const createPedagangSchema = z.object({
   nama: z.string().min(1, "Nama wajib diisi").min(2, "Nama minimal 2 karakter").max(100, "Nama maksimal 100 karakter"),
+  usahaId: z
+    .preprocess(
+      (val) => {
+        if (val === undefined || val === "" || val === null) return null;
+        const num = typeof val === "string" ? Number(val) : val;
+        if (isNaN(num) || num <= 0) return null;
+        return num;
+      },
+      z.union([z.number().int().positive("Jenis usaha harus valid"), z.null()]),
+    )
+    .optional(),
   nik: z
     .string()
     .min(1, "NIK wajib diisi")
@@ -34,6 +45,17 @@ export const createPedagangSchema = z.object({
 // Schema untuk update pedagang
 export const updatePedagangSchema = z.object({
   nama: z.string().min(2, "Nama minimal 2 karakter").max(100, "Nama maksimal 100 karakter").optional(),
+  usahaId: z
+    .preprocess(
+      (val) => {
+        if (val === undefined || val === "" || val === null) return null;
+        const num = typeof val === "string" ? Number(val) : val;
+        if (isNaN(num) || num <= 0) return null;
+        return num;
+      },
+      z.union([z.number().int().positive("Jenis usaha harus valid"), z.null()]),
+    )
+    .optional(),
   nik: z
     .string()
     .min(16, "NIK harus 16 digit")
