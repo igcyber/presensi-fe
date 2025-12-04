@@ -3,7 +3,11 @@ import { Slot } from "reka-ui";
 
 import { useFormField } from "./useFormField";
 
-const { error, formItemId, formDescriptionId, formMessageId } = useFormField();
+const props = defineProps<{
+  name?: string;
+}>();
+
+const { error, formItemId, formDescriptionId, formMessageId } = useFormField(props.name);
 </script>
 
 <template>

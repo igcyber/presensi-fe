@@ -5,17 +5,17 @@ import { toast } from "vue-sonner";
 import BaseFormDialog from "@/components/dialogs/BaseFormDialog.vue";
 import BaseInput from "@/components/forms/BaseInput.vue";
 import BaseSelect from "@/components/forms/BaseSelect.vue";
+import type { SelectOption } from "@/components/forms/BaseSelect.vue";
 
 import { createUser, updateUser } from "@/lib/api/services/user";
 import type { User } from "@/lib/api/types/user.types";
 import { createUserSchema, updateUserSchema } from "@/schemas/userSchema";
 
-// Interface definitions
 interface Props {
   open: boolean;
   mode: "create" | "edit" | "view";
   user?: User | null;
-  roleOptions?: { label: string; value: number }[];
+  roleOptions?: SelectOption[];
 }
 
 interface Emits {
@@ -23,16 +23,24 @@ interface Emits {
   (e: "success"): void;
 }
 
-// Props
-const props = withDefaults(defineProps<Props>(), { user: null, roleOptions: () => [] });
+const props = withDefaults(defineProps<Props>(), {
+  user: null,
+  roleOptions: () => [],
+});
 
-// Emits
 const emit = defineEmits<Emits>();
 
-// Computed properties
 const initialValues = computed(() =>
   props.mode === "create"
-    ? { fullName: "", username: "", email: "", nip: "", password: "", confirmPassword: "", roles: [] as number[] }
+    ? {
+        fullName: "",
+        username: "",
+        email: "",
+        nip: "",
+        password: "",
+        confirmPassword: "",
+        roles: [] as number[],
+      }
     : {
         fullName: props.user?.fullName ?? "",
         username: props.user?.username ?? "",
@@ -51,7 +59,6 @@ const open = computed({
   },
 });
 
-// Methods
 async function onSubmit(values: any) {
   if (props.mode === "create") {
     await createUser(values);
@@ -70,8 +77,8 @@ async function onSubmit(values: any) {
     resource-name="User"
     :schema="schema"
     :initial-values="initialValues"
-    :onSubmit="onSubmit"
-    @success="() => $emit('success')"
+    :on-submit="onSubmit"
+    @success="() => emit('success')"
   >
     <div class="grid grid-cols-1 gap-3">
       <BaseInput name="fullName" label="Nama Lengkap" placeholder="John Doe" required />

@@ -8,9 +8,9 @@ import { cn } from "@/lib/utils";
 
 import { useFormField } from "./useFormField";
 
-const props = defineProps<LabelProps & { class?: HTMLAttributes["class"]; customFor?: string }>();
+const props = defineProps<LabelProps & { name?: string; class?: HTMLAttributes["class"]; customFor?: string }>();
 
-const { error, formItemId } = useFormField();
+const { error, formItemId } = useFormField(props.name);
 </script>
 
 <template>

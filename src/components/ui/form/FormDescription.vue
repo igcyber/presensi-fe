@@ -6,10 +6,11 @@ import { cn } from "@/lib/utils";
 import { useFormField } from "./useFormField";
 
 const props = defineProps<{
+  name?: string;
   class?: HTMLAttributes["class"];
 }>();
 
-const { formDescriptionId } = useFormField();
+const { formDescriptionId } = useFormField(props.name);
 </script>
 
 <template>

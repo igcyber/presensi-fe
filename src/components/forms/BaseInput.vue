@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import { Eye, EyeOff } from "lucide-vue-next";
-import { computed, ref } from "vue";
+import { useField } from "vee-validate";
+import { computed, provide, ref } from "vue";
+import type { HTMLAttributes } from "vue";
 
 import { Button } from "@/components/ui/button";
-import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { FormControl, FormDescription, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { FIELD_NAME_CONTEXT_KEY } from "@/components/ui/form/useFormField";
 import { Input } from "@/components/ui/input";
+
+import { cn } from "@/lib/utils";
 
 interface Props {
   name: string;
@@ -19,16 +24,22 @@ interface Props {
   max?: number;
   step?: number;
   maxlength?: number;
+  minlength?: number;
   pattern?: string;
   description?: string;
-  customCss?: string;
+  class?: HTMLAttributes["class"];
 }
 
 const props = withDefaults(defineProps<Props>(), {
   type: "text",
   disabled: false,
   readonly: false,
+  required: false,
 });
+
+provide(FIELD_NAME_CONTEXT_KEY, props.name);
+
+const { value, errorMessage, setValue } = useField(props.name);
 
 const showPassword = ref(false);
 
@@ -58,56 +69,61 @@ const autocompleteValue = computed(() => {
   }
 });
 
+const handleChange = (val: string | number | undefined) => {
+  setValue(val, false);
+};
+
 const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value;
 };
 </script>
 
 <template>
-  <FormField v-slot="{ componentField }" :name="props.name">
-    <FormItem class="relative">
-      <FormLabel>
-        {{ props.label }}
-        <span v-if="props.required" class="text-destructive">*</span>
-      </FormLabel>
-      <FormControl>
-        <Input
-          v-bind="componentField"
-          :type="inputType"
-          :placeholder="props.placeholder"
-          :disabled="props.disabled"
-          :readonly="props.readonly"
-          :min="props.min"
-          :max="props.max"
-          :step="props.step"
-          :maxlength="props.maxlength"
-          :pattern="props.pattern"
-          :autocomplete="autocompleteValue"
-          :class="props.type === 'password' ? 'pr-10' : '' + props.customCss"
-        />
+  <FormItem class="relative">
+    <FormLabel :name="props.name">
+      {{ props.label }}
+      <span v-if="props.required" class="text-destructive">*</span>
+    </FormLabel>
+    <FormControl :name="props.name">
+      <Input
+        :model-value="(value as string | number | undefined) ?? ''"
+        @update:model-value="handleChange"
+        :type="inputType"
+        :placeholder="props.placeholder"
+        :disabled="props.disabled"
+        :readonly="props.readonly"
+        :min="props.min"
+        :max="props.max"
+        :step="props.step"
+        :maxlength="props.maxlength"
+        :minlength="props.minlength"
+        :pattern="props.pattern"
+        :autocomplete="autocompleteValue"
+        :aria-invalid="!!errorMessage"
+        :aria-describedby="props.description ? `${props.name}-description` : undefined"
+        :class="cn(props.type === 'password' ? 'pr-10' : '', props.class)"
+      />
 
-        <!-- Toggle Password Visibility -->
-        <Button
-          v-if="props.type === 'password'"
-          type="button"
-          variant="ghost"
-          size="sm"
-          class="absolute inset-y-5.5 right-0 flex items-center px-3 hover:bg-transparent"
-          @click="togglePasswordVisibility"
-          :aria-label="showPassword ? 'Sembunyikan password' : 'Tampilkan password'"
-          :aria-pressed="showPassword"
-          :disabled="props.disabled"
-        >
-          <EyeOff v-if="showPassword" class="h-4 w-4" />
-          <Eye v-else class="h-4 w-4" />
-        </Button>
-      </FormControl>
+      <Button
+        v-if="props.type === 'password'"
+        type="button"
+        variant="ghost"
+        size="sm"
+        class="absolute inset-y-5.5 right-0 flex items-center px-3 hover:bg-transparent"
+        @click="togglePasswordVisibility"
+        :aria-label="showPassword ? 'Sembunyikan password' : 'Tampilkan password'"
+        :aria-pressed="showPassword"
+        :disabled="props.disabled"
+      >
+        <EyeOff v-if="showPassword" class="h-4 w-4" />
+        <Eye v-else class="h-4 w-4" />
+      </Button>
+    </FormControl>
 
-      <FormDescription v-if="props.description">
-        {{ props.description }}
-      </FormDescription>
+    <FormDescription v-if="props.description" :name="props.name" :id="`${props.name}-description`">
+      {{ props.description }}
+    </FormDescription>
 
-      <FormMessage />
-    </FormItem>
-  </FormField>
+    <FormMessage :name="props.name" />
+  </FormItem>
 </template>

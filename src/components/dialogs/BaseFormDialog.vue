@@ -1,4 +1,3 @@
-// components/dialogs/BaseFormDialog.vue
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { toast } from "vue-sonner";
@@ -15,38 +14,31 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-// Types
+import type { ApiError } from "@/lib/api/core/apiResponse";
+import { cn } from "@/lib/utils";
+
 export type DialogMode = "create" | "edit" | "view";
 
 interface Props<TSchema extends ZodTypeAny = ZodTypeAny> {
-  /** v-model */
   open: boolean;
   mode?: DialogMode;
-  /** Optional resource name for auto title */
-  resourceName?: string; // e.g., "User"
-  title?: string; // override title
-  description?: string; // override desc
+  resourceName?: string;
+  title?: string;
+  description?: string;
 
-  /** VeeValidate/Zod */
-  schema: TSchema; // optional for simple dialogs
+  schema: TSchema;
   initialValues?: Partial<z.infer<TSchema>> | Record<string, any>;
 
-  /** Submit handler: return Promise to show loading */
   onSubmit?: (values: any) => Promise<void> | void;
 
-  /** Buttons */
-  submitText?: string; // defaults by mode
-  cancelText?: string; // defaults: "Batal"
+  submitText?: string;
+  cancelText?: string;
   hideFooter?: boolean;
 
-  /** UX */
-  widthClass?: string; // e.g., 'sm:max-w-[550px]'
-  closeOnSuccess?: boolean; // default true
-
-  /** Optional simple config-driven fields */
+  widthClass?: string;
+  closeOnSuccess?: boolean;
 }
 
-// Props
 const props = withDefaults(defineProps<Props>(), {
   mode: "create",
   resourceName: undefined,
@@ -59,18 +51,18 @@ const props = withDefaults(defineProps<Props>(), {
   closeOnSuccess: true,
 });
 
-// Emits
 const emit = defineEmits<{
   (e: "update:open", value: boolean): void;
   (e: "success", payload: any): void;
   (e: "cancel"): void;
 }>();
 
-// Reactive State
+// Reactive state
 const isSubmitting = ref(false);
 const serverErrors = ref<Record<string, string | string[]>>({});
+const formRef = ref<{ setFieldError?: (field: string, message: string) => void; resetForm?: () => void } | null>(null);
 
-// Computed Properties
+// Computed properties
 const computedTitle = computed(
   () =>
     props.title ??
@@ -93,14 +85,19 @@ const computedDesc = computed(
 
 const isView = computed(() => props.mode === "view");
 
-const formKey = computed(() => {
-  return JSON.stringify(props.initialValues ?? {}) + props.mode;
+const open = computed({
+  get: () => props.open,
+  set(value: boolean) {
+    emit("update:open", value);
+    if (!value) {
+      emit("cancel");
+    }
+  },
 });
 
 // Methods
 function close() {
-  emit("update:open", false);
-  emit("cancel");
+  open.value = false;
 }
 
 async function handleSubmit(values: any) {
@@ -109,19 +106,35 @@ async function handleSubmit(values: any) {
     isSubmitting.value = true;
     serverErrors.value = {};
 
+    // Clear previous field errors
+    if (formRef.value?.setFieldError) {
+      // Get all field names from schema if possible, or clear all
+      // For now, we'll set errors per field from the error response
+    }
+
     await props.onSubmit(values);
     emit("success", values);
 
-    if (props.closeOnSuccess) emit("update:open", false);
-  } catch (e: any) {
-    if (e.status === 422) {
-      // Normalize 422 errors if shape is { errors: { field: [msg] }}
-      const errs = e?.errors;
-      if (errs && typeof errs === "object") serverErrors.value = errs;
-    } else {
-      toast.error(e.message);
+    if (props.closeOnSuccess) {
+      open.value = false;
     }
-    // optionally you can toast outside
+  } catch (e: any) {
+    const apiError = e as ApiError;
+    if (apiError?.status === 422 && apiError?.errors) {
+      const errs = apiError.errors;
+      serverErrors.value = errs;
+
+      // Set field-level errors using Vee-Validate setFieldError
+      if (formRef.value?.setFieldError) {
+        for (const [field, messages] of Object.entries(errs)) {
+          const errorMessage = Array.isArray(messages) ? messages[0] : String(messages);
+          formRef.value.setFieldError(field, errorMessage);
+        }
+      }
+    } else {
+      const errorMessage = apiError?.message || "Terjadi kesalahan saat menyimpan data";
+      toast.error(errorMessage);
+    }
   } finally {
     isSubmitting.value = false;
   }
@@ -130,20 +143,23 @@ async function handleSubmit(values: any) {
 // Watchers
 watch(
   () => props.open,
-  (open) => {
-    if (!open) {
+  (isOpen) => {
+    if (!isOpen) {
       isSubmitting.value = false;
       serverErrors.value = {};
+      // Clear form errors when dialog closes
+      if (formRef.value?.resetForm) {
+        formRef.value.resetForm();
+      }
     }
   },
 );
 </script>
 
 <template>
-  <Dialog :open="open" @update:open="(v) => emit('update:open', v)">
+  <Dialog :open="open" @update:open="(v) => (open = v)">
     <DialogContent
-      class="flex max-h-[90vh] flex-col p-0 sm:max-w-[425px]"
-      :class="widthClass"
+      :class="cn('flex max-h-[90vh] flex-col p-0', props.widthClass)"
       @open-auto-focus="(e) => e.preventDefault()"
     >
       <DialogHeader class="flex-shrink-0 p-6 pb-0">
@@ -153,30 +169,30 @@ watch(
 
       <div class="flex-1 overflow-y-auto px-6">
         <BaseForm
-          :key="formKey"
+          ref="formRef"
           :schema="schema"
           :initial-values="initialValues ?? {}"
           :on-submit="handleSubmit"
           class="space-y-4 py-4"
         >
-          <!-- server side errors -->
           <div
             v-if="Object.keys(serverErrors).length"
             class="border-destructive/30 bg-destructive/10 rounded-md border p-3 text-sm"
           >
             <ul class="list-disc pl-5">
-              <li v-for="(msg, key) in serverErrors" :key="key">{{ Array.isArray(msg) ? msg.join(", ") : msg }}</li>
+              <li v-for="(msg, key) in serverErrors" :key="key">
+                {{ Array.isArray(msg) ? msg.join(", ") : msg }}
+              </li>
             </ul>
           </div>
 
-          <!-- Slot-based fields (full control) -->
           <slot :disabled="isView" />
 
           <DialogFooter v-if="!hideFooter" class="pt-4">
             <Button type="button" variant="outline" @click="close">{{ cancelText }}</Button>
-            <Button type="submit" :disabled="isSubmitting || isView">{{
-              submitText ?? (mode === "create" ? "Simpan" : "Update")
-            }}</Button>
+            <Button type="submit" :disabled="isSubmitting || isView">
+              {{ submitText ?? (mode === "create" ? "Simpan" : "Update") }}
+            </Button>
           </DialogFooter>
         </BaseForm>
       </div>

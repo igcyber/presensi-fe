@@ -1,6 +1,7 @@
 <script setup lang="ts" generic="TSchema extends ZodTypeAny">
 import { toTypedSchema } from "@vee-validate/zod";
-import { Form } from "vee-validate";
+import { useForm } from "vee-validate";
+import { provide, watch } from "vue";
 import type { z, ZodTypeAny } from "zod";
 
 export interface BaseFormProps<TSchema extends ZodTypeAny> {
@@ -17,43 +18,72 @@ const props = withDefaults(defineProps<BaseFormProps<TSchema>>(), {
   disabled: false,
 });
 
-// Emit events for better parent component integration
 const emit = defineEmits<{
   submit: [values: z.infer<TSchema>];
   "invalid-submit": [errors: Record<string, string>];
 }>();
 
-const handleSubmit = async (values: z.infer<TSchema>) => {
-  try {
-    await props.onSubmit(values);
-    emit("submit", values);
-  } catch (error) {
-    console.error("Form submission error:", error);
-  }
-};
+const {
+  handleSubmit: formHandleSubmit,
+  values,
+  errors,
+  meta,
+  setFieldValue,
+  setFieldError,
+  resetForm,
+} = useForm({
+  validationSchema: toTypedSchema(props.schema),
+  initialValues: props.initialValues as any,
+});
 
-const handleInvalidSubmit = (ctx: any) => {
-  const errors = Object.keys(ctx.errors).reduce(
-    (acc, key) => {
-      acc[key] = ctx.errors[key];
-      return acc;
-    },
-    {} as Record<string, string>,
-  );
-  emit("invalid-submit", errors);
-};
+const handleFormSubmit = formHandleSubmit(
+  async (values) => {
+    try {
+      await props.onSubmit(values as z.infer<TSchema>);
+      emit("submit", values as z.infer<TSchema>);
+    } catch (error) {
+      console.error("Form submission error:", error);
+    }
+  },
+  ({ errors: validationErrors }) => {
+    const errorMap = Object.keys(validationErrors as Record<string, any>).reduce(
+      (acc, key) => {
+        acc[key] = (validationErrors as Record<string, any>)[key] as string;
+        return acc;
+      },
+      {} as Record<string, string>,
+    );
+    emit("invalid-submit", errorMap);
+  },
+);
+
+provide("formContext", {
+  values,
+  errors,
+  meta,
+  setFieldValue,
+  setFieldError,
+  resetForm,
+});
+
+defineExpose({
+  setFieldError,
+  resetForm,
+});
+
+watch(
+  () => props.initialValues,
+  (newValues) => {
+    if (newValues) {
+      resetForm({ values: newValues as any });
+    }
+  },
+  { deep: true },
+);
 </script>
 
 <template>
-  <Form
-    :validation-schema="toTypedSchema(props.schema)"
-    :initial-values="props.initialValues"
-    :class="props.class"
-    :disabled="props.disabled"
-    @submit="handleSubmit"
-    @invalid-submit="handleInvalidSubmit"
-    v-slot="{ errors, meta }"
-  >
-    <slot :errors="errors" :meta="meta" />
-  </Form>
+  <form :class="props.class" :disabled="props.disabled" @submit.prevent="handleFormSubmit">
+    <slot :errors="errors" :meta="meta" :values="values" />
+  </form>
 </template>

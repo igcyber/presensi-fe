@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { Edit, Shield, Trash2 } from "lucide-vue-next";
+import { Edit, Trash2 } from "lucide-vue-next";
 import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 
 import BaseConfirmDialog from "@/components/dialogs/BaseConfirmDialog.vue";
 import UserDialog from "@/components/dialogs/UserDialog.vue";
-import UserRolesDialog from "@/components/dialogs/UserRolesDialog.vue";
 import UserDetailView from "@/components/features/user/UserDetailView.vue";
 import { Button } from "@/components/ui/button";
 import ErrorState from "@/components/ui/error-state/ErrorState.vue";
@@ -32,7 +31,6 @@ const userId = computed(() => {
 // Composables
 const editDialog = useDialog<User>();
 const confirmDialog = useDialog<User>();
-const rolesDialog = ref({ open: false });
 
 // Reactive state
 const roleOptions = ref<{ label: string; value: number }[]>([]);
@@ -61,10 +59,6 @@ const handleEdit = (user: User) => {
 
 const handleDelete = (user: User) => {
   confirmDialog.openView(user);
-};
-
-const handleManageRoles = () => {
-  rolesDialog.value.open = true;
 };
 
 const confirmDelete = async () => {
@@ -142,10 +136,6 @@ onMounted(() => {
               <Edit class="mr-2 h-4 w-4" />
               Edit User
             </Button>
-            <Button variant="outline" size="sm" @click="handleManageRoles">
-              <Shield class="mr-2 h-4 w-4" />
-              Kelola Role
-            </Button>
             <Button variant="destructive" size="sm" @click="onDelete">
               <Trash2 class="mr-2 h-4 w-4" />
               Hapus User
@@ -174,8 +164,5 @@ onMounted(() => {
       :loading="confirmDialog.state.value.loading"
       @confirm="confirmDelete"
     />
-
-    <!-- Manage Roles Dialog -->
-    <UserRolesDialog v-model:open="rolesDialog.open" :user="data" :role-options="roleOptions" @success="fetchData" />
   </div>
 </template>

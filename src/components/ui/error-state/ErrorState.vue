@@ -42,11 +42,11 @@ const iconClass = computed(() => {
 const bgClass = computed(() => {
   switch (props.variant) {
     case "warning":
-      return "bg-white border-yellow-200";
+      return "bg-yellow-50 border-yellow-200";
     case "info":
-      return "bg-white border-blue-200";
+      return "bg-blue-50 border-blue-200";
     default:
-      return "bg-white border-portal-black";
+      return "bg-red-50 border-red-200";
   }
 });
 </script>

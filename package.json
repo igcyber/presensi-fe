@@ -1,5 +1,5 @@
 {
-  "name": "disperindag-management-kios",
+  "name": "portal-sekretariat-dprd-kukar",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -57,6 +57,7 @@
     "vee-validate": "^4.15.1",
     "vue": "^3.5.18",
     "vue-chartjs": "^5.3.2",
+    "vue-pdf-embed": "^2.1.3",
     "vue-router": "^4.5.1",
     "vue-sonner": "^2.0.8",
     "zod": "^3.25.76"

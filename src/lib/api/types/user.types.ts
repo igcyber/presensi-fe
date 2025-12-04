@@ -65,17 +65,3 @@ export interface UserDetailResponse {
   timestamp: string;
   data: User;
 }
-
-/**
- * Request payload untuk menambahkan roles ke user
- */
-export interface AddUserRolesRequest {
-  roles: number[];
-}
-
-/**
- * Request payload untuk mengupdate roles user
- */
-export interface UpdateUserRolesRequest {
-  roles: number[];
-}

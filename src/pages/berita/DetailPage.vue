@@ -4,7 +4,7 @@ import { computed, onBeforeUnmount, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 
 import BeritaSide from "@/components/features/berita/BeritaSide.vue";
-import ShareLink from "@/components/features/media/ShareLink.vue";
+import ShareLink from "@/components/features/berita/ShareLink.vue";
 import AppBreadcrumb from "@/components/layout/partials/AppBreadcrumb.vue";
 
 import { useBreadcrumb } from "@/composables/useBreadcrumb";

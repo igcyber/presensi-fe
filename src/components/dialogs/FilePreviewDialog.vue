@@ -244,7 +244,7 @@ watch([open, () => props.file], ([newOpen, newFile], [_oldOpen, oldFile]) => {
 
           <!-- PDF -->
           <div v-else-if="fileType === 'pdf'" class="h-full w-full">
-            <iframe :src="file?.url" class="h-full w-full rounded border-0" title="PDF Preview"></iframe>
+            <iframe :src="file?.url" class="h-96 w-full rounded border-0 lg:h-[700px]" title="PDF Preview"></iframe>
           </div>
 
           <!-- Unsupported -->

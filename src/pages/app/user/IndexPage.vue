@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import { PlusIcon } from "lucide-vue-next";
-import { onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 
 import BaseConfirmDialog from "@/components/dialogs/BaseConfirmDialog.vue";
 import UserDialog from "@/components/dialogs/UserDialog.vue";
-import UserRolesDialog from "@/components/dialogs/UserRolesDialog.vue";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { type Column, DataTable } from "@/components/ui/datatable";
+import { type Column, DataTable, type FilterConfig } from "@/components/ui/datatable";
 import ErrorState from "@/components/ui/error-state/ErrorState.vue";
 
 import { useDialog } from "@/composables/useDialog";
@@ -23,17 +22,47 @@ import type { User } from "@/lib/api/types/user.types";
 // Composables
 const router = useRouter();
 
-const { items, isLoading, isError, error, pagination, query, fetchData, handleSearch, handlePageChange } =
-  useResourceList<User>((params) => getUsers(params), { perPage: 10, searchDebounce: 500 });
+// Get resource list with URL sync (includes pagination state)
+const {
+  items,
+  isLoading,
+  isError,
+  error,
+  pagination,
+  search,
+  sorts,
+  fetchData,
+  handleSearch,
+  handlePageChange,
+  addSort,
+  addFilter,
+  removeFilter,
+  clearFilters,
+} = useResourceList<User>((params) => getUsers(params), { perPage: 10, enableUrlSync: true });
 
 const dialog = useDialog<User>();
 const confirmDialog = useDialog<User>();
-const rolesDialog = ref({ open: false, user: null as User | null });
 
 const { capitalize } = useFormatters();
 
 // Reactive state
 const roleOptions = ref<{ label: string; value: number }[]>([]);
+const filterValues = ref<Record<string, any>>({});
+
+// Computed for DataTable props
+const currentSortField = computed(() => (sorts.value ? sorts.value.field : ""));
+const currentSortDirection = computed(() => (sorts.value ? sorts.value.direction : "asc"));
+
+// Filter config for DataTable
+const filterConfigs = computed<FilterConfig[]>(() => [
+  {
+    key: "role",
+    label: "Role",
+    type: "select",
+    options: roleOptions.value,
+    placeholder: "Pilih role",
+  },
+]);
 
 // Column definitions
 const columns: Column<User>[] = [
@@ -105,10 +134,6 @@ const handleDelete = (item: User): void => {
   confirmDialog.openView(item);
 };
 
-const handleManageRoles = (item: User): void => {
-  rolesDialog.value = { open: true, user: item };
-};
-
 const confirmDelete = async (): Promise<void> => {
   if (!confirmDialog.state.value.data) return;
 
@@ -138,19 +163,33 @@ const handleUserDialogSuccess = (): void => {
   fetchData();
 };
 
-const handleRolesDialogSuccess = (): void => {
-  rolesDialog.value.open = false;
-  fetchData();
+// DataTable event handlers
+const handleSort = (payload: { field: string; direction: "asc" | "desc" | undefined }): void => {
+  addSort(payload.field, payload.direction);
 };
 
-// Watchers
-watch(
-  query,
-  () => {
-    fetchData();
-  },
-  { immediate: true, deep: true },
-);
+const handleCustomFilter = (filters: Array<Record<string, any>>): void => {
+  // Handle custom filters from DataTable
+  // For role filter, extract and apply
+  if (filters.length > 0) {
+    const filterObj = filters[0];
+    if (filterObj.role) {
+      addFilter("role", filterObj.role);
+    } else {
+      // Remove role filter if not present
+      removeFilter("role");
+    }
+  } else {
+    clearFilters();
+  }
+};
+
+const handleResetFilter = (): void => {
+  filterValues.value = {};
+  clearFilters();
+};
+
+// Note: useResourceList already watches query changes and calls fetchData automatically
 
 // Lifecycle hooks
 onMounted(() => {
@@ -192,15 +231,37 @@ onMounted(() => {
             :page-size="pagination.per_page"
             :total-data="pagination.total"
             :total-pages="pagination.last_page"
+            :current-page="pagination.current_page"
             :loading="isLoading"
-            :action-manage-roles="true"
+            :filters="filterConfigs"
+            :search-value="search"
+            :sort-field="currentSortField"
+            :sort-direction="currentSortDirection"
+            :filter-values="filterValues"
             @page-change="handlePageChange"
             @search="handleSearch"
+            @sort="handleSort"
+            @custom-filter="handleCustomFilter"
+            @reset-filter="handleResetFilter"
             @row-click="handleRowClick"
             @edit="handleEdit"
             @delete="handleDelete"
-            @manage-roles="handleManageRoles"
-          />
+            @update:search-value="(val) => (search = val)"
+            @update:filter-values="(val) => (filterValues = val)"
+          >
+            <!-- Custom column rendering for roles -->
+            <template #cell-roles="{ item }">
+              <div class="flex flex-wrap gap-1">
+                <span
+                  v-for="role in item.roles"
+                  :key="role.id"
+                  class="inline-flex items-center rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800"
+                >
+                  {{ capitalize(role.name) }}
+                </span>
+              </div>
+            </template>
+          </DataTable>
         </CardContent>
       </Card>
 
@@ -222,14 +283,6 @@ onMounted(() => {
         variant="destructive"
         :loading="confirmDialog.state.value.loading"
         @confirm="confirmDelete"
-      />
-
-      <!-- Manage Roles Dialog -->
-      <UserRolesDialog
-        v-model:open="rolesDialog.open"
-        :user="rolesDialog.user"
-        :role-options="roleOptions"
-        @success="handleRolesDialogSuccess"
       />
     </div>
   </div>

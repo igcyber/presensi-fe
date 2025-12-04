@@ -1,8 +1,19 @@
 <script setup lang="ts" generic="T">
-import { format } from "date-fns";
-import { Calendar as CalendarIcon, EditIcon, Eye, Filter, RotateCcw, Search, Shield, TrashIcon } from "lucide-vue-next";
+// External imports
+import {
+  Calendar as CalendarIcon,
+  ChevronDown,
+  ChevronUp,
+  EditIcon,
+  Eye,
+  Filter,
+  RotateCcw,
+  Search,
+  TrashIcon,
+} from "lucide-vue-next";
 import { computed, ref } from "vue";
 
+// Internal imports
 import FilePreviewDialog from "@/components/dialogs/FilePreviewDialog.vue";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -24,7 +35,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useFilePreview } from "@/composables/useFilePreview";
 import { useFormatters } from "@/composables/useFormatters";
 
-// Interfaces
+// Type definitions and interfaces
 export interface Column<T = any> {
   key: string;
   label: string;
@@ -32,11 +43,11 @@ export interface Column<T = any> {
   searchable?: boolean;
   width?: string;
   render?: (item: T) => string | number;
-  htmlContent?: boolean; // Untuk kolom yang berisi HTML
-  stripHtml?: boolean; // Untuk menghilangkan HTML tags
-  previewable?: boolean; // Untuk kolom yang bisa di-preview (file, gambar, dll)
-  previewUrl?: (item: T) => string; // Function untuk mendapatkan URL preview
-  previewName?: (item: T) => string; // Function untuk mendapatkan nama file
+  htmlContent?: boolean;
+  stripHtml?: boolean;
+  previewable?: boolean;
+  previewUrl?: (item: T) => string;
+  previewName?: (item: T) => string;
 }
 
 export interface FilterOption {
@@ -60,71 +71,78 @@ export interface Props<T = unknown> {
   pageSize: number;
   totalData: number;
   totalPages: number;
+  currentPage: number;
   loading?: boolean;
   filters?: FilterConfig[];
   actions?: boolean;
   actionEdit?: boolean;
   actionDelete?: boolean;
-  actionManageRoles?: boolean;
+  searchValue?: string;
+  sortField?: string;
+  sortDirection?: "asc" | "desc" | undefined;
+  filterValues?: Record<string, any>;
 }
 
-// Props
+// Props definition
 const props = withDefaults(defineProps<Props<T>>(), {
   searchable: true,
   pagination: true,
   pageSize: 10,
+  currentPage: 1,
   loading: false,
   filters: () => [],
   actions: true,
   actionEdit: true,
   actionDelete: true,
-  actionManageRoles: false,
+  searchValue: "",
+  sortField: "",
+  sortDirection: undefined,
+  filterValues: () => ({}),
 });
 
-// Emits
+// Emits definition
 const emit = defineEmits<{
   rowClick: [item: T];
   edit: [item: T];
   delete: [item: T];
-  manageRoles?: [item: T];
   pageChange: [page: number];
   search: [search: string];
+  sort: [payload: { field: string; direction: "asc" | "desc" | undefined }];
   customFilter: [filters: Array<Record<string, any>>];
   resetFilter: [];
+  "update:searchValue": [value: string];
+  "update:filterValues": [values: Record<string, any>];
 }>();
 
-// Composables
+// Composables initialization
 const formatters = useFormatters();
 const filePreview = useFilePreview();
 
-// State
-const searchQuery = ref("");
-const currentPage = ref<number>(1);
-const sortColumn = ref<string>("");
-const sortDirection = ref<"asc" | "desc">("asc");
-const filterValues = ref<Record<string, any>>({});
+// Reactive state
+const localSearchQuery = ref(props.searchValue);
 
-// Computed
+// Computed properties
 const startIndex = computed(() => {
   if (!props.pagination || !props.totalData) return 1;
-  return (currentPage.value - 1) * props.pageSize + 1;
+  return (props.currentPage - 1) * props.pageSize + 1;
 });
 
 const endIndex = computed(() => {
   if (!props.pagination || !props.totalData) return 0;
-  return Math.min(currentPage.value * props.pageSize, props.totalData);
+  return Math.min(props.currentPage * props.pageSize, props.totalData);
 });
 
-// Methods
+// Public event handlers
 const handleSort = (column: Column<T>) => {
   if (!column.sortable) return;
 
-  if (sortColumn.value === column.key) {
-    sortDirection.value = sortDirection.value === "asc" ? "desc" : "asc";
-  } else {
-    sortColumn.value = column.key;
-    sortDirection.value = "asc";
+  let direction: "asc" | "desc" | undefined = "asc";
+
+  if (props.sortField === column.key) {
+    direction = props.sortDirection === "asc" ? "desc" : props.sortDirection === "desc" ? undefined : "asc";
   }
+
+  emit("sort", { field: column.key, direction });
 };
 
 const handleRowClick = (item: T) => {
@@ -137,10 +155,6 @@ const handleEdit = (item: T) => {
 
 const handleDelete = (item: T) => {
   emit("delete", item);
-};
-
-const handleManageRoles = (item: T) => {
-  emit("manageRoles", item);
 };
 
 const handlePreview = (item: T, column: Column<T>) => {
@@ -157,33 +171,35 @@ const handlePreview = (item: T, column: Column<T>) => {
   }
 };
 
+const handleSearchKeyup = (event: KeyboardEvent) => {
+  if (event.key === "Enter") {
+    handleSearchSubmit();
+  }
+};
+
+const handleSearchSubmit = () => {
+  emit("search", localSearchQuery.value);
+  emit("update:searchValue", localSearchQuery.value);
+};
+
+const handleCustomFilter = (filters: Array<Record<string, any>>) => {
+  emit("customFilter", filters);
+};
+
+// Navigation and pagination handlers
 const goToPage = (page: number) => {
   if (page >= 1 && page <= props.totalPages) {
-    currentPage.value = page;
     emit("pageChange", page);
   }
 };
 
-const handleSearch = () => {
-  currentPage.value = 1;
-  emit("search", searchQuery.value);
-};
-
-const handleCustomFilter = (filters: Array<Record<string, any>>) => {
-  currentPage.value = 1;
-  emit("customFilter", filters);
-};
-
+// Filter methods
 const applyFilters = () => {
   const filters: Record<string, any> = {};
 
-  Object.entries(filterValues.value).forEach(([key, value]) => {
+  Object.entries(props.filterValues).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== "") {
-      if (key === "date" && value) {
-        filters[key] = format(value, "yyyy-MM-dd");
-      } else {
-        filters[key] = typeof value === "string" && !isNaN(Number(value)) ? Number(value) : value;
-      }
+      filters[key] = value;
     }
   });
 
@@ -192,18 +208,13 @@ const applyFilters = () => {
 };
 
 const resetFilters = () => {
-  searchQuery.value = "";
-  filterValues.value = {};
-
+  localSearchQuery.value = "";
+  emit("update:searchValue", "");
+  emit("update:filterValues", {});
   emit("resetFilter");
 };
 
-const getCellValue = (item: T, column: Column<T>) => {
-  const value = item[column.key as keyof T];
-  return column.render ? column.render(item) : value;
-};
-
-// Utility function to strip HTML tags
+// Private helper methods
 const stripHtmlTags = (html: string): string => {
   if (!html) return "";
   const div = document.createElement("div");
@@ -211,12 +222,17 @@ const stripHtmlTags = (html: string): string => {
   return div.textContent || div.innerText || "";
 };
 
+const getCellValue = (item: T, column: Column<T>) => {
+  const value = item[column.key as keyof T];
+  return column.render ? column.render(item) : value;
+};
+
 const formatCellValue = (item: T, column: Column<T>) => {
   const value = getCellValue(item, column);
 
   // Handle HTML content
   if (column.htmlContent && typeof value === "string") {
-    return value; // Return HTML as is
+    return value;
   }
 
   // Handle strip HTML option
@@ -256,22 +272,25 @@ const formatCellValue = (item: T, column: Column<T>) => {
 </script>
 
 <template>
-  <div class="space-y-4">
+  <div class="space-y-4 p-2">
     <!-- Search and Filters Container -->
-    <div class="mb-6 w-full space-y-4">
-      <!-- Search -->
-      <div v-if="searchable" class="w-full">
-        <div class="relative">
-          <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <Search class="text-muted-foreground h-5 w-5" />
+    <div class="w-full space-y-4">
+      <!-- Search with Lazy Submit -->
+      <div v-if="searchable" class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="flex flex-col gap-1.5 sm:col-span-2 lg:col-span-1">
+          <Label for="searchKeyword" class="text-sm font-medium">Cari</Label>
+          <div class="flex gap-2">
+            <Input
+              v-model="localSearchQuery"
+              placeholder="Cari data..."
+              id="searchKeyword"
+              class="w-full"
+              @keyup="handleSearchKeyup"
+            />
+            <Button type="button" @click="handleSearchSubmit" variant="default" size="icon">
+              <Search class="h-4 w-4" />
+            </Button>
           </div>
-          <Input
-            v-model="searchQuery"
-            placeholder="Cari data..."
-            id="searchKeyword"
-            class="focus:ring-primary/20 focus:border-primary w-full pr-4 pl-10 transition-all duration-200 focus:ring-2"
-            @input="handleSearch"
-          />
         </div>
       </div>
 
@@ -283,7 +302,10 @@ const formatCellValue = (item: T, column: Column<T>) => {
             <!-- Select Filter -->
             <div v-if="filter.type === 'select'" class="flex flex-col gap-1.5">
               <Label :for="`filter-${filter.key}`" class="text-sm font-medium">{{ filter.label }}</Label>
-              <Select v-model="filterValues[filter.key]">
+              <Select
+                :model-value="filterValues[filter.key]"
+                @update:model-value="(val) => emit('update:filterValues', { ...filterValues, [filter.key]: val })"
+              >
                 <SelectTrigger :id="`filter-${filter.key}`" class="w-full">
                   <SelectValue :placeholder="filter.placeholder || `Pilih ${filter.label.toLowerCase()}`" />
                 </SelectTrigger>
@@ -314,7 +336,12 @@ const formatCellValue = (item: T, column: Column<T>) => {
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent class="w-auto p-0">
-                  <Calendar v-model="filterValues[filter.key]" mode="single" :week-start="1" />
+                  <Calendar
+                    :model-value="filterValues[filter.key]"
+                    @update:model-value="(val) => emit('update:filterValues', { ...filterValues, [filter.key]: val })"
+                    mode="single"
+                    :week-start="1"
+                  />
                 </PopoverContent>
               </Popover>
             </div>
@@ -346,7 +373,7 @@ const formatCellValue = (item: T, column: Column<T>) => {
 
       <!-- Custom Filters Slot (fallback) -->
       <div v-else-if="!searchable" class="w-full">
-        <slot name="filters" :search="searchQuery" :on-filter-change="handleCustomFilter">
+        <slot name="filters" :search="localSearchQuery" :on-filter-change="handleCustomFilter">
           <!-- Default: no filters -->
         </slot>
       </div>
@@ -354,7 +381,6 @@ const formatCellValue = (item: T, column: Column<T>) => {
   </div>
 
   <!-- Loading State -->
-
   <TableSkeleton v-if="loading" />
 
   <!-- Table -->
@@ -374,20 +400,20 @@ const formatCellValue = (item: T, column: Column<T>) => {
               <div class="flex items-center space-x-2">
                 <span>{{ column.label }}</span>
                 <div v-if="column.sortable" class="flex flex-col">
-                  <svg
+                  <ChevronUp
                     :class="[
                       'h-3 w-3 transition-colors',
-                      sortColumn === column.key && sortDirection === 'asc'
+                      sortField === column.key && sortDirection === 'asc' ? 'text-foreground' : 'text-muted-foreground',
+                    ]"
+                  />
+                  <ChevronDown
+                    :class="[
+                      '-mt-1 h-3 w-3 transition-colors',
+                      sortField === column.key && sortDirection === 'desc'
                         ? 'text-foreground'
                         : 'text-muted-foreground',
                     ]"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                    />
-                  </svg>
+                  />
                 </div>
               </div>
             </TableHead>
@@ -416,70 +442,63 @@ const formatCellValue = (item: T, column: Column<T>) => {
                 ['amount', 'harga', 'total', 'biaya'].includes(column.key) ? 'text-right font-medium' : '',
               ]"
             >
-              <!-- Status, Aktif, Inaktif columns -->
-              <template v-if="['status', 'is_active', 'aktif'].includes(column.key)">
-                <span :class="['rounded-full px-2 py-1 text-xs', (formatCellValue(item, column) as any).class]">
-                  {{ (formatCellValue(item, column) as any).label }}
-                </span>
-              </template>
+              <!-- Scoped slot for custom column rendering -->
+              <slot :name="`cell-${column.key}`" :item="item" :column="column" :value="formatCellValue(item, column)">
+                <!-- Default rendering fallback -->
+                <!-- Status, Aktif, Inaktif columns -->
+                <template v-if="['status', 'is_active', 'aktif'].includes(column.key)">
+                  <span :class="['rounded-full px-2 py-1 text-xs', (formatCellValue(item, column) as any).class]">
+                    {{ (formatCellValue(item, column) as any).label }}
+                  </span>
+                </template>
 
-              <!-- Currency columns -->
-              <template v-else-if="['amount', 'harga', 'total', 'biaya'].includes(column.key)">
-                {{ formatCellValue(item, column) }}
-              </template>
-
-              <!-- Date columns -->
-              <template v-else-if="['createdAt', 'updatedAt', 'tanggal'].includes(column.key)">
-                {{ formatCellValue(item, column) }}
-              </template>
-
-              <!-- HTML content columns -->
-              <template v-else-if="column.htmlContent">
-                <div
-                  v-html="formatCellValue(item, column)"
-                  class="max-w-xs overflow-hidden"
-                  :title="stripHtmlTags(String(formatCellValue(item, column)))"
-                ></div>
-              </template>
-
-              <!-- Strip HTML columns -->
-              <template v-else-if="column.stripHtml">
-                <div class="max-w-xs truncate" :title="String(formatCellValue(item, column))">
+                <!-- Currency columns -->
+                <template v-else-if="['amount', 'harga', 'total', 'biaya'].includes(column.key)">
                   {{ formatCellValue(item, column) }}
-                </div>
-              </template>
+                </template>
 
-              <!-- Previewable columns -->
-              <template v-else-if="column.previewable && column.previewUrl">
-                <Button variant="link" size="sm" @click.stop="handlePreview(item, column)" class="p-0">
-                  <span class="flex flex-col items-center justify-center gap-1 sm:flex-row">
-                    <Eye v-if="column.previewUrl(item)" class="h-3 w-3" />
+                <!-- Date columns -->
+                <template v-else-if="['createdAt', 'updatedAt', 'tanggal'].includes(column.key)">
+                  {{ formatCellValue(item, column) }}
+                </template>
 
-                    {{ formatCellValue(item, column) }}</span
-                  >
-                </Button>
-              </template>
+                <!-- HTML content columns -->
+                <template v-else-if="column.htmlContent">
+                  <div
+                    v-html="formatCellValue(item, column)"
+                    class="max-w-xs overflow-hidden"
+                    :title="stripHtmlTags(String(formatCellValue(item, column)))"
+                  ></div>
+                </template>
 
-              <!-- Other columns -->
-              <template v-else>
-                {{ formatCellValue(item, column) }}
-              </template>
+                <!-- Strip HTML columns -->
+                <template v-else-if="column.stripHtml">
+                  <div class="max-w-xs truncate" :title="String(formatCellValue(item, column))">
+                    {{ formatCellValue(item, column) }}
+                  </div>
+                </template>
+
+                <!-- Previewable columns -->
+                <template v-else-if="column.previewable && column.previewUrl">
+                  <Button variant="link" size="sm" @click.stop="handlePreview(item, column)" class="p-0">
+                    <span class="flex flex-col items-center justify-center gap-1 sm:flex-row">
+                      <Eye v-if="column.previewUrl(item)" class="h-3 w-3" />
+                      {{ formatCellValue(item, column) }}
+                    </span>
+                  </Button>
+                </template>
+
+                <!-- Other columns -->
+                <template v-else>
+                  {{ formatCellValue(item, column) }}
+                </template>
+              </slot>
             </TableCell>
             <TableCell v-if="actions" class="py-2 text-center">
               <div class="flex items-center justify-center gap-1 sm:gap-2">
                 <Button
-                  v-if="actionManageRoles"
-                  variant="outline"
-                  size="sm"
-                  @click.stop="handleManageRoles(item)"
-                  class="border-gray-300 px-2 sm:px-3 dark:border-gray-600"
-                >
-                  <Shield class="h-4 w-4" />
-                  <span class="hidden sm:inline">Role</span>
-                </Button>
-                <Button
                   v-if="actionEdit"
-                  variant="default"
+                  variant="secondary"
                   size="sm"
                   @click.stop="handleEdit(item)"
                   class="px-2 sm:px-3"
@@ -530,7 +549,6 @@ const formatCellValue = (item: T, column: Column<T>) => {
             :value="item.value"
             :is-active="item.value === page"
             class="h-8 w-8 text-xs sm:h-10 sm:w-10 sm:text-sm"
-            :class="item.value === page ? '!bg-green-800 text-white' : ''"
           >
             {{ item.value }}
           </PaginationItem>

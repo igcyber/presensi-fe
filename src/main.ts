@@ -1,20 +1,34 @@
+// Third-party library imports
 import $ from "jquery";
 
 import "lightbox2/dist/css/lightbox.min.css";
 
 import { createPinia } from "pinia";
+import { configure } from "vee-validate";
+// Vue and related imports
 import { createApp } from "vue";
 
+// Local imports
 import App from "@/App.vue";
 import router from "@/router";
+import { useAuthStore } from "@/stores/authStore";
 
+// Styles
 import "@/styles/icons.css";
 import "@/styles/main.css";
 
-import { useAuthStore } from "@/stores/authStore";
+// Configure vee-validate
+configure({
+  validateOnInput: false,
+  validateOnBlur: false,
+  validateOnChange: false,
+  validateOnModelUpdate: false,
+});
 
+// Setup jQuery globally
 (window as any).$ = (window as any).jQuery = $;
 
+// Setup Lightbox
 const lightboxModule = await import("lightbox2/dist/js/lightbox.js");
 
 if (lightboxModule && lightboxModule.default && typeof lightboxModule.default.option === "function") {
@@ -30,12 +44,13 @@ if (lightboxModule && lightboxModule.default && typeof lightboxModule.default.op
   });
 }
 
+// Create and configure Vue app
 const app = createApp(App);
 
 app.use(createPinia());
 app.use(router);
 
-// Inisialisasi auth store setelah pinia dipasang
+// Initialize auth store after pinia is mounted
 const authStore = useAuthStore();
 authStore.initializeAuth();
 

@@ -41,6 +41,47 @@ httpInstance.interceptors.response.use(
   (error) => handleError(error),
 );
 
+/**
+ * Transform AdonisJS validation errors dari array format ke object format
+ * AdonisJS format: [{ field: 'email', message: 'Invalid email' }]
+ * Vee-Validate format: { email: 'Invalid email' }
+ */
+const transformAdonisJSErrors = (errors: unknown): Record<string, string[]> => {
+  // Jika sudah object format, return as is (backward compatible)
+  if (errors && typeof errors === "object" && !Array.isArray(errors)) {
+    // Check if it's already in the correct format
+    const keys = Object.keys(errors);
+    if (keys.length > 0 && Array.isArray(errors[keys[0] as keyof typeof errors])) {
+      return errors as Record<string, string[]>;
+    }
+    // If it's object but not array values, convert to array format
+    const result: Record<string, string[]> = {};
+    for (const [key, value] of Object.entries(errors)) {
+      result[key] = Array.isArray(value) ? value : [String(value)];
+    }
+    return result;
+  }
+
+  // Jika array format (AdonisJS), transform ke object
+  if (Array.isArray(errors)) {
+    const result: Record<string, string[]> = {};
+    for (const error of errors) {
+      if (error && typeof error === "object" && "field" in error && "message" in error) {
+        const field = String(error.field);
+        const message = String(error.message);
+        if (result[field]) {
+          result[field].push(message);
+        } else {
+          result[field] = [message];
+        }
+      }
+    }
+    return result;
+  }
+
+  return {};
+};
+
 const handleError = (error: any) => {
   const apiError: ApiError = {
     message: "Terjadi kesalahan yang tidak diketahui",
@@ -54,7 +95,7 @@ const handleError = (error: any) => {
     apiError.message = data?.message || getDefaultErrorMessage(status);
 
     if (status === 422 && data?.errors) {
-      apiError.errors = data.errors;
+      apiError.errors = transformAdonisJSErrors(data.errors);
     }
   } else if (error.request) {
     apiError.message = "Tidak dapat terhubung ke server. Periksa koneksi internet Anda.";

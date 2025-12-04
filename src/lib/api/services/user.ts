@@ -1,11 +1,8 @@
 import type { ApiResponse } from "@/lib/api/core/apiResponse";
-import httpInstance from "@/lib/api/core/httpInstance";
 import { createCrudService } from "@/lib/api/factories/crudServiceFactory";
 import type {
-  AddUserRolesRequest,
   CreateUserRequest,
   UpdateUserRequest,
-  UpdateUserRolesRequest,
   User,
   UserListResponse,
   UserQueryParams,
@@ -93,54 +90,3 @@ export const updateUser = (id: number, payload: UpdateUserRequest): Promise<ApiR
  * ```
  */
 export const deleteUser = (id: number): Promise<ApiResponse<null>> => userService.remove(id);
-
-/**
- * Menambahkan roles ke user
- * @param userId - ID user
- * @param payload - Data roles yang akan ditambahkan
- * @returns Promise yang mengembalikan data user yang diperbarui
- * @endpoint POST /api/users/{userId}/roles
- * @example
- * ```typescript
- * const response = await addUserRoles(1, { roles: [2, 3] });
- * console.log(response.data.roles);
- * ```
- */
-export const addUserRoles = async (userId: number, payload: AddUserRolesRequest): Promise<ApiResponse<User>> => {
-  const { data } = await httpInstance.post<ApiResponse<User>>(`${base}/${userId}/roles`, payload);
-  return data;
-};
-
-/**
- * Mengupdate roles user (mengganti semua roles)
- * @param userId - ID user
- * @param payload - Data roles yang akan diupdate
- * @returns Promise yang mengembalikan data user yang diperbarui
- * @endpoint PUT /api/users/{userId}/roles
- * @example
- * ```typescript
- * const response = await updateUserRoles(1, { roles: [1, 2, 3] });
- * console.log(response.data.roles);
- * ```
- */
-export const updateUserRoles = async (userId: number, payload: UpdateUserRolesRequest): Promise<ApiResponse<User>> => {
-  const { data } = await httpInstance.put<ApiResponse<User>>(`${base}/${userId}/roles`, payload);
-  return data;
-};
-
-/**
- * Menghapus role dari user
- * @param userId - ID user
- * @param roleId - ID role yang akan dihapus
- * @returns Promise yang mengembalikan data user yang diperbarui
- * @endpoint DELETE /api/users/{userId}/roles/{roleId}
- * @example
- * ```typescript
- * const response = await deleteUserRole(1, 2);
- * console.log(response.data.roles);
- * ```
- */
-export const deleteUserRole = async (userId: number, roleId: number): Promise<ApiResponse<User>> => {
-  const { data } = await httpInstance.delete<ApiResponse<User>>(`${base}/${userId}/roles/${roleId}`);
-  return data;
-};

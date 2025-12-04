@@ -19,7 +19,7 @@ export const ENV_CONFIG = {
   // Portal Configuration
   portalName: import.meta.env.VITE_PORTAL_NAME || "Portal Resmi Kabupaten Kutai Kartanegara",
   portalTagline: import.meta.env.VITE_PORTAL_TAGLINE || "Kukar Idaman Mitra Pembangunan IKN",
-  websiteUrl: import.meta.env.VITE_WEBSITE_URL || "/beranda",
+  websiteUrl: import.meta.env.VITE_WEBSITE_URL || "/",
 
   // External Links
   pengaduanUrl:

@@ -46,10 +46,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 
-// Inisialisasi lowlight
 const lowlight = createLowlight();
 
-// Interface untuk SetImageOptions yang diperluas
 interface ExtendedSetImageOptions {
   src: string;
   alt?: string;
@@ -57,7 +55,6 @@ interface ExtendedSetImageOptions {
   size?: "small" | "medium" | "large";
 }
 
-// Custom Image extension dengan resize dan delete
 const CustomImage = Image.extend({
   addAttributes() {
     return {
@@ -216,7 +213,6 @@ const CustomImage = Image.extend({
   },
 });
 
-// Custom Table extension dengan kontrol dinamis
 const CustomTable = Table.extend({
   addNodeView() {
     return ({ node: _node, getPos, editor }) => {
@@ -329,7 +325,6 @@ const CustomTable = Table.extend({
   },
 });
 
-// Interface untuk props
 interface Props {
   name: string;
   label: string;
@@ -346,7 +341,6 @@ interface Props {
   minHeight?: number;
 }
 
-// Props dengan default values
 const props = withDefaults(defineProps<Props>(), {
   placeholder: "Mulai menulis...",
   disabled: false,
@@ -357,16 +351,13 @@ const props = withDefaults(defineProps<Props>(), {
   minHeight: 200,
 });
 
-// Registrasi field ke vee-validate
 const { value, errorMessage } = useField<string>(props.name);
 
-// Refs
 const imageInputRef = ref<HTMLInputElement>();
 const tableDialogOpen = ref(false);
 const tableRows = ref(3);
 const tableCols = ref(3);
 
-// Inisialisasi editor
 const editor = useEditor({
   content: value.value || "",
   editable: !props.disabled,
@@ -391,12 +382,11 @@ const editor = useEditor({
   },
   onUpdate: ({ editor }) => {
     if (!props.disabled) {
-      value.value = editor.getHTML(); // sync ke vee-validate
+      value.value = editor.getHTML();
     }
   },
 });
 
-// Computed properties untuk toolbar states
 const isBold = computed(() => editor.value?.isActive("bold"));
 const isItalic = computed(() => editor.value?.isActive("italic"));
 const isUnderline = computed(() => editor.value?.isActive("underline"));
@@ -413,7 +403,6 @@ const currentAlignment = computed(() => {
   return "left";
 });
 
-// Toolbar actions
 const toggleBold = () => editor.value?.chain().focus().toggleBold().run();
 const toggleItalic = () => editor.value?.chain().focus().toggleItalic().run();
 const toggleUnderline = () => editor.value?.chain().focus().toggleUnderline().run();
@@ -438,7 +427,6 @@ const insertTable = () => {
   tableDialogOpen.value = false;
 };
 
-// Image upload handlers
 const handleImageUpload = () => requestAnimationFrame(() => imageInputRef.value?.click());
 const onImageSelect = async (event: Event) => {
   const target = event.target as HTMLInputElement;
@@ -466,13 +454,10 @@ const onImageSelect = async (event: Event) => {
   } catch (error) {
     console.error("Image upload failed:", error);
   } finally {
-    // Reset input value agar file yang sama bisa diupload lagi
     target.value = "";
   }
 };
 
-// Watchers
-// Sync external value → editor
 watch(
   () => value.value,
   (newVal) => {
@@ -482,7 +467,6 @@ watch(
   },
 );
 
-// Watch disabled state changes
 watch(
   () => props.disabled,
   (disabled) => {
@@ -490,7 +474,6 @@ watch(
   },
 );
 
-// Lifecycle hooks
 onBeforeUnmount(() => {
   editor.value?.destroy();
 });

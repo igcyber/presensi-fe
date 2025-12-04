@@ -1,27 +1,44 @@
 import { FieldContextKey, useFieldError, useIsFieldDirty, useIsFieldTouched, useIsFieldValid } from "vee-validate";
-import { inject } from "vue";
+import { inject, type InjectionKey, type MaybeRefOrGetter, toValue } from "vue";
 
 import { FORM_ITEM_INJECTION_KEY } from "./injectionKeys";
 
-export function useFormField() {
-  const fieldContext = inject(FieldContextKey);
+// Injection key for field name context (used by new pattern)
+export const FIELD_NAME_CONTEXT_KEY = Symbol() as InjectionKey<MaybeRefOrGetter<string>>;
+
+export function useFormField(name?: MaybeRefOrGetter<string>) {
+  // Try to get name from parameter, injected context, or FieldContextKey
+  const fieldNameContext = inject(FIELD_NAME_CONTEXT_KEY, null);
+  const fieldContext = inject(FieldContextKey, null);
   const fieldItemContext = inject(FORM_ITEM_INJECTION_KEY);
 
-  if (!fieldContext) throw new Error("useFormField should be used within <FormField>");
+  let fieldName: MaybeRefOrGetter<string>;
 
-  const { name } = fieldContext;
-  const id = fieldItemContext;
+  if (name) {
+    // Name provided as parameter (new pattern)
+    fieldName = name;
+  } else if (fieldNameContext) {
+    // Name from injected context (new pattern)
+    fieldName = fieldNameContext;
+  } else if (fieldContext) {
+    // Name from FieldContextKey (old pattern - backward compatibility)
+    fieldName = fieldContext.name;
+  } else {
+    throw new Error("useFormField: field name is required. Provide name prop or use within <FormField>");
+  }
+
+  const id = fieldItemContext || toValue(fieldName);
 
   const fieldState = {
-    valid: useIsFieldValid(name),
-    isDirty: useIsFieldDirty(name),
-    isTouched: useIsFieldTouched(name),
-    error: useFieldError(name),
+    valid: useIsFieldValid(fieldName),
+    isDirty: useIsFieldDirty(fieldName),
+    isTouched: useIsFieldTouched(fieldName),
+    error: useFieldError(fieldName),
   };
 
   return {
     id,
-    name,
+    name: fieldName,
     formItemId: `${id}-form-item`,
     formDescriptionId: `${id}-form-item-description`,
     formMessageId: `${id}-form-item-message`,

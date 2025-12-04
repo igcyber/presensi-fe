@@ -1,8 +1,13 @@
 <script setup lang="ts">
-import { nextTick, ref } from "vue";
+import { useField } from "vee-validate";
+import { nextTick, provide, ref } from "vue";
+import type { HTMLAttributes } from "vue";
 
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { FormControl, FormDescription, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { FIELD_NAME_CONTEXT_KEY } from "@/components/ui/form/useFormField";
 import { Textarea } from "@/components/ui/textarea";
+
+import { cn } from "@/lib/utils";
 
 interface Props {
   name: string;
@@ -18,7 +23,7 @@ interface Props {
   showCounter?: boolean;
   description?: string;
   spellcheck?: boolean;
-  customCss?: string;
+  class?: HTMLAttributes["class"];
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -31,6 +36,10 @@ const props = withDefaults(defineProps<Props>(), {
   spellcheck: true,
 });
 
+provide(FIELD_NAME_CONTEXT_KEY, props.name);
+
+const { value, errorMessage, setValue } = useField(props.name);
+
 const textareaRef = ref<HTMLTextAreaElement>();
 
 const handleAutoResize = async (e: Event) => {
@@ -41,57 +50,56 @@ const handleAutoResize = async (e: Event) => {
 
   await nextTick();
 
-  // Set minimum height based on rows prop
-  const minHeight = props.rows * 24; // approximate line height
+  const minHeight = props.rows * 24;
   const newHeight = Math.max(el.scrollHeight, minHeight);
   el.style.height = `${newHeight}px`;
 };
 
-const handleInput = (e: Event, componentFieldOnInput: (e: Event) => void) => {
+const handleChange = (val: string) => {
+  setValue(val, false);
+};
+
+const handleInput = (e: Event) => {
   handleAutoResize(e);
-  componentFieldOnInput(e);
+  const target = e.target as HTMLTextAreaElement;
+  setValue(target.value, false);
 };
 </script>
 
 <template>
-  <FormField :name="props.name" v-slot="{ componentField }">
-    <FormItem>
-      <FormLabel>
-        {{ props.label }}
-        <span v-if="props.required" class="text-destructive">*</span>
-      </FormLabel>
-      <FormControl>
-        <Textarea
-          ref="textareaRef"
-          v-bind="componentField"
-          :rows="props.rows"
-          :placeholder="props.placeholder"
-          :disabled="props.disabled"
-          :readonly="props.readonly"
-          :maxlength="props.maxlength"
-          :minlength="props.minlength"
-          :spellcheck="props.spellcheck"
-          :aria-describedby="props.description ? `${props.name}-description` : undefined"
-          :style="props.autoResize ? { resize: 'none', overflow: 'hidden' } : {}"
-          @input="(e: Event) => handleInput(e, componentField.onInput)"
-          :class="props.customCss"
-        />
-      </FormControl>
-      <p v-if="props.description" :id="`${props.name}-description`" class="text-muted-foreground text-sm">
-        {{ props.description }}
-      </p>
-      <div v-if="props.showCounter && props.maxlength" class="flex items-center justify-between text-xs">
-        <span class="text-muted-foreground">
-          {{ String((componentField.modelValue as string)?.length || 0) }}/{{ props.maxlength }}
-        </span>
-        <span
-          v-if="props.maxlength && (componentField.modelValue as string)?.length > props.maxlength * 0.9"
-          class="text-warning"
-        >
-          Mendekati batas maksimal
-        </span>
-      </div>
-      <FormMessage />
-    </FormItem>
-  </FormField>
+  <FormItem>
+    <FormLabel :name="props.name">
+      {{ props.label }}
+      <span v-if="props.required" class="text-destructive">*</span>
+    </FormLabel>
+    <FormControl :name="props.name">
+      <Textarea
+        ref="textareaRef"
+        :model-value="(value as string) ?? ''"
+        @update:model-value="(payload: string | number) => handleChange(String(payload))"
+        :rows="props.rows"
+        :placeholder="props.placeholder"
+        :disabled="props.disabled"
+        :readonly="props.readonly"
+        :maxlength="props.maxlength"
+        :minlength="props.minlength"
+        :spellcheck="props.spellcheck"
+        :aria-invalid="!!errorMessage"
+        :aria-describedby="props.description ? `${props.name}-description` : undefined"
+        :style="props.autoResize ? { resize: 'none', overflow: 'hidden' } : {}"
+        :class="cn(props.class)"
+        @input="handleInput"
+      />
+    </FormControl>
+    <FormDescription v-if="props.description" :name="props.name" :id="`${props.name}-description`">
+      {{ props.description }}
+    </FormDescription>
+    <div v-if="props.showCounter && props.maxlength" class="flex items-center justify-between text-xs">
+      <span class="text-muted-foreground"> {{ String((value as string)?.length || 0) }}/{{ props.maxlength }} </span>
+      <span v-if="props.maxlength && (value as string)?.length > props.maxlength * 0.9" class="text-warning">
+        Mendekati batas maksimal
+      </span>
+    </div>
+    <FormMessage :name="props.name" />
+  </FormItem>
 </template>
