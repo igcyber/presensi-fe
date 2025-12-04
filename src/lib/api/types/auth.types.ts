@@ -39,7 +39,8 @@ export interface Token {
  */
 export interface AuthResponse {
   user: UserAuth;
-  token: Token;
+  access_token: string;
+  refresh_token: string;
 }
 
 /**

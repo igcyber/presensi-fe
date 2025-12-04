@@ -15,6 +15,7 @@ import {
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
 
 import { useAuthStore } from "@/stores/authStore";
+import { logout } from "@/lib/api";
 
 defineProps<{
   user: {
@@ -31,11 +32,20 @@ const authStore = useAuthStore();
 const router = useRouter();
 
 const handleLogout = async () => {
-  authStore.logout();
+  try {
+    const response = await logout();
+    if (response.success) {
+      authStore.logout();
+      router.push({ name: "login.index" });
+      toast.success("Logout berhasil!");
+    } else {
+      toast.error(response.message);
+    }
+  } catch (error) {
+    console.error(error);
+      toast.error("Terjadi kesalahan saat logout. Silakan coba lagi.");
 
-  await router.push({ name: "login.index" });
-
-  toast.success("Logout berhasil!");
+  }
 };
 
 const handleProfile = () => {

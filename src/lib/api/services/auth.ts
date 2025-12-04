@@ -9,6 +9,7 @@ import type {
   UpdateProfileRequest,
   UserAuth,
 } from "@/lib/api/types/auth.types";
+import { useAuthStore } from "@/stores/authStore";
 
 /**
  * Authenticate user with username and password
@@ -62,7 +63,9 @@ export const register = async (userData: RegisterRequest): Promise<ApiResponse<A
  * ```
  */
 export const logout = async (): Promise<ApiResponse<{ message: string }>> => {
-  const response = await httpInstance.post<ApiResponse<{ message: string }>>("/api/auth/logout");
+  const response = await httpInstance.post<ApiResponse<{ message: string }>>("/api/auth/logout", {
+    refresh_token: useAuthStore().refreshToken,
+  });
   return response.data;
 };
 

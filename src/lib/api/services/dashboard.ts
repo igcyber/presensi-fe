@@ -2,6 +2,10 @@ import type { ApiResponse } from "@/lib/api/core/apiResponse";
 import httpInstance from "@/lib/api/core/httpInstance";
 import type { DashboardData } from "@/lib/api/types/dashboard.types";
 
+
+
+
+
 /**
  * Get dashboard data including views statistics and popular content
  * @returns Promise resolving to complete dashboard data
@@ -14,6 +18,6 @@ import type { DashboardData } from "@/lib/api/types/dashboard.types";
  * ```
  */
 export const getDashboard = async (): Promise<ApiResponse<DashboardData>> => {
-  const response = await httpInstance.get<ApiResponse<DashboardData>>("/api/dashboard");
+  const response = await httpInstance.get<ApiResponse<DashboardData>>("/api/admin/dashboard/summary");
   return response.data;
 };
