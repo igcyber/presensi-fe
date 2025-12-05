@@ -80,7 +80,7 @@ export const logout = async (): Promise<ApiResponse<{ message: string }>> => {
  * ```
  */
 export const getCurrentUser = async (): Promise<ApiResponse<UserAuth>> => {
-  const response = await httpInstance.get<ApiResponse<UserAuth>>("/api/auth/profile");
+  const response = await httpInstance.get<ApiResponse<UserAuth>>("/api/setting/profile");
   return response.data;
 };
 
@@ -96,7 +96,7 @@ export const getCurrentUser = async (): Promise<ApiResponse<UserAuth>> => {
  * ```
  */
 export const updateProfile = async (profileData: UpdateProfileRequest): Promise<ApiResponse<UserAuth>> => {
-  const response = await httpInstance.put<ApiResponse<UserAuth>>("/api/auth/profile", profileData);
+  const response = await httpInstance.put<ApiResponse<UserAuth>>("/api/setting/profile/update-profile", profileData);
   return response.data;
 };
 
@@ -117,7 +117,10 @@ export const updateProfile = async (profileData: UpdateProfileRequest): Promise<
 export const changePassword = async (
   passwordData: ChangePasswordRequest,
 ): Promise<ApiResponse<{ message: string }>> => {
-  const response = await httpInstance.put<ApiResponse<{ message: string }>>("/api/auth/password", passwordData);
+  const response = await httpInstance.put<ApiResponse<{ message: string }>>(
+    "/api/setting/profile/update-password",
+    passwordData,
+  );
   return response.data;
 };
 

@@ -32,8 +32,18 @@ async function handleSubmit(values: LoginFormData) {
     // Handle successful login
     authStore.handleLoginSuccess(response);
 
-    // Redirect to dashboard or intended page
-    await router.push({ name: "app.dashboard" });
+    // 👇 LOGIKA REDIRECT BERDASARKAN PERAN
+    if (authStore.isAdmin) {
+      // Asumsi: Admin memiliki dashboard utama untuk manajemen
+      await router.push({ name: "app.dashboard" });
+    } else if (authStore.isPegawai) {
+      // Asumsi: Pegawai memiliki halaman khusus (misal: Absensi Harian)
+      // Kita akan buat rute ini di langkah 4.
+      await router.push({ name: "pegawai.absensi-harian" });
+    } else {
+      // Fallback untuk peran yang tidak dikenal
+      await router.push({ name: "app.dashboard" });
+    }
 
     // Show success message
     toast.success(response.message || "Login berhasil!");

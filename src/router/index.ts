@@ -100,9 +100,20 @@ router.beforeEach((to, from, next) => {
   const requiresAuth = to.meta?.requiresAuth === true; // Default false, kecuali explicitly true
   const isAuthRoute = to.name === "login.index";
 
+  // Peran yang dibutuhkan untuk rute
+  const requiredRoles = to.meta?.roles as string[] | undefined;
+  const userRoles = authStore.user?.roles || [];
+
   // Jika sudah login dan mencoba akses halaman auth (login), redirect ke dashboard
   if (isAuthenticated && isAuthRoute) {
-    next({ name: "app.dashboard" });
+    // Alihkan ke dashboard yang sesuai jika sudah login
+    if (authStore.isAdmin) {
+      next({ name: "app.dashboard" });
+    } else if (authStore.isPegawai) {
+      next({ name: "pegawai.absensi-harian" });
+    } else {
+      next({ name: "app.dashboard" }); // Fallback
+    }
     return;
   }
 
@@ -110,6 +121,24 @@ router.beforeEach((to, from, next) => {
   if (!isAuthenticated && requiresAuth) {
     next({ name: "login.index" });
     return;
+  }
+
+  if (isAuthenticated && requiredRoles && requiredRoles.length > 0) {
+    const hasRequiredRole = requiredRoles.some((role) => userRoles.includes(role));
+
+    if (!hasRequiredRole) {
+      // Jika tidak memiliki peran yang dibutuhkan, arahkan ke halaman utama role-nya
+      if (authStore.isAdmin) {
+        next({ name: "app.dashboard" });
+      } else if (authStore.isPegawai) {
+        next({ name: "pegawai.absensi-harian" });
+      } else {
+        // Jika tidak ada peran sama sekali, log out
+        authStore.logout();
+        next({ name: "login.index" });
+      }
+      return;
+    }
   }
 
   // Jika token expired, clear auth dan redirect ke login

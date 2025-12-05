@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ChartBar, HomeIcon, Tag, UserIcon } from "lucide-vue-next";
+import { CalendarCheck, ChartBar, ClipboardCheck, Clock, History, HomeIcon, Tag, UserIcon } from "lucide-vue-next";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 
@@ -34,14 +34,8 @@ const userData = computed(() => {
 });
 
 // Computed data untuk navigation dengan active state
-const data = computed(() => ({
-  teams: {
-    name: "DPRD",
-    logo: HomeIcon,
-    plan: "DPRD Beranda",
-    url: "/",
-  },
-  navDashboard: [
+const data = computed(() => {
+  const navAdminDashboard = [
     {
       title: "Dashboard",
       url: "/app/dashboard",
@@ -56,8 +50,40 @@ const data = computed(() => ({
       icon: ChartBar,
       isActive: routNameActive.value === "app.dashboard-data",
     },
-  ],
-  navUserAccess: [
+  ];
+  // Menu Khusus Pegawai
+  const navPegawaiPresensi = [
+    {
+      title: "Presensi",
+      url: "/pegawai/absensi",
+      name: "pegawai.absensi-harian",
+      icon: Clock, // Icon untuk presensi harian
+      isActive: routNameActive.value === "pegawai.absensi-harian",
+    },
+    {
+      title: "Rekap Presensi",
+      url: "/pegawai/rekap",
+      name: "pegawai.rekap-presensi",
+      icon: CalendarCheck, // Icon untuk rekap
+      isActive: routNameActive.value === "pegawai.rekap-presensi",
+    },
+    {
+      title: "Riwayat Absen",
+      url: "/pegawai/riwayat",
+      name: "pegawai.riwayat-absen",
+      icon: History, // Icon untuk riwayat
+      isActive: routNameActive.value === "pegawai.riwayat-absen",
+    },
+    {
+      title: "Pengajuan Tidak Hadir",
+      url: "/pegawai/permohonan",
+      name: "pegawai.permohonan",
+      icon: ClipboardCheck, // Icon untuk permohonan
+      isActive: routNameActive.value === "pegawai.permohonan",
+    },
+  ];
+
+  const navUserAccess = [
     {
       title: "Users",
       url: "/app/users",
@@ -65,17 +91,19 @@ const data = computed(() => ({
       icon: UserIcon,
       isActive: routNameActive.value === "app.user" || routNameActive.value === "app.user.detail",
     },
-  ],
-  navMediaKonten: [
-    {
-      title: "Tags",
-      url: "/app/tags",
-      name: "app.tags",
-      icon: Tag,
-      isActive: routNameActive.value === "app.tags" || routNameActive.value === "app.tags.detail",
+  ];
+  return {
+    teams: {
+      name: "Presensi",
+      logo: HomeIcon,
+      plan: authStore.isPegawai ? "Portal Pegawai" : "Portal Admin",
+      url: authStore.isPegawai ? "/pegawai/absensi" : "/app/dashboard",
     },
-  ],
-}));
+    navAdminDashboard,
+    navPegawaiPresensi,
+    navUserAccess,
+  };
+});
 </script>
 
 <template>
@@ -84,9 +112,19 @@ const data = computed(() => ({
       <TeamSwitcher :team="data.teams" />
     </SidebarHeader>
     <SidebarContent>
-      <NavDashboard :items="data.navDashboard" />
-      <NavGroup label="User & Access Management" :items="data.navUserAccess" />
-      <NavGroup label="Media & Konten" :items="data.navMediaKonten" />
+      <template v-if="authStore.isPegawai">
+        <NavGroup label="Menu Utama" :items="data.navPegawaiPresensi" />
+      </template>
+
+      <template v-else-if="authStore.isAdmin">
+        <NavDashboard :items="data.navAdminDashboard" />
+        <NavGroup label="User & Access Management" :items="data.navUserAccess" />
+        <!-- <NavGroup label="Media & Konten" :items="data.navMediaKonten" /> -->
+      </template>
+
+      <div v-else class="flex items-center justify-center p-4">
+        <span class="text-muted-foreground">Memuat menu...</span>
+      </div>
     </SidebarContent>
     <SidebarFooter>
       <NavUser :user="userData" />

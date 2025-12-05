@@ -2,12 +2,7 @@ import { useLocalStorage } from "@vueuse/core";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
-
-
 import type { LoginResponse, UserAuth } from "@/lib/api/types/auth.types";
-
-
-
 
 // interface for stored auth
 interface StoredAuth {
@@ -75,7 +70,7 @@ export const useAuthStore = defineStore("auth", () => {
     const token = {
       access_token,
       refresh_token,
-    }
+    };
 
     // Set tokens
     setAccessToken(token);
@@ -116,6 +111,15 @@ export const useAuthStore = defineStore("auth", () => {
     };
   };
 
+  // 👇 Tambahkan computed property untuk mengecek peran
+  const isAdmin = computed(() => {
+    return user.value?.roles?.includes("admin") ?? false;
+  });
+
+  const isPegawai = computed(() => {
+    return user.value?.roles?.includes("pegawai") ?? false;
+  });
+
   return {
     // State
     accessToken,
@@ -127,6 +131,8 @@ export const useAuthStore = defineStore("auth", () => {
     // Computed
     isAuthenticated,
     // isTokenExpired,
+    isAdmin,
+    isPegawai,
 
     // Actions
     setAccessToken,

@@ -4,6 +4,8 @@ import { onMounted } from "vue";
 import { toast } from "vue-sonner";
 
 import ChangePasswordDialog from "@/components/dialogs/ChangePasswordDialog.vue";
+// Import komponen Face ID baru
+import FaceIdCard from "@/components/features/profile/FaceIdCard.vue";
 import UpdateProfileForm from "@/components/features/profile/UpdateProfileForm.vue";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -257,6 +259,8 @@ const handlePasswordChangeSuccess = () => {
 
         <!-- Sidebar -->
         <div class="space-y-6">
+          <!-- Face ID Component -->
+          <FaceIdCard />
           <!-- Quick Actions -->
           <Card>
             <CardHeader>

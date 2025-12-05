@@ -1,4 +1,4 @@
-import type { User } from "./user.types";
+// import type { User } from "./user.types";
 
 /**
  * Login request payload
@@ -18,10 +18,29 @@ export interface RegisterRequest {
 }
 
 /**
- * UserAuth entity interface for login response
- * Represents the authenticated user data returned from login API
+ * User entity interface
+ * Represents a user with roles in the system
  */
-export type UserAuth = Omit<User, "roles">;
+export interface User {
+  id: number;
+  email: string;
+  username: string;
+  nama: string;
+  no_hp: string;
+  roles: string[];
+}
+
+export interface UserAuth {
+  id: number;
+  email: string;
+  username: string;
+  nama: string;
+  no_hp: string;
+  roles: string[];
+  permissions: string[];
+  kantor: string;
+  kantor_id: number;
+}
 
 /**
  * Token object interface for authentication
