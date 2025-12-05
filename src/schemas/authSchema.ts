@@ -48,12 +48,27 @@ export const resetPasswordSchema = z
     path: ["confirmPassword"],
   });
 
-// Schema untuk update profile
+// Schema untuk update profile (manajemen user)
 export const updateProfileSchema = z.object({
   fullName: z.string().trim().optional(),
   username: z.string().trim().optional(),
   nip: z.string().trim().optional(),
   email: z.string().trim().email("Format email tidak valid").optional(),
+});
+
+// Schema untuk update profile
+export const updateSelfProfileSchema = z.object({
+  nama: z.string().min(1, "Nama lengkap wajib diisi").max(255, "Nama lengkap maksimal 255 karakter"),
+  email: z.string().min(1, "Email wajib diisi").email("Format email tidak valid"),
+  username: z
+    .string()
+    .min(3, "Username minimal 3 karakter")
+    .max(255, "Username maksimal 255 karakter")
+    .regex(/^[a-zA-Z0-9_.]+$/, "Username hanya boleh huruf, angka, titik, dan underscore"),
+  no_hp: z
+    .string()
+    .min(1, "No. Handphone wajib diisi")
+    .regex(/^[0-9]+$/, "No. Handphone hanya boleh angka"),
 });
 
 // Schema untuk change password
@@ -78,4 +93,5 @@ export type RegisterFormData = z.infer<typeof registerSchema>;
 export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 export type UpdateProfileFormData = z.infer<typeof updateProfileSchema>;
+export type UpdateSelfProfileFormData = z.infer<typeof updateSelfProfileSchema>;
 export type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;

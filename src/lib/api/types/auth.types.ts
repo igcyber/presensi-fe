@@ -1,4 +1,5 @@
-// import type { User } from "./user.types";
+// src/lib/api/types/auth.types.ts
+import type { User } from "./user.types";
 
 /**
  * Login request payload
@@ -18,33 +19,49 @@ export interface RegisterRequest {
 }
 
 /**
- * User entity interface
- * Represents a user with roles in the system
+ * Struktur Data Kantor (jika nanti ada relasi)
  */
-export interface User {
+export interface KantorData {
   id: number;
-  email: string;
-  username: string;
   nama: string;
-  no_hp: string;
-  roles: string[];
+  alamat?: string;
 }
 
+/**
+ * Struktur Data Pegawai (nested object dari API)
+ */
+export interface UserPegawaiData {
+  id: number;
+  userId: number;
+  tipePegawaiId: number;
+  kantorId: number;
+  nama: string; // Ini pengganti fullName
+  checkRadius: string;
+  lat: string;
+  long: string;
+  kantor?: KantorData; // Property ini mungkin ada jika di-preload backend
+}
+
+/**
+ * UserAuth entity interface for login response
+ * Represents the authenticated user data returned from login API
+ * UPDATE: Disesuaikan dengan response API Presensi (CamelCase)
+ */
 export interface UserAuth {
   id: number;
   email: string;
   username: string;
-  nama: string;
-  no_hp: string;
-  roles: string[];
-  permissions: string[];
-  kantor: string;
-  kantor_id: number;
+  noHp: string;
+  // Data Relasi
+  userPegawai?: UserPegawaiData;
+  roles?: string[];
+  // Timestamps
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 /**
  * Token object interface for authentication
- * Contains the bearer token and its expiration information
  */
 export interface Token {
   type: string;
@@ -53,8 +70,7 @@ export interface Token {
 }
 
 /**
- * Auth response interface combining user and token
- * Represents the data payload in successful login response
+ * Auth response interface
  */
 export interface AuthResponse {
   user: UserAuth;
@@ -64,7 +80,6 @@ export interface AuthResponse {
 
 /**
  * Complete login response interface
- * Represents the full API response structure for successful login
  */
 export interface LoginResponse {
   success: boolean;
@@ -86,8 +101,8 @@ export interface ChangePasswordRequest {
  * Profile update request
  */
 export interface UpdateProfileRequest {
-  fullName?: string;
+  nama?: string;
   username?: string;
-  nip?: string;
+  no_hp?: string;
   email?: string;
 }

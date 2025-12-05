@@ -35,8 +35,6 @@ onMounted(() => {
 
 const handleProfileUpdateSuccess = () => {
   fetchData();
-
-  toast.success("Profil berhasil diperbarui");
 };
 
 const handlePasswordChangeSuccess = () => {
@@ -178,7 +176,7 @@ const handlePasswordChangeSuccess = () => {
             </div>
             <div class="flex-1 space-y-2 text-center sm:text-left">
               <div class="flex flex-col items-center gap-2 sm:flex-row sm:items-start">
-                <h2 class="text-2xl font-bold">{{ data?.fullName }}</h2>
+                <h2 class="text-2xl font-bold">{{ data?.userPegawai.nama }}</h2>
                 <Badge variant="default" class="text-xs"> Aktif </Badge>
               </div>
               <p class="text-muted-foreground">My Bio</p>
