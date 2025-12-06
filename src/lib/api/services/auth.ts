@@ -134,7 +134,16 @@ export const changePassword = async (
  * console.log(response.data.token);
  * ```
  */
+/**
+ * Refresh authentication token
+ * UPDATE: Endpoint disesuaikan dengan routes/auth.ts backend
+ */
 export const refreshToken = async (): Promise<ApiResponse<AuthResponse>> => {
-  const response = await httpInstance.post<ApiResponse<AuthResponse>>("/api/auth/refresh");
+  const authStore = useAuthStore();
+
+  const response = await httpInstance.post<ApiResponse<AuthResponse>>("/api/auth/refresh-token", {
+    refresh_token: authStore.refreshToken,
+  });
+
   return response.data;
 };
