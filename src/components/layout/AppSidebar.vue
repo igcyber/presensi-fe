@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CalendarCheck, ChartBar, ClipboardCheck, Clock, History, HomeIcon, Tag, UserIcon } from "lucide-vue-next";
+import { Badge, CalendarCheck, ChartBar, ClipboardCheck, Clock, History, HomeIcon, Tag, UserIcon } from "lucide-vue-next";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 
@@ -84,6 +84,13 @@ const data = computed(() => {
   ];
 
   const navPegawaiManagement = [
+    {
+      title: "Tipe Pegawai",
+      url: "/app/tipe-pegawai",
+      name: "app.tipe-pegawai",
+      icon: Badge,
+      isActive: routNameActive.value === "app.tipe-pegawai",
+    },
     {
       title: "Pegawai",
       url: "/app/pegawai",

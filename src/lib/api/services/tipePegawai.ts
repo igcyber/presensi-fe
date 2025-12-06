@@ -1,4 +1,4 @@
-import type { ApiResponse, PaginationMeta } from "@/lib/api/core/apiResponse";
+import type { ApiResponse, PaginationMeta, SearchParams } from "@/lib/api/core/apiResponse";
 import { createCrudService } from "@/lib/api/factories/crudServiceFactory";
 import type { TipePegawai, TipePegawaiListResponse } from "@/lib/api/types/tipePegawai.types";
 
@@ -20,8 +20,32 @@ const transformPaginationMeta = (meta: any): PaginationMeta => {
   };
 };
 
-export const getTipePegawai = async (): Promise<ApiResponse<TipePegawaiListResponse>> => {
-  const response = await tipePegawaiService.get();
+export const getTipePegawai = async (params?: SearchParams | any): Promise<ApiResponse<TipePegawaiListResponse>> => {
+  const queryParams: Record<string, any> = {};
+  
+  if (params) {
+    if (params.page) {
+      queryParams.page = params.page;
+    }
+    if (params.limit) {
+      queryParams.per_page = params.limit;
+    } else if (params.per_page) {
+      queryParams.per_page = params.per_page;
+    }
+    
+    if (params.search) {
+      queryParams.search = params.search;
+    }
+    
+    if (params.orderBy) {
+      queryParams.sort_by = params.orderBy;
+    }
+    if (params.sortBy) {
+      queryParams.sort_order = params.sortBy;
+    }
+  }
+  
+  const response = await tipePegawaiService.get(queryParams);
   
   if (response.data?.meta) {
     response.data.meta = transformPaginationMeta(response.data.meta);
@@ -29,4 +53,14 @@ export const getTipePegawai = async (): Promise<ApiResponse<TipePegawaiListRespo
   
   return response;
 };
+
+export const getTipePegawaiById = (id: number): Promise<ApiResponse<TipePegawai>> => tipePegawaiService.getById(id);
+
+export const createTipePegawai = (payload: { nama: string }): Promise<ApiResponse<TipePegawai>> =>
+  tipePegawaiService.create(payload);
+
+export const updateTipePegawai = (id: number, payload: { nama: string }): Promise<ApiResponse<TipePegawai>> =>
+  tipePegawaiService.update(id, payload);
+
+export const deleteTipePegawai = (id: number): Promise<ApiResponse<null>> => tipePegawaiService.remove(id);
 
