@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue";
-import { ref } from "vue";
+import { nextTick, ref } from "vue";
 import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 
@@ -32,17 +32,20 @@ async function handleSubmit(values: LoginFormData) {
     // Handle successful login
     authStore.handleLoginSuccess(response);
 
+    // Tunggu state ter-update sebelum redirect
+    await nextTick();
+
     // 👇 LOGIKA REDIRECT BERDASARKAN PERAN
     if (authStore.isAdmin) {
       // Asumsi: Admin memiliki dashboard utama untuk manajemen
-      await router.push({ name: "app.dashboard" });
+      await router.replace({ name: "app.dashboard" });
     } else if (authStore.isPegawai) {
       // Asumsi: Pegawai memiliki halaman khusus (misal: Absensi Harian)
       // Kita akan buat rute ini di langkah 4.
-      await router.push({ name: "pegawai.absensi-harian" });
+      await router.replace({ name: "pegawai.absensi-harian" });
     } else {
       // Fallback untuk peran yang tidak dikenal
-      await router.push({ name: "app.dashboard" });
+      await router.replace({ name: "app.dashboard" });
     }
 
     // Show success message

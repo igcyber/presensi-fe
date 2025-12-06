@@ -40,7 +40,8 @@ export const useAuthStore = defineStore("auth", () => {
 
   // Actions
   const setAccessToken = (token: any) => {
-    accessToken.value = token;
+    accessToken.value = token.access_token;
+    refreshToken.value = token.refresh_token;
     storedAuth.value.accessToken = token.access_token;
     storedAuth.value.refreshToken = token.refresh_token;
   };
