@@ -83,13 +83,13 @@ const data = computed(() => {
     },
   ];
 
-  const navUserAccess = [
+  const navPegawaiManagement = [
     {
-      title: "Users",
-      url: "/app/users",
-      name: "app.user",
+      title: "Pegawai",
+      url: "/app/pegawai",
+      name: "app.pegawai",
       icon: UserIcon,
-      isActive: routNameActive.value === "app.user" || routNameActive.value === "app.user.detail",
+      isActive: routNameActive.value === "app.pegawai" || routNameActive.value === "app.pegawai.detail",
     },
   ];
   return {
@@ -101,7 +101,7 @@ const data = computed(() => {
     },
     navAdminDashboard,
     navPegawaiPresensi,
-    navUserAccess,
+    navPegawaiManagement,
   };
 });
 </script>
@@ -118,7 +118,7 @@ const data = computed(() => {
 
       <template v-else-if="authStore.isAdmin">
         <NavDashboard :items="data.navAdminDashboard" />
-        <NavGroup label="User & Access Management" :items="data.navUserAccess" />
+        <NavGroup label="Master Data" :items="data.navPegawaiManagement" />
         <!-- <NavGroup label="Media & Konten" :items="data.navMediaKonten" /> -->
       </template>
 

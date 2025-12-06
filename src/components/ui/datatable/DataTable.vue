@@ -6,7 +6,6 @@ import {
   ChevronUp,
   EditIcon,
   Eye,
-  Filter,
   RotateCcw,
   Search,
   TrashIcon,
@@ -18,7 +17,6 @@ import FilePreviewDialog from "@/components/dialogs/FilePreviewDialog.vue";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import TableSkeleton from "@/components/ui/loading/TableSkeleton.vue";
 import {
   Pagination,
@@ -120,6 +118,7 @@ const filePreview = useFilePreview();
 
 // Reactive state
 const localSearchQuery = ref(props.searchValue);
+let searchTimeout: ReturnType<typeof setTimeout> | null = null;
 
 // Computed properties
 const startIndex = computed(() => {
@@ -171,15 +170,15 @@ const handlePreview = (item: T, column: Column<T>) => {
   }
 };
 
-const handleSearchKeyup = (event: KeyboardEvent) => {
-  if (event.key === "Enter") {
-    handleSearchSubmit();
+const handleSearchInput = () => {
+  if (searchTimeout) {
+    clearTimeout(searchTimeout);
   }
-};
 
-const handleSearchSubmit = () => {
-  emit("search", localSearchQuery.value);
-  emit("update:searchValue", localSearchQuery.value);
+  searchTimeout = setTimeout(() => {
+    emit("search", localSearchQuery.value);
+    emit("update:searchValue", localSearchQuery.value);
+  }, 500);
 };
 
 const handleCustomFilter = (filters: Array<Record<string, any>>) => {
@@ -194,12 +193,14 @@ const goToPage = (page: number) => {
 };
 
 // Filter methods
-const applyFilters = () => {
-  const filters: Record<string, any> = {};
+const handleFilterChange = (key: string, value: any) => {
+  const newFilterValues = { ...props.filterValues, [key]: value };
+  emit("update:filterValues", newFilterValues);
 
-  Object.entries(props.filterValues).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== "") {
-      filters[key] = value;
+  const filters: Record<string, any> = {};
+  Object.entries(newFilterValues).forEach(([filterKey, filterValue]) => {
+    if (filterValue !== undefined && filterValue !== null && filterValue !== "") {
+      filters[filterKey] = filterValue;
     }
   });
 
@@ -209,6 +210,7 @@ const applyFilters = () => {
 
 const resetFilters = () => {
   localSearchQuery.value = "";
+  emit("search", "");
   emit("update:searchValue", "");
   emit("update:filterValues", {});
   emit("resetFilter");
@@ -273,109 +275,83 @@ const formatCellValue = (item: T, column: Column<T>) => {
 
 <template>
   <div class="space-y-4 p-2">
-    <!-- Search and Filters Container -->
-    <div class="w-full space-y-4">
-      <!-- Search with Lazy Submit -->
-      <div v-if="searchable" class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div class="flex flex-col gap-1.5 sm:col-span-2 lg:col-span-1">
-          <Label for="searchKeyword" class="text-sm font-medium">Cari</Label>
-          <div class="flex gap-2">
+    <!-- Search and Filters Container - Horizontal Layout -->
+    <div class="w-full">
+      <div class="flex flex-wrap items-end gap-3">
+        <!-- Search Input -->
+        <div v-if="searchable" class="flex-1 min-w-[200px]">
+          <div class="relative">
+            <Search class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               v-model="localSearchQuery"
               placeholder="Cari data..."
               id="searchKeyword"
-              class="w-full"
-              @keyup="handleSearchKeyup"
+              class="w-full pl-9 pr-3"
+              @input="handleSearchInput"
             />
-            <Button type="button" @click="handleSearchSubmit" variant="default" size="icon">
-              <Search class="h-4 w-4" />
-            </Button>
           </div>
         </div>
-      </div>
 
-      <!-- Built-in Filters -->
-      <div v-if="filters && filters.length > 0" class="w-full">
-        <div class="grid grid-cols-1 lg:grid-cols-4 lg:gap-4">
-          <!-- Dynamic Filters -->
-          <template v-for="filter in filters" :key="filter.key">
-            <!-- Select Filter -->
-            <div v-if="filter.type === 'select'" class="flex flex-col gap-1.5">
-              <Label :for="`filter-${filter.key}`" class="text-sm font-medium">{{ filter.label }}</Label>
-              <Select
-                :model-value="filterValues[filter.key]"
-                @update:model-value="(val) => emit('update:filterValues', { ...filterValues, [filter.key]: val })"
-              >
-                <SelectTrigger :id="`filter-${filter.key}`" class="w-full">
-                  <SelectValue :placeholder="filter.placeholder || `Pilih ${filter.label.toLowerCase()}`" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem v-for="option in filter.options" :key="option.value" :value="String(option.value)">
-                    {{ option.label }}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+        <!-- Dynamic Filters -->
+        <template v-for="filter in filters" :key="filter.key">
+          <!-- Select Filter -->
+          <div v-if="filter.type === 'select'" class="min-w-[180px]">
+            <Select
+              :model-value="filterValues[filter.key]"
+              @update:model-value="(val) => handleFilterChange(filter.key, val)"
+            >
+              <SelectTrigger :id="`filter-${filter.key}`" class="w-full">
+                <SelectValue :placeholder="filter.placeholder || filter.label" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem v-for="option in filter.options" :key="option.value" :value="String(option.value)">
+                  {{ option.label }}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-            <!-- Date Filter -->
-            <div v-else-if="filter.type === 'date'" class="flex flex-col gap-1.5">
-              <Label :for="`filter-${filter.key}`" class="text-sm font-medium">{{ filter.label }}</Label>
-              <Popover>
-                <PopoverTrigger as-child>
-                  <Button
-                    variant="outline"
-                    :id="`filter-${filter.key}`"
-                    class="border-ring/50 focus-within:border-ring focus-within:ring-ring/50 dark:border-ring/40 dark:focus-within:border-ring dark:focus-within:ring-ring/40 w-full justify-start text-left font-normal focus-within:ring-[3px]"
-                    :class="!filterValues[filter.key] && 'text-muted-foreground'"
-                  >
-                    <CalendarIcon class="mr-2 h-4 w-4" />
-                    <span v-if="filterValues[filter.key]">
-                      {{ formatters.date(new Date(filterValues[filter.key])) }}
-                    </span>
-                    <span v-else>{{ filter.placeholder || "Pilih tanggal" }}</span>
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent class="w-auto p-0">
-                  <Calendar
-                    :model-value="filterValues[filter.key]"
-                    @update:model-value="(val) => emit('update:filterValues', { ...filterValues, [filter.key]: val })"
-                    mode="single"
-                    :week-start="1"
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-          </template>
-        </div>
+          <!-- Date Filter -->
+          <div v-else-if="filter.type === 'date'" class="min-w-[180px]">
+            <Popover>
+              <PopoverTrigger as-child>
+                <Button
+                  variant="outline"
+                  :id="`filter-${filter.key}`"
+                  class="w-full justify-start text-left font-normal"
+                  :class="!filterValues[filter.key] && 'text-muted-foreground'"
+                >
+                  <CalendarIcon class="mr-2 h-4 w-4" />
+                  <span v-if="filterValues[filter.key]">
+                    {{ formatters.date(new Date(filterValues[filter.key])) }}
+                  </span>
+                  <span v-else>{{ filter.placeholder || "Pilih tanggal" }}</span>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent class="w-auto p-0">
+                <Calendar
+                  :model-value="filterValues[filter.key]"
+                  @update:model-value="(val) => handleFilterChange(filter.key, val)"
+                  mode="single"
+                  :week-start="1"
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+        </template>
 
         <!-- Action Buttons -->
-        <div class="mt-6">
-          <div class="flex w-full flex-col items-stretch justify-between gap-3 sm:flex-row sm:items-center">
-            <div class="flex flex-wrap items-center gap-2">
-              <Button variant="default" @click="applyFilters" id="action" class="flex-shrink-0">
-                <Filter class="mr-2 size-4" />
-                <span class="hidden sm:inline">Terapkan Filter</span>
-                <span class="sm:hidden">Filter</span>
-              </Button>
-              <Button variant="outline" @click="resetFilters" class="flex-shrink-0">
-                <RotateCcw class="mr-2 size-4" />
-                <span class="hidden sm:inline">Reset Filter</span>
-                <span class="sm:hidden">Reset</span>
-              </Button>
-            </div>
-
-            <div class="flex-shrink-0">
-              <slot name="actionButtons" />
-            </div>
-          </div>
+        <div v-if="filters && filters.length > 0" class="flex items-center gap-2">
+          <Button variant="outline" @click="resetFilters" size="default" class="gap-2">
+            <RotateCcw class="h-4 w-4" />
+            <span class="hidden sm:inline">Reset</span>
+          </Button>
         </div>
-      </div>
 
-      <!-- Custom Filters Slot (fallback) -->
-      <div v-else-if="!searchable" class="w-full">
-        <slot name="filters" :search="localSearchQuery" :on-filter-change="handleCustomFilter">
-          <!-- Default: no filters -->
-        </slot>
+        <!-- Custom Action Buttons Slot -->
+        <div class="flex-shrink-0">
+          <slot name="actionButtons" />
+        </div>
       </div>
     </div>
   </div>
