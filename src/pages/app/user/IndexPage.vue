@@ -120,7 +120,7 @@ const columns: Column<Pegawai>[] = [
 const loadTipePegawaiOptions = async (): Promise<void> => {
   try {
     const response = await getTipePegawai();
-    tipePegawaiList.value = response.data.data.map((item: TipePegawai) => ({
+    tipePegawaiList.value = response.data.map((item: TipePegawai) => ({
       label: item.nama,
       value: item.nama, // Gunakan nama sebagai value untuk filter datatable
       id: item.id, // ID untuk dialog

@@ -12,7 +12,7 @@ import ErrorState from "@/components/ui/error-state/ErrorState.vue";
 
 import { useDialog } from "@/composables/useDialog";
 import { useResourceList } from "@/composables/useResourceList";
-import { deleteTipePegawai, getTipePegawai } from "@/lib/api/services/tipePegawai";
+import { deleteTipePegawai, getTipePegawaiList } from "@/lib/api/services/tipePegawai";
 import type { TipePegawai } from "@/lib/api/types/tipePegawai.types";
 
 const {
@@ -27,7 +27,7 @@ const {
   handleSearch,
   handlePageChange,
   addSort,
-} = useResourceList<TipePegawai>((params) => getTipePegawai(params), { perPage: 10, enableUrlSync: true });
+} = useResourceList<TipePegawai>((params) => getTipePegawaiList(params), { perPage: 10, enableUrlSync: true });
 
 const dialog = useDialog<TipePegawai>();
 const confirmDialog = useDialog<TipePegawai>();
