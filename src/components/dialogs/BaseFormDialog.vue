@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
 import { toast } from "vue-sonner";
 import type { z, ZodTypeAny } from "zod";
 
@@ -106,12 +106,6 @@ async function handleSubmit(values: any) {
     isSubmitting.value = true;
     serverErrors.value = {};
 
-    // Clear previous field errors
-    if (formRef.value?.setFieldError) {
-      // Get all field names from schema if possible, or clear all
-      // For now, we'll set errors per field from the error response
-    }
-
     await props.onSubmit(values);
     emit("success", values);
 
@@ -122,7 +116,8 @@ async function handleSubmit(values: any) {
     const apiError = e as ApiError;
     if (apiError?.status === 422 && apiError?.errors) {
       const errs = apiError.errors;
-      serverErrors.value = errs;
+
+      serverErrors.value = {};
 
       // Set field-level errors using Vee-Validate setFieldError
       if (formRef.value?.setFieldError) {
@@ -140,17 +135,33 @@ async function handleSubmit(values: any) {
   }
 }
 
+// Function to reset form state
+function resetFormState() {
+  isSubmitting.value = false;
+  serverErrors.value = {};
+}
+
+// Function to clear all form errors
+function clearFormErrors() {
+  if (formRef.value?.resetForm) {
+    // Reset form with initial values to clear all errors
+    formRef.value.resetForm({ values: props.initialValues as any });
+  }
+}
+
 // Watchers
 watch(
   () => props.open,
-  (isOpen) => {
-    if (!isOpen) {
-      isSubmitting.value = false;
-      serverErrors.value = {};
-      // Clear form errors when dialog closes
-      if (formRef.value?.resetForm) {
-        formRef.value.resetForm();
-      }
+  async (isOpen) => {
+    if (isOpen) {
+      // Reset form state when dialog opens
+      resetFormState();
+      // Clear form errors after dialog is fully opened
+      await nextTick();
+      clearFormErrors();
+    } else {
+      // Clear form state when dialog closes
+      resetFormState();
     }
   },
 );

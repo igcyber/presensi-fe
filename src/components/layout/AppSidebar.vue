@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Badge, Building2, CalendarCheck, ClipboardCheck, Clock, History, HomeIcon, Tag, UserIcon } from "lucide-vue-next";
+import { Badge, Building2, CalendarCheck, ClipboardCheck, Clock, History, HomeIcon, Tag, UserIcon, Calendar } from "lucide-vue-next";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 
@@ -26,9 +26,10 @@ const routNameActive = computed(() => {
 
 // Computed user data
 const userData = computed(() => {
+  const role = authStore.user?.roles?.[0];
   return {
-    fullname: authStore.user?.fullName || "",
-    username: authStore.user?.email || "",
+    fullname: authStore.user?.nama || "",
+    username: role === "admin" ? "" : authStore.user?.email || "",
     avatar: (authStore.user as unknown as { avatar: string })?.avatar || "",
   };
 });
@@ -97,6 +98,13 @@ const data = computed(() => {
       name: "app.pegawai",
       icon: UserIcon,
       isActive: routNameActive.value === "app.pegawai" || routNameActive.value === "app.pegawai.detail",
+    },
+    {
+      title: "Hari Libur",
+      url: "/app/hari-libur",
+      name: "app.hari-libur",
+      icon: Calendar,
+      isActive: routNameActive.value === "app.hari-libur" || routNameActive.value === "app.hari-libur.detail",
     },
   ];
   return {
