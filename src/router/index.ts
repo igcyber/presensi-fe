@@ -60,6 +60,10 @@ const sortedRoutes = dynamicRoutes.sort((a, b) => {
 
 // Routes
 const routes: RouteRecordRaw[] = [
+  {
+    path: "/",
+    redirect: { name: "login.index" },
+  },
   // Dynamic Routes yang ada di folder pages
   ...sortedRoutes,
 

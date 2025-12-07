@@ -59,6 +59,8 @@ export interface UserAuth {
   email: string;
   username: string;
   noHp: string;
+  nama?: string;
+  nip?: string;
   // Data Relasi
   userPegawai?: UserPegawaiData;
   roles?: string[];

@@ -1,26 +1,23 @@
 <script setup lang="ts">
 import { PlusIcon } from "lucide-vue-next";
 import { computed, onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 
 import BaseConfirmDialog from "@/components/dialogs/BaseConfirmDialog.vue";
-import UserDialog from "@/components/dialogs/UserDialog.vue";
+import PegawaiDialog from "@/components/dialogs/PegawaiDialog.vue";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { type Column, DataTable, type FilterConfig } from "@/components/ui/datatable";
 import ErrorState from "@/components/ui/error-state/ErrorState.vue";
 
 import { useDialog } from "@/composables/useDialog";
-import { useFormatters } from "@/composables/useFormatters";
 import { useResourceList } from "@/composables/useResourceList";
-import { getRoles } from "@/lib/api/services/role";
-import { deleteUser, getUsers } from "@/lib/api/services/user";
-import type { Role } from "@/lib/api/types/role.types";
-import type { User } from "@/lib/api/types/user.types";
-
-// Composables
-const router = useRouter();
+import { getKantor } from "@/lib/api/services/kantor";
+import { deletePegawai, getPegawai } from "@/lib/api/services/pegawai";
+import { getTipePegawai } from "@/lib/api/services/tipePegawai";
+import type { Kantor } from "@/lib/api/types/kantor.types";
+import type { Pegawai } from "@/lib/api/types/pegawai.types";
+import type { TipePegawai } from "@/lib/api/types/tipePegawai.types";
 
 // Get resource list with URL sync (includes pagination state)
 const {
@@ -38,66 +35,78 @@ const {
   addFilter,
   removeFilter,
   clearFilters,
-} = useResourceList<User>((params) => getUsers(params), { perPage: 10, enableUrlSync: true });
+} = useResourceList<Pegawai>((params) => getPegawai(params), { perPage: 10, enableUrlSync: true });
 
-const dialog = useDialog<User>();
-const confirmDialog = useDialog<User>();
-
-const { capitalize } = useFormatters();
+const dialog = useDialog<Pegawai>();
+const confirmDialog = useDialog<Pegawai>();
 
 // Reactive state
-const roleOptions = ref<{ label: string; value: number }[]>([]);
+const tipePegawaiList = ref<{ label: string; value: string; id: number }[]>([]);
+const kantorOptions = ref<{ label: string; value: number }[]>([]);
 const filterValues = ref<Record<string, any>>({});
+
+// Options untuk dialog (menggunakan ID sebagai value)
+const tipePegawaiOptions = computed(() =>
+  tipePegawaiList.value.map((item) => ({
+    label: item.label,
+    value: item.id,
+  })),
+);
+
+// Options untuk filter datatable (menggunakan nama sebagai value)
+const tipePegawaiFilterOptions = computed(() =>
+  tipePegawaiList.value.map((item) => ({
+    label: item.label,
+    value: item.value,
+  })),
+);
 
 // Computed for DataTable props
 const currentSortField = computed(() => (sorts.value ? sorts.value.field : ""));
 const currentSortDirection = computed(() => (sorts.value ? sorts.value.direction : "asc"));
 
-// Filter config for DataTable
+// Filter config for DataTable - menggunakan type dengan nilai text
 const filterConfigs = computed<FilterConfig[]>(() => [
   {
-    key: "role",
-    label: "Role",
+    key: "type",
+    label: "Tipe Pegawai",
     type: "select",
-    options: roleOptions.value,
-    placeholder: "Pilih role",
+    options: tipePegawaiFilterOptions.value,
+    placeholder: "Pilih tipe pegawai",
   },
 ]);
 
 // Column definitions
-const columns: Column<User>[] = [
+const columns: Column<Pegawai>[] = [
   {
-    key: "fullName",
+    key: "nama",
     label: "Nama",
     sortable: true,
     searchable: true,
   },
   {
-    key: "username",
-    label: "Username",
+    key: "tipePegawaiId",
+    label: "Tipe Pegawai",
     sortable: true,
     width: "150px",
-  },
-  {
-    key: "email",
-    label: "Email",
-    sortable: true,
-    searchable: true,
-  },
-  {
-    key: "nip",
-    label: "NIP",
-    sortable: true,
-    width: "150px",
-  },
-  {
-    key: "roles",
-    label: "Role",
-    sortable: true,
-    width: "150px",
-    render: (item: User): string => {
-      return item.roles.map((role: Role) => capitalize(role.name)).join(", ");
+    render: (item: Pegawai): string => {
+      return getTipePegawaiNama(item.tipePegawaiId);
     },
+  },
+  {
+    key: "kantorId",
+    label: "Kantor",
+    sortable: true,
+    width: "200px",
+    render: (item: Pegawai): string => {
+      return getKantorNama(item.kantorId);
+    },
+  },
+  {
+    key: "checkRadius",
+    label: "Check Radius",
+    sortable: true,
+    width: "150px",
   },
   {
     key: "createdAt",
@@ -108,29 +117,58 @@ const columns: Column<User>[] = [
 ];
 
 // Methods
-const loadRoleOptions = async (): Promise<void> => {
+const loadTipePegawaiOptions = async (): Promise<void> => {
   try {
-    const roles = await getRoles();
-    roleOptions.value = roles.data.data.map((role: Role) => ({ label: role.name, value: role.id }));
+    const response = await getTipePegawai();
+    tipePegawaiList.value = response.data.map((item: TipePegawai) => ({
+      label: item.nama,
+      value: item.nama, // Gunakan nama sebagai value untuk filter datatable
+      id: item.id, // ID untuk dialog
+    }));
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : "Gagal memuat data role";
+    const errorMessage = error instanceof Error ? error.message : "Gagal memuat data tipe pegawai";
     toast.error("Gagal", { description: errorMessage });
   }
+};
+
+const loadKantorOptions = async (): Promise<void> => {
+  try {
+    const response = await getKantor();
+    kantorOptions.value = response.data.data.map((item: Kantor) => ({
+      label: item.nama,
+      value: item.id,
+    }));
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "Gagal memuat data kantor";
+    toast.error("Gagal", { description: errorMessage });
+  }
+};
+
+// Helper functions untuk mendapatkan nama dari ID
+const getTipePegawaiNama = (id: number): string => {
+  const tipePegawai = tipePegawaiList.value.find((opt) => opt.id === id);
+  return tipePegawai?.label || `ID: ${id}`;
+};
+
+const getKantorNama = (id: number): string => {
+  const kantor = kantorOptions.value.find((opt) => opt.value === id);
+  return kantor?.label || `ID: ${id}`;
 };
 
 const openCreateDialog = (): void => {
   dialog.openCreate();
 };
 
-const handleRowClick = (item: User): void => {
-  router.push({ name: "app.user.detail", params: { id: item.id } });
+const handleRowClick = (_item: Pegawai): void => {
+  // TODO: Create detail page for pegawai if needed
+  // router.push({ name: "app.pegawai.detail", params: { id: item.id } });
 };
 
-const handleEdit = (item: User): void => {
+const handleEdit = (item: Pegawai): void => {
   dialog.openEdit(item);
 };
 
-const handleDelete = (item: User): void => {
+const handleDelete = (item: Pegawai): void => {
   confirmDialog.openView(item);
 };
 
@@ -139,15 +177,15 @@ const confirmDelete = async (): Promise<void> => {
 
   try {
     confirmDialog.setLoading(true);
-    await deleteUser(confirmDialog.state.value.data.id);
+    await deletePegawai(confirmDialog.state.value.data.id);
 
     fetchData();
 
     toast.success("Berhasil", {
-      description: "User berhasil dihapus",
+      description: "Pegawai berhasil dihapus",
     });
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : "Gagal menghapus user";
+    const errorMessage = error instanceof Error ? error.message : "Gagal menghapus pegawai";
 
     toast.error("Gagal", {
       description: errorMessage,
@@ -158,7 +196,7 @@ const confirmDelete = async (): Promise<void> => {
   }
 };
 
-const handleUserDialogSuccess = (): void => {
+const handlePegawaiDialogSuccess = (): void => {
   dialog.closeDialog();
   fetchData();
 };
@@ -169,15 +207,12 @@ const handleSort = (payload: { field: string; direction: "asc" | "desc" | undefi
 };
 
 const handleCustomFilter = (filters: Array<Record<string, any>>): void => {
-  // Handle custom filters from DataTable
-  // For role filter, extract and apply
   if (filters.length > 0) {
     const filterObj = filters[0];
-    if (filterObj.role) {
-      addFilter("role", filterObj.role);
+    if (filterObj.type) {
+      addFilter("type", filterObj.type);
     } else {
-      // Remove role filter if not present
-      removeFilter("role");
+      removeFilter("type");
     }
   } else {
     clearFilters();
@@ -189,11 +224,10 @@ const handleResetFilter = (): void => {
   clearFilters();
 };
 
-// Note: useResourceList already watches query changes and calls fetchData automatically
-
 // Lifecycle hooks
 onMounted(() => {
-  loadRoleOptions();
+  loadTipePegawaiOptions();
+  loadKantorOptions();
 });
 </script>
 
@@ -203,8 +237,8 @@ onMounted(() => {
       <!-- Header Section -->
       <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div class="space-y-1">
-          <h1 class="text-3xl font-bold tracking-tight">User</h1>
-          <p class="text-muted-foreground">Daftar pengguna dengan fitur pencarian, pengurutan, dan paginasi</p>
+          <h1 class="text-3xl font-bold tracking-tight">Pegawai</h1>
+          <p class="text-muted-foreground">Daftar pegawai dengan fitur pencarian, pengurutan, dan paginasi</p>
         </div>
         <Button @click="openCreateDialog" class="flex items-center gap-2 self-start sm:self-auto">
           <PlusIcon class="h-4 w-4" />
@@ -214,12 +248,12 @@ onMounted(() => {
 
       <Card>
         <CardHeader class="px-8">
-          <CardTitle>Users</CardTitle>
-          <CardDescription>List daftar users dengan fitur pencarian, sorting, dan pagination</CardDescription>
+          <CardTitle>Pegawai</CardTitle>
+          <CardDescription>List daftar pegawai dengan fitur pencarian, sorting, dan pagination</CardDescription>
         </CardHeader>
         <CardContent>
           <!-- Error State -->
-          <ErrorState v-if="isError" :message="error?.message || 'Gagal memuat data user'" @retry="fetchData" />
+          <ErrorState v-if="isError" :message="error?.message || 'Gagal memuat data pegawai'" @retry="fetchData" />
 
           <!-- Data Table -->
           <DataTable
@@ -249,36 +283,38 @@ onMounted(() => {
             @update:search-value="(val) => (search = val)"
             @update:filter-values="(val) => (filterValues = val)"
           >
-            <!-- Custom column rendering for roles -->
-            <template #cell-roles="{ item }">
-              <div class="flex flex-wrap gap-1">
-                <span
-                  v-for="role in item.roles"
-                  :key="role.id"
-                  class="inline-flex items-center rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800"
-                >
-                  {{ capitalize(role.name) }}
-                </span>
-              </div>
+            <!-- Custom column rendering for check radius -->
+            <template #cell-checkRadius="{ item }">
+              <span
+                :class="[
+                  'inline-flex items-center rounded-full px-2 py-1 text-xs font-medium',
+                  item.checkRadius === 'YA'
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-gray-100 text-gray-800',
+                ]"
+              >
+                {{ item.checkRadius }}
+              </span>
             </template>
           </DataTable>
         </CardContent>
       </Card>
 
-      <!-- User Dialog -->
-      <UserDialog
+      <!-- Pegawai Dialog -->
+      <PegawaiDialog
         v-model:open="dialog.state.value.open"
         :mode="dialog.state.value.mode"
-        :user="dialog.state.value.data"
-        :role-options="roleOptions"
-        @success="handleUserDialogSuccess"
+        :pegawai="dialog.state.value.data"
+        :tipe-pegawai-options="tipePegawaiOptions"
+        :kantor-options="kantorOptions"
+        @success="handlePegawaiDialogSuccess"
       />
 
       <!-- Confirm Delete Dialog -->
       <BaseConfirmDialog
         v-model:open="confirmDialog.state.value.open"
-        title="Hapus User"
-        :description="`Apakah Anda yakin ingin menghapus user '${confirmDialog.state.value.data?.fullName}'? Tindakan ini tidak dapat dibatalkan.`"
+        title="Hapus Pegawai"
+        :description="`Apakah Anda yakin ingin menghapus pegawai '${confirmDialog.state.value.data?.nama}'? Tindakan ini tidak dapat dibatalkan.`"
         confirm-text="Hapus"
         variant="destructive"
         :loading="confirmDialog.state.value.loading"

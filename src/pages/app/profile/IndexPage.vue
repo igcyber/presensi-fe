@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { CameraIcon, IdCardIcon, KeyIcon, MailIcon, ShieldIcon, UserIcon } from "lucide-vue-next";
 import { onMounted } from "vue";
-import { toast } from "vue-sonner";
 
 import ChangePasswordDialog from "@/components/dialogs/ChangePasswordDialog.vue";
 // Import komponen Face ID baru
@@ -167,7 +166,7 @@ const handlePasswordChangeSuccess = () => {
             <div class="relative -mt-16 sm:-mt-20">
               <img
                 src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
-                :alt="data?.fullName"
+                :alt="data?.userPegawai?.nama ?? data?.nama ?? data?.username"
                 class="h-24 w-24 rounded-full border-4 border-white object-cover shadow-lg sm:h-32 sm:w-32 dark:border-gray-800"
               />
               <Button size="sm" class="absolute right-0 bottom-0 h-8 w-8 rounded-full p-0 shadow-lg">
@@ -176,7 +175,7 @@ const handlePasswordChangeSuccess = () => {
             </div>
             <div class="flex-1 space-y-2 text-center sm:text-left">
               <div class="flex flex-col items-center gap-2 sm:flex-row sm:items-start">
-                <h2 class="text-2xl font-bold">{{ data?.userPegawai.nama }}</h2>
+                <h2 class="text-2xl font-bold">{{ data?.userPegawai?.nama ?? data?.nama }}</h2>
                 <Badge variant="default" class="text-xs"> Aktif </Badge>
               </div>
               <p class="text-muted-foreground">My Bio</p>
@@ -187,7 +186,7 @@ const handlePasswordChangeSuccess = () => {
                 </div>
                 <div class="flex items-center gap-1">
                   <IdCardIcon class="h-4 w-4" />
-                  {{ data?.nip }}
+                  {{ data?.nip ?? data?.userPegawai?.id }}
                 </div>
               </div>
               <div class="flex items-center gap-1">
