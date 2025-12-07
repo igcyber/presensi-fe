@@ -264,9 +264,6 @@ const formatCellValue = (item: T, column: Column<T>) => {
       return formatters.phone(value as string);
     case "email":
       return formatters.maskEmail(value as string);
-    case "nama":
-    case "name":
-      return formatters.name(value as string);
     default:
       return value;
   }
