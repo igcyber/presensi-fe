@@ -68,7 +68,7 @@ async function onSubmit(values: any) {
       <BaseInput
         name="version"
         label="Version"
-        placeholder="Masukkan version (contoh: v1.0.0.1)"
+        placeholder="Masukkan version (contoh: V1.0.0.1)"
         required
       />
     </div>
