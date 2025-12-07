@@ -1,6 +1,9 @@
 import type { ApiResponse } from "@/lib/api/core/apiResponse";
 import httpInstance from "@/lib/api/core/httpInstance";
 import type {
+  PermohonanAdminItem,
+  PermohonanAdminListResponse,
+  PermohonanAdminParams,
   PermohonanItem,
   PermohonanListResponse,
   PermohonanParams,
@@ -14,6 +17,7 @@ import type {
   RekapPresensiResponse,
   RiwayatPresensiItem,
   RiwayatPresensiParams,
+  VerifyPermohonanPayload,
 } from "@/lib/api/types/presensi.types";
 
 const BASE_URL = "/api/pegawai";
@@ -120,5 +124,33 @@ export const createPermohonan = async (payload: PermohonanPayload): Promise<ApiR
   const response = await httpInstance.post<ApiResponse<PermohonanItem>>(`${BASE_URL}/pengajuan-tidak-hadir`, formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
+  return response.data;
+};
+
+/**
+ * Get Daftar Permohonan Admin
+ * @endpoint GET /api/admin/permohonan
+ */
+export const getPermohonanAdminList = async (
+  params?: PermohonanAdminParams,
+): Promise<ApiResponse<PermohonanAdminListResponse>> => {
+  const response = await httpInstance.get<ApiResponse<PermohonanAdminListResponse>>("/api/admin/permohonan", {
+    params,
+  });
+  return response.data;
+};
+
+/**
+ * Verify Permohonan
+ * @endpoint POST /api/admin/permohonan/:id/verify
+ */
+export const verifyPermohonan = async (
+  id: number,
+  payload: VerifyPermohonanPayload,
+): Promise<ApiResponse<PermohonanAdminItem>> => {
+  const response = await httpInstance.post<ApiResponse<PermohonanAdminItem>>(
+    `/api/admin/permohonan/${id}/verify`,
+    payload,
+  );
   return response.data;
 };

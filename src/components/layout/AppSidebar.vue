@@ -54,6 +54,13 @@ const userData = computed(() => {
         icon: CalendarCheck,
         isActive: routNameActive.value === "app.rekap",
       },
+      {
+        title: "Permohonan Tidak Hadir",
+        url: "/app/permohonan",
+        name: "app.permohonan",
+        icon: ClipboardCheck,
+        isActive: routNameActive.value === "app.permohonan",
+      },
     ];
 
     // Menu Khusus Pegawai

@@ -2,6 +2,7 @@ import AuthLayout from "@/layouts/AuthLayout.vue";
 import dashboardRoute from "@/pages/app/dashboard/route";
 import hariLiburRoute from "@/pages/app/hari-libur/route";
 import kantorRoute from "@/pages/app/kantor/route";
+import permohonanRoute from "@/pages/app/permohonan/route";
 import profileRoute from "@/pages/app/profile/route";
 import pwaVersionRoute from "@/pages/app/pwa-version/route";
 import rekapRoute from "@/pages/app/rekap/route";
@@ -20,6 +21,7 @@ export default {
     ...dashboardRoute,
     ...profileRoute,
     ...rekapRoute,
+    ...permohonanRoute,
     ...kantorRoute,
     ...tipePegawaiRoute,
     ...userRoute,

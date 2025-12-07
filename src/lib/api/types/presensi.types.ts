@@ -207,3 +207,58 @@ export interface PermohonanListResponse {
   };
   data: PermohonanItem[];
 }
+
+/**
+ * Item Response Permohonan Admin
+ */
+export interface PermohonanAdminItem {
+  id: number;
+  tipe: TipePermohonan;
+  tanggal_pengajuan: string;
+  keterangan_pengajuan: string;
+  file_pendukung: string;
+  file_pendukung_url: string;
+  status: "pending" | "diterima" | "ditolak" | "batal";
+  pegawai: string;
+  verifikator: string | null;
+  tanggal_verifikator: string | null;
+  keterangan_verifikator: string | null;
+}
+
+/**
+ * Response List Permohonan Admin (Paginated)
+ */
+export interface PermohonanAdminListResponse {
+  meta: {
+    total: number;
+    perPage: number;
+    currentPage: number;
+    lastPage: number;
+    firstPage: number;
+    firstPageUrl: string;
+    lastPageUrl: string;
+    nextPageUrl: string | null;
+    previousPageUrl: string | null;
+  };
+  data: PermohonanAdminItem[];
+}
+
+/**
+ * Parameter Filter Permohonan Admin
+ */
+export interface PermohonanAdminParams {
+  search?: string | null;
+  status?: string;
+  tipe?: string;
+  date?: string;
+  page?: number;
+  per_page?: number;
+}
+
+/**
+ * Payload Verify Permohonan
+ */
+export interface VerifyPermohonanPayload {
+  status: "pending" | "diterima" | "ditolak";
+  keterangan_verifikator?: string;
+}
