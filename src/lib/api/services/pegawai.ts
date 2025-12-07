@@ -1,4 +1,5 @@
 import type { ApiResponse, PaginationMeta, SearchParams } from "@/lib/api/core/apiResponse";
+import httpInstance from "@/lib/api/core/httpInstance";
 import { createCrudService } from "@/lib/api/factories/crudServiceFactory";
 import type {
   CreatePegawaiRequest,
@@ -14,7 +15,7 @@ export const pegawaiService = createCrudService<Pegawai, Pegawai, CreatePegawaiR
 
 const transformPaginationMeta = (meta: any): PaginationMeta => {
   if (!meta) return meta;
-  
+
   return {
     total: meta.total ?? 0,
     per_page: meta.perPage ?? meta.per_page ?? 10,
@@ -29,7 +30,7 @@ const transformPaginationMeta = (meta: any): PaginationMeta => {
 export const getPegawai = async (params?: SearchParams | PegawaiQueryParams | any): Promise<ApiResponse<PegawaiListResponse>> => {
   // Konversi params dari SearchParams (limit) ke PegawaiQueryParams (per_page)
   const queryParams: PegawaiQueryParams = {};
-  
+
   if (params) {
     // Handle pagination
     if (params.page) {
@@ -40,12 +41,12 @@ export const getPegawai = async (params?: SearchParams | PegawaiQueryParams | an
     } else if (params.per_page) {
       queryParams.per_page = params.per_page;
     }
-    
+
     // Handle search
     if (params.search) {
       queryParams.search = params.search;
     }
-    
+
     // Handle type filter (dari direct params atau custom filters)
     if (params.type) {
       queryParams.type = String(params.type);
@@ -55,7 +56,7 @@ export const getPegawai = async (params?: SearchParams | PegawaiQueryParams | an
         queryParams.type = String(customFilters[0].type);
       }
     }
-    
+
     // Handle sorting
     if (params.orderBy) {
       queryParams.sort_by = params.orderBy as any;
@@ -64,13 +65,13 @@ export const getPegawai = async (params?: SearchParams | PegawaiQueryParams | an
       queryParams.sort_order = params.sortBy as "asc" | "desc";
     }
   }
-  
+
   const response = await pegawaiService.get(queryParams);
-  
+
   if (response.data?.meta) {
     response.data.meta = transformPaginationMeta(response.data.meta);
   }
-  
+
   return response;
 };
 
@@ -83,4 +84,13 @@ export const updatePegawai = (id: number, payload: UpdatePegawaiRequest): Promis
   pegawaiService.update(id, payload);
 
 export const deletePegawai = (id: number): Promise<ApiResponse<null>> => pegawaiService.remove(id);
+
+/**
+ * Get list semua pegawai tanpa pagination
+ * @endpoint GET /api/admin/pegawai/list-pegawai
+ */
+export const getListPegawai = async (): Promise<ApiResponse<Pegawai[]>> => {
+  const response = await httpInstance.get<ApiResponse<Pegawai[]>>(`${base}/list-pegawai`);
+  return response.data;
+};
 

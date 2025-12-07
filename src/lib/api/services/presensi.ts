@@ -8,6 +8,8 @@ import type {
   PresensiPayload,
   PresensiResponseData,
   PresensiStatusResponse,
+  RekapPresensiAdminParams,
+  RekapPresensiAdminResponse,
   RekapPresensiParams,
   RekapPresensiResponse,
   RiwayatPresensiItem,
@@ -51,6 +53,19 @@ export const submitPresensi = async (payload: PresensiPayload): Promise<ApiRespo
  */
 export const getRekapPresensi = async (params: RekapPresensiParams): Promise<ApiResponse<RekapPresensiResponse>> => {
   const response = await httpInstance.get<ApiResponse<RekapPresensiResponse>>(`${BASE_URL}/rekap-absen`, {
+    params,
+  });
+  return response.data;
+};
+
+/**
+ * Get rekap presensi admin
+ * @endpoint GET /api/admin/rekap-absen
+ */
+export const getRekapPresensiAdmin = async (
+  params: RekapPresensiAdminParams,
+): Promise<ApiResponse<RekapPresensiAdminResponse>> => {
+  const response = await httpInstance.get<ApiResponse<RekapPresensiAdminResponse>>("/api/admin/rekap-absen", {
     params,
   });
   return response.data;

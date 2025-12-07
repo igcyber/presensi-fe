@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Badge, Building2, CalendarCheck, ClipboardCheck, Clock, History, HomeIcon, Package, Tag, UserIcon, Calendar } from "lucide-vue-next";
+import { Badge, Building2, CalendarCheck, ClipboardCheck, Clock, FileText, History, HomeIcon, Package, UserIcon, Calendar } from "lucide-vue-next";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 
@@ -34,19 +34,30 @@ const userData = computed(() => {
   };
 });
 
-// Computed data untuk navigation dengan active state
-const data = computed(() => {
-  const navAdminDashboard = [
-    {
-      title: "Dashboard",
-      url: "/app/dashboard",
-      name: "app.dashboard",
-      icon: HomeIcon,
-      isActive: routNameActive.value === "app.dashboard",
-    },
-  ];
-  // Menu Khusus Pegawai
-  const navPegawaiPresensi = [
+  // Computed data untuk navigation dengan active state
+  const data = computed(() => {
+    const navAdminDashboard = [
+      {
+        title: "Dashboard",
+        url: "/app/dashboard",
+        name: "app.dashboard",
+        icon: HomeIcon,
+        isActive: routNameActive.value === "app.dashboard",
+      },
+    ];
+
+    const navAdminRekap = [
+      {
+        title: "Rekap Presensi",
+        url: "/app/rekap",
+        name: "app.rekap",
+        icon: CalendarCheck,
+        isActive: routNameActive.value === "app.rekap",
+      },
+    ];
+
+    // Menu Khusus Pegawai
+    const navPegawaiPresensi = [
     {
       title: "Presensi",
       url: "/pegawai/absensi",
@@ -122,6 +133,7 @@ const data = computed(() => {
       url: authStore.isPegawai ? "/pegawai/absensi" : "/app/dashboard",
     },
     navAdminDashboard,
+    navAdminRekap,
     navPegawaiPresensi,
     navPegawaiManagement,
   };
@@ -140,6 +152,7 @@ const data = computed(() => {
 
       <template v-else-if="authStore.isAdmin">
         <NavDashboard :items="data.navAdminDashboard" />
+        <NavGroup label="Menu Utama" :items="data.navAdminRekap" />
         <NavGroup label="Master Data" :items="data.navPegawaiManagement" />
         <!-- <NavGroup label="Media & Konten" :items="data.navMediaKonten" /> -->
       </template>

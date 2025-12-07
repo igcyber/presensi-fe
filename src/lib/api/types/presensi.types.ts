@@ -56,9 +56,21 @@ export interface PresensiResponseData extends BaseEntity {
 }
 
 /**
- * Parameter untuk Request Rekap
+ * Parameter untuk Request Rekap (Pegawai)
  */
 export interface RekapPresensiParams {
+  tipe: "bulanan" | "range";
+  month?: number;
+  year?: number;
+  start_date?: string;
+  end_date?: string;
+}
+
+/**
+ * Parameter untuk Request Rekap Admin
+ */
+export interface RekapPresensiAdminParams {
+  pegawai_id: number;
   tipe: "bulanan" | "range";
   month?: number;
   year?: number;
@@ -70,11 +82,13 @@ export interface RekapPresensiParams {
  * Item Detail Presensi per Hari
  */
 export interface DataPresensiItem {
-  tipe: "MASUK" | "PULANG" | "MASUK_LEMBUR" | "PULANG_LEMBUR" | "IZIN" | "SAKIT" | "CUTI";
+  tipe: "MASUK" | "PULANG" | "MASUK_LEMBUR" | "PULANG_LEMBUR" | "IZIN" | "SAKIT" | "CUTI" | "LIBUR";
   jam: string;
-  foto_url?: string;
-  lat?: string;
-  long?: string;
+  foto?: string | null;
+  foto_url?: string | null;
+  lat?: string | null;
+  long?: string | null;
+  akurasi?: string | null;
 }
 
 export interface RekapDetailItem {
@@ -84,7 +98,7 @@ export interface RekapDetailItem {
 }
 
 /**
- * Response GET /rekap-absen
+ * Response GET /rekap-absen (Pegawai)
  */
 export interface RekapPresensiResponse {
   pegawai: {
@@ -97,6 +111,23 @@ export interface RekapPresensiResponse {
   };
   // Hanlde object dengan key index string "0", "1", dst.
   detail: Record<string, RekapDetailItem>;
+}
+
+/**
+ * Response GET /api/admin/rekap-absen
+ */
+export interface RekapPresensiAdminResponse {
+  pegawai: {
+    nama: string;
+    tipePegawai: string;
+  };
+  periode: {
+    start_date: string;
+    end_date: string;
+    tipe: "bulanan" | "range";
+  };
+  // Handle object dengan key index string "0", "1", dst.
+  detail_harian: Record<string, RekapDetailItem>;
 }
 
 /**
