@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { PlusIcon } from "lucide-vue-next";
 import { computed, onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 
 import BaseConfirmDialog from "@/components/dialogs/BaseConfirmDialog.vue";
@@ -18,6 +19,8 @@ import { getTipePegawai } from "@/lib/api/services/tipePegawai";
 import type { Kantor } from "@/lib/api/types/kantor.types";
 import type { Pegawai } from "@/lib/api/types/pegawai.types";
 import type { TipePegawai } from "@/lib/api/types/tipePegawai.types";
+
+const router = useRouter();
 
 // Get resource list with URL sync (includes pagination state)
 const {
@@ -159,9 +162,8 @@ const openCreateDialog = (): void => {
   dialog.openCreate();
 };
 
-const handleRowClick = (_item: Pegawai): void => {
-  // TODO: Create detail page for pegawai if needed
-  // router.push({ name: "app.pegawai.detail", params: { id: item.id } });
+const handleRowClick = (item: Pegawai): void => {
+  router.push({ name: "app.pegawai.detail", params: { id: item.id } });
 };
 
 const handleEdit = (item: Pegawai): void => {

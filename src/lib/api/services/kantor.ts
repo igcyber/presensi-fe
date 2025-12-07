@@ -8,7 +8,7 @@ export const kantorService = createCrudService<Kantor, Kantor, unknown, unknown>
 
 const transformPaginationMeta = (meta: any): PaginationMeta => {
   if (!meta) return meta;
-  
+
   return {
     total: meta.total ?? 0,
     per_page: meta.perPage ?? meta.per_page ?? 10,
@@ -20,9 +20,18 @@ const transformPaginationMeta = (meta: any): PaginationMeta => {
   };
 };
 
+const transformKantorData = (kantor: any): Kantor => {
+  return {
+    ...kantor,
+    radiusLimit: kantor.radiusLimit ?? kantor.radius_limit ?? 0,
+    jamMasuk: kantor.jamMasuk ?? kantor.jam_masuk ?? "",
+    jamPulang: kantor.jamPulang ?? kantor.jam_pulang ?? "",
+  };
+};
+
 export const getKantor = async (params?: SearchParams | any): Promise<ApiResponse<KantorListResponse>> => {
   const queryParams: Record<string, any> = {};
-  
+
   if (params) {
     if (params.page) {
       queryParams.page = params.page;
@@ -32,11 +41,11 @@ export const getKantor = async (params?: SearchParams | any): Promise<ApiRespons
     } else if (params.per_page) {
       queryParams.per_page = params.per_page;
     }
-    
+
     if (params.search) {
       queryParams.search = params.search;
     }
-    
+
     if (params.orderBy) {
       queryParams.sort_by = params.orderBy;
     }
@@ -44,17 +53,27 @@ export const getKantor = async (params?: SearchParams | any): Promise<ApiRespons
       queryParams.sort_order = params.sortBy;
     }
   }
-  
+
   const response = await kantorService.get(queryParams);
-  
+
   if (response.data?.meta) {
     response.data.meta = transformPaginationMeta(response.data.meta);
   }
-  
+
+  if (response.data?.data && Array.isArray(response.data.data)) {
+    response.data.data = response.data.data.map(transformKantorData);
+  }
+
   return response;
 };
 
-export const getKantorById = (id: number): Promise<ApiResponse<Kantor>> => kantorService.getById(id);
+export const getKantorById = async (id: number): Promise<ApiResponse<Kantor>> => {
+  const response = await kantorService.getById(id);
+  if (response.data) {
+    response.data = transformKantorData(response.data);
+  }
+  return response;
+};
 
 export const createKantor = (payload: {
   nama: string;

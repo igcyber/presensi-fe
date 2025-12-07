@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { PlusIcon } from "lucide-vue-next";
 import { computed } from "vue";
+import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 
 import BaseConfirmDialog from "@/components/dialogs/BaseConfirmDialog.vue";
@@ -14,6 +15,8 @@ import { useDialog } from "@/composables/useDialog";
 import { useResourceList } from "@/composables/useResourceList";
 import { deleteKantor, getKantor } from "@/lib/api/services/kantor";
 import type { Kantor } from "@/lib/api/types/kantor.types";
+
+const router = useRouter();
 
 const {
   items,
@@ -49,22 +52,24 @@ const columns: Column<Kantor>[] = [
     searchable: true,
   },
   {
-    key: "radius_limit",
+    key: "radiusLimit",
     label: "Radius (m)",
     sortable: true,
     width: "120px",
   },
   {
-    key: "jam_masuk",
+    key: "jamMasuk",
     label: "Jam Masuk",
     sortable: true,
     width: "120px",
+    render: (item: Kantor) => item.jamMasuk ? item.jamMasuk.slice(0, 5) : "-",
   },
   {
-    key: "jam_pulang",
+    key: "jamPulang",
     label: "Jam Pulang",
     sortable: true,
     width: "120px",
+    render: (item: Kantor) => item.jamPulang ? item.jamPulang.slice(0, 5) : "-",
   },
   {
     key: "jumlah_pegawai",
@@ -78,8 +83,8 @@ const openCreateDialog = (): void => {
   dialog.openCreate();
 };
 
-const handleRowClick = (_item: Kantor): void => {
-  // TODO: Create detail page for kantor if needed
+const handleRowClick = (item: Kantor): void => {
+  router.push({ name: "app.kantor.detail", params: { id: item.id } });
 };
 
 const handleEdit = (item: Kantor): void => {

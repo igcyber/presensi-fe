@@ -55,9 +55,9 @@ const initialValues = computed(() => {
     lat: props.kantor?.lat ?? "",
     long: props.kantor?.long ?? "",
     deskripsi: props.kantor?.deskripsi ?? "",
-    radius_limit: props.kantor?.radius_limit ?? 100,
-    jam_masuk: formatTime(props.kantor?.jam_masuk),
-    jam_pulang: formatTime(props.kantor?.jam_pulang),
+    radius_limit: (props.kantor as any)?.radiusLimit ?? (props.kantor as any)?.radius_limit ?? 100,
+    jam_masuk: formatTime((props.kantor as any)?.jamMasuk ?? (props.kantor as any)?.jam_masuk),
+    jam_pulang: formatTime((props.kantor as any)?.jamPulang ?? (props.kantor as any)?.jam_pulang),
   };
 });
 

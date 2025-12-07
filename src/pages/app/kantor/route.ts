@@ -1,3 +1,4 @@
+import KantorDetailPage from "./DetailPage.vue";
 import KantorPage from "./IndexPage.vue";
 
 export default [
@@ -8,6 +9,15 @@ export default [
     meta: {
       requiresAuth: true,
       title: "Kantor",
+    },
+  },
+  {
+    path: "kantor/:id",
+    name: "app.kantor.detail",
+    component: KantorDetailPage,
+    meta: {
+      requiresAuth: true,
+      title: "Detail Kantor",
     },
   },
 ];

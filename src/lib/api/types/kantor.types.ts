@@ -6,10 +6,11 @@ export interface Kantor extends BaseEntity {
   lat: string;
   long: string;
   deskripsi?: string | null;
-  radius_limit: number;
-  jam_masuk: string;
-  jam_pulang: string;
+  radiusLimit: number;
+  jamMasuk: string;
+  jamPulang: string;
   jumlah_pegawai?: number;
+  exceptUser?: number[];
 }
 
 export type KantorListResponse = PaginatedPayload<Kantor>;

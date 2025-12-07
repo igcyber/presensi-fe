@@ -4,6 +4,7 @@ import { toast } from "vue-sonner";
 
 import BaseFormDialog from "@/components/dialogs/BaseFormDialog.vue";
 import BaseInput from "@/components/forms/BaseInput.vue";
+import MapPicker from "@/components/forms/MapPicker.vue";
 import BaseSelect from "@/components/forms/BaseSelect.vue";
 import type { SelectOption } from "@/components/forms/BaseSelect.vue";
 
@@ -81,13 +82,13 @@ const initialValues = computed(() => {
     // Use pegawaiDetail if available, otherwise fallback to props.pegawai
     const data = pegawaiDetail.value || props.pegawai;
     return {
-      tipe_pegawai_id: data?.tipePegawaiId,
-      kantor_id: data?.kantorId,
+      tipe_pegawai_id: (data as any)?.tipePegawaiId ?? (data as any)?.tipe_pegawai_id,
+      kantor_id: (data as any)?.kantorId ?? (data as any)?.kantor_id,
       nama: data?.nama ?? "",
-      check_radius: data?.checkRadius ?? "TIDAK",
+      check_radius: (data as any)?.checkRadius ?? (data as any)?.check_radius ?? "TIDAK",
       lat: data?.lat ?? "",
       long: data?.long ?? "",
-      no_hp: data?.user?.noHp ?? "",
+      no_hp: (data as any)?.user?.noHp ?? (data as any)?.user?.no_hp ?? "",
       email: data?.user?.email ?? "",
       username: data?.user?.username ?? "",
     };
@@ -236,6 +237,7 @@ async function onSubmit(values: any) {
     :schema="schema"
     :initial-values="initialValues"
     :on-submit="onSubmit"
+    width-class="sm:max-w-[800px]"
     @success="() => emit('success')"
   >
     <div class="grid grid-cols-1 gap-3">
@@ -267,10 +269,16 @@ async function onSubmit(values: any) {
         :required="mode === 'create'"
       />
 
-      <div class="grid grid-cols-2 gap-3">
-        <BaseInput name="lat" label="Latitude" placeholder="Masukkan latitude" :required="mode === 'create'" />
-        <BaseInput name="long" label="Longitude" placeholder="Masukkan longitude" :required="mode === 'create'" />
-      </div>
+      <MapPicker
+        lat-name="lat"
+        long-name="long"
+        label=""
+        :required="mode === 'create'"
+        :disabled="mode === 'view'"
+        description="Klik pada peta untuk menentukan lokasi atau isi koordinat secara manual"
+        :default-center="[-0.4191422207962125, 117.16900524248992]"
+        :default-zoom="16"
+      />
 
       <BaseInput name="no_hp" label="Nomor HP" placeholder="Masukkan nomor HP" :required="mode === 'create'" />
       <BaseInput name="email" label="Email" type="email" placeholder="Masukkan email" :required="mode === 'create'" />

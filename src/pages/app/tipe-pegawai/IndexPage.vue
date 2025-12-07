@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { PlusIcon } from "lucide-vue-next";
 import { computed } from "vue";
+import { useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 
 import BaseConfirmDialog from "@/components/dialogs/BaseConfirmDialog.vue";
@@ -14,6 +15,8 @@ import { useDialog } from "@/composables/useDialog";
 import { useResourceList } from "@/composables/useResourceList";
 import { deleteTipePegawai, getTipePegawaiList } from "@/lib/api/services/tipePegawai";
 import type { TipePegawai } from "@/lib/api/types/tipePegawai.types";
+
+const router = useRouter();
 
 const {
   items,
@@ -60,8 +63,8 @@ const openCreateDialog = (): void => {
   dialog.openCreate();
 };
 
-const handleRowClick = (_item: TipePegawai): void => {
-  // TODO: Create detail page for tipe pegawai if needed
+const handleRowClick = (item: TipePegawai): void => {
+  router.push({ name: "app.tipe-pegawai.detail", params: { id: item.id } });
 };
 
 const handleEdit = (item: TipePegawai): void => {
