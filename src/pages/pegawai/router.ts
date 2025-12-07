@@ -1,11 +1,10 @@
 // src/pages/pegawai/router.ts (Modified)
 import AuthLayout from "@/layouts/AuthLayout.vue";
-import AbsensiHarianPage from "@/pages/pegawai/AbsensiHarianPage.vue";
+import PengajuanTidakHadir from "@/pages/pegawai/PengajuanTidakHadir.vue";
 import RekapPresensiPage from "@/pages/pegawai/RekapPresensiPage.vue";
-// New
-import RiwayatAbsenPage from "@/pages/pegawai/RiwayatPresensiPage.vue";
+import RiwayatPresensiPage from "@/pages/pegawai/RiwayatPresensiPage.vue";
 
-// New
+import PresensiHarianPage from "./PresensiHarianPage.vue";
 
 export default {
   path: "/pegawai",
@@ -17,9 +16,9 @@ export default {
     {
       path: "absensi",
       name: "pegawai.absensi-harian",
-      component: AbsensiHarianPage,
+      component: PresensiHarianPage,
       meta: {
-        title: "Absensi Harian",
+        title: "Presensi Harian",
         roles: ["pegawai"],
       },
     },
@@ -35,16 +34,16 @@ export default {
     {
       path: "riwayat",
       name: "pegawai.riwayat-absen", // Sesuai permintaan: Riwayat Absen
-      component: RiwayatAbsenPage,
+      component: RiwayatPresensiPage,
       meta: {
-        title: "Riwayat Absen",
+        title: "Riwayat Presensi",
         roles: ["pegawai"],
       },
     },
     {
       path: "permohonan",
       name: "pegawai.permohonan",
-      component: AbsensiHarianPage, // Placeholder, ganti nanti
+      component: PengajuanTidakHadir,
       meta: {
         title: "Pengajuan Tidak Hadir",
         roles: ["pegawai"],

@@ -24,7 +24,13 @@ export interface RegisterRequest {
 export interface KantorData {
   id: number;
   nama: string;
-  alamat?: string;
+  deskripsi?: string;
+  radiusLimit?: number;
+}
+
+export interface TipePegawaiData {
+  id: number;
+  nama: string;
 }
 
 /**
@@ -35,11 +41,12 @@ export interface UserPegawaiData {
   userId: number;
   tipePegawaiId: number;
   kantorId: number;
-  nama: string; // Ini pengganti fullName
+  nama: string;
   checkRadius: string;
   lat: string;
   long: string;
-  kantor?: KantorData; // Property ini mungkin ada jika di-preload backend
+  kantor?: KantorData;
+  tipePegawai?: TipePegawaiData;
 }
 
 /**

@@ -34,11 +34,8 @@ watch(
 // Helper untuk mengambil NAMA
 const getNama = (data: any) => {
   if (!data) return "";
-  // Prioritas 1: userPegawai.nama (Sesuai response Postman Anda)
   if (data.userPegawai?.nama) return data.userPegawai.nama;
-  // Prioritas 2: nama (langsung di root)
   if (data.nama) return data.nama;
-  // Fallback
   return data.fullName || "";
 };
 
@@ -57,17 +54,13 @@ const getNoHp = (data: any) => {
 const getKantor = (data: any) => {
   if (!data) return "Memuat...";
 
-  // Cek jika ada nama kantor di userPegawai (biasanya dari relasi)
-  if (data.userPegawai?.kantor?.nama) return data.userPegawai.kantor.nama;
-
-  // Cek jika ada string langsung
-  if (data.kantor) return data.kantor;
-
-  // Jika hanya ada ID (Kasus saat ini)
-  if (data.userPegawai?.kantorId) {
-    // Idealnya backend mengirim nama, tapi sementara kita tampilkan ID atau placeholder
-    return `Kantor ID: ${data.userPegawai.kantorId}`;
+  // Prioritas Utama: Relasi userPegawai.kantor (Data Baru dari Backend)
+  if (data.userPegawai?.kantor?.nama) {
+    return data.userPegawai.kantor.nama;
   }
+
+  // Fallback: Jika backend belum di-deploy/di-update
+  if (data.kantor) return data.kantor; // String langsung
 
   return "Tidak ada data kantor";
 };

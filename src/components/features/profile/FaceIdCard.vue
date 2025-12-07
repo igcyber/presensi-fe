@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Camera, CheckCircle, Loader2, RefreshCcw, Save, XCircle } from "lucide-vue-next";
-import { onMounted, onUnmounted, ref } from "vue";
+import { Camera, CheckCircle, FlipHorizontal, Loader2, RefreshCcw, Save, XCircle } from "lucide-vue-next";
+import { onMounted, ref } from "vue";
 import { toast } from "vue-sonner";
 
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 
 import { useFormatters } from "@/composables/useFormatters";
+import { usePresensiCamera } from "@/composables/usePresensiCamera";
 import { checkFaceIdStatus, updateFaceId } from "@/lib/api/services/setting";
 import type { FaceIdStatus } from "@/lib/api/types/setting.types";
 
@@ -25,13 +26,21 @@ const status = ref<FaceIdStatus | null>(null);
 const isLoading = ref(false);
 const isUploading = ref(false);
 
-// --- State Kamera ---
-const isCameraOpen = ref(false);
-const videoRef = ref<HTMLVideoElement | null>(null);
-const canvasRef = ref<HTMLCanvasElement | null>(null);
-const stream = ref<MediaStream | null>(null);
-const capturedImage = ref<string | null>(null); // Base64 string untuk preview
-const capturedFile = ref<File | null>(null); // File object untuk upload
+// --- Composables ---
+// Mengambil fungsi kamera & state mirror dari composable
+const {
+  isCameraOpen,
+  isMirrored,
+  toggleMirror,
+  videoRef,
+  canvasRef,
+  capturedImage,
+  capturedFile,
+  startCamera,
+  stopCamera,
+  takePhoto,
+  retakePhoto,
+} = usePresensiCamera(); // File object untuk upload
 
 // --- API: Fetch Status ---
 const fetchStatus = async () => {
@@ -44,84 +53,6 @@ const fetchStatus = async () => {
   } finally {
     isLoading.value = false;
   }
-};
-
-// --- Logic Kamera ---
-
-// 1. Mulai Kamera
-const startCamera = async () => {
-  isCameraOpen.value = true;
-  capturedImage.value = null;
-  capturedFile.value = null;
-
-  try {
-    // Request akses kamera (video only)
-    stream.value = await navigator.mediaDevices.getUserMedia({
-      video: {
-        width: { ideal: 720 },
-        height: { ideal: 720 },
-        facingMode: "user", // Prefer kamera depan
-      },
-    });
-
-    if (videoRef.value) {
-      videoRef.value.srcObject = stream.value;
-    }
-  } catch (error) {
-    console.error("Error accessing camera:", error);
-    toast.error("Gagal mengakses kamera. Pastikan izin kamera diaktifkan.");
-    isCameraOpen.value = false;
-  }
-};
-
-// 2. Stop Kamera (Membersihkan track)
-const stopCamera = () => {
-  if (stream.value) {
-    stream.value.getTracks().forEach((track) => track.stop());
-    stream.value = null;
-  }
-  isCameraOpen.value = false;
-};
-
-// 3. Ambil Foto (Capture)
-const takePhoto = () => {
-  if (videoRef.value && canvasRef.value) {
-    const video = videoRef.value;
-    const canvas = canvasRef.value;
-    const context = canvas.getContext("2d");
-
-    if (context) {
-      // Set ukuran canvas sesuai video
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-
-      // Gambar frame video ke canvas
-      context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-      // Simpan sebagai base64 untuk preview
-      capturedImage.value = canvas.toDataURL("image/jpeg");
-
-      // Konversi canvas ke Blob -> File untuk upload API
-      canvas.toBlob(
-        (blob) => {
-          if (blob) {
-            capturedFile.value = new File([blob], "face-id-capture.jpg", {
-              type: "image/jpeg",
-            });
-          }
-        },
-        "image/jpeg",
-        0.9,
-      );
-    }
-  }
-};
-
-// 4. Ulangi Foto (Retake)
-const retakePhoto = () => {
-  capturedImage.value = null;
-  capturedFile.value = null;
-  // Video otomatis jalan terus karena stream tidak dimatikan
 };
 
 // 5. Submit ke API
@@ -148,10 +79,6 @@ const submitPhoto = async () => {
 // Lifecycle
 onMounted(() => {
   fetchStatus();
-});
-
-onUnmounted(() => {
-  stopCamera(); // Pastikan kamera mati saat pindah halaman
 });
 </script>
 
@@ -189,7 +116,7 @@ onUnmounted(() => {
                 Diperbarui: {{ date(status.registered_at) }}
               </p>
               <p v-else class="text-muted-foreground mt-1 text-xs">
-                Silakan lakukan pendaftaran wajah agar bisa melakukan absen.
+                Silakan lakukan pendaftaran wajah agar bisa melakukan presensi.
               </p>
             </div>
           </div>
@@ -219,20 +146,28 @@ onUnmounted(() => {
             ref="videoRef"
             autoplay
             playsinline
-            class="h-full w-full -scale-x-100 transform object-cover"
+            class="h-full w-full object-cover transition-transform duration-300"
+            :class="isMirrored ? '-scale-x-100' : 'scale-x-100'"
           ></video>
 
-          <img
-            v-if="capturedImage"
-            :src="capturedImage"
-            alt="Preview"
-            class="h-full w-full -scale-x-100 transform object-cover"
-          />
+          <img v-if="capturedImage" :src="capturedImage" alt="Preview" class="h-full w-full object-cover" />
 
           <canvas ref="canvasRef" class="hidden"></canvas>
 
           <div v-if="!capturedImage" class="pointer-events-none absolute inset-0 flex items-center justify-center">
             <div class="h-2/3 w-2/3 rounded-full border-2 border-dashed border-white/50"></div>
+          </div>
+
+          <div v-if="!capturedImage" class="pointer-events-auto absolute top-4 right-4 z-20">
+            <Button
+              size="icon"
+              variant="secondary"
+              class="h-10 w-10 rounded-full border-none bg-black/50 text-white hover:bg-black/70"
+              @click="toggleMirror"
+              title="Mirror Kamera"
+            >
+              <FlipHorizontal class="h-5 w-5" />
+            </Button>
           </div>
         </div>
 
@@ -240,7 +175,7 @@ onUnmounted(() => {
           <Button variant="ghost" @click="stopCamera" :disabled="isUploading"> Batal </Button>
 
           <div class="flex gap-2">
-            <Button v-if="!capturedImage" @click="takePhoto">
+            <Button v-if="!capturedImage" @click="() => takePhoto('face_id_register')">
               <Camera class="mr-2 h-4 w-4" />
               Ambil Foto
             </Button>
