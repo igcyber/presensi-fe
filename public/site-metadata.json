@@ -1,9 +1,9 @@
 {
   "website": {
-    "name": "Sistem Informasi Pelayanan Sekretariat Unggul Terpadu Sekretariat DPRD Kab. Kutai Kartanegara",
-    "shortName": "SiPesut",
-    "description": "Sistem informasi pelayanan publik yang terpadu untuk memfasilitasi layanan Sekretariat DPRD Kabupaten Kutai Kartanegara dengan standar pelayanan yang unggul dan transparan",
-    "url": "https://sipesut-setdprd.kukarkab.go.id",
+    "name": "Sistem Presensi Diskominfo Kukar",
+    "shortName": "diskominfo-presensi",
+    "description": "Sistem presensi pegawai Diskominfo Kukar",
+    "url": "https://diskominfo-presensi.kukarkab.go.id",
     "locale": "id_ID",
     "themeColor": "#1e40af"
   },
@@ -19,30 +19,19 @@
     }
   },
   "seo": {
-    "title": "SiPesut - Sistem Informasi Pelayanan Sekretariat Unggul Terpadu DPRD Kutai Kartanegara",
-    "description": "Sistem informasi pelayanan publik yang terpadu untuk memfasilitasi layanan Sekretariat DPRD Kabupaten Kutai Kartanegara dengan standar pelayanan yang unggul dan transparan",
+    "title": "Sistem Presensi Diskominfo Kukar",
+    "description": "Sistem presensi pegawai Diskominfo Kukar",
     "keywords": [
-      "SIPesut",
-      "Sistem Informasi Pelayanan Sekretariat",
-      "DPRD Kutai Kartanegara",
-      "Kukar",
-      "standar pelayanan",
-      "pelayanan publik",
-      "Sekretariat DPRD",
-      "sistem informasi terpadu",
-      "layanan digital",
-      "transparansi publik",
-      "Sekretariat DPRD Kukar",
-      "layanan Sekretariat",
-      "informasi DPRD",
-      "portal DPRD Kutai Kartanegara"
+      "Sistem Presensi Diskominfo Kukar",
+      "Diskominfo Kukar",
+      "Presensi Pegawai Diskominfo Kukar"
     ],
-    "author": "Sekretariat DPRD Kabupaten Kutai Kartanegara",
+    "author": "Diskominfo Kukar",
     "robots": "index, follow"
   },
   "openGraph": {
-    "title": "SiPesut - Sistem Informasi Pelayanan Sekretariat Unggul Terpadu DPRD Kutai Kartanegara",
-    "description": "Sistem informasi pelayanan publik yang terpadu untuk memfasilitasi layanan Sekretariat DPRD Kabupaten Kutai Kartanegara dengan standar pelayanan yang unggul dan transparan",
+    "title": "Sistem Presensi Diskominfo Kukar",
+    "description": "Sistem presensi pegawai Diskominfo Kukar",
     "image": "/assets/images/logos/logo-kukar.png",
     "imageWidth": "1200",
     "imageHeight": "630",
