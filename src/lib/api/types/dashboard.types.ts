@@ -1,48 +1,70 @@
 /**
- * Dashboard views statistics interface
- * Represents view counts for different content types
+ * Dashboard overview interface
+ * Represents overview statistics for dashboard
  */
-export interface DashboardViews {
-  berita: number;
-  dokumen: number;
-  infografis: number;
-  video: number;
-  foto: number;
+export interface DashboardOverview {
+  total_pegawai: number;
+  total_absen_masuk: number;
+  total_absen_pulang: number;
+  unique_pegawai_hadir: number;
+  unique_pegawai_tidak_hadir: number;
 }
 
 /**
- * Popular berita item interface
- * Represents popular news item in dashboard
+ * Daily breakdown item interface
  */
-export interface PopularBerita {
-  id: number;
-  judul: string;
-  isi: string;
-  foto: string;
-  keterangan: string | null;
-  tagId: number;
-  views: number;
-  createdBy: number;
-  updatedBy: number | null;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string | null;
-  fotoUrl: string;
+export interface DailyBreakdownItem {
+  pegawaiHadir: number;
+  pegawaiTidakHadir: number;
+  totalAbsenMasuk: number;
+  totalAbsenPulang: number;
 }
 
 /**
- * Dashboard popular content interface
- * Represents popular content in dashboard
+ * Dashboard summary data interface
+ * Represents summary data from /api/admin/dashboard/summary
  */
-export interface DashboardPopular {
-  berita: PopularBerita[];
+export interface DashboardSummaryData {
+  overview: DashboardOverview;
+  daily_breakdown: Record<string, DailyBreakdownItem>;
 }
 
 /**
- * Dashboard data interface
- * Represents complete dashboard data
+ * Chart data item interface
+ */
+export interface ChartDataItem {
+  label: string;
+  masuk: number;
+  pulang: number;
+  total: number;
+}
+
+/**
+ * Dashboard chart data interface
+ * Represents chart data from /api/admin/dashboard/chart
+ */
+export interface DashboardChartData {
+  chart_data: Record<string, ChartDataItem>;
+  type: "daily" | "weekly" | "monthly";
+}
+
+/**
+ * Dashboard daily data interface
+ * Represents daily data from /api/admin/dashboard/daily
+ */
+export interface DashboardDailyData {
+  total_pegawai: number;
+  pegawai_hadir: number;
+  pegawai_tidak_hadir: number;
+  total_absen_masuk: number;
+  total_absen_pulang: number;
+}
+
+/**
+ * Dashboard data interface (for backward compatibility)
+ * @deprecated Use DashboardSummaryData instead
  */
 export interface DashboardData {
-  views: DashboardViews;
-  popular: DashboardPopular;
+  overview: DashboardOverview;
+  daily_breakdown: Record<string, DailyBreakdownItem>;
 }

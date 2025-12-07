@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Badge, Building2, CalendarCheck, ChartBar, ClipboardCheck, Clock, History, HomeIcon, Tag, UserIcon } from "lucide-vue-next";
+import { Badge, Building2, CalendarCheck, ClipboardCheck, Clock, History, HomeIcon, Tag, UserIcon } from "lucide-vue-next";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 
@@ -42,13 +42,6 @@ const data = computed(() => {
       name: "app.dashboard",
       icon: HomeIcon,
       isActive: routNameActive.value === "app.dashboard",
-    },
-    {
-      title: "Dashboard Data",
-      url: "/app/dashboard-data",
-      name: "app.dashboard-data",
-      icon: ChartBar,
-      isActive: routNameActive.value === "app.dashboard-data",
     },
   ];
   // Menu Khusus Pegawai
