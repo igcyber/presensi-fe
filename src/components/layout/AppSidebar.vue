@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Badge, Building2, CalendarCheck, ClipboardCheck, Clock, History, HomeIcon, Tag, UserIcon, Calendar } from "lucide-vue-next";
+import { Badge, Building2, CalendarCheck, ClipboardCheck, Clock, History, HomeIcon, Package, Tag, UserIcon, Calendar } from "lucide-vue-next";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 
@@ -105,6 +105,13 @@ const data = computed(() => {
       name: "app.hari-libur",
       icon: Calendar,
       isActive: routNameActive.value === "app.hari-libur" || routNameActive.value === "app.hari-libur.detail",
+    },
+    {
+      title: "PWA Version",
+      url: "/app/pwa-version",
+      name: "app.pwa-version",
+      icon: Package,
+      isActive: routNameActive.value === "app.pwa-version",
     },
   ];
   return {
